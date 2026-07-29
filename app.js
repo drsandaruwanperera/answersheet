@@ -25,3 +25,4 @@ loginBtn.addEventListener("click", async () => {
     window.location.href = "dashboard.html?id=" + studentId;
 
 });
+console.log("app.js loaded");
