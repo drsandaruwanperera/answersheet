@@ -27,7 +27,8 @@ async function openPaper(no) {
         return;
     }
 
-    window.location.href = "viewer.html?paper=" + no;
+    window.location.href =
+"viewer.html?paper=" + no + "&id=" + studentId;
 }
 
 window.openPaper = openPaper;
