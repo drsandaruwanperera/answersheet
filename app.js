@@ -22,14 +22,6 @@ loginBtn.addEventListener("click", async () => {
         msg.innerHTML = "Wrong Password";
         return;
     }
-
-    // මේක අලුතින් දාන්න
-    if (data.used === true) {
-        msg.innerHTML = "Password already used";
-        return;
-    }
-
-    // Dashboard එකට Student ID එක්ක යවන්න
     window.location.href = "dashboard.html?id=" + studentId;
 
 });
