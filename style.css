@@ -6,193 +6,170 @@
 }
 
 body{
-
     min-height:100vh;
-
     display:flex;
-
     justify-content:center;
-
     align-items:center;
-
-    background:#1f2937;
-
-    /* Background image එකක් දාන්න ඕන නම්
-    background:
-    linear-gradient(rgba(20,25,45,.65),rgba(20,25,45,.65)),
-    url("background.jpg");
-
-    background-size:cover;
-    background-position:center;
-    */
+    padding:20px;
+    background:linear-gradient(135deg,#6d28d9,#8b5cf6);
 }
 
 .login-card{
-
-    width:420px;
-    max-width:90%;
-
-    background:#ffffff;
-
+    width:450px;
+    max-width:100%;
+    background:#fff;
     padding:45px;
+    border-radius:24px;
+    box-shadow:0 20px 60px rgba(0,0,0,.25);
+}
 
-    border-radius:20px;
-
-    box-shadow:0 20px 50px rgba(0,0,0,.35);
+.logo{
+    text-align:center;
+    font-size:60px;
+    margin-bottom:15px;
 }
 
 .login-card h1{
-
     text-align:center;
-
     color:#111827;
+    font-size:32px;
+    margin-bottom:8px;
+}
 
-    margin-bottom:35px;
+.subtitle{
+    text-align:center;
+    color:#7c3aed;
+    font-size:18px;
+    font-weight:600;
+    margin-bottom:12px;
+}
 
-    font-size:34px;
+.description{
+    text-align:center;
+    color:#6b7280;
+    font-size:15px;
+    line-height:1.6;
+    margin-bottom:30px;
 }
 
 label{
-
     display:block;
-
     margin-bottom:8px;
-
     font-weight:600;
-
     color:#374151;
 }
 
 input{
-
     width:100%;
-
     padding:15px;
-
     margin-bottom:22px;
-
     border:1px solid #d1d5db;
-
-    border-radius:10px;
-
+    border-radius:12px;
     font-size:16px;
-
     transition:.3s;
 }
 
 input:focus{
-
     outline:none;
-
     border-color:#7c3aed;
-
-    box-shadow:0 0 10px rgba(124,58,237,.25);
+    box-shadow:0 0 0 4px rgba(124,58,237,.15);
 }
 
 button{
-
     width:100%;
-
-    padding:15px;
-
+    padding:16px;
     border:none;
-
-    border-radius:10px;
-
-    background:#7c3aed;
-
-    color:white;
-
-    font-size:18px;
-
-    font-weight:bold;
-
+    border-radius:12px;
+    background:linear-gradient(90deg,#7c3aed,#9333ea);
+    color:#fff;
+    font-size:17px;
+    font-weight:600;
     cursor:pointer;
-
     transition:.3s;
 }
 
 button:hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 25px rgba(124,58,237,.30);
+}
 
-    background:#6d28d9;
+.security{
+    margin-top:15px;
+    text-align:center;
+    color:#6b7280;
+    font-size:14px;
+}
+
+.support-box{
+    margin-top:30px;
+    padding:20px;
+    background:#f9fafb;
+    border:1px solid #e5e7eb;
+    border-radius:16px;
+}
+
+.support-title{
+    text-align:center;
+    font-size:18px;
+    font-weight:700;
+    color:#111827;
+    margin-bottom:10px;
+}
+
+.support-text{
+    text-align:center;
+    color:#6b7280;
+    line-height:1.6;
+    margin-bottom:15px;
+}
+
+.support-phone{
+    display:block;
+    text-align:center;
+    text-decoration:none;
+    color:#7c3aed;
+    font-weight:600;
+    font-size:16px;
+}
+
+.support-phone:hover{
+    color:#6d28d9;
 }
 
 #msg{
-
-    margin-top:15px;
-
+    margin-top:18px;
     text-align:center;
-
-    color:red;
-
-    font-weight:bold;
-}
-body{
-    margin:0;
-    font-family:"Segoe UI",sans-serif;
-    background:#eef2f7;
-}
-
-.container{
-    max-width:1100px;
-    margin:50px auto;
-    padding:20px;
-}
-
-.container h1{
-    text-align:center;
-    color:#1f2937;
-    margin-bottom:35px;
-    font-size:36px;
-}
-
-.paper-grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:20px;
-}
-
-.paper-grid button{
-
-    height:80px;
-
-    border:none;
-
-    border-radius:18px;
-
-    background:white;
-
-    color:#1f2937;
-
-    font-size:20px;
-
     font-weight:600;
-
-    cursor:pointer;
-
-    box-shadow:0 8px 20px rgba(0,0,0,.08);
-
-    transition:.25s;
+    color:#dc2626;
 }
 
-.paper-grid button:hover{
-
-    background:#2563eb;
-
-    color:white;
-
-    transform:translateY(-5px);
-
-    box-shadow:0 15px 30px rgba(37,99,235,.3);
-
+.footer{
+    margin-top:30px;
+    text-align:center;
+    color:#9ca3af;
+    font-size:13px;
+    line-height:1.8;
 }
 
-@media(max-width:768px){
+@media (max-width:480px){
 
-.paper-grid{
+    .login-card{
+        padding:30px 25px;
+    }
 
-grid-template-columns:1fr;
+    .logo{
+        font-size:50px;
+    }
 
-}
+    .login-card h1{
+        font-size:26px;
+    }
 
+    .subtitle{
+        font-size:16px;
+    }
+
+    .description{
+        font-size:14px;
+    }
 }
