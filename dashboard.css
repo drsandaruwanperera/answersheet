@@ -179,3 +179,30 @@ footer{
     }
 
 }
+/* Paper Status */
+
+.paper-grid button.available{
+    background:linear-gradient(90deg,#22c55e,#16a34a);
+}
+
+.paper-grid button.available:hover{
+    background:linear-gradient(90deg,#16a34a,#15803d);
+}
+
+.paper-grid button.viewed{
+    background:#9ca3af;
+    cursor:not-allowed;
+}
+
+.paper-grid button.viewed:hover{
+    transform:none;
+    background:#9ca3af;
+}
+
+.paper-grid button small{
+    display:block;
+    margin-top:10px;
+    font-size:14px;
+    font-weight:500;
+    opacity:.95;
+}
