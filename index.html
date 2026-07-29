@@ -1,44 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Student Login</title>
+<img src="logo.png" class="logo">
 
-<link rel="stylesheet" href="style.css">
-</head>
+<h2>Student Login</h2>
 
-<body>
+<p class="subtitle">
+Model Paper Portal 2026
+</p>
 
-<div class="overlay"></div>
+<input
+type="text"
+id="studentId"
+placeholder="Student ID">
 
-<div class="login-box">
+<input
+type="password"
+id="password"
+placeholder="Password">
 
-    <h1>Student Login</h1>
+<button id="loginBtn">
+Login
+</button>
 
-    <p class="subtitle">
-        Model Paper Portal
-    </p>
-
-    <input
-        type="text"
-        id="studentId"
-        placeholder="Student ID">
-
-    <input
-        type="password"
-        id="password"
-        placeholder="Password">
-
-    <button id="loginBtn">
-        Login
-    </button>
-
-    <p id="msg"></p>
-
-</div>
-
-<script type="module" src="app.js"></script>
-
-</body>
-</html>
+<p id="msg"></p>
