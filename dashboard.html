@@ -4,35 +4,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Model Papers</title>
+    <title>Student Assessment Portal</title>
 
-   <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="dashboard.css">
 </head>
 
 <body>
 
 <div class="container">
 
-    <h1>Model Papers</h1>
+    <div class="header">
+
+        <div>
+            <h2>📘 Student Assessment Portal</h2>
+            <p>Student ID :
+                <span id="studentId"></span>
+            </p>
+        </div>
+
+        <button id="logoutBtn">🚪 Sign Out</button>
+
+    </div>
+
+    <div class="progress-card">
+
+        <h3>📊 Progress</h3>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <p id="progressText">0 / 10 Papers Viewed</p>
+
+    </div>
+
+    <div class="info-grid">
+
+        <div class="card">
+            <h3>📢 Announcements</h3>
+            <p>No new announcements.</p>
+        </div>
+
+        <div class="card">
+            <h3>📞 Support</h3>
+            <p>077 901 1780</p>
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <h3>📝 Instructions</h3>
+
+        <ul>
+            <li>Each paper can only be viewed once.</li>
+            <li>Do not share your login credentials.</li>
+            <li>Contact the administrator if you need assistance.</li>
+        </ul>
+
+    </div>
+
+    <h2 class="paper-title">📚 Model Papers</h2>
 
     <div class="paper-grid">
 
         <button onclick="openPaper(1)">📘 Model Paper 01</button>
         <button onclick="openPaper(2)">📘 Model Paper 02</button>
-
         <button onclick="openPaper(3)">📘 Model Paper 03</button>
         <button onclick="openPaper(4)">📘 Model Paper 04</button>
-
         <button onclick="openPaper(5)">📘 Model Paper 05</button>
         <button onclick="openPaper(6)">📘 Model Paper 06</button>
-
         <button onclick="openPaper(7)">📘 Model Paper 07</button>
         <button onclick="openPaper(8)">📘 Model Paper 08</button>
-
         <button onclick="openPaper(9)">📘 Model Paper 09</button>
         <button onclick="openPaper(10)">📘 Model Paper 10</button>
 
     </div>
+
+    <footer>
+        © 2026 Student Assessment Portal
+    </footer>
 
 </div>
 
