@@ -38,6 +38,5 @@ loginBtn.addEventListener("click", async () => {
         used: true
     });
 
-    window.location.href = "answer.html";
 
 });
