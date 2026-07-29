@@ -6,34 +6,52 @@
 <title>Model Paper</title>
 
 <style>
-html,body{
-margin:0;
-width:100%;
-height:100%;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-iframe{
-width:100%;
-height:100vh;
-border:none;
+body{
+    background:#222;
+    user-select:none;
+    overflow-x:hidden;
+}
+
+.page{
+    width:100%;
+    max-width:900px;
+    margin:20px auto;
+    position:relative;
+}
+
+.page img{
+    width:100%;
+    display:block;
+    pointer-events:none;
+    -webkit-user-drag:none;
+}
+
+.watermark{
+    position:absolute;
+    top:10px;
+    right:10px;
+    background:rgba(255,0,0,.6);
+    color:#fff;
+    padding:6px 12px;
+    font-weight:bold;
+    font-size:18px;
+    border-radius:6px;
 }
 </style>
 
 </head>
+
 <body>
 
-<iframe id="pdfFrame"></iframe>
+<div id="viewer"></div>
 
-<script>
-
-const params = new URLSearchParams(window.location.search);
-
-const paper = params.get("paper");
-
-document.getElementById("pdfFrame").src =
-"papers/paper"+paper+".pdf";
-
-</script>
+<script src="viewer.js"></script>
 
 </body>
 </html>
