@@ -38,5 +38,7 @@ loginBtn.addEventListener("click", async () => {
         used: true
     });
 
+    // Dashboard එකට යන්න
+    window.location.href = "dashboard.html";
 
 });
