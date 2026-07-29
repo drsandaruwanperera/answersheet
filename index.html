@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Student Login</title>
+    <title>Student Assessment Portal</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
@@ -14,8 +14,21 @@
 
 <div class="login-card">
 
-    <h1>Student Login</h1>
+    <!-- Header -->
+    <div class="logo">🎓</div>
 
+    <h1>Student Assessment Portal</h1>
+
+    <p class="subtitle">
+        Secure Student Login
+    </p>
+
+    <p class="description">
+        Please sign in using your Student ID and Password
+        to access Model Papers.
+    </p>
+
+    <!-- Login Form -->
     <label for="studentId">Student ID</label>
     <input
         type="text"
@@ -28,8 +41,15 @@
         id="password"
         placeholder="Enter Password">
 
-    <button id="loginBtn">Login</button>
+    <button id="loginBtn">
+        Sign In
+    </button>
 
+    <p class="security">
+        🔒 Your credentials are securely protected.
+    </p>
+
+    <!-- Support -->
     <div class="support-box">
 
         <p class="support-title">
@@ -37,8 +57,8 @@
         </p>
 
         <p class="support-text">
-            If you are unable to log in,<br>
-            Please contact the System Administrator.
+            If you are unable to sign in,<br>
+            please contact the System Administrator.
         </p>
 
         <a href="tel:0779011780" class="support-phone">
@@ -48,6 +68,11 @@
     </div>
 
     <p id="msg"></p>
+
+    <div class="footer">
+        <p>Version 1.0</p>
+        <p>© 2026 Student Assessment Portal</p>
+    </div>
 
 </div>
 
