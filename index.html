@@ -1,36 +1,43 @@
 <!DOCTYPE html>
-<html>
-<head>
+<html lang="en">
 
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Answer Sheet</title>
+<title>Answer Sheet Login</title>
 
-<style>
-
-body{
-    margin:0;
-    background:#f0f0f0;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-}
-
-img{
-    width:95%;
-    max-width:900px;
-    height:auto;
-}
-
-</style>
+<link rel="stylesheet" href="style.css">
 
 </head>
 
 <body>
 
-<img src="sheet.jpg">
+<div class="login-box">
+
+<h2>Answer Sheet Login</h2>
+
+<input
+type="text"
+id="studentId"
+placeholder="Student ID">
+
+<input
+type="password"
+id="password"
+placeholder="Password">
+
+<button id="loginBtn">
+
+Login
+
+</button>
+
+<p id="msg"></p>
+
+</div>
+
+<script type="module" src="app.js"></script>
 
 </body>
 
