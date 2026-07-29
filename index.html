@@ -1,25 +1,102 @@
-<!-- Student ID -->
-<label for="studentId">Student ID</label>
+<!DOCTYPE html>
+<html lang="en">
 
-<div class="input-group">
-    <span class="icon">👤</span>
-    <input
-        type="text"
-        id="studentId"
-        placeholder="Enter Student ID">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Assessment Portal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="login-card">
+
+    <div class="logo">🎓</div>
+
+    <h1>Student Assessment Portal</h1>
+
+    <p class="subtitle">Secure Student Login</p>
+
+    <p class="description">
+        Please sign in using your Student ID and Password
+        to access Model Papers.
+    </p>
+
+    <!-- Student ID -->
+    <label for="studentId">Student ID👤</label>
+
+    <div class="input-group">
+        <input
+            type="text"
+            id="studentId"
+            placeholder="Enter Student ID">
+    </div>
+
+    <!-- Password -->
+    <label for="password">Password🔒</label>
+
+    <div class="input-group">
+        <input
+            type="password"
+            id="password"
+            placeholder="Enter Password">
+
+        <span class="toggle-password" id="togglePassword">
+            👁️
+        </span>
+    </div>
+
+    <button id="loginBtn">
+        Sign In
+    </button>
+
+    <p class="security">
+        🔒 Your credentials are securely protected.
+    </p>
+
+    <div class="support-box">
+
+        <p class="support-title">🛟 Need Assistance?</p>
+
+        <p class="support-text">
+            If you are unable to sign in,<br>
+            please contact the System Administrator.
+        </p>
+
+        <a href="tel:0779011780" class="support-phone">
+            📞 077 901 1780
+        </a>
+
+    </div>
+
+    <p id="msg"></p>
+
+    <div class="footer">
+        <p>Version 1.0</p>
+        <p>© 2026 Student Assessment Portal</p>
+    </div>
+
 </div>
 
-<!-- Password -->
-<label for="password">Password</label>
+<script type="module" src="app.js"></script>
 
-<div class="input-group">
-    <span class="icon">🔒</span>
-    <input
-        type="password"
-        id="password"
-        placeholder="Enter Password">
+<script>
+const toggle = document.getElementById("togglePassword");
+const password = document.getElementById("password");
 
-    <span class="toggle-password" id="togglePassword">
-        👁️
-    </span>
-</div>
+toggle.addEventListener("click", () => {
+
+    if(password.type === "password"){
+        password.type = "text";
+        toggle.textContent = "🙈";
+    }else{
+        password.type = "password";
+        toggle.textContent = "👁️";
+    }
+
+});
+</script>
+
+</body>
+</html>
