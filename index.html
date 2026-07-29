@@ -2,14 +2,12 @@
 <html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Login</title>
 
-<title>Student Login</title>
-
-<link rel="stylesheet" href="style.css">
-
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -19,14 +17,12 @@
     <h1>Student Login</h1>
 
     <label for="studentId">Student ID</label>
-
     <input
         type="text"
         id="studentId"
         placeholder="Enter Student ID">
 
     <label for="password">Password</label>
-
     <input
         type="password"
         id="password"
@@ -34,27 +30,28 @@
 
     <button id="loginBtn">Login</button>
 
-   <div class="support-box">
+    <div class="support-box">
 
-    <p class="support-title">
-        🛟 Need Assistance?
-    </p>
+        <p class="support-title">
+            🛟 Need Assistance?
+        </p>
 
-    <p class="support-text">
-              If you are unable to log in,<br>
-        Please contact the System Administrator
-    </p>
+        <p class="support-text">
+            If you are unable to log in,<br>
+            Please contact the System Administrator.
+        </p>
 
-       <script>
-    alert("HTML Loaded");
-</script>
+        <a href="tel:0779011780" class="support-phone">
+            📞 077 901 1780
+        </a>
+
+    </div>
+
+    <p id="msg"></p>
+
+</div>
 
 <script type="module" src="app.js"></script>
 
 </body>
 </html>
-
-    <a href="tel:0779011780" class="support-phone">
-        📞 077 901 1780
-    </a>
-</div>
