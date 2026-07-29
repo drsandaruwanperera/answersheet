@@ -4,9 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Student Assessment Portal</title>
-
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -14,32 +12,42 @@
 
 <div class="login-card">
 
-    <!-- Header -->
     <div class="logo">🎓</div>
 
     <h1>Student Assessment Portal</h1>
 
-    <p class="subtitle">
-        Secure Student Login
-    </p>
+    <p class="subtitle">Secure Student Login</p>
 
     <p class="description">
         Please sign in using your Student ID and Password
         to access Model Papers.
     </p>
 
-    <!-- Login Form -->
+    <!-- Student ID -->
     <label for="studentId">Student ID</label>
-    <input
-        type="text"
-        id="studentId"
-        placeholder="Enter Student ID">
 
+    <div class="input-group">
+        <span class="icon">👤</span>
+        <input
+            type="text"
+            id="studentId"
+            placeholder="Enter Student ID">
+    </div>
+
+    <!-- Password -->
     <label for="password">Password</label>
-    <input
-        type="password"
-        id="password"
-        placeholder="Enter Password">
+
+    <div class="input-group">
+        <span class="icon">🔒</span>
+        <input
+            type="password"
+            id="password"
+            placeholder="Enter Password">
+
+        <span class="toggle-password" id="togglePassword">
+            👁️
+        </span>
+    </div>
 
     <button id="loginBtn">
         Sign In
@@ -49,12 +57,9 @@
         🔒 Your credentials are securely protected.
     </p>
 
-    <!-- Support -->
     <div class="support-box">
 
-        <p class="support-title">
-            🛟 Need Assistance?
-        </p>
+        <p class="support-title">🛟 Need Assistance?</p>
 
         <p class="support-text">
             If you are unable to sign in,<br>
@@ -77,6 +82,23 @@
 </div>
 
 <script type="module" src="app.js"></script>
+
+<script>
+const toggle = document.getElementById("togglePassword");
+const password = document.getElementById("password");
+
+toggle.addEventListener("click", () => {
+
+    if(password.type === "password"){
+        password.type = "text";
+        toggle.textContent = "🙈";
+    }else{
+        password.type = "password";
+        toggle.textContent = "👁️";
+    }
+
+});
+</script>
 
 </body>
 </html>
