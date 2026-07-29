@@ -137,7 +137,6 @@ body{
     border:none;
     padding:22px;
     border-radius:16px;
-    background:linear-gradient(90deg,#7c3aed,#9333ea);
     color:white;
     font-size:19px;
     font-weight:600;
@@ -148,7 +147,40 @@ body{
 
 .paper-grid button:hover{
     transform:translateY(-4px);
+}
+
+/* Available Papers */
+
+.paper-grid button.available{
+    background:linear-gradient(90deg,#7c3aed,#9333ea);
+}
+
+.paper-grid button.available:hover{
     background:linear-gradient(90deg,#6d28d9,#7c3aed);
+}
+
+/* Viewed Papers */
+
+.paper-grid button.viewed{
+    background:#9ca3af;
+    cursor:not-allowed;
+}
+
+.paper-grid button.viewed:hover{
+    background:#9ca3af;
+    transform:none;
+}
+
+/* Status Badge */
+
+.paper-grid button small{
+    display:inline-block;
+    margin-top:12px;
+    padding:5px 12px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:600;
+    background:rgba(255,255,255,.22);
 }
 
 /* Footer */
@@ -178,31 +210,4 @@ footer{
         grid-template-columns:1fr;
     }
 
-}
-/* Paper Status */
-
-.paper-grid button.available{
-    background:linear-gradient(90deg,#22c55e,#16a34a);
-}
-
-.paper-grid button.available:hover{
-    background:linear-gradient(90deg,#16a34a,#15803d);
-}
-
-.paper-grid button.viewed{
-    background:#9ca3af;
-    cursor:not-allowed;
-}
-
-.paper-grid button.viewed:hover{
-    transform:none;
-    background:#9ca3af;
-}
-
-.paper-grid button small{
-    display:block;
-    margin-top:10px;
-    font-size:14px;
-    font-weight:500;
-    opacity:.95;
 }
