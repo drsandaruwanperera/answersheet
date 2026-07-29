@@ -5,31 +5,35 @@ async function openPaper(no) {
     const params = new URLSearchParams(window.location.search);
     const studentId = params.get("id");
 
+    if (!studentId) {
+        alert("Student ID not found.");
+        return;
+    }
+
     const ref = doc(db, "students", studentId);
     const snap = await getDoc(ref);
 
     if (!snap.exists()) {
-        alert("Student not found");
+        alert("Student not found.");
         return;
     }
 
     const data = snap.data();
 
-    if (data.used === true) {
-        alert("Password already used.");
+    const field = "paper" + String(no).padStart(2, "0");
+
+    if (data[field] === true) {
+        alert("This Model Paper has already been viewed.");
         return;
     }
 
-    const field = "paper" + String(no).padStart(2, "0");
+    await updateDoc(ref, {
+        [field]: true
+    });
 
-if (data[field] === true) {
-    alert("This Model Paper has already been viewed.");
-    return;
+    window.location.href =
+        "viewer.html?paper=" + no + "&id=" + studentId;
+
 }
 
-await updateDoc(ref, {
-    [field]: true
-});
-
-window.location.href =
-    "viewer.html?paper=" + no + "&id=" + studentId;
+window.openPaper = openPaper;
