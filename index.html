@@ -1,19 +1,32 @@
-<img src="logo.png" class="logo">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Login</title>
 
-<h2>Student Login</h2>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-<input
-type="text"
-id="studentId"
-placeholder="Student ID">
+<div class="login-card">
 
-<input
-type="password"
-id="password"
-placeholder="Password">
+    <h1>Student Login</h1>
+    <p class="sub">Model Paper Access Portal</p>
 
-<button id="loginBtn">
-Login
-</button>
+    <label>Student ID</label>
+    <input type="text" id="studentId" placeholder="Enter Student ID">
 
-<p id="msg"></p>
+    <label>Password</label>
+    <input type="password" id="password" placeholder="Enter Password">
+
+    <button id="loginBtn">Login</button>
+
+    <p id="msg"></p>
+
+</div>
+
+<script type="module" src="app.js"></script>
+
+</body>
+</html>
