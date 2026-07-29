@@ -37,3 +37,17 @@ async function openPaper(no) {
 }
 
 window.openPaper = openPaper;
+// Student ID display
+const params = new URLSearchParams(window.location.search);
+const studentId = params.get("id");
+
+document.getElementById("studentId").textContent = studentId;
+
+// Sign Out
+document.getElementById("logoutBtn").addEventListener("click", () => {
+
+    if (confirm("Are you sure you want to sign out?")) {
+        window.location.href = "index.html";
+    }
+
+});
