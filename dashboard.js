@@ -1,9 +1,60 @@
 import { db, doc, getDoc, updateDoc } from "./firebase.js";
 
-async function openPaper(no) {
+const params = new URLSearchParams(window.location.search);
+const studentId = params.get("id");
 
-    const params = new URLSearchParams(window.location.search);
-    const studentId = params.get("id");
+// Display Student ID
+document.getElementById("studentId").textContent = studentId;
+
+// Sign Out
+document.getElementById("logoutBtn").addEventListener("click", () => {
+
+    if (confirm("Are you sure you want to sign out?")) {
+        window.location.href = "index.html";
+    }
+
+});
+
+// Load Dashboard Information
+async function loadDashboard() {
+
+    if (!studentId) {
+        alert("Student ID not found.");
+        return;
+    }
+
+    const ref = doc(db, "students", studentId);
+    const snap = await getDoc(ref);
+
+    if (!snap.exists()) {
+        alert("Student not found.");
+        return;
+    }
+
+    const data = snap.data();
+
+    let viewed = 0;
+
+    for (let i = 1; i <= 10; i++) {
+
+        const field = "paper" + String(i).padStart(2, "0");
+
+        if (data[field] === true) {
+            viewed++;
+        }
+
+    }
+
+    document.getElementById("progressText").textContent =
+        viewed + " / 10 Papers Viewed";
+
+    document.getElementById("progressFill").style.width =
+        (viewed / 10 * 100) + "%";
+
+}
+
+// Open Paper
+async function openPaper(no) {
 
     if (!studentId) {
         alert("Student ID not found.");
@@ -37,17 +88,5 @@ async function openPaper(no) {
 }
 
 window.openPaper = openPaper;
-// Student ID display
-const params = new URLSearchParams(window.location.search);
-const studentId = params.get("id");
 
-document.getElementById("studentId").textContent = studentId;
-
-// Sign Out
-document.getElementById("logoutBtn").addEventListener("click", () => {
-
-    if (confirm("Are you sure you want to sign out?")) {
-        window.location.href = "index.html";
-    }
-
-});
+loadDashboard();
