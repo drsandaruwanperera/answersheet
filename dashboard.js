@@ -38,9 +38,28 @@ async function loadDashboard() {
     for (let i = 1; i <= 10; i++) {
 
         const field = "paper" + String(i).padStart(2, "0");
+        const btn = document.getElementById(field);
 
         if (data[field] === true) {
+
             viewed++;
+
+            btn.classList.add("viewed");
+
+            btn.innerHTML = `
+                📘 Model Paper ${String(i).padStart(2, "0")}
+                <small>🔒 Viewed</small>
+            `;
+
+        } else {
+
+            btn.classList.add("available");
+
+            btn.innerHTML = `
+                📘 Model Paper ${String(i).padStart(2, "0")}
+                <small>🟢 Available</small>
+            `;
+
         }
 
     }
