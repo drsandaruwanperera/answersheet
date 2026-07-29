@@ -15,6 +15,12 @@ async function openPaper(no) {
 
     const data = snap.data();
 
+    // Password එක කලින් භාවිතා කරලා නම්
+    if (data.used === true) {
+        alert("Password already used.");
+        return;
+    }
+
     const field = "paper" + String(no).padStart(2, "0");
 
     if (data[field] === true) {
@@ -22,13 +28,13 @@ async function openPaper(no) {
         return;
     }
 
+    // මේ paper එකත් used එකත් update කරන්න
     await updateDoc(ref, {
-        [field]: true
+        [field]: true,
+        used: true
     });
 
-    if (data.used === true) {
-    msg.innerHTML = "Password already used";
-    return;
+    window.location.href = "viewer.html?paper=" + no;
 }
 
 window.openPaper = openPaper;
