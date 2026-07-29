@@ -23,11 +23,13 @@ loginBtn.addEventListener("click", async () => {
         return;
     }
 
-    // Test redirect
-    window.location.href = "dashboard.html";
+    // මේක අලුතින් දාන්න
+    if (data.used === true) {
+        msg.innerHTML = "Password already used";
+        return;
+    }
+
+    // Dashboard එකට Student ID එක්ක යවන්න
+    window.location.href = "dashboard.html?id=" + studentId;
 
 });
-
-
-
-dent thiynne mekh
