@@ -22,13 +22,14 @@ async function openPaper(no) {
 
     const field = "paper" + String(no).padStart(2, "0");
 
-    if (data[field] === true) {
-        alert("This Model Paper has already been viewed.");
-        return;
-    }
-
-    window.location.href =
-"viewer.html?paper=" + no + "&id=" + studentId;
+if (data[field] === true) {
+    alert("This Model Paper has already been viewed.");
+    return;
 }
 
-window.openPaper = openPaper;
+await updateDoc(ref, {
+    [field]: true
+});
+
+window.location.href =
+    "viewer.html?paper=" + no + "&id=" + studentId;
