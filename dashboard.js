@@ -26,8 +26,9 @@ async function openPaper(no) {
         [field]: true
     });
 
-    window.location.href =
-        "viewer.html?paper=" + no;
+    if (data.used === true) {
+    msg.innerHTML = "Password already used";
+    return;
 }
 
 window.openPaper = openPaper;
