@@ -127,19 +127,23 @@ button:hover{
 
     font-weight:bold;
 }
-/* ---------- Dashboard ---------- */
+body{
+    margin:0;
+    font-family:"Segoe UI",sans-serif;
+    background:#eef2f7;
+}
 
 .container{
     max-width:1100px;
-    margin:40px auto;
+    margin:50px auto;
     padding:20px;
 }
 
-.container h2{
+.container h1{
     text-align:center;
-    color:white;
-    margin-bottom:30px;
-    font-size:34px;
+    color:#1f2937;
+    margin-bottom:35px;
+    font-size:36px;
 }
 
 .paper-grid{
@@ -149,25 +153,46 @@ button:hover{
 }
 
 .paper-grid button{
-    padding:22px;
-    font-size:20px;
+
+    height:80px;
+
     border:none;
-    border-radius:12px;
-    background:linear-gradient(90deg,#7c3aed,#9333ea);
-    color:white;
+
+    border-radius:18px;
+
+    background:white;
+
+    color:#1f2937;
+
+    font-size:20px;
+
+    font-weight:600;
+
     cursor:pointer;
-    transition:0.3s;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+    transition:.25s;
 }
 
 .paper-grid button:hover{
-    transform:translateY(-3px);
-    box-shadow:0 10px 20px rgba(0,0,0,.3);
+
+    background:#2563eb;
+
+    color:white;
+
+    transform:translateY(-5px);
+
+    box-shadow:0 15px 30px rgba(37,99,235,.3);
+
 }
 
-@media (max-width:768px){
+@media(max-width:768px){
 
-    .paper-grid{
-        grid-template-columns:1fr;
-    }
+.paper-grid{
+
+grid-template-columns:1fr;
+
+}
 
 }
