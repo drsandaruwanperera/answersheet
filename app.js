@@ -1,22 +1,33 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+import { db, doc, getDoc } from "./firebase.js";
 
-import {
-  getFirestore,
-  doc,
-  getDoc,
-  updateDoc
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+const loginBtn = document.getElementById("loginBtn");
 
-const firebaseConfig = {
-  apiKey: "...",
-  authDomain: "answersheet2026.firebaseapp.com",
-  projectId: "answersheet2026",
-  storageBucket: "answersheet2026.firebasestorage.app",
-  messagingSenderId: "953495846284",
-  appId: "1:953495846284:web:0f1f9def812a5cbef16aa9"
-};
+loginBtn.addEventListener("click", async () => {
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+    const studentId = document.getElementById("studentId").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const msg = document.getElementById("msg");
 
-export { db, doc, getDoc, updateDoc };
+    const ref = doc(db, "students", studentId);
+    const snap = await getDoc(ref);
+
+    if (!snap.exists()) {
+        msg.innerHTML = "Student ID not found";
+        return;
+    }
+
+    const data = snap.data();
+
+    if (data.password !== password) {
+        msg.innerHTML = "Wrong Password";
+        return;
+    }
+
+    // Test redirect
+    window.location.href = "dashboard.html";
+
+});
+
+
+
+dent thiynne mekh
