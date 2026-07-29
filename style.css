@@ -127,3 +127,47 @@ button:hover{
 
     font-weight:bold;
 }
+/* ---------- Dashboard ---------- */
+
+.container{
+    max-width:1100px;
+    margin:40px auto;
+    padding:20px;
+}
+
+.container h2{
+    text-align:center;
+    color:white;
+    margin-bottom:30px;
+    font-size:34px;
+}
+
+.paper-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:20px;
+}
+
+.paper-grid button{
+    padding:22px;
+    font-size:20px;
+    border:none;
+    border-radius:12px;
+    background:linear-gradient(90deg,#7c3aed,#9333ea);
+    color:white;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.paper-grid button:hover{
+    transform:translateY(-3px);
+    box-shadow:0 10px 20px rgba(0,0,0,.3);
+}
+
+@media (max-width:768px){
+
+    .paper-grid{
+        grid-template-columns:1fr;
+    }
+
+}
