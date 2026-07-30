@@ -22,7 +22,13 @@ loginBtn.addEventListener("click", async () => {
         msg.innerHTML = "Wrong Password";
         return;
     }
-    window.location.href = "dashboard.html?id=" + studentId;
+
+    if (data.mustChangePassword === true) {
+        window.location.href = "change-password.html?id=" + studentId;
+    } else {
+        window.location.href = "dashboard.html?id=" + studentId;
+    }
 
 });
+
 console.log("app.js loaded");
