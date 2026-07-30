@@ -1,8 +1,8 @@
-import {
-    db,
-    getDocs,
-    collection
-} from "./firebase.js";
+import * as firebase from "./firebase.js";
+
+const db = firebase.db;
+const getDocs = firebase.getDocs;
+const collection = firebase.collection;
 
 // Protect Admin Page
 if (sessionStorage.getItem("adminLoggedIn") !== "true") {
