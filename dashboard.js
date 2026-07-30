@@ -14,11 +14,14 @@ document.getElementById("studentId").textContent = studentId;
 document.getElementById("logoutBtn").addEventListener("click", () => {
 
     if (confirm("Are you sure you want to sign out?")) {
+
+        sessionStorage.clear();
+
         window.location.href = "index.html";
+
     }
 
 });
-
 // Load Dashboard Information
 async function loadDashboard() {
 
