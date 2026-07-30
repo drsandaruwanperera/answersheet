@@ -4,18 +4,22 @@ const TIMEOUT = 15 * 60 * 1000; // 15 minutes
 
 let logoutTimer;
 
+function logout() {
+
+    alert("Your session has expired due to inactivity.");
+
+    // Clear login session
+    sessionStorage.clear();
+
+    // Go to login page
+    window.location.replace("index.html");
+}
+
 function resetTimer() {
 
     clearTimeout(logoutTimer);
 
-    logoutTimer = setTimeout(() => {
-
-        alert("Your session has expired due to inactivity.");
-
-        window.location.href = "index.html";
-
-    }, TIMEOUT);
-
+    logoutTimer = setTimeout(logout, TIMEOUT);
 }
 
 // Reset timer on user activity
