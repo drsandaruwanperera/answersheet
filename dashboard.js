@@ -1,4 +1,8 @@
 import { db, doc, getDoc, updateDoc } from "./firebase.js";
+// Check login session
+if (sessionStorage.getItem("loggedIn") !== "true") {
+    window.location.href = "index.html";
+}
 
 const params = new URLSearchParams(window.location.search);
 const studentId = params.get("id");
