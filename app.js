@@ -23,6 +23,10 @@ loginBtn.addEventListener("click", async () => {
         return;
     }
 
+    // Save login session
+    sessionStorage.setItem("loggedIn", "true");
+    sessionStorage.setItem("studentId", studentId);
+
     if (data.mustChangePassword === true) {
         window.location.href = "change-password.html?id=" + studentId;
     } else {
