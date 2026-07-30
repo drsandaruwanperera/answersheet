@@ -45,9 +45,88 @@
             id="search"
             placeholder="Search Student ID">
 
-        <button>
-            ➕ Add Student
+       <!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard</title>
+
+    <link rel="stylesheet" href="admin.css">
+
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+
+        <h1>👨🏻‍💻 Admin Dashboard</h1>
+
+        <button id="logoutBtn">
+            🚪 Logout
         </button>
+
+    </header>
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>Total Students</h3>
+            <h2 id="totalStudents">0</h2>
+        </div>
+
+        <div class="card">
+            <h3>Model Papers Viewed</h3>
+            <h2 id="totalViewed">0</h2>
+        </div>
+
+    </div>
+
+    <div class="toolbar">
+
+        <input
+            type="text"
+            id="search"
+            placeholder="Search Student ID">
+
+        <button id="addStudentBtn">
+    ➕ Add Student
+</button>
+    
+
+    </div>
+
+    <table>
+
+        <thead>
+
+        <tr>
+
+            <th>Student ID</th>
+            <th>Viewed</th>
+            <th>Password</th>
+            <th>Action</th>
+
+        </tr>
+
+        </thead>
+
+        <tbody id="studentTable">
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<script src="session.js"></script>
+<script type="module" src="admin.js"></script>
+
+</body>
+</html>
 
     </div>
 
