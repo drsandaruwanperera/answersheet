@@ -67,3 +67,47 @@
 
 </body>
 </html>
+                const studentData = {
+
+                    password: password,
+                    mustChangePassword: true
+
+                };
+
+                // Default paper permissions
+                for (let i = 1; i <= 10; i++) {
+
+                    const paper = "paper" + String(i).padStart(2, "0");
+
+                    studentData[paper] = false;
+                    studentData[paper + "Viewed"] = false;
+                }
+
+                await setDoc(studentRef, studentData);
+
+                if (studentSnap.exists()) {
+                    updated++;
+                } else {
+                    imported++;
+                }
+
+            } catch (error) {
+
+                console.error(error);
+                failed++;
+            }
+
+        }
+
+        result.innerHTML = `
+            ✅ Import Completed<br><br>
+            New Students : ${imported}<br>
+            Updated : ${updated}<br>
+            Failed : ${failed}
+        `;
+
+    };
+
+    reader.readAsArrayBuffer(file);
+
+}
