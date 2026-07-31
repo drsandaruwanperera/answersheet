@@ -189,7 +189,7 @@ saveStudent.addEventListener("click", async () => {
 
     const studentData = {
         password,
-        mustChange
+        mustChangePassword
     };
 
     for (let i = 1; i <= 10; i++) {
