@@ -141,13 +141,16 @@ async function importStudents() {
 
                     }
 
-                } catch (err) {
+               } catch (err) {
 
-                    console.error(err);
+    console.error("Student ID:", studentId);
+    console.error("Import Error:", err);
 
-                    failed++;
+    alert(err.message);
 
-                }
+    failed++;
+
+}
 
             }
                       result.innerHTML = `
