@@ -237,7 +237,7 @@ table.addEventListener("click", async (e) => {
 
     document.getElementById("editStudentId").value = currentStudent;
     document.getElementById("editPassword").value = data.password || "";
-    document.getElementById("editMustChange").checked = data.mustChange || false;
+    document.getElementById("editMustChange").checked = data.mustChangePassword || false;
 
     for (let i = 1; i <= 10; i++) {
 
