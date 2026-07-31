@@ -1,8 +1,7 @@
 import {
     db,
-    collection,
-    getDocs,
     doc,
+    getDoc,
     setDoc
 } from "./firebase.js";
 
