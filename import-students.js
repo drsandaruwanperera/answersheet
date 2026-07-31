@@ -26,44 +26,79 @@ async function importStudents() {
 
     reader.onload = async (e) => {
 
-        const data = new Uint8Array(e.target.result);
+        try {
 
-        const workbook = XLSX.read(data, {
-            type: "array"
-        });
+            const data = new Uint8Array(e.target.result);
 
-        const sheetName = workbook.SheetNames[0];
+            const workbook = XLSX.read(data, { type: "array" });
 
-        const worksheet = workbook.Sheets[sheetName];
+            const sheet = workbook.Sheets[workbook.SheetNames[0]];
 
-        const rows = XLSX.utils.sheet_to_json(worksheet);
+            const rows = XLSX.utils.sheet_to_json(sheet);
 
-        if (rows.length === 0) {
-            alert("Excel file is empty.");
-            return;
-        }
-
-        let imported = 0;
-        let updated = 0;
-        let failed = 0;
-
-        for (const row of rows) {
-
-            const studentId =
-                String(row["Student ID"]).trim();
-
-            const password =
-                String(row["Password"]).trim();
-
-            if (!studentId || !password) {
-                failed++;
-                continue;
+            if (rows.length === 0) {
+                alert("Excel file is empty.");
+                return;
             }
 
-            try {
+            let imported = 0;
+            let updated = 0;
+            let failed = 0;
+
+            for (const row of rows) {
+
+                const studentId = String(row["Student ID"] || "").trim();
+                const password = String(row["Password"] || "").trim();
+
+                if (!studentId || !password) {
+                    failed++;
+                    continue;
+                }
 
                 const studentRef = doc(db, "students", studentId);
 
                 const studentSnap = await getDoc(studentRef);
 
-                // Part 2 continues here...
+                const studentData = {
+                    password: password,
+                    mustChangePassword: true
+                };
+
+                for (let i = 1; i <= 10; i++) {
+
+                    const paper = "paper" + String(i).padStart(2, "0");
+
+                    studentData[paper] = false;
+                    studentData[paper + "Viewed"] = false;
+                }
+
+                await setDoc(studentRef, studentData);
+
+                if (studentSnap.exists()) {
+                    updated++;
+                } else {
+                    imported++;
+                }
+
+            }
+
+            result.innerHTML = `
+                <b>✅ Import Completed</b><br><br>
+                New Students : ${imported}<br>
+                Updated : ${updated}<br>
+                Failed : ${failed}
+            `;
+
+        } catch (err) {
+
+            console.error(err);
+
+            result.innerHTML =
+                "<span style='color:red'>Import Failed. Check Console (F12).</span>";
+        }
+
+    };
+
+    reader.readAsArrayBuffer(file);
+
+}
