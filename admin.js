@@ -1,18 +1,23 @@
 import * as firebase from "./firebase.js";
 
 const db = firebase.db;
-const getDocs = firebase.getDocs;
 const collection = firebase.collection;
+const getDocs = firebase.getDocs;
 
 // Protect Admin Page
 if (sessionStorage.getItem("adminLoggedIn") !== "true") {
     window.location.href = "admin-login.html";
 }
 
+// Elements
 const table = document.getElementById("studentTable");
-
 const totalStudents = document.getElementById("totalStudents");
 const totalViewed = document.getElementById("totalViewed");
+const onlineStudents = document.getElementById("onlineStudents");
+const search = document.getElementById("search");
+
+// Student list
+let allStudents = [];
 
 // Logout
 document.getElementById("logoutBtn").addEventListener("click", () => {
@@ -20,58 +25,110 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
     if (confirm("Logout from Admin Panel?")) {
 
         sessionStorage.removeItem("adminLoggedIn");
-
         window.location.href = "admin-login.html";
 
     }
 
 });
 
-async function loadStudents() {
+// Render Table
+function renderTable(list){
 
-    const snapshot = await getDocs(collection(db, "students"));
+    table.innerHTML="";
 
-    let students = 0;
-    let viewed = 0;
-
-    table.innerHTML = "";
-
-    snapshot.forEach(docSnap => {
-
-        students++;
-
-        const data = docSnap.data();
-
-        let count = 0;
-
-        for (let i = 1; i <= 10; i++) {
-
-            const field = "paper" + String(i).padStart(2, "0");
-
-            if (data[field] === true) count++;
-
-        }
-
-        viewed += count;
+    list.forEach(student=>{
 
         table.innerHTML += `
-            <tr>
-                <td>${docSnap.id}</td>
-                <td>${count}/10</td>
-                <td>********</td>
-                <td>
-                    <button class="action-btn">
-                        Edit
-                    </button>
-                </td>
-            </tr>
+        <tr>
+
+            <td>${student.id}</td>
+
+            <td>${student.viewed}/10</td>
+
+            <td>********</td>
+
+            <td>
+
+                <button
+                    class="action-btn edit-btn"
+                    data-id="${student.id}">
+
+                    ✏️ Edit
+
+                </button>
+
+            </td>
+
+        </tr>
         `;
 
     });
 
-    totalStudents.textContent = students;
-    totalViewed.textContent = viewed;
+}
+
+// Load Students
+async function loadStudents(){
+
+    const snapshot = await getDocs(collection(db,"students"));
+
+    allStudents=[];
+
+    let students=0;
+    let viewed=0;
+
+    snapshot.forEach(docSnap=>{
+
+        students++;
+
+        const data=docSnap.data();
+
+        let count=0;
+
+        for(let i=1;i<=10;i++){
+
+            const field="paper"+String(i).padStart(2,"0");
+
+            if(data[field]===true){
+
+                count++;
+
+            }
+
+        }
+
+        viewed+=count;
+
+        allStudents.push({
+
+            id:docSnap.id,
+            viewed:count,
+            data:data
+
+        });
+
+    });
+
+    renderTable(allStudents);
+
+    totalStudents.textContent=students;
+    totalViewed.textContent=viewed;
+    onlineStudents.textContent=students;
 
 }
 
 loadStudents();
+
+// Live Search
+search.addEventListener("input",()=>{
+
+    const keyword=search.value.toLowerCase();
+
+    const filtered=allStudents.filter(student=>
+
+        student.id.toLowerCase().includes(keyword)
+
+    );
+
+    renderTable(filtered);
+
+});
