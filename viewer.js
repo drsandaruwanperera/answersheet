@@ -7,39 +7,32 @@ if (sessionStorage.getItem("loggedIn") !== "true") {
 
 const params = new URLSearchParams(window.location.search);
 
-const paper = params.get("paper");
+const paper = params.get("paper");      // paper01
 const studentId = params.get("id");
 
 const viewer = document.getElementById("viewer");
 
 async function loadPaper() {
 
-    if (!studentId || !paper) {
+    if (!paper || !studentId) {
         alert("Invalid request.");
-        window.location.href = "index.html";
+        window.location.href = "dashboard.html?id=" + studentId;
         return;
     }
 
-    const ref = doc(db, "students", studentId);
-    const snap = await getDoc(ref);
+    // Get Paper Information
+    const paperRef = doc(db, "papers", paper);
+    const paperSnap = await getDoc(paperRef);
 
-    if (!snap.exists()) {
-        alert("Student not found.");
-        window.location.href = "index.html";
-        return;
-    }
-
-    const data = snap.data();
-
-    const field = "paper" + String(paper).padStart(2, "0") + "Pages";
-
-    const totalPages = data[field];
-
-    if (!totalPages) {
+    if (!paperSnap.exists()) {
         alert("Paper not found.");
         window.location.href = "dashboard.html?id=" + studentId;
         return;
     }
+
+    const paperData = paperSnap.data();
+
+    const totalPages = paperData.pages;
 
     for (let i = 1; i <= totalPages; i++) {
 
@@ -49,7 +42,7 @@ async function loadPaper() {
         page.className = "page";
 
         const img = document.createElement("img");
-        img.src = `papers/paper${paper}/paper${paper}_Page_${no}.jpg`;
+        img.src = `papers/${paper}/${paper}_Page_${no}.jpg`;
 
         const wm = document.createElement("div");
         wm.className = "watermark";
@@ -59,6 +52,7 @@ async function loadPaper() {
         page.appendChild(wm);
 
         viewer.appendChild(page);
+
     }
 
 }
