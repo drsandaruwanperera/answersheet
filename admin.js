@@ -176,9 +176,14 @@ saveStudent.addEventListener("click", async () => {
         mustChangePassword: mustChangePassword
     };
 
-    for (let i = 1; i <= 10; i++) {
-        studentData["paper" + String(i).padStart(2, "0")] = false;
-    }
+ for (let i = 1; i <= 10; i++) {
+
+    const paper = "paper" + String(i).padStart(2, "0");
+
+    studentData[paper] = false;          // Permission
+    studentData[paper + "Viewed"] = false; // Viewed Status
+
+}
 
     try {
         await setDoc(doc(db, "students", id), studentData);
