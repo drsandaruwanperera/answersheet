@@ -109,7 +109,7 @@ async function loadStudents(){
 
         for(let i=1;i<=10;i++){
 
-            const field="paper"+String(i).padStart(2,"0");
+            const field="paper"+String(i).padStart(2,"0")+"Viewed";
 
             if(data[field]===true){
 
@@ -159,6 +159,9 @@ search.addEventListener("input",()=>{
 
 });
 // ==========================
+// Add Student
+// ==========================
+
 saveStudent.addEventListener("click", async () => {
 
     const id = document.getElementById("studentId").value.trim();
@@ -176,16 +179,19 @@ saveStudent.addEventListener("click", async () => {
         mustChangePassword: mustChangePassword
     };
 
- for (let i = 1; i <= 10; i++) {
+    // Default Paper Data
+    for (let i = 1; i <= 10; i++) {
 
-    const paper = "paper" + String(i).padStart(2, "0");
+        const paper = "paper" + String(i).padStart(2, "0");
 
-    studentData[paper] = false;          // Permission
-    studentData[paper + "Viewed"] = false; // Viewed Status
+        studentData[paper] = false;             // Permission
+        studentData[paper + "Viewed"] = false;  // Viewed Status
+        studentData[paper + "Pages"] = 10;      // Default Pages
 
-}
+    }
 
     try {
+
         await setDoc(doc(db, "students", id), studentData);
 
         alert("Student added successfully.");
@@ -199,11 +205,14 @@ saveStudent.addEventListener("click", async () => {
         loadStudents();
 
     } catch (err) {
+
         console.error(err);
         alert("Failed to add student.");
+
     }
 
 });
+
 // ==========================
 // Edit Student
 // ==========================
@@ -222,13 +231,15 @@ table.addEventListener("click", async (e) => {
 
     document.getElementById("editStudentId").value = currentStudent;
     document.getElementById("editPassword").value = data.password || "";
-    document.getElementById("editMustChange").checked = data.mustChangePassword || false;
+    document.getElementById("editMustChange").checked =
+        data.mustChangePassword || false;
 
     for (let i = 1; i <= 10; i++) {
 
         const field = "paper" + String(i).padStart(2, "0");
 
-        document.getElementById(field).checked = data[field] || false;
+        document.getElementById(field).checked =
+            data[field] || false;
 
     }
 
@@ -251,7 +262,6 @@ window.addEventListener("click", (e) => {
     }
 
 });
-
 // ==========================
 // Update Student
 // ==========================
@@ -261,22 +271,27 @@ updateStudent.addEventListener("click", async () => {
     const updateData = {
 
         password: document.getElementById("editPassword").value,
-    mustChangePassword:
-        document.getElementById("editMustChange").checked
+        mustChangePassword:
+            document.getElementById("editMustChange").checked
 
     };
 
+    // Update Paper Permissions Only
     for (let i = 1; i <= 10; i++) {
 
         const field = "paper" + String(i).padStart(2, "0");
 
-        updateData[field] = document.getElementById(field).checked;
+        updateData[field] =
+            document.getElementById(field).checked;
 
     }
 
     try {
 
-        await updateDoc(doc(db, "students", currentStudent), updateData);
+        await updateDoc(
+            doc(db, "students", currentStudent),
+            updateData
+        );
 
         alert("Student updated successfully.");
 
@@ -287,11 +302,13 @@ updateStudent.addEventListener("click", async () => {
     } catch (err) {
 
         console.error(err);
+
         alert("Update failed.");
 
     }
 
 });
+
 // ==========================
 // Delete Student
 // ==========================
@@ -301,7 +318,9 @@ deleteStudent.addEventListener("click", async () => {
     if (!currentStudent) return;
 
     const ok = confirm(
-        "Are you sure you want to delete " + currentStudent + " ?"
+        "Are you sure you want to delete " +
+        currentStudent +
+        " ?"
     );
 
     if (!ok) return;
@@ -344,7 +363,7 @@ document.addEventListener("keydown", (e) => {
 });
 
 // ==========================
-// Close Input Fields
+// Clear Add Student Form
 // ==========================
 
 function clearAddStudentForm() {
@@ -357,17 +376,35 @@ function clearAddStudentForm() {
 
 closeModal.addEventListener("click", clearAddStudentForm);
 
+// Open Add Student Modal
+addStudentBtn.addEventListener("click", () => {
+
+    clearAddStudentForm();
+    studentModal.style.display = "flex";
+
+});
+
+window.addEventListener("click", (e) => {
+
+    if (e.target === studentModal) {
+
+        studentModal.style.display = "none";
+
+    }
+
+});
+
 // ==========================
 // Refresh Dashboard
 // ==========================
 
-async function refreshDashboard(){
+async function refreshDashboard() {
 
     await loadStudents();
 
 }
 
-setInterval(refreshDashboard,30000);
+setInterval(refreshDashboard, 30000);
 
 // ==========================
 // Console
