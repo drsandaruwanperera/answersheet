@@ -181,7 +181,7 @@ saveStudent.addEventListener("click", async () => {
 
 // Read Paper Settings
 const papersSnapshot = await getDocs(collection(db, "papers"));
-
+console.log(await getDocs(collection(db, "papers")));
 const paperSettings = {};
 
 papersSnapshot.forEach((docSnap) => {
