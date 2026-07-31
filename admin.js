@@ -159,28 +159,12 @@ search.addEventListener("input",()=>{
 
 });
 // ==========================
-// Add Student
-// ==========================
-
-addStudentBtn.addEventListener("click", () => {
-    studentModal.style.display = "flex";
-});
-
-closeModal.addEventListener("click", () => {
-    studentModal.style.display = "none";
-});
-
-window.addEventListener("click", (e) => {
-    if (e.target === studentModal) {
-        studentModal.style.display = "none";
-    }
-});
-
 saveStudent.addEventListener("click", async () => {
 
     const id = document.getElementById("studentId").value.trim();
     const password = document.getElementById("studentPassword").value.trim();
-    const mustChangePassword = document.getElementById("mustChange").checked;
+    const mustChangePassword =
+        document.getElementById("mustChange").checked;
 
     if (!id || !password) {
         alert("Please enter Student ID and Password.");
@@ -188,8 +172,8 @@ saveStudent.addEventListener("click", async () => {
     }
 
     const studentData = {
-        password,
-        mustChangePassword
+        password: password,
+        mustChangePassword: mustChangePassword
     };
 
     for (let i = 1; i <= 10; i++) {
@@ -197,7 +181,6 @@ saveStudent.addEventListener("click", async () => {
     }
 
     try {
-
         await setDoc(doc(db, "students", id), studentData);
 
         alert("Student added successfully.");
@@ -211,14 +194,11 @@ saveStudent.addEventListener("click", async () => {
         loadStudents();
 
     } catch (err) {
-
         console.error(err);
         alert("Failed to add student.");
-
     }
 
 });
-
 // ==========================
 // Edit Student
 // ==========================
