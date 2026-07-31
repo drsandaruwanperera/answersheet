@@ -1,4 +1,5 @@
 import { db, doc, getDoc, updateDoc } from "./firebase.js";
+
 // Check login session
 if (sessionStorage.getItem("loggedIn") !== "true") {
     window.location.href = "index.html";
@@ -16,12 +17,12 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
     if (confirm("Are you sure you want to sign out?")) {
 
         sessionStorage.clear();
-
         window.location.href = "index.html";
 
     }
 
 });
+
 // Load Dashboard Information
 async function loadDashboard() {
 
@@ -44,14 +45,24 @@ async function loadDashboard() {
 
     for (let i = 1; i <= 10; i++) {
 
-        const field = "paper" + String(i).padStart(2, "0");
-        const btn = document.getElementById(field);
+        const permission = "paper" + String(i).padStart(2, "0");
+        const viewedField = permission + "Viewed";
 
-        if (data[field] === true) {
+        const btn = document.getElementById(permission);
+
+        // No permission
+        if (data[permission] !== true) {
+            btn.style.display = "none";
+            continue;
+        }
+
+        btn.style.display = "block";
+
+        if (data[viewedField] === true) {
 
             viewed++;
 
-            btn.classList.add("viewed");
+            btn.className = "viewed";
 
             btn.innerHTML = `
                 📘 Model Paper ${String(i).padStart(2, "0")}
@@ -60,7 +71,7 @@ async function loadDashboard() {
 
         } else {
 
-            btn.classList.add("available");
+            btn.className = "available";
 
             btn.innerHTML = `
                 📘 Model Paper ${String(i).padStart(2, "0")}
@@ -97,19 +108,25 @@ async function openPaper(no) {
 
     const data = snap.data();
 
-    const field = "paper" + String(no).padStart(2, "0");
+    const permission = "paper" + String(no).padStart(2, "0");
+    const viewedField = permission + "Viewed";
 
-    if (data[field] === true) {
+    if (data[permission] !== true) {
+        alert("You do not have permission to view this paper.");
+        return;
+    }
+
+    if (data[viewedField] === true) {
         alert("This Model Paper has already been viewed.");
         return;
     }
 
     await updateDoc(ref, {
-        [field]: true
+        [viewedField]: true
     });
 
     window.location.href =
-        "viewer.html?paper=" + no + "&id=" + studentId;
+        "viewer.html?paper=" + permission + "&id=" + studentId;
 
 }
 
