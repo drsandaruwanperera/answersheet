@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import Students</title>
+
+    <link rel="stylesheet" href="import-students.css">
+
+    <!-- SheetJS -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>📥 Import Students</h2>
+
+    <p>
+        Excel file එකේ columns දෙකක් විතරක් තියෙන්න ඕන.
+    </p>
+
+    <table class="sample">
+        <tr>
+            <th>Student ID</th>
+            <th>Password</th>
+        </tr>
+
+        <tr>
+            <td>001</td>
+            <td>1234</td>
+        </tr>
+
+        <tr>
+            <td>002</td>
+            <td>5678</td>
+        </tr>
+    </table>
+
+    <br>
+
+    <input
+        type="file"
+        id="excelFile"
+        accept=".xlsx,.xls">
+
+    <br><br>
+
+    <button id="importBtn">
+        Import Students
+    </button>
+
+    <br><br>
+
+    <div id="result"></div>
+
+    <br>
+
+    <button onclick="location.href='admin.html'">
+        ← Back
+    </button>
+
+</div>
+
+<script type="module" src="import-students.js"></script>
+
+</body>
+</html>
