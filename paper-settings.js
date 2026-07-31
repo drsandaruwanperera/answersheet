@@ -3,15 +3,30 @@ import {
     collection,
     getDocs,
     doc,
-    updateDoc
+    setDoc
 } from "./firebase.js";
 
 const table = document.getElementById("paperTable");
 
-console.log("db =", db);
-console.log("collection =", collection);
+async function loadPapers() {
 
-    // paper01, paper02 ... paper10 ලෙස sort කිරීම
+    table.innerHTML = "";
+
+    const snapshot = await getDocs(collection(db, "papers"));
+
+    const papers = [];
+
+    snapshot.forEach(docSnap => {
+
+        papers.push({
+
+            id: docSnap.id,
+            ...docSnap.data()
+
+        });
+
+    });
+
     papers.sort((a, b) => a.id.localeCompare(b.id));
 
     papers.forEach(paper => {
@@ -37,18 +52,32 @@ console.log("collection =", collection);
             </td>
 
             <td>
+                <label>
+                    <input
+                        type="checkbox"
+                        id="default-${paper.id}"
+                        ${paper.defaultAvailable ? "checked" : ""}>
+                    Default
+                </label>
+            </td>
+
+            <td>
+
                 <button
                     class="saveBtn"
                     data-id="${paper.id}">
+
                     Save
+
                 </button>
+
             </td>
+
         `;
 
         table.appendChild(tr);
 
     });
-
     document.querySelectorAll(".saveBtn").forEach(btn => {
 
         btn.addEventListener("click", async () => {
@@ -61,29 +90,42 @@ console.log("collection =", collection);
             const pages =
                 parseInt(document.getElementById(`pages-${id}`).value);
 
+            const defaultAvailable =
+                document.getElementById(`default-${id}`).checked;
+
             if (!title) {
+
                 alert("Title cannot be empty.");
                 return;
+
             }
 
             if (isNaN(pages) || pages < 1) {
+
                 alert("Pages must be at least 1.");
                 return;
+
             }
 
             try {
 
-                await updateDoc(doc(db, "papers", id), {
-                    title,
-                    pages
-                });
+                await setDoc(
+                    doc(db, "papers", id),
+                    {
+                        title: title,
+                        pages: pages,
+                        defaultAvailable: defaultAvailable
+                    },
+                    { merge: true }
+                );
 
-                alert(`${id} updated successfully.`);
+                alert(id + " saved successfully.");
 
             } catch (err) {
 
                 console.error(err);
-                alert("Update failed.");
+
+                alert("Save failed.");
 
             }
 
@@ -92,5 +134,38 @@ console.log("collection =", collection);
     });
 
 }
+// ==========================
+// Create Missing Papers
+// ==========================
 
-loadPapers();
+async function createMissingPapers() {
+
+    for (let i = 1; i <= 10; i++) {
+
+        const id = "paper" + String(i).padStart(2, "0");
+
+        await setDoc(
+            doc(db, "papers", id),
+            {
+                title: "Model Paper " + String(i).padStart(2, "0"),
+                pages: 10,
+                defaultAvailable: i === 1
+            },
+            { merge: true }
+        );
+
+    }
+
+}
+
+// ==========================
+// Initialize
+// ==========================
+
+(async () => {
+
+    await createMissingPapers();
+
+    await loadPapers();
+
+})();
