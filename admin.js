@@ -180,7 +180,7 @@ saveStudent.addEventListener("click", async () => {
 
     const id = document.getElementById("studentId").value.trim();
     const password = document.getElementById("studentPassword").value.trim();
-    const mustChange = document.getElementById("mustChange").checked;
+    const mustChangePassword = document.getElementById("mustChange").checked;
 
     if (!id || !password) {
         alert("Please enter Student ID and Password.");
