@@ -17,18 +17,16 @@ async function loadPapers() {
 
         const ref = doc(db, "papers", id);
 
-        const snap = await getDoc(ref);
+        let snap = await getDoc(ref);
 
         let data;
 
         if (!snap.exists()) {
 
             data = {
-
                 title: "Model Paper " + String(i).padStart(2, "0"),
                 pages: 10,
                 defaultAvailable: i === 1
-
             };
 
             await setDoc(ref, data);
@@ -39,63 +37,49 @@ async function loadPapers() {
 
         }
 
-        const tr = document.createElement("tr");
+        const row = document.createElement("tr");
 
-        tr.innerHTML = `
+        row.innerHTML = `
+            <td>${id}</td>
 
-        <td>${id}</td>
+            <td>
+                <input
+                    id="title-${id}"
+                    value="${data.title}">
+            </td>
 
-        <td>
+            <td>
+                <input
+                    type="number"
+                    min="1"
+                    id="pages-${id}"
+                    value="${data.pages}">
+            </td>
 
-            <input
-                type="text"
-                id="title-${id}"
-                value="${data.title}">
+            <td>
+                <input
+                    type="checkbox"
+                    id="default-${id}"
+                    ${data.defaultAvailable ? "checked" : ""}>
+            </td>
 
-        </td>
+            <td>
 
-        <td>
+                <button
+                    class="saveBtn"
+                    data-id="${id}">
 
-            <input
-                type="number"
-                min="1"
-                id="pages-${id}"
-                value="${data.pages}">
+                    Save
 
-        </td>
+                </button>
 
-        <td>
-
-            <input
-                type="checkbox"
-                id="default-${id}"
-                ${data.defaultAvailable ? "checked" : ""}>
-
-        </td>
-
-        <td>
-
-            <button
-                class="saveBtn"
-                data-id="${id}">
-
-                Save
-
-            </button>
-
-        </td>
-
+            </td>
         `;
 
-        table.appendChild(tr);
+        table.appendChild(row);
 
     }
-        }
-
-    // ==========================
-    // Save Buttons
-    // ==========================
-
+        // Save button events
     document.querySelectorAll(".saveBtn").forEach(btn => {
 
         btn.addEventListener("click", async () => {
@@ -116,58 +100,14 @@ async function loadPapers() {
 
             if (!title) {
 
-                alert("Please enter a title.");
+                alert("Please enter a paper title.");
                 return;
 
             }
 
             if (isNaN(pages) || pages < 1) {
 
-                alert("Pages must be greater than 0.");
-                return;
-
-            }
-
-            await setDoc(
-                doc(db, "papers", id),
-                {
-                    title: title,
-                    pages: pages,
-                    defaultAvailable: defaultAvailable
-                },
-                { merge: true }
-            );
-
-            alert(id + " updated successfully.");
-
-        });
-
-    });
-    document.querySelectorAll(".saveBtn").forEach(btn => {
-
-        btn.addEventListener("click", async () => {
-
-            const id = btn.dataset.id;
-
-            const title =
-                document.getElementById(`title-${id}`).value.trim();
-
-            const pages =
-                parseInt(document.getElementById(`pages-${id}`).value);
-
-            const defaultAvailable =
-                document.getElementById(`default-${id}`).checked;
-
-            if (!title) {
-
-                alert("Please enter paper title.");
-                return;
-
-            }
-
-            if (isNaN(pages) || pages < 1) {
-
-                alert("Invalid page count.");
+                alert("Pages must be at least 1.");
                 return;
 
             }
@@ -199,5 +139,63 @@ async function loadPapers() {
     });
 
 }
+    // Save button events
+    document.querySelectorAll(".saveBtn").forEach(btn => {
 
-loadPapers();
+        btn.addEventListener("click", async () => {
+
+            const id = btn.dataset.id;
+
+            const title = document
+                .getElementById(`title-${id}`)
+                .value
+                .trim();
+
+            const pages = parseInt(
+                document.getElementById(`pages-${id}`).value
+            );
+
+            const defaultAvailable =
+                document.getElementById(`default-${id}`).checked;
+
+            if (!title) {
+
+                alert("Please enter a paper title.");
+                return;
+
+            }
+
+            if (isNaN(pages) || pages < 1) {
+
+                alert("Pages must be at least 1.");
+                return;
+
+            }
+
+            try {
+
+                await setDoc(
+                    doc(db, "papers", id),
+                    {
+                        title: title,
+                        pages: pages,
+                        defaultAvailable: defaultAvailable
+                    },
+                    { merge: true }
+                );
+
+                alert(id + " saved successfully.");
+
+            } catch (err) {
+
+                console.error(err);
+
+                alert("Failed to save paper.");
+
+            }
+
+        });
+
+    });
+
+}
