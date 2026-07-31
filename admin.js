@@ -276,7 +276,8 @@ updateStudent.addEventListener("click", async () => {
     const updateData = {
 
         password: document.getElementById("editPassword").value,
-        mustChange: document.getElementById("editMustChange").checked
+    mustChangePassword:
+        document.getElementById("editMustChange").checked
 
     };
 
