@@ -6,11 +6,6 @@ import {
     collection,
     setDoc
 } from "./firebase.js";
-async function importStudents() {
-
-    console.log("Import Started");
-
-    const file = fileInput.files[0];
 
 const fileInput = document.getElementById("excelFile");
 const importBtn = document.getElementById("importBtn");
