@@ -8,20 +8,8 @@ import {
 
 const table = document.getElementById("paperTable");
 
-async function loadPapers() {
-
-    table.innerHTML = "";
-
-    const snapshot = await getDocs(collection(db, "papers"));
-
-    const papers = [];
-
-    snapshot.forEach(docSnap => {
-        papers.push({
-            id: docSnap.id,
-            ...docSnap.data()
-        });
-    });
+console.log("db =", db);
+console.log("collection =", collection);
 
     // paper01, paper02 ... paper10 ලෙස sort කිරීම
     papers.sort((a, b) => a.id.localeCompare(b.id));
