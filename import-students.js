@@ -34,22 +34,37 @@ async function importStudents() {
 
             const sheet = workbook.Sheets[workbook.SheetNames[0]];
 
-            const rows = XLSX.utils.sheet_to_json(sheet);
+            const rows = XLSX.utils.sheet_to_json(sheet, {
+    header: 1,
+    defval: ""
+});
 
-            if (rows.length === 0) {
-                alert("Excel file is empty.");
-                return;
-            }
+if (rows.length < 2) {
+    alert("Excel file is empty.");
+    return;
+}
 
-            let imported = 0;
-            let updated = 0;
-            let failed = 0;
+let imported = 0;
+let updated = 0;
+let failed = 0;
 
-            for (const row of rows) {
+// Header row
+const headers = rows[0].map(h => String(h).trim().toLowerCase());
 
-                const studentId = String(row["Student ID"] || "").trim();
-                const password = String(row["Password"] || "").trim();
+const studentIdIndex = headers.indexOf("student id");
+const passwordIndex = headers.indexOf("password");
 
+if (studentIdIndex === -1 || passwordIndex === -1) {
+    alert("Excel file must contain Student ID and Password columns.");
+    return;
+}
+
+for (let r = 1; r < rows.length; r++) {
+
+    const row = rows[r];
+
+    const studentId = String(row[studentIdIndex] || "").trim();
+    const password = String(row[passwordIndex] || "").trim();
                 if (!studentId || !password) {
                     failed++;
                     continue;
