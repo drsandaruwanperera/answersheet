@@ -132,3 +132,71 @@ search.addEventListener("input",()=>{
     renderTable(filtered);
 
 });
+const doc = firebase.doc;
+const setDoc = firebase.setDoc;
+// =========================
+// Add Student Modal
+// =========================
+
+const addStudentBtn = document.getElementById("addStudentBtn");
+const studentModal = document.getElementById("studentModal");
+const closeModal = document.getElementById("closeModal");
+const saveStudent = document.getElementById("saveStudent");
+
+addStudentBtn.addEventListener("click", () => {
+    studentModal.style.display = "flex";
+});
+
+closeModal.addEventListener("click", () => {
+    studentModal.style.display = "none";
+});
+
+window.addEventListener("click", (e) => {
+    if (e.target === studentModal) {
+        studentModal.style.display = "none";
+    }
+});
+
+saveStudent.addEventListener("click", async () => {
+
+    const id = document.getElementById("studentId").value.trim();
+    const password = document.getElementById("studentPassword").value.trim();
+    const mustChange = document.getElementById("mustChange").checked;
+
+    if (!id || !password) {
+        alert("Please enter Student ID and Password.");
+        return;
+    }
+
+    const studentData = {
+        password: password,
+        mustChange: mustChange
+    };
+
+    // Default paper permissions
+    for (let i = 1; i <= 10; i++) {
+        studentData["paper" + String(i).padStart(2, "0")] = false;
+    }
+
+    try {
+
+        await setDoc(doc(db, "students", id), studentData);
+
+        alert("Student added successfully.");
+
+        document.getElementById("studentId").value = "";
+        document.getElementById("studentPassword").value = "";
+        document.getElementById("mustChange").checked = false;
+
+        studentModal.style.display = "none";
+
+        loadStudents();
+
+    } catch (error) {
+
+        console.error(error);
+        alert("Failed to add student.");
+
+    }
+
+});
