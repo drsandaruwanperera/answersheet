@@ -12,24 +12,42 @@ async function loadPapers() {
 
     table.innerHTML = "";
 
-    const snapshot = await getDocs(collection(db, "papers"));
-
     const papers = [];
 
-    snapshot.forEach(docSnap => {
+for (let i = 1; i <= 10; i++) {
+
+    const id = "paper" + String(i).padStart(2, "0");
+
+    const paperRef = doc(db, "papers", id);
+    const paperSnap = await getDoc(paperRef);
+
+    if (paperSnap.exists()) {
 
         papers.push({
-
-            id: docSnap.id,
-            ...docSnap.data()
-
+            id: id,
+            ...paperSnap.data()
         });
 
-    });
+    } else {
 
-    papers.sort((a, b) => a.id.localeCompare(b.id));
+        await setDoc(paperRef, {
+            title: "Model Paper " + String(i).padStart(2, "0"),
+            pages: 10,
+            defaultAvailable: i === 1
+        });
 
-    papers.forEach(paper => {
+        papers.push({
+            id: id,
+            title: "Model Paper " + String(i).padStart(2, "0"),
+            pages: 10,
+            defaultAvailable: i === 1
+        });
+
+    }
+
+}
+
+papers.forEach(paper => {
 
         const tr = document.createElement("tr");
 
