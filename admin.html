@@ -1,25 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Admin Dashboard</title>
+    <title>Student Assessment Portal - Admin</title>
 
     <link rel="stylesheet" href="admin.css">
-
 </head>
 <body>
 
-<div class="container">
+<div class="sidebar">
+
+    <h2>👨🏻‍💻 Admin</h2>
+
+    <ul>
+        <li class="active">📊 Dashboard</li>
+        <li>👨‍🎓 Students</li>
+        <li>📚 Papers</li>
+        <li>📈 Reports</li>
+        <li>⚙️ Settings</li>
+        <li id="logoutBtn">🚪 Logout</li>
+    </ul>
+
+</div>
+
+<div class="main">
 
     <header>
-        <h1>👨🏻‍💻 Admin Dashboard</h1>
 
-        <button id="logoutBtn">
-            🚪 Logout
-        </button>
+        <h1>Student Assessment Portal</h1>
+
     </header>
 
     <div class="cards">
@@ -30,8 +40,13 @@
         </div>
 
         <div class="card">
-            <h3>Model Papers Viewed</h3>
+            <h3>Total Paper Views</h3>
             <h2 id="totalViewed">0</h2>
+        </div>
+
+        <div class="card">
+            <h3>Students</h3>
+            <h2 id="onlineStudents">0</h2>
         </div>
 
     </div>
@@ -39,9 +54,9 @@
     <div class="toolbar">
 
         <input
-            type="text"
             id="search"
-            placeholder="Search Student ID">
+            type="text"
+            placeholder="🔍 Search Student ID">
 
         <button id="addStudentBtn">
             ➕ Add Student
@@ -52,12 +67,16 @@
     <table>
 
         <thead>
-            <tr>
-                <th>Student ID</th>
-                <th>Viewed</th>
-                <th>Password</th>
-                <th>Action</th>
-            </tr>
+
+        <tr>
+
+            <th>Student ID</th>
+            <th>Viewed</th>
+            <th>Password</th>
+            <th>Action</th>
+
+        </tr>
+
         </thead>
 
         <tbody id="studentTable">
