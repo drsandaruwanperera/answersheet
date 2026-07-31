@@ -6,6 +6,8 @@ import {
 } from "./firebase.js";
 
 const table = document.getElementById("paperTable");
+console.log("Table:", table);
+console.log("loadPapers started");
 
 async function loadPapers() {
 
