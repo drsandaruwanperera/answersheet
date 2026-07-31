@@ -11,88 +11,136 @@ async function loadPapers() {
 
     table.innerHTML = "";
 
-    const papers = [];
+    for (let i = 1; i <= 10; i++) {
 
-for (let i = 1; i <= 10; i++) {
+        const id = "paper" + String(i).padStart(2, "0");
 
-    const id = "paper" + String(i).padStart(2, "0");
+        const ref = doc(db, "papers", id);
 
-    const paperRef = doc(db, "papers", id);
-    const paperSnap = await getDoc(paperRef);
+        const snap = await getDoc(ref);
 
-    if (paperSnap.exists()) {
+        let data;
 
-        papers.push({
-            id: id,
-            ...paperSnap.data()
-        });
+        if (!snap.exists()) {
 
-    } else {
+            data = {
 
-        await setDoc(paperRef, {
-            title: "Model Paper " + String(i).padStart(2, "0"),
-            pages: 10,
-            defaultAvailable: i === 1
-        });
+                title: "Model Paper " + String(i).padStart(2, "0"),
+                pages: 10,
+                defaultAvailable: i === 1
 
-        papers.push({
-            id: id,
-            title: "Model Paper " + String(i).padStart(2, "0"),
-            pages: 10,
-            defaultAvailable: i === 1
-        });
+            };
 
-    }
+            await setDoc(ref, data);
 
-}
+        } else {
 
-papers.forEach(paper => {
+            data = snap.data();
+
+        }
 
         const tr = document.createElement("tr");
 
         tr.innerHTML = `
-            <td>${paper.id}</td>
 
-            <td>
-                <input
-                    type="text"
-                    id="title-${paper.id}"
-                    value="${paper.title || ""}">
-            </td>
+        <td>${id}</td>
 
-            <td>
-                <input
-                    type="number"
-                    min="1"
-                    id="pages-${paper.id}"
-                    value="${paper.pages || 1}">
-            </td>
+        <td>
 
-            <td>
-                <label>
-                    <input
-                        type="checkbox"
-                        id="default-${paper.id}"
-                        ${paper.defaultAvailable ? "checked" : ""}>
-                    Default
-                </label>
-            </td>
+            <input
+                type="text"
+                id="title-${id}"
+                value="${data.title}">
 
-            <td>
+        </td>
 
-                <button
-                    class="saveBtn"
-                    data-id="${paper.id}">
+        <td>
 
-                    Save
+            <input
+                type="number"
+                min="1"
+                id="pages-${id}"
+                value="${data.pages}">
 
-                </button>
+        </td>
 
-            </td>
+        <td>
+
+            <input
+                type="checkbox"
+                id="default-${id}"
+                ${data.defaultAvailable ? "checked" : ""}>
+
+        </td>
+
+        <td>
+
+            <button
+                class="saveBtn"
+                data-id="${id}">
+
+                Save
+
+            </button>
+
+        </td>
 
         `;
 
         table.appendChild(tr);
+
+    }
+        }
+
+    // ==========================
+    // Save Buttons
+    // ==========================
+
+    document.querySelectorAll(".saveBtn").forEach(btn => {
+
+        btn.addEventListener("click", async () => {
+
+            const id = btn.dataset.id;
+
+            const title = document
+                .getElementById(`title-${id}`)
+                .value
+                .trim();
+
+            const pages = parseInt(
+                document.getElementById(`pages-${id}`).value
+            );
+
+            const defaultAvailable =
+                document.getElementById(`default-${id}`).checked;
+
+            if (!title) {
+
+                alert("Please enter a title.");
+                return;
+
+            }
+
+            if (isNaN(pages) || pages < 1) {
+
+                alert("Pages must be greater than 0.");
+                return;
+
+            }
+
+            await setDoc(
+                doc(db, "papers", id),
+                {
+                    title: title,
+                    pages: pages,
+                    defaultAvailable: defaultAvailable
+                },
+                { merge: true }
+            );
+
+            alert(id + " updated successfully.");
+
+        });
 
     });
     document.querySelectorAll(".saveBtn").forEach(btn => {
@@ -112,14 +160,14 @@ papers.forEach(paper => {
 
             if (!title) {
 
-                alert("Title cannot be empty.");
+                alert("Please enter paper title.");
                 return;
 
             }
 
             if (isNaN(pages) || pages < 1) {
 
-                alert("Pages must be at least 1.");
+                alert("Invalid page count.");
                 return;
 
             }
@@ -142,7 +190,7 @@ papers.forEach(paper => {
 
                 console.error(err);
 
-                alert("Save failed.");
+                alert("Failed to save paper.");
 
             }
 
@@ -151,38 +199,5 @@ papers.forEach(paper => {
     });
 
 }
-// ==========================
-// Create Missing Papers
-// ==========================
 
-async function createMissingPapers() {
-
-    for (let i = 1; i <= 10; i++) {
-
-        const id = "paper" + String(i).padStart(2, "0");
-
-        await setDoc(
-            doc(db, "papers", id),
-            {
-                title: "Model Paper " + String(i).padStart(2, "0"),
-                pages: 10,
-                defaultAvailable: i === 1
-            },
-            { merge: true }
-        );
-
-    }
-
-}
-
-// ==========================
-// Initialize
-// ==========================
-
-(async () => {
-
-    await createMissingPapers();
-
-    await loadPapers();
-
-})();
+loadPapers();
