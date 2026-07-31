@@ -3,6 +3,11 @@ import * as firebase from "./firebase.js";
 const db = firebase.db;
 const collection = firebase.collection;
 const getDocs = firebase.getDocs;
+const doc = firebase.doc;
+const getDoc = firebase.getDoc;
+const setDoc = firebase.setDoc;
+const updateDoc = firebase.updateDoc;
+const deleteDoc = firebase.deleteDoc;
 
 // Protect Admin Page
 if (sessionStorage.getItem("adminLoggedIn") !== "true") {
@@ -16,8 +21,18 @@ const totalViewed = document.getElementById("totalViewed");
 const onlineStudents = document.getElementById("onlineStudents");
 const search = document.getElementById("search");
 
-// Student list
+const addStudentBtn = document.getElementById("addStudentBtn");
+const studentModal = document.getElementById("studentModal");
+const closeModal = document.getElementById("closeModal");
+const saveStudent = document.getElementById("saveStudent");
+
+const editModal = document.getElementById("editModal");
+const closeEdit = document.getElementById("closeEdit");
+const updateStudent = document.getElementById("updateStudent");
+const deleteStudent = document.getElementById("deleteStudent");
+
 let allStudents = [];
+let currentStudent = "";
 
 // Logout
 document.getElementById("logoutBtn").addEventListener("click", () => {
@@ -31,14 +46,18 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
 
 });
 
+// ==========================
 // Render Table
+// ==========================
+
 function renderTable(list){
 
     table.innerHTML="";
 
     list.forEach(student=>{
 
-        table.innerHTML += `
+        table.innerHTML+=`
+
         <tr>
 
             <td>${student.id}</td>
@@ -60,13 +79,17 @@ function renderTable(list){
             </td>
 
         </tr>
+
         `;
 
     });
 
 }
 
+// ==========================
 // Load Students
+// ==========================
+
 async function loadStudents(){
 
     const snapshot = await getDocs(collection(db,"students"));
@@ -118,7 +141,10 @@ async function loadStudents(){
 
 loadStudents();
 
-// Live Search
+// ==========================
+// Search
+// ==========================
+
 search.addEventListener("input",()=>{
 
     const keyword=search.value.toLowerCase();
@@ -132,16 +158,9 @@ search.addEventListener("input",()=>{
     renderTable(filtered);
 
 });
-const doc = firebase.doc;
-const setDoc = firebase.setDoc;
-// =========================
-// Add Student Modal
-// =========================
-
-const addStudentBtn = document.getElementById("addStudentBtn");
-const studentModal = document.getElementById("studentModal");
-const closeModal = document.getElementById("closeModal");
-const saveStudent = document.getElementById("saveStudent");
+// ==========================
+// Add Student
+// ==========================
 
 addStudentBtn.addEventListener("click", () => {
     studentModal.style.display = "flex";
@@ -169,11 +188,10 @@ saveStudent.addEventListener("click", async () => {
     }
 
     const studentData = {
-        password: password,
-        mustChange: mustChange
+        password,
+        mustChange
     };
 
-    // Default paper permissions
     for (let i = 1; i <= 10; i++) {
         studentData["paper" + String(i).padStart(2, "0")] = false;
     }
@@ -192,11 +210,181 @@ saveStudent.addEventListener("click", async () => {
 
         loadStudents();
 
-    } catch (error) {
+    } catch (err) {
 
-        console.error(error);
+        console.error(err);
         alert("Failed to add student.");
 
     }
 
 });
+
+// ==========================
+// Edit Student
+// ==========================
+
+table.addEventListener("click", async (e) => {
+
+    if (!e.target.classList.contains("edit-btn")) return;
+
+    currentStudent = e.target.dataset.id;
+
+    const snap = await getDoc(doc(db, "students", currentStudent));
+
+    if (!snap.exists()) return;
+
+    const data = snap.data();
+
+    document.getElementById("editStudentId").value = currentStudent;
+    document.getElementById("editPassword").value = data.password || "";
+    document.getElementById("editMustChange").checked = data.mustChange || false;
+
+    for (let i = 1; i <= 10; i++) {
+
+        const field = "paper" + String(i).padStart(2, "0");
+
+        document.getElementById(field).checked = data[field] || false;
+
+    }
+
+    editModal.style.display = "flex";
+
+});
+
+closeEdit.addEventListener("click", () => {
+
+    editModal.style.display = "none";
+
+});
+
+window.addEventListener("click", (e) => {
+
+    if (e.target === editModal) {
+
+        editModal.style.display = "none";
+
+    }
+
+});
+
+// ==========================
+// Update Student
+// ==========================
+
+updateStudent.addEventListener("click", async () => {
+
+    const updateData = {
+
+        password: document.getElementById("editPassword").value,
+        mustChange: document.getElementById("editMustChange").checked
+
+    };
+
+    for (let i = 1; i <= 10; i++) {
+
+        const field = "paper" + String(i).padStart(2, "0");
+
+        updateData[field] = document.getElementById(field).checked;
+
+    }
+
+    try {
+
+        await updateDoc(doc(db, "students", currentStudent), updateData);
+
+        alert("Student updated successfully.");
+
+        editModal.style.display = "none";
+
+        loadStudents();
+
+    } catch (err) {
+
+        console.error(err);
+        alert("Update failed.");
+
+    }
+
+});
+// ==========================
+// Delete Student
+// ==========================
+
+deleteStudent.addEventListener("click", async () => {
+
+    if (!currentStudent) return;
+
+    const ok = confirm(
+        "Are you sure you want to delete " + currentStudent + " ?"
+    );
+
+    if (!ok) return;
+
+    try {
+
+        await deleteDoc(doc(db, "students", currentStudent));
+
+        alert("Student deleted successfully.");
+
+        editModal.style.display = "none";
+
+        currentStudent = "";
+
+        loadStudents();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Delete failed.");
+
+    }
+
+});
+
+// ==========================
+// ESC Key Close
+// ==========================
+
+document.addEventListener("keydown", (e) => {
+
+    if (e.key === "Escape") {
+
+        studentModal.style.display = "none";
+        editModal.style.display = "none";
+
+    }
+
+});
+
+// ==========================
+// Close Input Fields
+// ==========================
+
+function clearAddStudentForm() {
+
+    document.getElementById("studentId").value = "";
+    document.getElementById("studentPassword").value = "";
+    document.getElementById("mustChange").checked = false;
+
+}
+
+closeModal.addEventListener("click", clearAddStudentForm);
+
+// ==========================
+// Refresh Dashboard
+// ==========================
+
+async function refreshDashboard(){
+
+    await loadStudents();
+
+}
+
+setInterval(refreshDashboard,30000);
+
+// ==========================
+// Console
+// ==========================
+
+console.log("Admin Panel Loaded Successfully");
