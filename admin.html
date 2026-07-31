@@ -1,94 +1,255 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Student Assessment Portal - Admin</title>
 
     <link rel="stylesheet" href="admin.css">
+
 </head>
+
 <body>
 
-<div class="sidebar">
+    <!-- Sidebar -->
 
-    <h2>👨🏻‍💻 Admin</h2>
+    <div class="sidebar">
 
-    <ul>
-        <li class="active">📊 Dashboard</li>
-        <li>👨‍🎓 Students</li>
-        <li>📚 Papers</li>
-        <li>📈 Reports</li>
-        <li>⚙️ Settings</li>
-        <li id="logoutBtn">🚪 Logout</li>
-    </ul>
+        <h2>👨🏻‍💻 Admin</h2>
 
-</div>
+        <ul>
 
-<div class="main">
+            <li class="active">📊 Dashboard</li>
 
-    <header>
+            <li>👨‍🎓 Students</li>
 
-        <h1>Student Assessment Portal</h1>
+            <li>📚 Papers</li>
 
-    </header>
+            <li>📈 Reports</li>
 
-    <div class="cards">
+            <li>⚙️ Settings</li>
 
-        <div class="card">
-            <h3>Total Students</h3>
-            <h2 id="totalStudents">0</h2>
+            <li id="logoutBtn">🚪 Logout</li>
+
+        </ul>
+
+    </div>
+
+    <!-- Main -->
+
+    <div class="main">
+
+        <header>
+
+            <h1>Student Assessment Portal</h1>
+
+        </header>
+
+        <!-- Dashboard Cards -->
+
+        <div class="cards">
+
+            <div class="card">
+
+                <h3>Total Students</h3>
+
+                <h2 id="totalStudents">0</h2>
+
+            </div>
+
+            <div class="card">
+
+                <h3>Total Paper Views</h3>
+
+                <h2 id="totalViewed">0</h2>
+
+            </div>
+
+            <div class="card">
+
+                <h3>Students</h3>
+
+                <h2 id="onlineStudents">0</h2>
+
+            </div>
+
         </div>
 
-        <div class="card">
-            <h3>Total Paper Views</h3>
-            <h2 id="totalViewed">0</h2>
+        <!-- Toolbar -->
+
+        <div class="toolbar">
+
+            <input
+                type="text"
+                id="search"
+                placeholder="🔍 Search Student ID">
+
+            <button id="addStudentBtn">
+
+                ➕ Add Student
+
+            </button>
+
         </div>
 
-        <div class="card">
-            <h3>Students</h3>
-            <h2 id="onlineStudents">0</h2>
+        <!-- Student Table -->
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Student ID</th>
+
+                    <th>Viewed</th>
+
+                    <th>Password</th>
+
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="studentTable">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- Add Student Modal -->
+    <!-- ========================= -->
+
+    <div id="studentModal" class="modal">
+
+        <div class="modal-content">
+
+            <h2>Add Student</h2>
+
+            <input
+                type="text"
+                id="studentId"
+                placeholder="Student ID">
+
+            <input
+                type="password"
+                id="studentPassword"
+                placeholder="Password">
+
+            <label class="checkbox">
+
+                <input
+                    type="checkbox"
+                    id="mustChange">
+
+                Force password change on first login
+
+            </label>
+
+            <div class="modal-buttons">
+
+                <button id="saveStudent">
+
+                    💾 Save
+
+                </button>
+
+                <button id="closeModal">
+
+                    ❌ Cancel
+
+                </button>
+
+            </div>
+
         </div>
 
     </div>
 
-    <div class="toolbar">
+    <!-- ========================= -->
+    <!-- Edit Student Modal -->
+    <!-- ========================= -->
 
-        <input
-            id="search"
-            type="text"
-            placeholder="🔍 Search Student ID">
+    <div id="editModal" class="modal">
 
-        <button id="addStudentBtn">
-            ➕ Add Student
-        </button>
+        <div class="modal-content">
+
+            <h2>Edit Student</h2>
+
+            <input
+                type="text"
+                id="editStudentId"
+                readonly>
+
+            <input
+                type="password"
+                id="editPassword"
+                placeholder="New Password">
+
+            <label class="checkbox">
+
+                <input
+                    type="checkbox"
+                    id="editMustChange">
+
+                Force password change
+
+            </label>
+
+            <h3>Paper Permissions</h3>
+
+            <div class="papers">
+
+                <label><input type="checkbox" id="paper01"> Paper 01</label>
+                <label><input type="checkbox" id="paper02"> Paper 02</label>
+                <label><input type="checkbox" id="paper03"> Paper 03</label>
+                <label><input type="checkbox" id="paper04"> Paper 04</label>
+                <label><input type="checkbox" id="paper05"> Paper 05</label>
+                <label><input type="checkbox" id="paper06"> Paper 06</label>
+                <label><input type="checkbox" id="paper07"> Paper 07</label>
+                <label><input type="checkbox" id="paper08"> Paper 08</label>
+                <label><input type="checkbox" id="paper09"> Paper 09</label>
+                <label><input type="checkbox" id="paper10"> Paper 10</label>
+
+            </div>
+
+            <div class="modal-buttons">
+
+                <button id="updateStudent">
+
+                    💾 Update
+
+                </button>
+
+                <button id="deleteStudent">
+
+                    🗑 Delete
+
+                </button>
+
+                <button id="closeEdit">
+
+                    ❌ Close
+
+                </button>
+
+            </div>
+
+        </div>
 
     </div>
 
-    <table>
+    <script src="session.js"></script>
 
-        <thead>
-
-        <tr>
-
-            <th>Student ID</th>
-            <th>Viewed</th>
-            <th>Password</th>
-            <th>Action</th>
-
-        </tr>
-
-        </thead>
-
-        <tbody id="studentTable">
-
-        </tbody>
-
-    </table>
-
-</div>
-
-<script src="session.js"></script>
-<script type="module" src="admin.js"></script>
+    <script type="module" src="admin.js"></script>
 
 </body>
+
 </html>
