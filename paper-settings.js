@@ -18,7 +18,8 @@ async function loadPapers() {
         const id = "paper" + String(i).padStart(2, "0");
 
         const ref = doc(db, "papers", id);
-
+        console.log("Loading:", id);
+        
         let snap = await getDoc(ref);
 
         let data;
