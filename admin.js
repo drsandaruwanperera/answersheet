@@ -179,16 +179,36 @@ saveStudent.addEventListener("click", async () => {
         mustChangePassword: mustChangePassword
     };
 
-    // Default Paper Data
-    for (let i = 1; i <= 10; i++) {
+// Read Paper Settings
+const papersSnapshot = await getDocs(collection(db, "papers"));
 
-        const paper = "paper" + String(i).padStart(2, "0");
+const paperSettings = {};
 
-        studentData[paper] = false;             // Permission
-        studentData[paper + "Viewed"] = false;  // Viewed Status
-        studentData[paper + "Pages"] = 10;      // Default Pages
+papersSnapshot.forEach((docSnap) => {
 
-    }
+    paperSettings[docSnap.id] = docSnap.data();
+
+});
+
+// Apply Default Paper Permissions
+for (let i = 1; i <= 10; i++) {
+
+    const paper = "paper" + String(i).padStart(2, "0");
+
+    const settings = paperSettings[paper];
+
+    // Default Permission
+    studentData[paper] =
+        settings?.defaultAvailable === true;
+
+    // Viewed Status
+    studentData[paper + "Viewed"] = false;
+
+    // Pages
+    studentData[paper + "Pages"] =
+        settings?.pages || 10;
+
+}
 
     try {
 
