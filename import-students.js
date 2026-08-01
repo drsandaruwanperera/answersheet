@@ -40,7 +40,9 @@ async function importStudents() {
             });
 
             const sheet =
-                workbook.Sheets[workbook.SheetNames[0]];
+                workbook.Sheets[
+                    workbook.SheetNames[0]
+                ];
 
             const rows =
                 XLSX.utils.sheet_to_json(sheet);
@@ -53,10 +55,10 @@ async function importStudents() {
 
             }
 
-            // Load Paper Settings
-
             const paperSnapshot =
-                await getDocs(collection(db, "papers"));
+                await getDocs(
+                    collection(db, "papers")
+                );
 
             const paperSettings = {};
 
@@ -70,7 +72,7 @@ async function importStudents() {
             let imported = 0;
             let updated = 0;
             let failed = 0;
-                      for (const row of rows) {
+                        for (const row of rows) {
 
                 const studentId =
                     String(row["Student ID"] || "").trim();
@@ -81,6 +83,7 @@ async function importStudents() {
                 if (!studentId || !password) {
 
                     failed++;
+
                     continue;
 
                 }
@@ -96,6 +99,7 @@ async function importStudents() {
                     const studentData = {
 
                         password: password,
+
                         mustChangePassword: true
 
                     };
@@ -136,22 +140,22 @@ async function importStudents() {
 
                     }
 
-               } catch (err) {
+                } catch (err) {
 
-    console.error("Student ID:", studentId);
-    console.error("Import Error:", err);
+                    console.error(err);
 
-    alert(err.message);
+                    failed++;
 
-    failed++;
-
-}
+                }
 
             }
-                      result.innerHTML = `
+                        result.innerHTML = `
                 <h3>✅ Import Completed</h3>
+
                 <p><strong>New Students:</strong> ${imported}</p>
+
                 <p><strong>Updated:</strong> ${updated}</p>
+
                 <p><strong>Failed:</strong> ${failed}</p>
             `;
 
@@ -160,9 +164,9 @@ async function importStudents() {
             console.error(err);
 
             result.innerHTML = `
-                <span style="color:red">
+                <span style="color:red;">
                     ❌ Import Failed.<br>
-                    Check Console (F12).
+                    ${err.message}
                 </span>
             `;
 
