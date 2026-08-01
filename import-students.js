@@ -88,7 +88,7 @@ const studentId =
     String(row[studentIdKey] || "").trim();
 
 const password =
-    String(row[passwordKey] || "").trim();;
+    String(row[passwordKey] || "").trim();
 
                 if (!studentId || !password) {
 
