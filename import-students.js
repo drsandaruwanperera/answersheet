@@ -150,9 +150,11 @@ const password =
 
                     }
 
-                } catch (err) {
+                               } catch (err) {
 
                     console.error(err);
+
+                    alert(err.message);
 
                     failed++;
 
