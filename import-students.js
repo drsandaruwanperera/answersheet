@@ -74,11 +74,21 @@ async function importStudents() {
             let failed = 0;
                         for (const row of rows) {
 
-                const studentId =
-                    String(row["Student ID"] || "").trim();
+               const keys = Object.keys(row);
 
-                const password =
-                    String(row["Password"] || "").trim();
+const studentIdKey = keys.find(
+    k => k.trim().toLowerCase() === "student id"
+);
+
+const passwordKey = keys.find(
+    k => k.trim().toLowerCase() === "password"
+);
+
+const studentId =
+    String(row[studentIdKey] || "").trim();
+
+const password =
+    String(row[passwordKey] || "").trim();;
 
                 if (!studentId || !password) {
 
