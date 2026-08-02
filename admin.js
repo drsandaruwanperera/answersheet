@@ -14,7 +14,10 @@ if (sessionStorage.getItem("adminLoggedIn") !== "true") {
     window.location.href = "admin-login.html";
 }
 
+// ==========================
 // Elements
+// ==========================
+
 const table = document.getElementById("studentTable");
 const totalStudents = document.getElementById("totalStudents");
 const totalViewed = document.getElementById("totalViewed");
@@ -31,10 +34,18 @@ const closeEdit = document.getElementById("closeEdit");
 const updateStudent = document.getElementById("updateStudent");
 const deleteStudent = document.getElementById("deleteStudent");
 
+// New Buttons
+const selectAllPapers = document.getElementById("selectAllPapers");
+const removeAllPapers = document.getElementById("removeAllPapers");
+const resetViewed = document.getElementById("resetViewed");
+
 let allStudents = [];
 let currentStudent = "";
 
+// ==========================
 // Logout
+// ==========================
+
 document.getElementById("logoutBtn").addEventListener("click", () => {
 
     if (confirm("Logout from Admin Panel?")) {
@@ -52,17 +63,25 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
 
 function renderTable(list){
 
-    table.innerHTML="";
+    table.innerHTML = "";
 
-    list.forEach(student=>{
+    list.forEach(student => {
 
-        table.innerHTML+=`
+        let badge = "🔴";
+
+        if(student.viewed >= 8){
+            badge = "🟢";
+        }else if(student.viewed >= 4){
+            badge = "🟡";
+        }
+
+        table.innerHTML += `
 
         <tr>
 
             <td>${student.id}</td>
 
-            <td>${student.viewed}/10</td>
+            <td>${badge} ${student.viewed}/10</td>
 
             <td>********</td>
 
@@ -94,38 +113,37 @@ async function loadStudents(){
 
     const snapshot = await getDocs(collection(db,"students"));
 
-    allStudents=[];
+    allStudents = [];
 
-    let students=0;
-    let viewed=0;
+    let students = 0;
+    let viewed = 0;
 
     snapshot.forEach(docSnap=>{
 
         students++;
 
-        const data=docSnap.data();
+        const data = docSnap.data();
 
-        let count=0;
+        let count = 0;
 
         for(let i=1;i<=10;i++){
 
-            const field="paper"+String(i).padStart(2,"0")+"Viewed";
+            const field =
+                "paper" + String(i).padStart(2,"0") + "Viewed";
 
-            if(data[field]===true){
-
+            if(data[field] === true){
                 count++;
-
             }
 
         }
 
-        viewed+=count;
+        viewed += count;
 
         allStudents.push({
 
-            id:docSnap.id,
-            viewed:count,
-            data:data
+            id: docSnap.id,
+            viewed: count,
+            data: data
 
         });
 
@@ -133,31 +151,29 @@ async function loadStudents(){
 
     renderTable(allStudents);
 
-    totalStudents.textContent=students;
-    totalViewed.textContent=viewed;
-    onlineStudents.textContent=students;
+    totalStudents.textContent = students;
+    totalViewed.textContent = viewed;
+    onlineStudents.textContent = students;
 
 }
 
 loadStudents();
-
 // ==========================
 // Search
 // ==========================
 
-search.addEventListener("input",()=>{
+search.addEventListener("input", () => {
 
-    const keyword=search.value.toLowerCase();
+    const keyword = search.value.toLowerCase().trim();
 
-    const filtered=allStudents.filter(student=>
-
+    const filtered = allStudents.filter(student =>
         student.id.toLowerCase().includes(keyword)
-
     );
 
     renderTable(filtered);
 
 });
+
 // ==========================
 // Add Student
 // ==========================
@@ -179,36 +195,30 @@ saveStudent.addEventListener("click", async () => {
         mustChangePassword: mustChangePassword
     };
 
-// Read Paper Settings
-const papersSnapshot = await getDocs(collection(db, "papers"));
-console.log(await getDocs(collection(db, "papers")));
-const paperSettings = {};
+    // Load Paper Settings
+    const papersSnapshot = await getDocs(collection(db, "papers"));
 
-papersSnapshot.forEach((docSnap) => {
+    const paperSettings = {};
 
-    paperSettings[docSnap.id] = docSnap.data();
+    papersSnapshot.forEach((docSnap) => {
+        paperSettings[docSnap.id] = docSnap.data();
+    });
 
-});
+    // Default Permissions
+    for (let i = 1; i <= 10; i++) {
 
-// Apply Default Paper Permissions
-for (let i = 1; i <= 10; i++) {
+        const paper = "paper" + String(i).padStart(2, "0");
+        const settings = paperSettings[paper];
 
-    const paper = "paper" + String(i).padStart(2, "0");
+        studentData[paper] =
+            settings?.defaultAvailable === true;
 
-    const settings = paperSettings[paper];
+        studentData[paper + "Viewed"] = false;
 
-    // Default Permission
-    studentData[paper] =
-        settings?.defaultAvailable === true;
+        studentData[paper + "Pages"] =
+            settings?.pages || 10;
 
-    // Viewed Status
-    studentData[paper + "Viewed"] = false;
-
-    // Pages
-    studentData[paper + "Pages"] =
-        settings?.pages || 10;
-
-}
+    }
 
     try {
 
@@ -224,15 +234,15 @@ for (let i = 1; i <= 10; i++) {
 
         loadStudents();
 
-    } catch (err) {
+    } catch (error) {
 
-        console.error(err);
+        console.error(error);
+
         alert("Failed to add student.");
 
     }
 
 });
-
 // ==========================
 // Edit Student
 // ==========================
@@ -272,7 +282,22 @@ closeEdit.addEventListener("click", () => {
     editModal.style.display = "none";
 
 });
-document.getElementById("selectAllPapers").addEventListener("click", () => {
+
+window.addEventListener("click", (e) => {
+
+    if (e.target === editModal) {
+
+        editModal.style.display = "none";
+
+    }
+
+});
+
+// ==========================
+// Select All Papers
+// ==========================
+
+selectAllPapers.addEventListener("click", () => {
 
     for (let i = 1; i <= 10; i++) {
 
@@ -284,11 +309,62 @@ document.getElementById("selectAllPapers").addEventListener("click", () => {
 
 });
 
-window.addEventListener("click", (e) => {
+// ==========================
+// Remove All Papers
+// ==========================
 
-    if (e.target === editModal) {
+removeAllPapers.addEventListener("click", () => {
 
-        editModal.style.display = "none";
+    for (let i = 1; i <= 10; i++) {
+
+        document.getElementById(
+            "paper" + String(i).padStart(2, "0")
+        ).checked = false;
+
+    }
+
+});
+
+// ==========================
+// Reset Viewed Status
+// ==========================
+
+resetViewed.addEventListener("click", async () => {
+
+    if (!currentStudent) return;
+
+    const ok = confirm(
+        "Reset viewed status for this student?"
+    );
+
+    if (!ok) return;
+
+    const updateData = {};
+
+    for (let i = 1; i <= 10; i++) {
+
+        updateData[
+            "paper" + String(i).padStart(2, "0") + "Viewed"
+        ] = false;
+
+    }
+
+    try {
+
+        await updateDoc(
+            doc(db, "students", currentStudent),
+            updateData
+        );
+
+        alert("Viewed status reset successfully.");
+
+        loadStudents();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Reset failed.");
 
     }
 
@@ -301,13 +377,13 @@ updateStudent.addEventListener("click", async () => {
 
     const updateData = {
 
-        password: document.getElementById("editPassword").value,
+        password: document.getElementById("editPassword").value.trim(),
         mustChangePassword:
             document.getElementById("editMustChange").checked
 
     };
 
-    // Update Paper Permissions Only
+    // Update Paper Permissions
     for (let i = 1; i <= 10; i++) {
 
         const field = "paper" + String(i).padStart(2, "0");
@@ -330,9 +406,9 @@ updateStudent.addEventListener("click", async () => {
 
         loadStudents();
 
-    } catch (err) {
+    } catch (error) {
 
-        console.error(err);
+        console.error(error);
 
         alert("Update failed.");
 
@@ -348,17 +424,16 @@ deleteStudent.addEventListener("click", async () => {
 
     if (!currentStudent) return;
 
-    const ok = confirm(
+    if (!confirm(
         "Are you sure you want to delete " +
-        currentStudent +
-        " ?"
-    );
-
-    if (!ok) return;
+        currentStudent + " ?"
+    )) return;
 
     try {
 
-        await deleteDoc(doc(db, "students", currentStudent));
+        await deleteDoc(
+            doc(db, "students", currentStudent)
+        );
 
         alert("Student deleted successfully.");
 
@@ -379,7 +454,7 @@ deleteStudent.addEventListener("click", async () => {
 });
 
 // ==========================
-// ESC Key Close
+// ESC Close
 // ==========================
 
 document.addEventListener("keydown", (e) => {
@@ -407,10 +482,14 @@ function clearAddStudentForm() {
 
 closeModal.addEventListener("click", clearAddStudentForm);
 
+// ==========================
 // Open Add Student Modal
+// ==========================
+
 addStudentBtn.addEventListener("click", () => {
 
     clearAddStudentForm();
+
     studentModal.style.display = "flex";
 
 });
@@ -426,19 +505,13 @@ window.addEventListener("click", (e) => {
 });
 
 // ==========================
-// Refresh Dashboard
+// Auto Refresh Dashboard
 // ==========================
 
-async function refreshDashboard() {
-
-    await loadStudents();
-
-}
-
-setInterval(refreshDashboard, 30000);
+setInterval(loadStudents, 30000);
 
 // ==========================
 // Console
 // ==========================
 
-console.log("Admin Panel Loaded Successfully");
+console.log("✅ Admin Panel Loaded Successfully");
