@@ -40,16 +40,16 @@ container.innerHTML = `
     <div class="button-grid">
 
         <button class="paper-btn"
-            onclick="window.open('papers/past/${data.paper}/mcq.pdf','_blank')">
+            onclick="window.open('papers/past/${data.paper}/question.pdf','_blank')">
 
-            📄 MCQ Paper
+         📄 Question Paper
 
         </button>
 
         <button class="answer-btn"
             onclick="location.href='answer-images.html?paper=${data.paper.replace('paper','')}&type=mcq'">
 
-            📝 MCQ Answer Scheme
+           📝 Answer Scheme
 
         </button>
 
