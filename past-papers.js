@@ -1,62 +1,33 @@
-const params = new URLSearchParams(window.location.search);
-const studentId = params.get("id");
-
 const container = document.getElementById("paperContainer");
 
-for (let i = 1; i <= 5; i++) {
+const cards = [
+    {
+        title: "Province Wise 1st Paper",
+        description: "MCQ Papers & Answer Schemes",
+        link: "province-paper1.html"
+    },
+    {
+        title: "Province Wise 2nd Paper",
+        description: "Question Papers & Answer Schemes",
+        link: "province-paper2.html"
+    }
+];
 
-    const paperNo = String(i).padStart(2, "0");
+cards.forEach(cardData => {
 
     const card = document.createElement("div");
     card.className = "paper-card";
+    card.style.cursor = "pointer";
+
+    card.onclick = () => {
+        location.href = cardData.link;
+    };
 
     card.innerHTML = `
-
-        <h2>📁 ${i}${i == 1 ? "st" : i == 2 ? "nd" : i == 3 ? "rd" : "th"} Paper</h2>
-
-        ${
-            i === 1
-            ? `
-            <div class="notice-box">
-
-                <h3>📢 Special Notice</h3>
-
-                <img
-                    src="images/special-notice.jpg"
-                    class="notice-image"
-                    alt="Special Notice">
-
-            </div>
-            `
-            : ""
-        }
-
-        <div class="button-grid">
-
-            <button class="paper-btn"
-                onclick="window.open('papers/past/paper${paperNo}/mcq.pdf','_blank')">
-                📄 Part 1 - MCQ Paper
-            </button>
-
-            <button class="paper-btn"
-                onclick="window.open('papers/past/paper${paperNo}/question.pdf','_blank')">
-                📄 Part 2 - Question Paper
-            </button>
-
-            <button class="answer-btn"
-                onclick="location.href='answer-images.html?paper=${paperNo}&type=mcq&id=${encodeURIComponent(studentId)}'">
-                📝 Part 1 - Answer Scheme
-            </button>
-
-            <button class="answer-btn"
-                onclick="location.href='answer-images.html?paper=${paperNo}&type=question&id=${encodeURIComponent(studentId)}'">
-                📝 Part 2 - Answer Scheme
-            </button>
-
-        </div>
-
+        <h2>📁 ${cardData.title}</h2>
+        <p>${cardData.description}</p>
     `;
 
     container.appendChild(card);
 
-}
+});
