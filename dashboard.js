@@ -121,9 +121,11 @@ async function openPaper(no) {
         return;
     }
 
-    await updateDoc(ref, {
-        [viewedField]: true
-    });
+   await updateDoc(ref, {
+    [viewedField]: true
+});
+
+alert("Firestore Updated Successfully");
 
     window.location.href =
         "viewer.html?paper=" + permission + "&id=" + studentId;
