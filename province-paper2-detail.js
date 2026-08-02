@@ -42,14 +42,14 @@ container.innerHTML = `
         <button class="paper-btn"
             onclick="window.open('papers/past/${data.paper}/question.pdf','_blank')">
 
-         📄 Question Paper
+            📄 Question Paper
 
         </button>
 
         <button class="answer-btn"
-            onclick="location.href='answer-images.html?paper=${data.paper.replace('paper','')}&type=question'"
+            onclick="location.href='answer-images.html?paper=${data.paper.replace('paper','')}&type=question'">
 
-           📝 Answer Scheme
+            📝 Answer Scheme
 
         </button>
 
