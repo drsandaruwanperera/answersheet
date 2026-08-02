@@ -16,51 +16,62 @@ async function loadModelPapers() {
         return;
     }
 
-    const ref = doc(db, "students", studentId);
-    const snap = await getDoc(ref);
+    try {
 
-    if (!snap.exists()) {
-        alert("Student not found.");
-        return;
-    }
+        const ref = doc(db, "students", studentId);
+        const snap = await getDoc(ref);
 
-    const data = snap.data();
-
-    for (let i = 1; i <= 10; i++) {
-
-        const permission = "paper" + String(i).padStart(2, "0");
-        const viewedField = permission + "Viewed";
-
-        const btn = document.getElementById(permission);
-
-        if (!btn) continue;
-
-        if (data[permission] !== true) {
-            btn.style.display = "none";
-            continue;
+        if (!snap.exists()) {
+            alert("Student not found.");
+            return;
         }
 
-        btn.style.display = "block";
+        const data = snap.data();
 
-        if (data[viewedField] === true) {
+        for (let i = 1; i <= 10; i++) {
 
-            btn.className = "viewed";
+            const permission = "paper" + String(i).padStart(2, "0");
+            const viewedField = permission + "Viewed";
 
-            btn.innerHTML = `
-                📘 Model Paper ${String(i).padStart(2, "0")}
-                <small>🔒 Viewed</small>
-            `;
+            const btn = document.getElementById(permission);
 
-        } else {
+            if (!btn) continue;
 
-            btn.className = "available";
+            // Hide papers without permission
+            if (data[permission] !== true) {
+                btn.style.display = "none";
+                continue;
+            }
 
-            btn.innerHTML = `
-                📘 Model Paper ${String(i).padStart(2, "0")}
-                <small>🟢 Available</small>
-            `;
+            btn.style.display = "block";
+
+            // Already viewed
+            if (data[viewedField] === true) {
+
+                btn.className = "viewed";
+
+                btn.innerHTML = `
+                    📘 Model Paper ${String(i).padStart(2, "0")}
+                    <small>🔒 Viewed</small>
+                `;
+
+            } else {
+
+                btn.className = "available";
+
+                btn.innerHTML = `
+                    📘 Model Paper ${String(i).padStart(2, "0")}
+                    <small>🟢 Available</small>
+                `;
+
+            }
 
         }
+
+    } catch (error) {
+
+        console.error(error);
+        alert("Failed to load model papers.");
 
     }
 
@@ -69,32 +80,48 @@ async function loadModelPapers() {
 // Open Paper
 async function openPaper(no) {
 
-    const ref = doc(db, "students", studentId);
-    const snap = await getDoc(ref);
+    try {
 
-    if (!snap.exists()) return;
+        const ref = doc(db, "students", studentId);
+        const snap = await getDoc(ref);
 
-    const data = snap.data();
+        if (!snap.exists()) {
+            alert("Student not found.");
+            return;
+        }
 
-    const permission = "paper" + String(no).padStart(2, "0");
-    const viewedField = permission + "Viewed";
+        const data = snap.data();
 
-    if (data[permission] !== true) {
-        alert("You do not have permission to view this paper.");
-        return;
+        const permission = "paper" + String(no).padStart(2, "0");
+        const viewedField = permission + "Viewed";
+
+        if (data[permission] !== true) {
+            alert("You do not have permission to view this paper.");
+            return;
+        }
+
+        if (data[viewedField] === true) {
+            alert("This Model Paper has already been viewed.");
+            return;
+        }
+
+        console.log("Updating:", viewedField);
+
+        await updateDoc(ref, {
+            [viewedField]: true
+        });
+
+        console.log("Firestore Update Success");
+
+        window.location.href =
+            `viewer.html?paper=${permission}&id=${studentId}`;
+
+    } catch (error) {
+
+        console.error("Firestore Update Error:", error);
+        alert(error.message);
+
     }
-
-    if (data[viewedField] === true) {
-        alert("This Model Paper has already been viewed.");
-        return;
-    }
-
-    await updateDoc(ref, {
-        [viewedField]: true
-    });
-
-    window.location.href =
-        "viewer.html?paper=" + permission + "&id=" + studentId;
 
 }
 
