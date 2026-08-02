@@ -41,7 +41,7 @@ for (let i = 1; i <= 5; i++) {
     </button>
 
     <button class="answer-btn"
-        onclick="location.href='answer-images.html?paper=${String(i).padStart(2,'0')}&type=mcq'">
+        onclick="location.href='answer-images.html?paper=${String(i).padStart(2,'0')}&type=mcq&id=' + encodeURIComponent(studentId)
         📝 Part 1 - Answer Scheme
     </button>
 
