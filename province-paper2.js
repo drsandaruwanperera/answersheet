@@ -35,7 +35,7 @@ provinces.forEach(item => {
 
     card.innerHTML = `
         <h2>📁 ${item.name}</h2>
-        <p>MCQ Paper & MCQ Answer Scheme</p>
+        <p>Question Paper & Answer Scheme</p>
     `;
 
     container.appendChild(card);
