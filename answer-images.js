@@ -2,6 +2,7 @@ const params = new URLSearchParams(window.location.search);
 
 const paper = params.get("paper");
 const type = params.get("type");
+const studentId = params.get("id");
 
 const container = document.getElementById("imageContainer");
 
