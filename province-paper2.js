@@ -3,26 +3,25 @@ const container = document.getElementById("paperContainer");
 const provinces = [
     {
         name: "Central Province",
-        link: "province-paper1-detail.html?province=central"
+        link: "province-paper2-detail.html?province=central"
     },
     {
         name: "Western Province",
-        link: "province-paper1-detail.html?province=western"
+        link: "province-paper2-detail.html?province=western"
     },
     {
         name: "North Western Province",
-        link: "province-paper1-detail.html?province=north-western"
+        link: "province-paper2-detail.html?province=north-western"
     },
     {
         name: "Southern Province",
-        link: "province-paper1-detail.html?province=southern"
+        link: "province-paper2-detail.html?province=southern"
     },
     {
         name: "Sabaragamuwa Province",
-        link: "province-paper1-detail.html?province=sabaragamuwa"
+        link: "province-paper2-detail.html?province=sabaragamuwa"
     }
 ];
-
 provinces.forEach(item => {
 
     const card = document.createElement("div");
