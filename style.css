@@ -173,3 +173,23 @@ button:hover{
         font-size:14px;
     }
 }
+/* Login Instructions */
+
+.login-note{
+    margin:20px 0;
+    padding:16px;
+    background:#eff6ff;
+    border-left:5px solid #2563eb;
+    border-radius:12px;
+    color:#374151;
+    font-size:14px;
+    line-height:1.7;
+}
+
+.login-note strong{
+    color:#1d4ed8;
+}
+
+.login-note p{
+    margin-top:8px;
+}
