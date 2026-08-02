@@ -7,12 +7,11 @@
 
 body{
     background:#f3f4f6;
-    padding:30px 20px;
+    padding:30px 15px;
 }
 
 .container{
-    width:100%;
-    max-width:1200px;
+    max-width:1100px;
     margin:auto;
 }
 
@@ -24,6 +23,7 @@ body{
 }
 
 .header h1{
+    font-size:30px;
     color:#111827;
 }
 
@@ -31,10 +31,11 @@ body{
     border:none;
     background:#7c3aed;
     color:#fff;
-    padding:12px 22px;
+    padding:12px 24px;
     border-radius:10px;
     cursor:pointer;
     font-weight:600;
+    transition:.3s;
 }
 
 .header button:hover{
@@ -44,36 +45,55 @@ body{
 .answer-page{
     background:#fff;
     padding:20px;
-    border-radius:16px;
+    border-radius:18px;
     margin-bottom:30px;
     box-shadow:0 8px 20px rgba(0,0,0,.08);
 }
 
-.answer-page img{
-    width:100%;
-    border-radius:10px;
-    border:1px solid #ddd;
+.page-title{
+    font-size:18px;
+    font-weight:700;
+    color:#374151;
+    text-align:center;
+    margin-bottom:15px;
 }
 
-.page-title{
-    font-size:20px;
-    font-weight:bold;
-    margin-bottom:15px;
-    color:#374151;
+.answer-image{
+    display:block;
+    width:100%;
+    max-width:900px;
+    margin:0 auto;
+    border-radius:10px;
+    border:1px solid #ddd;
+    box-shadow:0 8px 20px rgba(0,0,0,.12);
 }
 
 @media(max-width:768px){
 
+    body{
+        padding:15px 8px;
+    }
+
     .header{
         flex-direction:column;
         gap:15px;
+        text-align:center;
     }
 
-}
-.answer-image{
-    width:100%;
-    display:block;
-    margin-bottom:25px;
-    border-radius:12px;
-    box-shadow:0 8px 20px rgba(0,0,0,.12);
+    .header h1{
+        font-size:24px;
+    }
+
+    .header button{
+        width:100%;
+    }
+
+    .answer-page{
+        padding:12px;
+    }
+
+    .answer-image{
+        max-width:100%;
+    }
+
 }
