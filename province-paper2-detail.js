@@ -47,7 +47,7 @@ container.innerHTML = `
         </button>
 
         <button class="answer-btn"
-            onclick="location.href='answer-images.html?paper=${data.paper.replace('paper','')}&type=mcq'">
+            onclick="location.href='answer-images.html?paper=${data.paper.replace('paper','')}&type=question'"
 
            📝 Answer Scheme
 
