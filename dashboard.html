@@ -1,105 +1,78 @@
-<!DOCTYPE html>
-<html lang="en">
+import { db, doc, getDoc } from "./firebase.js";
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Assessment Portal</title>
+// Check Login
+if (sessionStorage.getItem("loggedIn") !== "true") {
+    window.location.href = "index.html";
+}
 
-    <link rel="stylesheet" href="dashboard.css">
-</head>
+const params = new URLSearchParams(window.location.search);
+const studentId = params.get("id");
 
-<body>
+// Display Student ID
+document.getElementById("studentId").textContent = studentId;
 
-<div class="container">
+// Sign Out
+document.getElementById("logoutBtn").addEventListener("click", () => {
 
-    <div class="header">
+    if (confirm("Are you sure you want to sign out?")) {
 
-        <div>
-            <h2>📘 Student Assessment Portal</h2>
-            <p>Student ID :
-                <span id="studentId"></span>
-            </p>
-        </div>
+        sessionStorage.clear();
+        window.location.href = "index.html";
 
-        <button id="logoutBtn">🚪 Sign Out</button>
+    }
 
-    </div>
+});
 
-    <div class="progress-card">
+// Load Dashboard
+async function loadDashboard() {
 
-        <h3>📊 Progress</h3>
+    if (!studentId) {
+        alert("Student ID not found.");
+        return;
+    }
 
-        <div class="progress-bar">
-            <div class="progress-fill" id="progressFill"></div>
-        </div>
+    try {
 
-        <p id="progressText">0 / 10 Papers Viewed</p>
+        const ref = doc(db, "students", studentId);
+        const snap = await getDoc(ref);
 
-    </div>
+        if (!snap.exists()) {
+            alert("Student not found.");
+            return;
+        }
 
-    <div class="info-grid">
+        const data = snap.data();
 
-        <div class="card">
-            <h3>📢 Announcements</h3>
-            <p>No new announcements.</p>
-        </div>
+        let viewed = 0;
 
-        <div class="card">
-            <h3>📞 Support</h3>
-            <p>077 901 1780</p>
-        </div>
+        // Count Viewed Papers
+        for (let i = 1; i <= 10; i++) {
 
-    </div>
+            const viewedField =
+                "paper" + String(i).padStart(2, "0") + "Viewed";
 
-    <div class="card">
+            if (data[viewedField] === true) {
+                viewed++;
+            }
 
-        <h3>📝 Instructions</h3>
+        }
 
-        <ul>
-            <li>Each Paper Can Only Be Viewed Once</li>
-            <li>Do Not Share Your Login Credentials</li>
-            <li>Contact The Administrator If You Need Assistance</li>
-        </ul>
+        // Update Progress Text
+        document.getElementById("progressText").textContent =
+            viewed + " / 10 Papers Viewed";
 
-    </div>
+        // Update Progress Bar
+        document.getElementById("progressFill").style.width =
+            (viewed / 10 * 100) + "%";
 
-   <h2 class="paper-title">📚 Study Materials</h2>
+    } catch (err) {
 
-<div class="material-grid">
+        console.error(err);
+        alert("Failed to load dashboard.");
 
-    <div class="material-card"
-         onclick="location.href='model-papers.html?id=' + encodeURIComponent(document.getElementById('studentId').textContent)">
+    }
 
-        <div class="material-icon">📘</div>
+}
 
-        <h3>Model Papers</h3>
-
-        <p>Practice & Assessment Papers</p>
-
-    </div>
-
-    <div class="material-card"
-         onclick="location.href='past-papers.html?id=' + encodeURIComponent(document.getElementById('studentId').textContent)">
-
-        <div class="material-icon">📂</div>
-
-        <h3>Province Papers</h3>
-
-<p>Provincial Examination Papers</p>
-    </div>
-
-</div>
-
-       
-    <footer>
-        © 2026 Student Assessment Portal
-    </footer>
-
-</div>
-
-<script src="session.js"></script>
-<script type="module" src="dashboard.js"></script>
-
-</body>
-</html>
+// Load Dashboard
+loadDashboard();
