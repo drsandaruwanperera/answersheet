@@ -309,3 +309,53 @@ td {
     display: table-cell !important;
     border: 1px solid #ccc;
 }
+/* =========================
+   Permission Tools
+========================= */
+
+.permission-tools{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:10px;
+    margin:20px 0;
+}
+
+.select-btn,
+.remove-btn,
+.reset-btn{
+
+    width:100%;
+    border:none;
+    border-radius:8px;
+    padding:12px;
+    color:#fff;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.3s;
+
+}
+
+.select-btn{
+    background:#16a34a;
+}
+
+.select-btn:hover{
+    background:#15803d;
+}
+
+.remove-btn{
+    background:#dc2626;
+}
+
+.remove-btn:hover{
+    background:#b91c1c;
+}
+
+.reset-btn{
+    background:#f59e0b;
+}
+
+.reset-btn:hover{
+    background:#d97706;
+}
