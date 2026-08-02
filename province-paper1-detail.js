@@ -2,43 +2,43 @@ const params = new URLSearchParams(window.location.search);
 
 const province = params.get("province");
 
-const provinces = [
-    "Central Province",
-    "Western Province",
-    "North Western Province",
-    "Southern Province",
-    "Sabaragamuwa Province"
-];
+const provinceNames = {
+    "central": "Central Province",
+    "western": "Western Province",
+    "north-western": "North Western Province",
+    "southern": "Southern Province",
+    "sabaragamuwa": "Sabaragamuwa Province"
+};
 
 document.getElementById("provinceTitle").textContent =
-    provinces[province - 1];
+    provinceNames[province];
 
 const container = document.getElementById("paperContainer");
 
 container.innerHTML = `
 
-    <div class="paper-card">
+<div class="paper-card">
 
-        <h2>${provinces[province - 1]}</h2>
+    <h2>📁 ${provinceNames[province]}</h2>
 
-        <div class="button-grid">
+    <div class="button-grid">
 
-            <button class="paper-btn"
-                onclick="window.open('papers/province1/province${province}/mcq.pdf','_blank')">
+        <button class="paper-btn"
+            onclick="window.open('papers/past/province1/${province}/mcq.pdf','_blank')">
 
-                📄 MCQ Paper
+            📄 MCQ Paper
 
-            </button>
+        </button>
 
-            <button class="answer-btn"
-                onclick="location.href='answer-images.html?paper=province1-${province}&type=mcq'">
+        <button class="answer-btn"
+            onclick="location.href='answer-images.html?paper=${province}&group=province1&type=mcq'">
 
-                📝 MCQ Answer Scheme
+            📝 MCQ Answer Scheme
 
-            </button>
-
-        </div>
+        </button>
 
     </div>
+
+</div>
 
 `;
