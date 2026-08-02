@@ -34,24 +34,50 @@ body{
     border-radius:10px;
     cursor:pointer;
     font-weight:600;
+    transition:.3s;
 }
 
 .header button:hover{
     background:#6d28d9;
 }
 
+/* ===========================
+   Province Cards
+=========================== */
+
 .paper-card{
     background:#fff;
-    border-radius:18px;
-    padding:25px;
+    border-radius:20px;
+    padding:28px;
     margin-bottom:30px;
-    box-shadow:0 8px 20px rgba(0,0,0,.08);
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+    transition:.3s;
+    cursor:pointer;
+}
+
+.paper-card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 18px 40px rgba(124,58,237,.18);
 }
 
 .paper-card h2{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
     color:#111827;
-    margin-bottom:20px;
+    font-size:34px;
+    margin-bottom:10px;
 }
+
+.paper-card p{
+    color:#6b7280;
+    font-size:17px;
+    line-height:1.6;
+}
+
+/* ===========================
+   Notice
+=========================== */
 
 .notice-box{
     background:#fff8e1;
@@ -72,6 +98,10 @@ body{
     border:1px solid #ddd;
 }
 
+/* ===========================
+   Buttons
+=========================== */
+
 .button-grid{
     display:grid;
     grid-template-columns:repeat(2,1fr);
@@ -80,7 +110,6 @@ body{
 
 .paper-btn,
 .answer-btn{
-
     border:none;
     border-radius:14px;
     padding:18px;
@@ -88,48 +117,51 @@ body{
     font-weight:600;
     cursor:pointer;
     transition:.3s;
-
 }
 
 .paper-btn{
-
     background:linear-gradient(90deg,#7c3aed,#9333ea);
-    color:white;
-
+    color:#fff;
 }
 
 .paper-btn:hover{
-
     transform:translateY(-3px);
-
 }
 
 .answer-btn{
-
     background:#2563eb;
-    color:white;
-
+    color:#fff;
 }
 
 .answer-btn:hover{
-
     background:#1d4ed8;
-
 }
+
+/* ===========================
+   Mobile
+=========================== */
 
 @media(max-width:768px){
 
     .header{
-
         flex-direction:column;
         gap:15px;
-
     }
 
     .button-grid{
-
         grid-template-columns:1fr;
+    }
 
+    .paper-card{
+        padding:22px;
+    }
+
+    .paper-card h2{
+        font-size:26px;
+    }
+
+    .paper-card p{
+        font-size:15px;
     }
 
 }
