@@ -5,6 +5,7 @@ const type = params.get("type");
 
 const container = document.getElementById("imageContainer");
 
+// Load Images
 for (let i = 1; i <= 30; i++) {
 
     const page = String(i).padStart(2, "0");
@@ -27,25 +28,49 @@ for (let i = 1; i <= 30; i++) {
     };
 
 }
-document.addEventListener("keydown", function (e) {
+
+// Disable Right Click
+document.addEventListener("contextmenu", (e) => {
+    e.preventDefault();
+});
+
+// Disable Drag
+document.addEventListener("dragstart", (e) => {
+    e.preventDefault();
+});
+
+// Disable Keyboard Shortcuts
+document.addEventListener("keydown", (e) => {
+
+    const key = e.key.toLowerCase();
 
     // Ctrl + S
-    if (e.ctrlKey && e.key.toLowerCase() === "s") {
+    if (e.ctrlKey && key === "s") {
         e.preventDefault();
     }
 
     // Ctrl + P
-    if (e.ctrlKey && e.key.toLowerCase() === "p") {
+    if (e.ctrlKey && key === "p") {
         e.preventDefault();
     }
 
     // Ctrl + U
-    if (e.ctrlKey && e.key.toLowerCase() === "u") {
+    if (e.ctrlKey && key === "u") {
         e.preventDefault();
     }
 
     // Ctrl + Shift + I
-    if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "i") {
+    if (e.ctrlKey && e.shiftKey && key === "i") {
+        e.preventDefault();
+    }
+
+    // Ctrl + Shift + J
+    if (e.ctrlKey && e.shiftKey && key === "j") {
+        e.preventDefault();
+    }
+
+    // Ctrl + Shift + C
+    if (e.ctrlKey && e.shiftKey && key === "c") {
         e.preventDefault();
     }
 
