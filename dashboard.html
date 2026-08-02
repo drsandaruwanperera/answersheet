@@ -1,78 +1,113 @@
-import { db, doc, getDoc } from "./firebase.js";
+<!DOCTYPE html>
+<html lang="en">
 
-// Check Login
-if (sessionStorage.getItem("loggedIn") !== "true") {
-    window.location.href = "index.html";
-}
+<head>
 
-const params = new URLSearchParams(window.location.search);
-const studentId = params.get("id");
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-// Display Student ID
-document.getElementById("studentId").textContent = studentId;
+    <title>Student Assessment Portal</title>
 
-// Sign Out
-document.getElementById("logoutBtn").addEventListener("click", () => {
+    <link rel="stylesheet" href="dashboard.css">
 
-    if (confirm("Are you sure you want to sign out?")) {
+</head>
 
-        sessionStorage.clear();
-        window.location.href = "index.html";
+<body>
 
-    }
+<div class="container">
 
-});
+    <div class="header">
 
-// Load Dashboard
-async function loadDashboard() {
+        <div>
+            <h2>📘 Student Assessment Portal</h2>
+            <p>
+                Student ID :
+                <span id="studentId"></span>
+            </p>
+        </div>
 
-    if (!studentId) {
-        alert("Student ID not found.");
-        return;
-    }
+        <button id="logoutBtn">
+            🚪 Sign Out
+        </button>
 
-    try {
+    </div>
 
-        const ref = doc(db, "students", studentId);
-        const snap = await getDoc(ref);
+    <div class="progress-card">
 
-        if (!snap.exists()) {
-            alert("Student not found.");
-            return;
-        }
+        <h3>📊 Progress</h3>
 
-        const data = snap.data();
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
 
-        let viewed = 0;
+        <p id="progressText">
+            0 / 10 Papers Viewed
+        </p>
 
-        // Count Viewed Papers
-        for (let i = 1; i <= 10; i++) {
+    </div>
 
-            const viewedField =
-                "paper" + String(i).padStart(2, "0") + "Viewed";
+    <div class="info-grid">
 
-            if (data[viewedField] === true) {
-                viewed++;
-            }
+        <div class="card">
+            <h3>📢 Announcements</h3>
+            <p>No new announcements.</p>
+        </div>
 
-        }
+        <div class="card">
+            <h3>📞 Support</h3>
+            <p>077 901 1780</p>
+        </div>
 
-        // Update Progress Text
-        document.getElementById("progressText").textContent =
-            viewed + " / 10 Papers Viewed";
+    </div>
 
-        // Update Progress Bar
-        document.getElementById("progressFill").style.width =
-            (viewed / 10 * 100) + "%";
+    <div class="card">
 
-    } catch (err) {
+        <h3>📝 Instructions</h3>
 
-        console.error(err);
-        alert("Failed to load dashboard.");
+        <ul>
+            <li>Each Paper Can Only Be Viewed Once</li>
+            <li>Do Not Share Your Login Credentials</li>
+            <li>Contact The Administrator If You Need Assistance</li>
+        </ul>
 
-    }
+    </div>
 
-}
+    <h2 class="paper-title">📚 Study Materials</h2>
 
-// Load Dashboard
-loadDashboard();
+    <div class="material-grid">
+
+        <div class="material-card"
+             onclick="location.href='model-papers.html?id=' + encodeURIComponent(document.getElementById('studentId').textContent)">
+
+            <div class="material-icon">📘</div>
+
+            <h3>Model Papers</h3>
+
+            <p>Practice & Assessment Papers</p>
+
+        </div>
+
+        <div class="material-card"
+             onclick="location.href='past-papers.html?id=' + encodeURIComponent(document.getElementById('studentId').textContent)">
+
+            <div class="material-icon">📂</div>
+
+            <h3>Province Papers</h3>
+
+            <p>Provincial Examination Papers</p>
+
+        </div>
+
+    </div>
+
+    <footer>
+        © 2026 Student Assessment Portal
+    </footer>
+
+</div>
+
+<script src="session.js"></script>
+<script type="module" src="dashboard.js"></script>
+
+</body>
+</html>
