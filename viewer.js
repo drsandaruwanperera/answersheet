@@ -1,4 +1,4 @@
-import { db, doc, getDoc } from "./firebase.js";
+import { db, doc, getDoc, updateDoc } from "./firebase.js";
 
 // Check login session
 if (sessionStorage.getItem("loggedIn") !== "true") {
