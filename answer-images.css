@@ -1,1 +1,71 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Segoe UI",sans-serif;
+}
 
+body{
+    background:#f3f4f6;
+    padding:30px 20px;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+}
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.header h1{
+    color:#111827;
+}
+
+.header button{
+    border:none;
+    background:#7c3aed;
+    color:#fff;
+    padding:12px 22px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+}
+
+.header button:hover{
+    background:#6d28d9;
+}
+
+.answer-page{
+    background:#fff;
+    padding:20px;
+    border-radius:16px;
+    margin-bottom:30px;
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+}
+
+.answer-page img{
+    width:100%;
+    border-radius:10px;
+    border:1px solid #ddd;
+}
+
+.page-title{
+    font-size:20px;
+    font-weight:bold;
+    margin-bottom:15px;
+    color:#374151;
+}
+
+@media(max-width:768px){
+
+    .header{
+        flex-direction:column;
+        gap:15px;
+    }
+
+}
