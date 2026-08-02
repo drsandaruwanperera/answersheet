@@ -272,6 +272,17 @@ closeEdit.addEventListener("click", () => {
     editModal.style.display = "none";
 
 });
+document.getElementById("selectAllPapers").addEventListener("click", () => {
+
+    for (let i = 1; i <= 10; i++) {
+
+        document.getElementById(
+            "paper" + String(i).padStart(2, "0")
+        ).checked = true;
+
+    }
+
+});
 
 window.addEventListener("click", (e) => {
 
