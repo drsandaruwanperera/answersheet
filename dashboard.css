@@ -211,3 +211,55 @@ footer{
     }
 
 }
+/* ===========================
+   Study Materials
+=========================== */
+
+.material-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:25px;
+    margin-bottom:30px;
+}
+
+.material-card{
+    background:#ffffff;
+    border-radius:18px;
+    padding:35px 25px;
+    text-align:center;
+    cursor:pointer;
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+    transition:.3s;
+    border:2px solid transparent;
+}
+
+.material-card:hover{
+    transform:translateY(-5px);
+    border-color:#7c3aed;
+    box-shadow:0 12px 30px rgba(124,58,237,.20);
+}
+
+.material-icon{
+    font-size:60px;
+    margin-bottom:18px;
+}
+
+.material-card h3{
+    font-size:24px;
+    color:#111827;
+    margin-bottom:10px;
+}
+
+.material-card p{
+    color:#6b7280;
+    font-size:15px;
+    line-height:1.6;
+}
+
+@media(max-width:768px){
+
+    .material-grid{
+        grid-template-columns:1fr;
+    }
+
+}
