@@ -13,21 +13,15 @@ provinces.forEach((province, index) => {
     const card = document.createElement("div");
     card.className = "paper-card";
 
+    card.style.cursor = "pointer";
+
+    card.onclick = () => {
+        location.href = `province-paper1-detail.html?province=${index + 1}`;
+    };
+
     card.innerHTML = `
-
         <h2>📁 ${province}</h2>
-
-        <div class="button-grid">
-
-            <button class="paper-btn"
-                onclick="location.href='province-paper1-detail.html?province=${index + 1}'">
-
-                Open
-
-            </button>
-
-        </div>
-
+        <p>MCQ Paper & MCQ Answer Scheme</p>
     `;
 
     container.appendChild(card);
