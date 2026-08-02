@@ -64,9 +64,33 @@
 
     </div>
 
-    <h2 class="paper-title">📚 Model Papers</h2>
+   <h2 class="paper-title">📚 Study Materials</h2>
 
-    <div class="paper-grid">
+<div class="material-grid">
+
+    <div class="material-card"
+         onclick="location.href='model-papers.html?id=' + encodeURIComponent(document.getElementById('studentId').textContent)">
+
+        <div class="material-icon">📘</div>
+
+        <h3>Model Papers</h3>
+
+        <p>Practice & Assessment Papers</p>
+
+    </div>
+
+    <div class="material-card"
+         onclick="location.href='past-papers.html?id=' + encodeURIComponent(document.getElementById('studentId').textContent)">
+
+        <div class="material-icon">📂</div>
+
+        <h3>Past Papers</h3>
+
+        <p>Previous Examination Papers</p>
+
+    </div>
+
+</div>
 
         <button id="paper01" onclick="openPaper(1)">
             📘 Model Paper 01
