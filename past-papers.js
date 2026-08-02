@@ -39,11 +39,11 @@ for (let i = 1; i <= 5; i++) {
             </button>
 
             <button class="answer-btn">
-                🖼️ Part 1 - Answer Scheme
+                📝 Part 1 - Answer Scheme
             </button>
 
             <button class="answer-btn">
-                🖼️ Part 2 - Answer Scheme
+                📝 Part 2 - Answer Scheme
             </button>
 
         </div>
