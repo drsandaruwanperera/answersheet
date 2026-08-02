@@ -30,24 +30,27 @@ for (let i = 1; i <= 5; i++) {
 
         <div class="button-grid">
 
-            <button class="paper-btn">
-                📄 Part 1 - MCQ Paper
-            </button>
+    <button class="paper-btn"
+        onclick="window.open('papers/past/paper${String(i).padStart(2,'0')}/mcq.pdf','_blank')">
+        📄 Part 1 - MCQ Paper
+    </button>
 
-            <button class="paper-btn">
-                📄 Part 2 - Question Paper
-            </button>
+    <button class="paper-btn"
+        onclick="window.open('papers/past/paper${String(i).padStart(2,'0')}/question.pdf','_blank')">
+        📄 Part 2 - Question Paper
+    </button>
 
-            <button class="answer-btn">
-                📝 Part 1 - Answer Scheme
-            </button>
+    <button class="answer-btn"
+        onclick="location.href='answer-images.html?paper=${String(i).padStart(2,'0')}&type=mcq'">
+        📝 Part 1 - Answer Scheme
+    </button>
 
-            <button class="answer-btn">
-                📝 Part 2 - Answer Scheme
-            </button>
+    <button class="answer-btn"
+        onclick="location.href='answer-images.html?paper=${String(i).padStart(2,'0')}&type=question'">
+        📝 Part 2 - Answer Scheme
+    </button>
 
-        </div>
-
+</div>
     `;
 
     container.appendChild(card);
