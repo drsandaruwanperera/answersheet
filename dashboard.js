@@ -1,6 +1,6 @@
-import { db, doc, getDoc, updateDoc } from "./firebase.js";
+import { db, doc, getDoc } from "./firebase.js";
 
-// Check login session
+// Check Login
 if (sessionStorage.getItem("loggedIn") !== "true") {
     window.location.href = "index.html";
 }
@@ -23,7 +23,7 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
 
 });
 
-// Load Dashboard Information
+// Load Dashboard
 async function loadDashboard() {
 
     if (!studentId) {
@@ -31,107 +31,49 @@ async function loadDashboard() {
         return;
     }
 
-    const ref = doc(db, "students", studentId);
-    const snap = await getDoc(ref);
+    try {
 
-    if (!snap.exists()) {
-        alert("Student not found.");
-        return;
-    }
+        const ref = doc(db, "students", studentId);
+        const snap = await getDoc(ref);
 
-    const data = snap.data();
-
-    let viewed = 0;
-
-    for (let i = 1; i <= 10; i++) {
-
-        const permission = "paper" + String(i).padStart(2, "0");
-        const viewedField = permission + "Viewed";
-
-        const btn = document.getElementById(permission);
-
-        // No permission
-        if (data[permission] !== true) {
-            btn.style.display = "none";
-            continue;
+        if (!snap.exists()) {
+            alert("Student not found.");
+            return;
         }
 
-        btn.style.display = "block";
+        const data = snap.data();
 
-        if (data[viewedField] === true) {
+        console.log("Student:", studentId);
+        console.log(data);
 
-            viewed++;
+        let viewed = 0;
 
-            btn.className = "viewed";
+        for (let i = 1; i <= 10; i++) {
 
-            btn.innerHTML = `
-                📘 Model Paper ${String(i).padStart(2, "0")}
-                <small>🔒 Viewed</small>
-            `;
+            const viewedField = "paper" + String(i).padStart(2, "0") + "Viewed";
 
-        } else {
+            console.log(viewedField, data[viewedField]);
 
-            btn.className = "available";
-
-            btn.innerHTML = `
-                📘 Model Paper ${String(i).padStart(2, "0")}
-                <small>🟢 Available</small>
-            `;
+            if (data[viewedField] === true) {
+                viewed++;
+            }
 
         }
 
+        document.getElementById("progressText").textContent =
+            viewed + " / 10 Papers Viewed";
+
+        document.getElementById("progressFill").style.width =
+            (viewed * 10) + "%";
+
+    } catch (error) {
+
+        console.error(error);
+        alert("Failed to load dashboard.");
+
     }
-
-    document.getElementById("progressText").textContent =
-        viewed + " / 10 Papers Viewed";
-
-    document.getElementById("progressFill").style.width =
-        (viewed / 10 * 100) + "%";
 
 }
 
-// Open Paper
-async function openPaper(no) {
-
-    if (!studentId) {
-        alert("Student ID not found.");
-        return;
-    }
-
-    const ref = doc(db, "students", studentId);
-    const snap = await getDoc(ref);
-
-    if (!snap.exists()) {
-        alert("Student not found.");
-        return;
-    }
-
-    const data = snap.data();
-
-    const permission = "paper" + String(no).padStart(2, "0");
-    const viewedField = permission + "Viewed";
-
-    if (data[permission] !== true) {
-        alert("You do not have permission to view this paper.");
-        return;
-    }
-
-    if (data[viewedField] === true) {
-        alert("This Model Paper has already been viewed.");
-        return;
-    }
-
-   await updateDoc(ref, {
-    [viewedField]: true
-});
-
-alert("Firestore Updated Successfully");
-
-    window.location.href =
-        "viewer.html?paper=" + permission + "&id=" + studentId;
-
-}
-
-window.openPaper = openPaper;
-
+// Load Dashboard
 loadDashboard();
