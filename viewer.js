@@ -1,86 +1,174 @@
-import { db, doc, getDoc, updateDoc } from "./firebase.js";
+import { db, doc, getDoc } from "./firebase.js";
 
-// Check login session
+// ==========================
+// Check Login
+// ==========================
+
 if (sessionStorage.getItem("loggedIn") !== "true") {
     window.location.href = "index.html";
 }
 
+// ==========================
+// Get Parameters
+// ==========================
+
 const params = new URLSearchParams(window.location.search);
 
-const paper = params.get("paper");      // paper01
+const paper = params.get("paper");
 const studentId = params.get("id");
 
 const viewer = document.getElementById("viewer");
 
+// ==========================
+// Load Paper
+// ==========================
+
 async function loadPaper() {
 
     if (!paper || !studentId) {
+
         alert("Invalid request.");
-        window.location.href = "dashboard.html?id=" + studentId;
+
+        window.location.href =
+            "dashboard.html?id=" + studentId;
+
         return;
     }
 
-    // Get Paper Information
-    const paperRef = doc(db, "papers", paper);
-    const paperSnap = await getDoc(paperRef);
+    try {
 
-    if (!paperSnap.exists()) {
-        alert("Paper not found.");
-        window.location.href = "dashboard.html?id=" + studentId;
-        return;
-    }
+        // Get Paper Information
+        const paperRef = doc(db, "papers", paper);
 
-    const paperData = paperSnap.data();
+        const paperSnap = await getDoc(paperRef);
 
-    const totalPages = paperData.pages;
+        if (!paperSnap.exists()) {
 
-    for (let i = 1; i <= totalPages; i++) {
+            alert("Paper not found.");
 
-        const no = String(i).padStart(2, "0");
+            window.location.href =
+                "dashboard.html?id=" + studentId;
 
-        const page = document.createElement("div");
-        page.className = "page";
+            return;
+        }
 
-        const img = document.createElement("img");
-        img.src = `papers/${paper}/${paper}_Page_${no}.jpg`;
+        const paperData = paperSnap.data();
 
-        const wm = document.createElement("div");
-        wm.className = "watermark";
-        wm.textContent = studentId;
+        const totalPages = paperData.pages;
 
-        page.appendChild(img);
-        page.appendChild(wm);
+        // Clear viewer
+        viewer.innerHTML = "";
 
-        viewer.appendChild(page);
+        // ==========================
+        // Create Pages
+        // ==========================
+
+        for (let i = 1; i <= totalPages; i++) {
+
+            const no = String(i).padStart(2, "0");
+
+            const page = document.createElement("div");
+
+            page.className = "page";
+
+            // Paper Image
+            const img = document.createElement("img");
+
+            img.src =
+                `papers/${paper}/${paper}_Page_${no}.jpg`;
+
+            img.alt =
+                `Paper ${paper} Page ${i}`;
+
+            // ==========================
+            // Watermark
+            // ==========================
+
+            const watermark =
+                document.createElement("div");
+
+            watermark.className = "watermark";
+
+            // Create repeated Student ID
+            for (let w = 0; w < 30; w++) {
+
+                const mark =
+                    document.createElement("span");
+
+                mark.textContent = studentId;
+
+                watermark.appendChild(mark);
+
+            }
+
+            // Add image first
+            page.appendChild(img);
+
+            // Add watermark ON TOP
+            page.appendChild(watermark);
+
+            // Add page
+            viewer.appendChild(page);
+
+        }
+
+    } catch (error) {
+
+        console.error("Paper loading error:", error);
+
+        alert("Failed to load paper.");
 
     }
 
 }
 
+// ==========================
+// Start
+// ==========================
+
 loadPaper();
 
+// ==========================
 // Disable Right Click
-document.addEventListener("contextmenu", e => e.preventDefault());
+// ==========================
 
-// Disable Drag
-document.addEventListener("dragstart", e => e.preventDefault());
+document.addEventListener(
+    "contextmenu",
+    event => event.preventDefault()
+);
 
-// Disable Common Keyboard Shortcuts
-document.addEventListener("keydown", e => {
+// ==========================
+// Disable Image Drag
+// ==========================
 
-    if (e.ctrlKey) {
+document.addEventListener(
+    "dragstart",
+    event => event.preventDefault()
+);
 
-        const k = e.key.toLowerCase();
+// ==========================
+// Disable Keyboard Shortcuts
+// ==========================
+
+document.addEventListener("keydown", event => {
+
+    if (event.ctrlKey || event.metaKey) {
+
+        const key =
+            event.key.toLowerCase();
 
         if (
-            k === "s" ||
-            k === "p" ||
-            k === "c" ||
-            k === "u" ||
-            k === "a"
+            key === "s" ||
+            key === "p" ||
+            key === "c" ||
+            key === "u" ||
+            key === "a"
         ) {
-            e.preventDefault();
+
+            event.preventDefault();
+
             alert("This action is disabled.");
+
         }
 
     }
