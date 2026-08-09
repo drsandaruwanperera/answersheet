@@ -1,7 +1,7 @@
 import { db, doc, getDoc } from "./firebase.js";
 
 // ==========================
-// Check Login
+// CHECK LOGIN
 // ==========================
 
 if (sessionStorage.getItem("loggedIn") !== "true") {
@@ -9,7 +9,7 @@ if (sessionStorage.getItem("loggedIn") !== "true") {
 }
 
 // ==========================
-// Get Parameters
+// GET URL PARAMETERS
 // ==========================
 
 const params = new URLSearchParams(window.location.search);
@@ -20,7 +20,7 @@ const studentId = params.get("id");
 const viewer = document.getElementById("viewer");
 
 // ==========================
-// Load Paper
+// LOAD PAPER
 // ==========================
 
 async function loadPaper() {
@@ -30,14 +30,14 @@ async function loadPaper() {
         alert("Invalid request.");
 
         window.location.href =
-            "dashboard.html?id=" + studentId;
+            "dashboard.html?id=" + (studentId || "");
 
         return;
     }
 
     try {
 
-        // Get Paper Information
+        // Get paper information
         const paperRef = doc(db, "papers", paper);
 
         const paperSnap = await getDoc(paperRef);
@@ -54,37 +54,50 @@ async function loadPaper() {
 
         const paperData = paperSnap.data();
 
-        const totalPages = paperData.pages;
+        const totalPages = Number(paperData.pages) || 0;
+
+        if (totalPages <= 0) {
+
+            alert("No pages found for this paper.");
+
+            return;
+        }
 
         // Clear viewer
         viewer.innerHTML = "";
 
         // ==========================
-        // Create Pages
+        // CREATE ALL PAPER PAGES
         // ==========================
 
         for (let i = 1; i <= totalPages; i++) {
 
-            const no = String(i).padStart(2, "0");
+            const pageNumber =
+                String(i).padStart(2, "0");
 
-            const page = document.createElement("div");
+            // Page container
+            const page =
+                document.createElement("div");
 
             page.className = "page";
 
             // ==========================
-            // Paper Image
+            // PAPER IMAGE
             // ==========================
 
-            const img = document.createElement("img");
+            const img =
+                document.createElement("img");
 
             img.src =
-                `papers/${paper}/${paper}_Page_${no}.jpg`;
+                `papers/${paper}/${paper}_Page_${pageNumber}.jpg`;
 
             img.alt =
                 `Paper ${paper} Page ${i}`;
 
+            img.draggable = false;
+
             // ==========================
-            // Watermark
+            // WATERMARK CONTAINER
             // ==========================
 
             const watermark =
@@ -92,8 +105,11 @@ async function loadPaper() {
 
             watermark.className = "watermark";
 
-            // Create 16 watermark positions
-            for (let w = 0; w < 16; w++) {
+            // ==========================
+            // CREATE 20 WATERMARKS
+            // ==========================
+
+            for (let w = 0; w < 20; w++) {
 
                 const mark =
                     document.createElement("span");
@@ -103,13 +119,15 @@ async function loadPaper() {
                 watermark.appendChild(mark);
             }
 
-            // Image first
+            // ==========================
+            // ADD TO PAGE
+            // ==========================
+
             page.appendChild(img);
 
-            // Watermark on top
+            // Watermark is ABOVE image
             page.appendChild(watermark);
 
-            // Add page
             viewer.appendChild(page);
         }
 
@@ -120,41 +138,51 @@ async function loadPaper() {
             error
         );
 
-        alert("Failed to load paper.");
+        alert(
+            "Failed to load paper. Please try again."
+        );
     }
 }
 
 // ==========================
-// Start
+// START
 // ==========================
 
 loadPaper();
 
 // ==========================
-// Disable Right Click
+// DISABLE RIGHT CLICK
 // ==========================
 
 document.addEventListener(
     "contextmenu",
-    event => event.preventDefault()
+    function (event) {
+
+        event.preventDefault();
+
+    }
 );
 
 // ==========================
-// Disable Image Drag
+// DISABLE DRAGGING
 // ==========================
 
 document.addEventListener(
     "dragstart",
-    event => event.preventDefault()
+    function (event) {
+
+        event.preventDefault();
+
+    }
 );
 
 // ==========================
-// Disable Keyboard Shortcuts
+// DISABLE COMMON SHORTCUTS
 // ==========================
 
 document.addEventListener(
     "keydown",
-    event => {
+    function (event) {
 
         if (event.ctrlKey || event.metaKey) {
 
@@ -176,5 +204,6 @@ document.addEventListener(
                 );
             }
         }
+
     }
 );
