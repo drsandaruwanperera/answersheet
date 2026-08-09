@@ -1,57 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Model Paper</title>
-<link rel="icon" href="data:,">
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
 
-body{
-    background:#222;
-    user-select:none;
-    overflow-x:hidden;
-}
+    <meta charset="UTF-8">
 
-.page{
-    width:100%;
-    max-width:900px;
-    margin:20px auto;
-    position:relative;
-}
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-.page img{
-    width:100%;
-    display:block;
-    pointer-events:none;
-    -webkit-user-drag:none;
-}
+    <title>Paper Viewer</title>
 
-.watermark{
-    position:absolute;
-    top:10px;
-    right:10px;
-    background:rgba(255,0,0,.6);
-    color:#fff;
-    padding:6px 12px;
-    font-weight:bold;
-    font-size:18px;
-    border-radius:6px;
-}
-</style>
+    <link rel="stylesheet" href="viewer.css">
 
 </head>
 
 <body>
 
-<div id="viewer"></div>
+    <div id="viewer"></div>
 
-<script src="session.js"></script>
-<script type="module" src="viewer.js"></script>
+    <script
+        type="module"
+        src="viewer.js">
+    </script>
 
 </body>
+
+</html>
