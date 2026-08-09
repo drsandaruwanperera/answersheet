@@ -71,7 +71,10 @@ async function loadPaper() {
 
             page.className = "page";
 
+            // ==========================
             // Paper Image
+            // ==========================
+
             const img = document.createElement("img");
 
             img.src =
@@ -89,8 +92,8 @@ async function loadPaper() {
 
             watermark.className = "watermark";
 
-            // Create repeated Student ID
-            for (let w = 0; w < 30; w++) {
+            // Create 16 watermark positions
+            for (let w = 0; w < 16; w++) {
 
                 const mark =
                     document.createElement("span");
@@ -98,28 +101,27 @@ async function loadPaper() {
                 mark.textContent = studentId;
 
                 watermark.appendChild(mark);
-
             }
 
-            // Add image first
+            // Image first
             page.appendChild(img);
 
-            // Add watermark ON TOP
+            // Watermark on top
             page.appendChild(watermark);
 
             // Add page
             viewer.appendChild(page);
-
         }
 
     } catch (error) {
 
-        console.error("Paper loading error:", error);
+        console.error(
+            "Paper loading error:",
+            error
+        );
 
         alert("Failed to load paper.");
-
     }
-
 }
 
 // ==========================
@@ -150,27 +152,29 @@ document.addEventListener(
 // Disable Keyboard Shortcuts
 // ==========================
 
-document.addEventListener("keydown", event => {
+document.addEventListener(
+    "keydown",
+    event => {
 
-    if (event.ctrlKey || event.metaKey) {
+        if (event.ctrlKey || event.metaKey) {
 
-        const key =
-            event.key.toLowerCase();
+            const key =
+                event.key.toLowerCase();
 
-        if (
-            key === "s" ||
-            key === "p" ||
-            key === "c" ||
-            key === "u" ||
-            key === "a"
-        ) {
+            if (
+                key === "s" ||
+                key === "p" ||
+                key === "c" ||
+                key === "u" ||
+                key === "a"
+            ) {
 
-            event.preventDefault();
+                event.preventDefault();
 
-            alert("This action is disabled.");
-
+                alert(
+                    "This action is disabled."
+                );
+            }
         }
-
     }
-
-});
+);
