@@ -635,3 +635,33 @@ tr:hover {
     background: #f3f4f6;
     border: 1px solid #e5e7eb;
 }
+/* =========================
+   Reset Password Button
+========================= */
+
+.reset-password-btn {
+    width: 100%;
+
+    margin-top: -5px;
+    margin-bottom: 15px;
+
+    padding: 11px 14px;
+
+    border: 1px solid #c7d2fe;
+    border-radius: 8px;
+
+    background: #eef2ff;
+    color: #4338ca;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.reset-password-btn:hover {
+    background: #e0e7ff;
+    border-color: #818cf8;
+}
