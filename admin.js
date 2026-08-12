@@ -161,6 +161,72 @@ async function loadStudents(){
 
 loadStudents();
 // ==========================
+// Live Grade Detection
+// ==========================
+
+function updateGradeStatus() {
+
+    const value =
+        document.getElementById("studentId").value.trim();
+
+    if (!value) {
+
+        studentGradeStatus.textContent = "";
+        studentGradeStatus.className = "grade-status";
+
+        return;
+    }
+
+    const number = Number(value);
+
+    // 26000 Series → Grade 11
+    if (
+        Number.isInteger(number) &&
+        number >= 26000 &&
+        number <= 26999
+    ) {
+
+        studentGradeStatus.textContent =
+            "✓ Grade 11 Student — 26000 Series";
+
+        studentGradeStatus.className =
+            "grade-status grade11";
+
+        return;
+    }
+
+    // 27000 Series → Grade 10
+    if (
+        Number.isInteger(number) &&
+        number >= 27000 &&
+        number <= 27999
+    ) {
+
+        studentGradeStatus.textContent =
+            "✓ Grade 10 Student — 27000 Series";
+
+        studentGradeStatus.className =
+            "grade-status grade10";
+
+        return;
+    }
+
+    // Existing A/L Student
+    studentGradeStatus.textContent =
+        "✓ Existing A/L Student";
+
+    studentGradeStatus.className =
+        "grade-status al";
+}
+
+// Detect while typing Student ID
+document
+    .getElementById("studentId")
+    .addEventListener(
+        "input",
+        updateGradeStatus
+    );
+// ==========================
 // Search
 // ==========================
 
