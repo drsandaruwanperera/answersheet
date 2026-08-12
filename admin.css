@@ -175,7 +175,50 @@ tr:hover {
 .action-btn:hover {
     background: #1d4ed8;
 }
+/* =========================
+   Fix Table Action Column
+========================= */
 
+table {
+    table-layout: fixed;
+}
+
+th:nth-child(1),
+td:nth-child(1) {
+    width: 20%;
+}
+
+th:nth-child(2),
+td:nth-child(2) {
+    width: 20%;
+}
+
+th:nth-child(3),
+td:nth-child(3) {
+    width: 20%;
+}
+
+th:nth-child(4),
+td:nth-child(4) {
+    width: 20%;
+}
+
+th:nth-child(5),
+td:nth-child(5) {
+    width: 20%;
+}
+
+td:last-child {
+    white-space: nowrap;
+    text-align: center;
+    vertical-align: middle;
+}
+
+td:last-child .action-btn {
+    display: inline-block;
+    white-space: nowrap;
+    margin: 0;
+}
 /* =========================
    Modal
 ========================= */
