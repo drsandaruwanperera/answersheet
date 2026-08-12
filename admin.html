@@ -140,18 +140,63 @@
 
         <div class="modal-content">
 
-            <h2>Add Student</h2>
+           <h2>Add Student</h2>
 
-            <input
-                type="text"
-                id="studentId"
-                placeholder="Student ID">
+<input
+    type="text"
+    id="studentId"
+    placeholder="Student ID">
 
-            <input
-                type="password"
-                id="studentPassword"
-                placeholder="Password">
+<div class="student-type-box">
 
+    <label for="studentType">
+        Student Type
+    </label>
+
+    <select id="studentType">
+
+        <option value="al">
+            A/L Student
+        </option>
+
+        <option value="grade10">
+            Grade 10
+        </option>
+
+        <option value="grade11">
+            Grade 11
+        </option>
+
+    </select>
+
+</div>
+
+<div
+    id="gradeInfo"
+    class="grade-info"
+    style="display:none;">
+
+    <label for="studentGrade">
+        Grade
+    </label>
+
+    <input
+        type="text"
+        id="studentGrade"
+        readonly
+        placeholder="Auto detected">
+
+    <small>
+        26000 series → Grade 11 |
+        27000 series → Grade 10
+    </small>
+
+</div>
+
+<input
+    type="password"
+    id="studentPassword"
+    placeholder="Password">
             <label class="checkbox">
 
                 <input
