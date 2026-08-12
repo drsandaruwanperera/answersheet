@@ -263,6 +263,11 @@ else {
     totalStudents.textContent = students;
     totalViewed.textContent = viewed;
     onlineStudents.textContent = students;
+    grade10Students.textContent = grade10Count;
+grade11Students.textContent = grade11Count;
+alStudents.textContent = alCount;
+
+activeStudents.textContent = 0;
 
 }
 
