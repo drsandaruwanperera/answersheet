@@ -184,6 +184,20 @@ saveStudent.addEventListener("click", async () => {
     const password = document.getElementById("studentPassword").value.trim();
     const mustChangePassword =
         document.getElementById("mustChange").checked;
+    // Student Type
+const studentType =
+    document.getElementById("studentType").value;
+
+// Detect Grade
+let grade = null;
+
+if (studentType === "grade10") {
+    grade = 10;
+}
+
+if (studentType === "grade11") {
+    grade = 11;
+}
 
     if (!id || !password) {
         alert("Please enter Student ID and Password.");
