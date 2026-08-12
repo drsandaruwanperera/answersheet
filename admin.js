@@ -9,7 +9,10 @@ const setDoc = firebase.setDoc;
 const updateDoc = firebase.updateDoc;
 const deleteDoc = firebase.deleteDoc;
 
+// ==========================
 // Protect Admin Page
+// ==========================
+
 if (sessionStorage.getItem("adminLoggedIn") !== "true") {
     window.location.href = "admin-login.html";
 }
@@ -18,9 +21,9 @@ if (sessionStorage.getItem("adminLoggedIn") !== "true") {
 // Elements
 // ==========================
 
-const table = document.getElementById("studentTable");
-const totalStudents = document.getElementById("totalStudents");
-const totalViewed = document.getElementById("totalViewed");
+const table =
+    document.getElementById("studentTable");
+
 const totalStudents =
     document.getElementById("totalStudents");
 
@@ -38,45 +41,196 @@ const alStudents =
 
 const activeStudents =
     document.getElementById("activeStudents");
-const search = document.getElementById("search");
 
-const addStudentBtn = document.getElementById("addStudentBtn");
-const studentModal = document.getElementById("studentModal");
-const closeModal = document.getElementById("closeModal");
-const saveStudent = document.getElementById("saveStudent");
-const studentGradeStatus =
-    document.getElementById("studentGradeStatus");
+const search =
+    document.getElementById("search");
 
-const editModal = document.getElementById("editModal");
-const closeEdit = document.getElementById("closeEdit");
-const updateStudent = document.getElementById("updateStudent");
-const deleteStudent = document.getElementById("deleteStudent");
+const addStudentBtn =
+    document.getElementById("addStudentBtn");
+
+const studentModal =
+    document.getElementById("studentModal");
+
+const closeModal =
+    document.getElementById("closeModal");
+
+const saveStudent =
+    document.getElementById("saveStudent");
+
+const editModal =
+    document.getElementById("editModal");
+
+const closeEdit =
+    document.getElementById("closeEdit");
+
+const updateStudent =
+    document.getElementById("updateStudent");
+
+const deleteStudent =
+    document.getElementById("deleteStudent");
+
 const resetPasswordBtn =
     document.getElementById("resetPasswordBtn");
 
-// New Buttons
-const selectAllPapers = document.getElementById("selectAllPapers");
-const removeAllPapers = document.getElementById("removeAllPapers");
-const resetViewed = document.getElementById("resetViewed");
+// ==========================
+// Student Variables
+// ==========================
 
 let allStudents = [];
-let currentStudent = "";
+
+let currentStudent = null;
 
 // ==========================
-// Logout
+// Load Students
 // ==========================
 
-document.getElementById("logoutBtn").addEventListener("click", () => {
+async function loadStudents() {
 
-    if (confirm("Logout from Admin Panel?")) {
+    try {
 
-        sessionStorage.removeItem("adminLoggedIn");
-        window.location.href = "admin-login.html";
+        const snapshot =
+            await getDocs(
+                collection(db, "students")
+            );
+
+        console.log(
+            "Students loaded:",
+            snapshot.size
+        );
+
+        allStudents = [];
+
+        let students = 0;
+        let viewed = 0;
+
+        let grade10Count = 0;
+        let grade11Count = 0;
+        let alCount = 0;
+
+        snapshot.forEach(docSnap => {
+
+            students++;
+
+            const data =
+                docSnap.data();
+
+            // ==========================
+            // Grade Counts
+            // ==========================
+
+            if (
+                data.studentType ===
+                "grade10"
+            ) {
+
+                grade10Count++;
+
+            }
+
+            else if (
+                data.studentType ===
+                "grade11"
+            ) {
+
+                grade11Count++;
+
+            }
+
+            else {
+
+                alCount++;
+
+            }
+
+            // ==========================
+            // Paper Views
+            // ==========================
+
+            let count = 0;
+
+            for (
+                let i = 1;
+                i <= 10;
+                i++
+            ) {
+
+                const field =
+                    "paper" +
+                    String(i).padStart(2, "0") +
+                    "Viewed";
+
+                if (
+                    data[field] === true
+                ) {
+
+                    count++;
+
+                }
+
+            }
+
+            viewed += count;
+
+            allStudents.push({
+
+                id: docSnap.id,
+                viewed: count,
+                data: data
+
+            });
+
+        });
+
+        // ==========================
+        // Dashboard
+        // ==========================
+
+        totalStudents.textContent =
+            students;
+
+        totalViewed.textContent =
+            viewed;
+
+        grade10Students.textContent =
+            grade10Count;
+
+        grade11Students.textContent =
+            grade11Count;
+
+        alStudents.textContent =
+            alCount;
+
+        activeStudents.textContent =
+            0;
+
+        // ==========================
+        // Render Table
+        // ==========================
+
+        renderTable(allStudents);
 
     }
 
-});
+    catch (error) {
 
+        console.error(
+            "Load students error:",
+            error
+        );
+
+        alert(
+            "Failed to load students."
+        );
+
+    }
+
+}
+
+// ==========================
+// Start
+// ==========================
+
+loadStudents();
 // ==========================
 // Render Table
 // ==========================
