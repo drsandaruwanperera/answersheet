@@ -65,7 +65,7 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
 // Render Table
 // ==========================
 
-function renderTable(list){
+function renderTable(list) {
 
     table.innerHTML = "";
 
@@ -73,49 +73,57 @@ function renderTable(list){
 
         let badge = "🔴";
 
-        if(student.viewed >= 8){
+        if (student.viewed >= 8) {
             badge = "🟢";
-        }else if(student.viewed >= 4){
+        } 
+        else if (student.viewed >= 4) {
             badge = "🟡";
+        }
+
+        let typeGrade = "📚 A/L";
+
+        if (student.data?.studentType === "grade10") {
+            typeGrade = "🎓 Grade 10";
+        }
+        else if (student.data?.studentType === "grade11") {
+            typeGrade = "🎓 Grade 11";
         }
 
         table.innerHTML += `
 
-        <tr>
+            <tr>
 
-            <td>${student.id}</td>
+                <td>
+                    ${student.id}
+                </td>
 
-<td>
-    ${
-        student.data?.studentType === "grade10"
-            ? "🎓 Grade 10"
-            : student.data?.studentType === "grade11"
-            ? "🎓 Grade 11"
-            : "📚 A/L"
-    }
-</td>
+                <td>
+                    ${typeGrade}
+                </td>
 
-<td>${student.viewed}/10</td>
+                <td>
+                    ${badge} ${student.viewed}/10
+                </td>
 
-<td>********</td>
-                <button
-                    class="action-btn edit-btn"
-                    data-id="${student.id}">
+                <td>
+                    ********
+                </td>
 
-                    ✏️ Edit
+                <td>
+                    <button
+                        class="action-btn edit-btn"
+                        data-id="${student.id}">
+                        ✏️ Edit
+                    </button>
+                </td>
 
-                </button>
-
-            </td>
-
-        </tr>
+            </tr>
 
         `;
 
     });
 
 }
-
 // ==========================
 // Load Students
 // ==========================
