@@ -286,17 +286,6 @@ else {
     studentType = "al";
     grade = null;
 }
-// Everything else → Existing A/L system
-else {
-
-    studentType = "al";
-    grade = null;
-
-}
-    if (!id || !password) {
-        alert("Please enter Student ID and Password.");
-        return;
-    }
 
     const studentData = {
     password: password,
