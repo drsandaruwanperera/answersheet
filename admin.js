@@ -205,9 +205,14 @@ if (studentType === "grade11") {
     }
 
     const studentData = {
-        password: password,
-        mustChangePassword: mustChangePassword
-    };
+    password: password,
+    mustChangePassword: mustChangePassword,
+    studentType: studentType
+};
+
+if (grade !== null) {
+    studentData.grade = grade;
+}
 
     // Load Paper Settings
     const papersSnapshot = await getDocs(collection(db, "papers"));
