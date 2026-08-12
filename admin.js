@@ -28,6 +28,8 @@ const addStudentBtn = document.getElementById("addStudentBtn");
 const studentModal = document.getElementById("studentModal");
 const closeModal = document.getElementById("closeModal");
 const saveStudent = document.getElementById("saveStudent");
+const studentGradeStatus =
+    document.getElementById("studentGradeStatus");
 
 const editModal = document.getElementById("editModal");
 const closeEdit = document.getElementById("closeEdit");
