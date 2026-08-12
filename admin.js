@@ -206,6 +206,10 @@ async function loadStudents(){
     let students = 0;
     let viewed = 0;
 
+    let grade10Count = 0;
+    let grade11Count = 0;
+    let alCount = 0;
+
     snapshot.forEach(docSnap=>{
 
         students++;
