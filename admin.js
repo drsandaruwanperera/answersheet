@@ -217,6 +217,23 @@ async function loadStudents(){
         const data = docSnap.data();
 
         let count = 0;
+        // Count students by type
+
+if (data.studentType === "grade10") {
+
+    grade10Count++;
+
+}
+else if (data.studentType === "grade11") {
+
+    grade11Count++;
+
+}
+else {
+
+    alCount++;
+
+}
 
         for(let i=1;i<=10;i++){
 
