@@ -480,7 +480,13 @@ function clearAddStudentForm() {
 
 }
 
-closeModal.addEventListener("click", clearAddStudentForm);
+closeModal.addEventListener("click", () => {
+
+    clearAddStudentForm();
+
+    studentModal.style.display = "none";
+
+});
 
 // ==========================
 // Open Add Student Modal
