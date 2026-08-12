@@ -523,7 +523,75 @@ updateStudent.addEventListener("click", async () => {
     }
 
 });
+// ==========================
+// Reset Student Password
+// ==========================
 
+resetPasswordBtn.addEventListener("click", async () => {
+
+    if (!currentStudent) {
+        alert("Please select a student first.");
+        return;
+    }
+
+    const newPassword = prompt(
+        "Enter new password for " + currentStudent
+    );
+
+    if (newPassword === null) {
+        return;
+    }
+
+    const password = newPassword.trim();
+
+    if (!password) {
+        alert("Password cannot be empty.");
+        return;
+    }
+
+    if (password.length < 4) {
+        alert("Password must contain at least 4 characters.");
+        return;
+    }
+
+    const confirmReset = confirm(
+        "Reset password for " +
+        currentStudent +
+        "?"
+    );
+
+    if (!confirmReset) {
+        return;
+    }
+
+    try {
+
+        await updateDoc(
+            doc(db, "students", currentStudent),
+            {
+                password: password,
+                mustChangePassword: true
+            }
+        );
+
+        // Update password field in Edit modal
+        document.getElementById("editPassword").value = password;
+
+        alert(
+            "Password reset successfully.\n\n" +
+            "Student: " + currentStudent +
+            "\nNew Password: " + password
+        );
+
+    } catch (error) {
+
+        console.error("Password reset error:", error);
+
+        alert("Failed to reset password.");
+
+    }
+
+});
 // ==========================
 // Delete Student
 // ==========================
