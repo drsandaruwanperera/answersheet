@@ -242,7 +242,25 @@ async function loadStudents() {
 
                 const data =
                     docSnap.data();
+// ==========================
+// Active Student Check
+// ==========================
 
+const lastActive =
+    data.lastActiveAt || 0;
+
+const now =
+    Date.now();
+
+const activeLimit =
+    60 * 1000; // 60 seconds
+
+if (
+    lastActive > 0 &&
+    (now - lastActive) <= activeLimit
+) {
+    activeCount++;
+}
                 // ==========================
                 // Grade Count
                 // ==========================
