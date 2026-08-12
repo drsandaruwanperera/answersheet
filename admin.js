@@ -21,7 +21,23 @@ if (sessionStorage.getItem("adminLoggedIn") !== "true") {
 const table = document.getElementById("studentTable");
 const totalStudents = document.getElementById("totalStudents");
 const totalViewed = document.getElementById("totalViewed");
-const onlineStudents = document.getElementById("onlineStudents");
+const totalStudents =
+    document.getElementById("totalStudents");
+
+const totalViewed =
+    document.getElementById("totalViewed");
+
+const grade10Students =
+    document.getElementById("grade10Students");
+
+const grade11Students =
+    document.getElementById("grade11Students");
+
+const alStudents =
+    document.getElementById("alStudents");
+
+const activeStudents =
+    document.getElementById("activeStudents");
 const search = document.getElementById("search");
 
 const addStudentBtn = document.getElementById("addStudentBtn");
