@@ -35,6 +35,8 @@ const editModal = document.getElementById("editModal");
 const closeEdit = document.getElementById("closeEdit");
 const updateStudent = document.getElementById("updateStudent");
 const deleteStudent = document.getElementById("deleteStudent");
+const resetPasswordBtn =
+    document.getElementById("resetPasswordBtn");
 
 // New Buttons
 const selectAllPapers = document.getElementById("selectAllPapers");
