@@ -253,7 +253,7 @@ saveStudent.addEventListener("click", async () => {
     const mustChangePassword =
         document.getElementById("mustChange").checked;
 // ==========================
-// Detect Student Type / Grade
+// Detect Student Type
 // ==========================
 
 let studentType = "al";
@@ -261,30 +261,31 @@ let grade = null;
 
 const studentNumber = Number(id);
 
-// Grade 11 → 26000 series
+// 26000 - 26999 → Grade 11
 if (
     Number.isInteger(studentNumber) &&
     studentNumber >= 26000 &&
     studentNumber <= 26999
 ) {
-
     studentType = "grade11";
     grade = 11;
-
 }
 
-// Grade 10 → 27000 series
+// 27000 - 27999 → Grade 10
 else if (
     Number.isInteger(studentNumber) &&
     studentNumber >= 27000 &&
     studentNumber <= 27999
 ) {
-
     studentType = "grade10";
     grade = 10;
-
 }
 
+// Other IDs → Existing A/L
+else {
+    studentType = "al";
+    grade = null;
+}
 // Everything else → Existing A/L system
 else {
 
