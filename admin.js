@@ -308,6 +308,10 @@ if (grade !== null) {
     studentData.grade = grade;
 }
 
+if (grade !== null) {
+    studentData.grade = grade;
+}
+
     // Load Paper Settings
     const papersSnapshot = await getDocs(collection(db, "papers"));
 
