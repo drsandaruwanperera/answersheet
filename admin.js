@@ -355,8 +355,8 @@ if (
             alCount;
 
         // Active system will be added later
-        activeStudents.textContent =
-            "0";
+       activeStudents.textContent =
+    activeCount;
 
         // ==========================
         // Render
