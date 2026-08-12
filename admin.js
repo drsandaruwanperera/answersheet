@@ -184,21 +184,46 @@ saveStudent.addEventListener("click", async () => {
     const password = document.getElementById("studentPassword").value.trim();
     const mustChangePassword =
         document.getElementById("mustChange").checked;
-    // Student Type
-const studentType =
-    document.getElementById("studentType").value;
+// ==========================
+// Detect Student Type / Grade
+// ==========================
 
-// Detect Grade
+let studentType = "al";
 let grade = null;
 
-if (studentType === "grade10") {
-    grade = 10;
-}
+const studentNumber = Number(id);
 
-if (studentType === "grade11") {
+// Grade 11 → 26000 series
+if (
+    Number.isInteger(studentNumber) &&
+    studentNumber >= 26000 &&
+    studentNumber <= 26999
+) {
+
+    studentType = "grade11";
     grade = 11;
+
 }
 
+// Grade 10 → 27000 series
+else if (
+    Number.isInteger(studentNumber) &&
+    studentNumber >= 27000 &&
+    studentNumber <= 27999
+) {
+
+    studentType = "grade10";
+    grade = 10;
+
+}
+
+// Everything else → Existing A/L system
+else {
+
+    studentType = "al";
+    grade = null;
+
+}
     if (!id || !password) {
         alert("Please enter Student ID and Password.");
         return;
