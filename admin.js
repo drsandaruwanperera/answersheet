@@ -71,60 +71,113 @@ function renderTable(list) {
 
     list.forEach(student => {
 
+        // Create Row
+        const row = document.createElement("tr");
+
+        // ==========================
+        // Student ID
+        // ==========================
+
+        const idCell = document.createElement("td");
+
+        idCell.textContent = student.id;
+
+        row.appendChild(idCell);
+
+
+        // ==========================
+        // Type / Grade
+        // ==========================
+
+        const typeCell = document.createElement("td");
+
+        if (student.data?.studentType === "grade10") {
+
+            typeCell.textContent = "🎓 Grade 10";
+
+        }
+        else if (student.data?.studentType === "grade11") {
+
+            typeCell.textContent = "🎓 Grade 11";
+
+        }
+        else {
+
+            typeCell.textContent = "📚 A/L";
+
+        }
+
+        row.appendChild(typeCell);
+
+
+        // ==========================
+        // Viewed
+        // ==========================
+
+        const viewedCell = document.createElement("td");
+
         let badge = "🔴";
 
         if (student.viewed >= 8) {
+
             badge = "🟢";
-        } 
+
+        }
         else if (student.viewed >= 4) {
+
             badge = "🟡";
+
         }
 
-        let typeGrade = "📚 A/L";
+        viewedCell.textContent =
+            badge + " " + student.viewed + "/10";
 
-        if (student.data?.studentType === "grade10") {
-            typeGrade = "🎓 Grade 10";
-        }
-        else if (student.data?.studentType === "grade11") {
-            typeGrade = "🎓 Grade 11";
-        }
+        row.appendChild(viewedCell);
 
-        table.innerHTML += `
 
-            <tr>
+        // ==========================
+        // Password
+        // ==========================
 
-                <td>
-                    ${student.id}
-                </td>
+        const passwordCell = document.createElement("td");
 
-                <td>
-                    ${typeGrade}
-                </td>
+        passwordCell.textContent = "********";
 
-                <td>
-                    ${badge} ${student.viewed}/10
-                </td>
+        row.appendChild(passwordCell);
 
-                <td>
-                    ********
-                </td>
 
-                <td>
-                    <button
-                        class="action-btn edit-btn"
-                        data-id="${student.id}">
-                        ✏️ Edit
-                    </button>
-                </td>
+        // ==========================
+        // Action
+        // ==========================
 
-            </tr>
+        const actionCell = document.createElement("td");
 
-        `;
+        const editButton =
+            document.createElement("button");
+
+        editButton.className =
+            "action-btn edit-btn";
+
+        editButton.dataset.id =
+            student.id;
+
+        editButton.textContent =
+            "✏️ Edit";
+
+        actionCell.appendChild(editButton);
+
+        row.appendChild(actionCell);
+
+
+        // ==========================
+        // Add Row
+        // ==========================
+
+        table.appendChild(row);
 
     });
 
-}
-// ==========================
+}// ==========================
 // Load Students
 // ==========================
 
