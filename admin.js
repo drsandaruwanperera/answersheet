@@ -1407,3 +1407,36 @@ setInterval(
 console.log(
     "✅ Admin Panel Loaded Successfully"
 );
+// ==========================
+// Admin Logout
+// ==========================
+
+const logoutBtn =
+    document.getElementById("logoutBtn");
+
+if (logoutBtn) {
+
+    logoutBtn.addEventListener(
+        "click",
+        () => {
+
+            const confirmed =
+                confirm(
+                    "Are you sure you want to logout?"
+                );
+
+            if (!confirmed) {
+                return;
+            }
+
+            sessionStorage.removeItem(
+                "adminLoggedIn"
+            );
+
+            window.location.href =
+                "admin-login.html";
+
+        }
+    );
+
+}
