@@ -85,12 +85,19 @@ function renderTable(list){
 
             <td>${student.id}</td>
 
-            <td>${badge} ${student.viewed}/10</td>
+<td>
+    ${
+        student.data?.studentType === "grade10"
+            ? "🎓 Grade 10"
+            : student.data?.studentType === "grade11"
+            ? "🎓 Grade 11"
+            : "📚 A/L"
+    }
+</td>
 
-            <td>********</td>
+<td>${student.viewed}/10</td>
 
-            <td>
-
+<td>********</td>
                 <button
                     class="action-btn edit-btn"
                     data-id="${student.id}">
