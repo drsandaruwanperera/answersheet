@@ -1,0 +1,301 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background: #f5f7fb;
+    color: #1f2937;
+    display: flex;
+}
+
+
+/* ==========================
+   Sidebar
+========================== */
+
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    background: #4f46e5;
+    color: white;
+    position: fixed;
+    left: 0;
+    top: 0;
+    padding: 25px;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar li {
+    padding: 14px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.sidebar li:hover,
+.sidebar .active {
+    background: rgba(255,255,255,0.15);
+}
+
+
+/* ==========================
+   Main
+========================== */
+
+.main {
+    margin-left: 240px;
+    width: calc(100% - 240px);
+    padding: 30px;
+}
+
+
+/* ==========================
+   Header
+========================== */
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+header h1 {
+    font-size: 36px;
+    margin-bottom: 6px;
+}
+
+header p {
+    color: #6b7280;
+}
+
+.add-btn {
+    background: #4f46e5;
+    color: white;
+    border: none;
+    padding: 13px 20px;
+    border-radius: 9px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.add-btn:hover {
+    transform: translateY(-1px);
+    opacity: 0.9;
+}
+
+
+/* ==========================
+   Cards
+========================== */
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.card {
+    background: white;
+    border-radius: 14px;
+    padding: 22px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.06);
+}
+
+.card > span {
+    font-size: 30px;
+}
+
+.card p {
+    color: #6b7280;
+    font-size: 14px;
+    margin-bottom: 7px;
+}
+
+.card h2 {
+    color: #4f46e5;
+    font-size: 30px;
+}
+
+.active-card h2 {
+    color: #16a34a;
+}
+
+
+/* ==========================
+   Filters
+========================== */
+
+.filters {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.search-box {
+    flex: 1;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.search-box input {
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 13px 0;
+    font-size: 15px;
+}
+
+.filters select {
+    min-width: 150px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 12px;
+    background: white;
+    outline: none;
+    cursor: pointer;
+}
+
+
+/* ==========================
+   Table
+========================== */
+
+.table-container {
+    background: white;
+    border-radius: 14px;
+    overflow-x: auto;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.06);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: #4f46e5;
+    color: white;
+}
+
+th {
+    padding: 16px;
+    text-align: center;
+    font-size: 14px;
+}
+
+td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #eef0f4;
+    font-size: 14px;
+}
+
+tbody tr:hover {
+    background: #f8f9ff;
+}
+
+
+/* ==========================
+   Status
+========================== */
+
+.status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+}
+
+.status.active {
+    color: #16a34a;
+}
+
+.status.offline {
+    color: #6b7280;
+}
+
+
+/* ==========================
+   Action Button
+========================== */
+
+.action-btn {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.action-btn:hover {
+    opacity: 0.85;
+}
+
+
+/* ==========================
+   Responsive
+========================== */
+
+@media (max-width: 1100px) {
+
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 800px) {
+
+    .sidebar {
+        display: none;
+    }
+
+    .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 15px;
+    }
+
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .filters {
+        flex-direction: column;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+}
