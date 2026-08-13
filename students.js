@@ -763,3 +763,113 @@ cancelAdd.addEventListener(
 
     }
 );
+// ==========================
+// Student Edit Button
+// ==========================
+
+table.addEventListener("click", async (e) => {
+
+    const editButton =
+        e.target.closest(".edit-btn");
+
+    if (!editButton) {
+        return;
+    }
+
+    const studentId =
+        editButton.dataset.id;
+
+    try {
+
+        const snap = await getDoc(
+            doc(db, "students", studentId)
+        );
+
+        if (!snap.exists()) {
+
+            alert("Student not found.");
+
+            return;
+        }
+
+        const data = snap.data();
+
+        // Current student
+        currentStudent = studentId;
+
+
+        // ==========================
+        // Student ID
+        // ==========================
+
+        document.getElementById(
+            "editStudentId"
+        ).value = studentId;
+
+
+        // ==========================
+        // Password
+        // ==========================
+
+        document.getElementById(
+            "editPassword"
+        ).value =
+            data.password || "";
+
+
+        // ==========================
+        // Force Password Change
+        // ==========================
+
+        document.getElementById(
+            "editMustChange"
+        ).checked =
+            data.mustChangePassword === true;
+
+
+        // ==========================
+        // Paper Permissions
+        // ==========================
+
+        for (let i = 1; i <= 10; i++) {
+
+            const field =
+                "paper" +
+                String(i).padStart(2, "0");
+
+            const checkbox =
+                document.getElementById(field);
+
+            if (checkbox) {
+
+                checkbox.checked =
+                    data[field] === true;
+
+            }
+        }
+
+
+        // ==========================
+        // Open Edit Modal
+        // ==========================
+
+        document.getElementById(
+            "editModal"
+        ).style.display = "flex";
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Edit student error:",
+            error
+        );
+
+        alert(
+            "Failed to load student."
+        );
+
+    }
+
+});
