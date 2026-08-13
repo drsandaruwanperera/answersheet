@@ -1,28 +1,103 @@
-// Auto Logout After 15 Minutes of Inactivity
+// ==========================
+// Session Timeout
+// ==========================
 
-const TIMEOUT = 15 * 60 * 1000; // 15 minutes
+const TIMEOUT =
+    15 * 60 * 1000; // 15 minutes
 
 let logoutTimer;
 
+
+// ==========================
+// Check Current Session
+// ==========================
+
+const isAdmin =
+    sessionStorage.getItem(
+        "adminLoggedIn"
+    ) === "true";
+
+const isStudent =
+    sessionStorage.getItem(
+        "loggedIn"
+    ) === "true";
+
+
+// ==========================
+// Logout
+// ==========================
+
 function logout() {
 
-    alert("Your session has expired due to inactivity.");
+    alert(
+        "Your session has expired due to inactivity."
+    );
 
-    // Clear login session
+
+    // Clear session
+
     sessionStorage.clear();
 
-    // Go to login page
-    window.location.replace("index.html");
+
+    // Admin → Admin Login
+
+    if (isAdmin) {
+
+        window.location.replace(
+            "admin-login.html"
+        );
+
+        return;
+
+    }
+
+
+    // Student → Student Login
+
+    if (isStudent) {
+
+        window.location.replace(
+            "index.html"
+        );
+
+        return;
+
+    }
+
+
+    // Default
+
+    window.location.replace(
+        "index.html"
+    );
+
 }
+
+
+// ==========================
+// Reset Timer
+// ==========================
 
 function resetTimer() {
 
-    clearTimeout(logoutTimer);
+    clearTimeout(
+        logoutTimer
+    );
 
-    logoutTimer = setTimeout(logout, TIMEOUT);
+
+    logoutTimer =
+        setTimeout(
+            logout,
+            TIMEOUT
+        );
+
 }
 
-// Reset timer on user activity
+
+// ==========================
+// User Activity
+// ==========================
+
 [
     "mousemove",
     "mousedown",
@@ -30,9 +105,20 @@ function resetTimer() {
     "scroll",
     "keypress",
     "touchstart"
-].forEach(event => {
-    document.addEventListener(event, resetTimer);
-});
+].forEach(
+    event => {
 
-// Start timer
+        document.addEventListener(
+            event,
+            resetTimer
+        );
+
+    }
+);
+
+
+// ==========================
+// Start Timer
+// ==========================
+
 resetTimer();
