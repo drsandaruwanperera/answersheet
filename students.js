@@ -722,16 +722,44 @@ console.log(
     "✅ Students Management Loaded"
 );
 // ==========================
-// Add Student
+// Add Student Modal
 // ==========================
+
+const addModal =
+    document.getElementById("addModal");
+
+const closeAdd =
+    document.getElementById("closeAdd");
+
+const cancelAdd =
+    document.getElementById("cancelAdd");
 
 addStudentBtn.addEventListener(
     "click",
     () => {
 
-        alert(
-            "Add Student form will be connected next."
-        );
+        addModal.style.display =
+            "flex";
+
+    }
+);
+
+closeAdd.addEventListener(
+    "click",
+    () => {
+
+        addModal.style.display =
+            "none";
+
+    }
+);
+
+cancelAdd.addEventListener(
+    "click",
+    () => {
+
+        addModal.style.display =
+            "none";
 
     }
 );
