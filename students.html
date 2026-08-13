@@ -485,6 +485,85 @@
     <!-- ==========================
          Script
     =========================== -->
+    <!-- Add Student Modal -->
+
+    <div id="addModal" class="modal">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <div>
+                    <h2>Add Student</h2>
+                    <p>Create a new student account</p>
+                </div>
+
+                <button
+                    id="closeAdd"
+                    class="close-btn"
+                    type="button"
+                >
+                    ✕
+                </button>
+
+            </div>
+
+            <label>Student ID</label>
+
+            <input
+                type="text"
+                id="newStudentId"
+                placeholder="Enter Student ID"
+            >
+
+            <div
+                id="newStudentGrade"
+                class="grade-status"
+            ></div>
+
+            <label>Password</label>
+
+            <input
+                type="text"
+                id="newStudentPassword"
+                placeholder="Enter Password"
+            >
+
+            <label class="check-row">
+
+                <input
+                    type="checkbox"
+                    id="newMustChange"
+                >
+
+                Force password change on first login
+
+            </label>
+
+            <div class="modal-buttons">
+
+                <button
+                    id="cancelAdd"
+                    class="cancel-btn"
+                    type="button"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    id="saveNewStudent"
+                    class="save-btn"
+                    type="button"
+                >
+                    💾 Save Student
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
 
     <script type="module" src="students.js"></script>
 
