@@ -361,6 +361,51 @@ async function openEditStudent(studentId) {
         "flex";
 
 }
+closeEdit.addEventListener(
+    "click",
+    () => {
+
+        editModal.style.display =
+            "none";
+
+        currentStudent =
+            "";
+
+    }
+);
+
+closeEditBottom.addEventListener(
+    "click",
+    () => {
+
+        editModal.style.display =
+            "none";
+
+        currentStudent =
+            "";
+
+    }
+);
+
+window.addEventListener(
+    "click",
+    event => {
+
+        if (
+            event.target ===
+            editModal
+        ) {
+
+            editModal.style.display =
+                "none";
+
+            currentStudent =
+                "";
+
+        }
+
+    }
+);
 // ==========================
 // Apply Filters
 // ==========================
