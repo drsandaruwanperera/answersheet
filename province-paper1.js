@@ -23,21 +23,29 @@ const provinces = [
     }
 ];
 
-provinces.forEach(item => {
+if (!container) {
+    console.error("paperContainer not found.");
+} else {
 
-    const card = document.createElement("div");
-    card.className = "paper-card";
-    card.style.cursor = "pointer";
+    provinces.forEach(item => {
 
-    card.onclick = () => {
-        location.href = item.link;
-    };
+        const card = document.createElement("div");
 
-    card.innerHTML = `
-        <h2>📁 ${item.name}</h2>
-        <p>MCQ Paper & MCQ Answer Scheme</p>
-    `;
+        card.className = "paper-card";
 
-    container.appendChild(card);
+        card.style.cursor = "pointer";
 
-});
+        card.onclick = () => {
+            window.location.href = item.link;
+        };
+
+        card.innerHTML = `
+            <h2>📁 ${item.name}</h2>
+            <p>MCQ Paper & MCQ Answer Scheme</p>
+        `;
+
+        container.appendChild(card);
+
+    });
+
+}
