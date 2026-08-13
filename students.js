@@ -251,15 +251,15 @@ function renderTable(list) {
             "✏️ Edit";
 
         button.addEventListener(
-            "click",
-            () => {
+    "click",
+    () => {
 
-                window.location.href =
-                    "admin.html";
-
-            }
+        openEditStudent(
+            student.id
         );
 
+    }
+);
         actionCell.appendChild(
             button
         );
