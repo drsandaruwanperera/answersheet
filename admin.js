@@ -115,7 +115,7 @@ const logoutBtn =
 // the last 60 seconds.
 
 const ACTIVE_LIMIT =
-    60 * 1000;
+    90 * 1000;
 
 
 // ==========================
