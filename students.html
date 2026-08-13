@@ -18,7 +18,206 @@
     >
 
 </head>
+<!-- ==========================
+     Edit Student Modal
+=========================== -->
 
+<div id="editModal" class="modal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <div>
+                <h2>Edit Student</h2>
+                <p>Manage student account and paper access</p>
+            </div>
+
+            <button
+                id="closeEdit"
+                class="close-btn"
+            >
+                ✕
+            </button>
+
+        </div>
+
+
+        <!-- Student ID -->
+
+        <label>
+            Student ID
+        </label>
+
+        <input
+            type="text"
+            id="editStudentId"
+            readonly
+        >
+
+
+        <!-- Password -->
+
+        <label>
+            Password
+        </label>
+
+        <div class="password-row">
+
+            <input
+                type="text"
+                id="editPassword"
+                placeholder="Student password"
+            >
+
+            <button
+                id="resetPasswordBtn"
+                type="button"
+            >
+                🔐 Reset
+            </button>
+
+        </div>
+
+
+        <!-- Force Password Change -->
+
+        <label class="check-row">
+
+            <input
+                type="checkbox"
+                id="editMustChange"
+            >
+
+            Force password change on next login
+
+        </label>
+
+
+        <!-- Paper Permissions -->
+
+        <h3>
+            📚 Paper Permissions
+        </h3>
+
+        <div class="paper-tools">
+
+            <button
+                id="selectAllPapers"
+                type="button"
+            >
+                ✅ Select All
+            </button>
+
+            <button
+                id="removeAllPapers"
+                type="button"
+            >
+                ❌ Remove All
+            </button>
+
+            <button
+                id="resetViewed"
+                type="button"
+            >
+                🔄 Reset Viewed
+            </button>
+
+        </div>
+
+
+        <div class="papers">
+
+            <label>
+                <input type="checkbox" id="paper01">
+                Paper 01
+            </label>
+
+            <label>
+                <input type="checkbox" id="paper02">
+                Paper 02
+            </label>
+
+            <label>
+                <input type="checkbox" id="paper03">
+                Paper 03
+            </label>
+
+            <label>
+                <input type="checkbox" id="paper04">
+                Paper 04
+            </label>
+
+            <label>
+                <input type="checkbox" id="paper05">
+                Paper 05
+            </label>
+
+            <label>
+                <input type="checkbox" id="paper06">
+                Paper 06
+            </label>
+
+            <label>
+                <input type="checkbox" id="paper07">
+                Paper 07
+            </label>
+
+            <label>
+                <input type="checkbox" id="paper08">
+                Paper 08
+            </label>
+
+            <label>
+                <input type="checkbox" id="paper09">
+                Paper 09
+            </label>
+
+            <label>
+                <input type="checkbox" id="paper10">
+                Paper 10
+            </label>
+
+        </div>
+
+
+        <!-- Buttons -->
+
+        <div class="modal-buttons">
+
+            <button
+                id="deleteStudent"
+                class="delete-btn"
+                type="button"
+            >
+                🗑 Delete
+            </button>
+
+            <div>
+
+                <button
+                    id="closeEditBottom"
+                    class="cancel-btn"
+                    type="button"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    id="updateStudent"
+                    class="save-btn"
+                    type="button"
+                >
+                    💾 Save Changes
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 <body>
 
     <!-- ==========================
