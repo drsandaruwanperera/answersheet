@@ -4,6 +4,35 @@ import {
     getDoc,
     setDoc
 } from "./firebase.js";
+// ==========================
+// Super Admin Protection
+// ==========================
+
+const adminLoggedIn =
+    sessionStorage.getItem("adminLoggedIn") === "true";
+
+const adminRole =
+    sessionStorage.getItem("adminRole") || "limited";
+
+if (!adminLoggedIn) {
+
+    window.location.replace(
+        "admin-login.html"
+    );
+
+}
+
+if (adminRole !== "full") {
+
+    alert(
+        "Access denied. Super Admin only."
+    );
+
+    window.location.replace(
+        "admin.html"
+    );
+
+}
 
 const table = document.getElementById("paperTable");
 console.log("Table:", table);
