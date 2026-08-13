@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Students - Admin</title>
+
+    <link
+        rel="stylesheet"
+        href="students.css"
+    >
+
+</head>
+
+<body>
+
+    <!-- ==========================
+         Sidebar
+    =========================== -->
+
+    <div class="sidebar">
+
+        <h2>👨🏻‍💻 Admin</h2>
+
+        <ul>
+
+            <li onclick="location.href='admin.html'">
+                📊 Dashboard
+            </li>
+
+            <li class="active">
+                👨‍🎓 Students
+            </li>
+
+            <li onclick="location.href='paper-settings.html'">
+                📚 Papers
+            </li>
+
+            <li onclick="location.href='import-students.html'">
+                📥 Import Students
+            </li>
+
+            <li onclick="location.href='reports.html'">
+                📈 Reports
+            </li>
+
+            <li onclick="location.href='settings.html'">
+                ⚙️ Settings
+            </li>
+
+            <li id="logoutBtn">
+                🚪 Logout
+            </li>
+
+        </ul>
+
+    </div>
+
+
+    <!-- ==========================
+         Main
+    =========================== -->
+
+    <div class="main">
+
+        <header>
+
+            <div>
+
+                <h1>Students</h1>
+
+                <p>
+                    Manage student accounts and activity
+                </p>
+
+            </div>
+
+            <button
+                class="add-btn"
+                id="addStudentBtn"
+            >
+                ➕ Add Student
+            </button>
+
+        </header>
+
+
+        <!-- ==========================
+             Summary Cards
+        =========================== -->
+
+        <div class="cards">
+
+            <div class="card">
+
+                <span>👨‍🎓</span>
+
+                <div>
+
+                    <p>Total Students</p>
+
+                    <h2 id="totalStudents">
+                        0
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <span>🎓</span>
+
+                <div>
+
+                    <p>Grade 10</p>
+
+                    <h2 id="grade10Students">
+                        0
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <span>🎓</span>
+
+                <div>
+
+                    <p>Grade 11</p>
+
+                    <h2 id="grade11Students">
+                        0
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <span>📚</span>
+
+                <div>
+
+                    <p>A/L Students</p>
+
+                    <h2 id="alStudents">
+                        0
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="card active-card">
+
+                <span>🟢</span>
+
+                <div>
+
+                    <p>Active Now</p>
+
+                    <h2 id="activeStudents">
+                        0
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==========================
+             Filters
+        =========================== -->
+
+        <div class="filters">
+
+            <div class="search-box">
+
+                🔍
+
+                <input
+                    type="text"
+                    id="search"
+                    placeholder="Search Student ID..."
+                >
+
+            </div>
+
+
+            <select id="typeFilter">
+
+                <option value="all">
+                    All Students
+                </option>
+
+                <option value="grade10">
+                    Grade 10
+                </option>
+
+                <option value="grade11">
+                    Grade 11
+                </option>
+
+                <option value="al">
+                    A/L
+                </option>
+
+            </select>
+
+
+            <select id="statusFilter">
+
+                <option value="all">
+                    All Status
+                </option>
+
+                <option value="active">
+                    🟢 Active
+                </option>
+
+                <option value="offline">
+                    ⚪ Offline
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- ==========================
+             Student Table
+        =========================== -->
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Student ID</th>
+
+                        <th>Type / Grade</th>
+
+                        <th>Viewed</th>
+
+                        <th>Status</th>
+
+                        <th>Password</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="studentTable">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================
+         Script
+    =========================== -->
+
+    <script type="module" src="students.js"></script>
+
+</body>
+
+</html>
