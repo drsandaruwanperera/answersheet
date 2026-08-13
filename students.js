@@ -721,3 +721,17 @@ loadStudents();
 console.log(
     "✅ Students Management Loaded"
 );
+// ==========================
+// Add Student
+// ==========================
+
+addStudentBtn.addEventListener(
+    "click",
+    () => {
+
+        alert(
+            "Add Student form will be connected next."
+        );
+
+    }
+);
