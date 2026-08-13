@@ -17,6 +17,8 @@ if (
 // ==========================
 // Elements
 // ==========================
+const addStudentBtn =
+    document.getElementById("addStudentBtn");
 
 const table =
     document.getElementById("studentTable");
