@@ -4,17 +4,26 @@
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Student Assessment Portal - Admin</title>
 
-    <link rel="stylesheet" href="admin.css">
+    <link
+        rel="stylesheet"
+        href="admin.css"
+    >
 
 </head>
 
 <body>
 
-    <!-- Sidebar -->
+    <!-- ==========================
+         Sidebar
+    =========================== -->
 
     <div class="sidebar">
 
@@ -22,428 +31,426 @@
 
         <ul>
 
-            <li class="active">📊 Dashboard</li>
+            <li class="active">
+                📊 Dashboard
+            </li>
 
-      <li onclick="location.href='students.html'">
-    👨‍🎓 Students
-</li>
+            <li
+                onclick="location.href='students.html'"
+            >
+                👨‍🎓 Students
+            </li>
 
-            <li onclick="location.href='paper-settings.html'">
+            <li
+                onclick="location.href='paper-settings.html'"
+            >
                 📚 Papers
             </li>
 
-            <li onclick="location.href='import-students.html'">
+            <li
+                onclick="location.href='import-students.html'"
+            >
                 📥 Import Students
             </li>
 
-          <li onclick="location.href='reports.html'">
-    📈 Reports
-</li>
+            <li
+                onclick="location.href='reports.html'"
+            >
+                📈 Reports
+            </li>
 
-          <li onclick="location.href='settings.html'">
-    ⚙️ Settings
-</li>
+            <li
+                onclick="location.href='settings.html'"
+            >
+                ⚙️ Settings
+            </li>
 
-            <li id="logoutBtn">🚪 Logout</li>
+            <li id="logoutBtn">
+                🚪 Logout
+            </li>
 
         </ul>
 
     </div>
 
-    <!-- Main -->
+
+    <!-- ==========================
+         Main Dashboard
+    =========================== -->
 
     <div class="main">
 
+        <!-- Header -->
+
         <header>
 
-            <h1>Student Assessment Portal</h1>
+            <div>
+
+                <h1>
+                    Student Assessment Portal
+                </h1>
+
+                <p>
+                    Administrator Dashboard
+                </p>
+
+            </div>
 
         </header>
 
-        <!-- Dashboard Cards -->
 
-<div class="cards">
-
-    <div class="card">
-        <h3>Total Students</h3>
-        <h2 id="totalStudents">0</h2>
-    </div>
-
-    <div class="card">
-        <h3>🎓 Grade 10</h3>
-        <h2 id="grade10Students">0</h2>
-    </div>
-
-    <div class="card">
-        <h3>🎓 Grade 11</h3>
-        <h2 id="grade11Students">0</h2>
-    </div>
-
-    <div class="card">
-        <h3>📚 A/L Students</h3>
-        <h2 id="alStudents">0</h2>
-    </div>
-
-    <div class="card">
-        <h3>🟢 Active Now</h3>
-        <h2 id="activeStudents">0</h2>
-    </div>
-
-    <div class="card">
-        <h3>📄 Total Paper Views</h3>
-        <h2 id="totalViewed">0</h2>
-    </div>
-
-</div>
         <!-- ==========================
-     Student Analytics
-========================== -->
+             Summary Cards
+        =========================== -->
 
-<div class="dashboard-analytics">
+        <div class="summary-grid">
 
-    <div class="analytics-header">
+            <!-- Total Students -->
 
-        <div>
-            <h2>Student Overview</h2>
+            <div class="summary-card">
 
-            <p>
-                Student distribution and current activity
-            </p>
+                <div class="summary-icon">
+                    👨‍🎓
+                </div>
+
+                <div>
+
+                    <span>
+                        Total Students
+                    </span>
+
+                    <strong id="totalStudents">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- Total Paper Views -->
+
+            <div class="summary-card">
+
+                <div class="summary-icon">
+                    📄
+                </div>
+
+                <div>
+
+                    <span>
+                        Total Paper Views
+                    </span>
+
+                    <strong id="totalViewed">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- Active Students -->
+
+            <div class="summary-card">
+
+                <div class="summary-icon active-icon">
+                    🟢
+                </div>
+
+                <div>
+
+                    <span>
+                        Active Now
+                    </span>
+
+                    <strong id="activeStudents">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
         </div>
 
-        <button
-            class="view-students-btn"
-            onclick="location.href='students.html'"
-        >
-            👨‍🎓 Manage Students
-        </button>
+
+        <!-- ==========================
+             Live Student Analytics
+        =========================== -->
+
+        <div class="live-analytics">
+
+            <!-- Analytics Header -->
+
+            <div class="analytics-top">
+
+                <div>
+
+                    <h2>
+                        Student Analytics
+                    </h2>
+
+                    <p>
+                        Live overview of students and activity
+                    </p>
+
+                </div>
+
+
+                <div class="analytics-actions">
+
+                    <div class="live-indicator">
+
+                        <span></span>
+
+                        LIVE
+
+                    </div>
+
+
+                    <button
+                        class="view-students-btn"
+                        onclick="location.href='students.html'"
+                    >
+
+                        👨‍🎓 Manage Students
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==========================
+                 Bar Chart
+            =========================== -->
+
+            <div class="bar-chart">
+
+
+                <!-- Total Students -->
+
+                <div class="chart-row">
+
+                    <div class="chart-label">
+
+                        👨‍🎓 Total Students
+
+                    </div>
+
+
+                    <div class="chart-track">
+
+                        <div
+                            id="chartTotalStudents"
+                            class="chart-bar total-bar"
+                        ></div>
+
+                    </div>
+
+
+                    <div
+                        id="chartTotalStudentsValue"
+                        class="chart-value"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+                <!-- Total Paper Views -->
+
+                <div class="chart-row">
+
+                    <div class="chart-label">
+
+                        📄 Paper Views
+
+                    </div>
+
+
+                    <div class="chart-track">
+
+                        <div
+                            id="chartPaperViews"
+                            class="chart-bar paper-bar"
+                        ></div>
+
+                    </div>
+
+
+                    <div
+                        id="chartPaperViewsValue"
+                        class="chart-value"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+                <!-- Grade 10 -->
+
+                <div class="chart-row">
+
+                    <div class="chart-label">
+
+                        🎓 Grade 10
+
+                    </div>
+
+
+                    <div class="chart-track">
+
+                        <div
+                            id="chartGrade10"
+                            class="chart-bar grade10-bar"
+                        ></div>
+
+                    </div>
+
+
+                    <div
+                        id="chartGrade10Value"
+                        class="chart-value"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+                <!-- Grade 11 -->
+
+                <div class="chart-row">
+
+                    <div class="chart-label">
+
+                        🎓 Grade 11
+
+                    </div>
+
+
+                    <div class="chart-track">
+
+                        <div
+                            id="chartGrade11"
+                            class="chart-bar grade11-bar"
+                        ></div>
+
+                    </div>
+
+
+                    <div
+                        id="chartGrade11Value"
+                        class="chart-value"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+                <!-- A/L -->
+
+                <div class="chart-row">
+
+                    <div class="chart-label">
+
+                        📚 A/L Students
+
+                    </div>
+
+
+                    <div class="chart-track">
+
+                        <div
+                            id="chartAL"
+                            class="chart-bar al-bar"
+                        ></div>
+
+                    </div>
+
+
+                    <div
+                        id="chartALValue"
+                        class="chart-value"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+                <!-- Active -->
+
+                <div class="chart-row">
+
+                    <div class="chart-label">
+
+                        🟢 Active Now
+
+                    </div>
+
+
+                    <div class="chart-track">
+
+                        <div
+                            id="chartActive"
+                            class="chart-bar active-bar"
+                        ></div>
+
+                    </div>
+
+
+                    <div
+                        id="chartActiveValue"
+                        class="chart-value"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==========================
+                 Footer
+            =========================== -->
+
+            <div class="analytics-footer">
+
+                🔄 Live data
+
+                <span>
+                    •
+                </span>
+
+                Automatically updated every 30 seconds
+
+            </div>
+
+        </div>
+
 
     </div>
 
 
-    <div class="analytics-grid">
-
-        <!-- Grade 10 -->
-
-        <div class="analytics-box">
-
-            <div class="analytics-title">
-                🎓 Grade 10
-            </div>
-
-            <div
-                class="analytics-number"
-                id="dashboardGrade10"
-            >
-                0
-            </div>
-
-            <div class="analytics-bar">
-
-                <div
-                    id="grade10Bar"
-                    class="analytics-fill"
-                ></div>
-
-            </div>
-
-        </div>
-
-
-        <!-- Grade 11 -->
-
-        <div class="analytics-box">
-
-            <div class="analytics-title">
-                🎓 Grade 11
-            </div>
-
-            <div
-                class="analytics-number"
-                id="dashboardGrade11"
-            >
-                0
-            </div>
-
-            <div class="analytics-bar">
-
-                <div
-                    id="grade11Bar"
-                    class="analytics-fill"
-                ></div>
-
-            </div>
-
-        </div>
-
-
-        <!-- A/L -->
-
-        <div class="analytics-box">
-
-            <div class="analytics-title">
-                📚 A/L Students
-            </div>
-
-            <div
-                class="analytics-number"
-                id="dashboardAL"
-            >
-                0
-            </div>
-
-            <div class="analytics-bar">
-
-                <div
-                    id="alBar"
-                    class="analytics-fill"
-                ></div>
-
-            </div>
-
-        </div>
-
-
-        <!-- Active -->
-
-        <div class="analytics-box active-box">
-
-            <div class="analytics-title">
-                🟢 Active Students
-            </div>
-
-            <div
-                class="analytics-number active-number"
-                id="dashboardActive"
-            >
-                0
-            </div>
-
-            <p class="analytics-subtext">
-                Currently active
-            </p>
-
-        </div>
-
-    </div>
-
-</div>        <!-- Student Table -->
-
-        <table>
-
-            <thead>
-
-                <tr>
-
-                   <th>Student ID</th>
-
-<th>Type / Grade</th>
-
-<th>Viewed</th>
-
-<th>Password</th>
-
-<th>Action</th>
-
-                </tr>
-
-            </thead>
-
-            <tbody id="studentTable">
-
-            </tbody>
-
-        </table>
-
-    </div>
-        <!-- ========================= -->
-    <!-- Add Student Modal -->
-    <!-- ========================= -->
-
-    <div id="studentModal" class="modal">
-
-        <div class="modal-content">
-
-           <h2>Add Student</h2>
-
-<input
-    type="text"
-    id="studentId"
-    placeholder="Student ID">
-
-<div id="studentGradeStatus" class="grade-status"></div>
-<div class="student-type-box">
-
-    <label for="studentType">
-        Student Type
-    </label>
-
-    <select id="studentType">
-
-        <option value="al">
-            A/L Student
-        </option>
-
-        <option value="grade10">
-            Grade 10
-        </option>
-
-        <option value="grade11">
-            Grade 11
-        </option>
-
-    </select>
-
-</div>
-
-<div
-    id="gradeInfo"
-    class="grade-info"
-    style="display:none;">
-
-    <label for="studentGrade">
-        Grade
-    </label>
-
-    <input
-        type="text"
-        id="studentGrade"
-        readonly
-        placeholder="Auto detected">
-
-    <small>
-        26000 series → Grade 11 |
-        27000 series → Grade 10
-    </small>
-
-</div>
-
-<input
-    type="password"
-    id="studentPassword"
-    placeholder="Password">
-            <label class="checkbox">
-
-                <input
-                    type="checkbox"
-                    id="mustChange">
-
-                Force password change on first login
-
-            </label>
-
-            <div class="modal-buttons">
-
-                <button id="saveStudent">
-
-                    💾 Save
-
-                </button>
-
-                <button id="closeModal">
-
-                    ❌ Cancel
-
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- ========================= -->
-    <!-- Edit Student Modal -->
-    <!-- ========================= -->
-
-    <div id="editModal" class="modal">
-
-        <div class="modal-content">
-
-            <h2>Edit Student</h2>
-
-            <input
-                type="text"
-                id="editStudentId"
-                readonly>
-
-            <input
-                type="password"
-                id="editPassword"
-                placeholder="New Password">
-<button
-    type="button"
-    id="resetPasswordBtn"
-    class="reset-password-btn">
-
-    🔑 Reset Password
-
-</button>
-            <label class="checkbox">
-
-                <input
-                    type="checkbox"
-                    id="editMustChange">
-
-                Force password change
-
-            </label>
-
-            <h3>Paper Permissions</h3>
-
-<div class="papers">
-
-    <label><input type="checkbox" id="paper01"> Paper 01</label>
-    <label><input type="checkbox" id="paper02"> Paper 02</label>
-    <label><input type="checkbox" id="paper03"> Paper 03</label>
-    <label><input type="checkbox" id="paper04"> Paper 04</label>
-    <label><input type="checkbox" id="paper05"> Paper 05</label>
-    <label><input type="checkbox" id="paper06"> Paper 06</label>
-    <label><input type="checkbox" id="paper07"> Paper 07</label>
-    <label><input type="checkbox" id="paper08"> Paper 08</label>
-    <label><input type="checkbox" id="paper09"> Paper 09</label>
-    <label><input type="checkbox" id="paper10"> Paper 10</label>
-
-</div>
-
-<div class="permission-tools">
-
-    <button id="selectAllPapers" class="select-btn">
-        ✅ Select All Papers
-    </button>
-
-    <button id="removeAllPapers" class="remove-btn">
-        ❌ Remove All Papers
-    </button>
-
-    <button id="resetViewed" class="reset-btn">
-        🔄 Reset Viewed Status
-    </button>
-
-</div>
-
-<div class="modal-buttons">
-
-    <button id="updateStudent">
-        💾 Update
-    </button>
-
-    <button id="deleteStudent">
-        🗑 Delete
-    </button>
-
-    <button id="closeEdit">
-        ❌ Close
-    </button>
-
-</div>
-        </div>
-
-    </div>
+    <!-- ==========================
+         Scripts
+    =========================== -->
 
     <script src="session.js"></script>
 
-    <script type="module" src="admin.js"></script>
+    <script
+        type="module"
+        src="admin.js"
+    ></script>
 
 </body>
 
