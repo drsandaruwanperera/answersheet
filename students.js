@@ -275,7 +275,92 @@ function renderTable(list) {
     });
 
 }
+// ==========================
+// Edit Student Modal
+// ==========================
 
+const editModal =
+    document.getElementById("editModal");
+
+const closeEdit =
+    document.getElementById("closeEdit");
+
+const closeEditBottom =
+    document.getElementById("closeEditBottom");
+
+const editStudentId =
+    document.getElementById("editStudentId");
+
+const editPassword =
+    document.getElementById("editPassword");
+
+const editMustChange =
+    document.getElementById("editMustChange");
+
+async function openEditStudent(studentId) {
+
+    const student =
+        allStudents.find(
+            item => item.id === studentId
+        );
+
+    if (!student) {
+
+        alert("Student not found.");
+
+        return;
+
+    }
+
+    // Current student
+    currentStudent =
+        studentId;
+
+    // Student ID
+    editStudentId.value =
+        studentId;
+
+    // Password
+    editPassword.value =
+        student.data?.password || "";
+
+    // Force password change
+    editMustChange.checked =
+        student.data?.mustChangePassword === true;
+
+    // Paper permissions
+    for (
+        let i = 1;
+        i <= 10;
+        i++
+    ) {
+
+        const field =
+            "paper" +
+            String(i).padStart(
+                2,
+                "0"
+            );
+
+        const checkbox =
+            document.getElementById(
+                field
+            );
+
+        if (checkbox) {
+
+            checkbox.checked =
+                student.data?.[field] === true;
+
+        }
+
+    }
+
+    // Open modal
+    editModal.style.display =
+        "flex";
+
+}
 // ==========================
 // Apply Filters
 // ==========================
