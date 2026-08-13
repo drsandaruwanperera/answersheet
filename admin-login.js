@@ -1,11 +1,12 @@
 import {
     db,
-    doc,
-    getDoc
+    collection,
+    getDocs
 } from "./firebase.js";
 
 const loginBtn =
     document.getElementById("loginBtn");
+
 
 loginBtn.addEventListener(
     "click",
@@ -26,8 +27,13 @@ loginBtn.addEventListener(
         const msg =
             document.getElementById("msg");
 
+
         msg.textContent = "";
 
+
+        // ==========================
+        // Validation
+        // ==========================
 
         if (!username || !password) {
 
@@ -35,52 +41,76 @@ loginBtn.addEventListener(
                 "Please enter username and password.";
 
             return;
+
         }
 
 
         try {
 
             // ==========================
-            // Get Admin Account
+            // Get Admin Accounts
             // ==========================
 
-            const ref =
-                doc(
-                    db,
-                    "admins",
-                    "admin"
+            const snapshot =
+                await getDocs(
+                    collection(
+                        db,
+                        "admins"
+                    )
                 );
 
-            const snap =
-                await getDoc(ref);
+
+            let account = null;
 
 
-            if (!snap.exists()) {
+            snapshot.forEach(
+                adminDoc => {
+
+                    const data =
+                        adminDoc.data();
+
+
+                    if (
+                        data.username ===
+                        username
+                    ) {
+
+                        account = data;
+
+                    }
+
+                }
+            );
+
+
+            // ==========================
+            // Account Not Found
+            // ==========================
+
+            if (!account) {
 
                 msg.textContent =
-                    "Admin account not found.";
+                    "Invalid username or password.";
 
                 return;
+
             }
 
 
-            const data =
-                snap.data();
-
-
             // ==========================
-            // Check Login
+            // Check Password
             // ==========================
 
             if (
-                username !== data.username ||
-                password !== data.password
+                password !==
+                account.password
             ) {
 
                 msg.textContent =
                     "Invalid username or password.";
 
                 return;
+
             }
 
 
@@ -89,11 +119,12 @@ loginBtn.addEventListener(
             // ==========================
 
             const role =
-                data.role || "limited";
+                account.role ||
+                "limited";
 
 
             // ==========================
-            // Save Session
+            // Save Admin Session
             // ==========================
 
             sessionStorage.setItem(
@@ -106,6 +137,11 @@ loginBtn.addEventListener(
                 role
             );
 
+            sessionStorage.setItem(
+                "adminUsername",
+                username
+            );
+
 
             console.log(
                 "Admin login:",
@@ -116,7 +152,7 @@ loginBtn.addEventListener(
 
 
             // ==========================
-            // Open Dashboard
+            // Dashboard
             // ==========================
 
             window.location.href =
