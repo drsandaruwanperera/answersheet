@@ -234,6 +234,7 @@ async function loadStudents() {
         let grade11Count = 0;
 
         let alCount = 0;
+        let activeCount = 0
 
         snapshot.forEach(
             docSnap => {
