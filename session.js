@@ -1,106 +1,19 @@
 // ==========================
-// Admin Role Protection
+// Admin Session Protection
 // ==========================
 
-function applyAdminPermissions() {
+const adminLoggedIn =
+    sessionStorage.getItem("adminLoggedIn") === "true";
 
-    const isAdmin =
-        sessionStorage.getItem("adminLoggedIn") === "true";
-
-    if (!isAdmin) {
-        return;
-    }
-
-    const role =
-        sessionStorage.getItem("adminRole") || "limited";
-
-    const fullAdminItems =
-        document.querySelectorAll(".full-admin-only");
-
-    if (role !== "full") {
-
-        fullAdminItems.forEach(item => {
-            item.style.display = "none";
-        });
-
-    }
-
-}
+const adminRole =
+    sessionStorage.getItem("adminRole") || "limited";
 
 
 // ==========================
-// Page Protection
+// Check Login
 // ==========================
 
-function protectAdminPage() {
-
-    const isAdmin =
-        sessionStorage.getItem("adminLoggedIn") === "true";
-
-    if (!isAdmin) {
-
-        window.location.replace(
-            "admin-login.html"
-        );
-
-        return false;
-    }
-
-    return true;
-}
-
-
-// ==========================
-// Full Admin Only Pages
-// ==========================
-
-function protectFullAdminPage() {
-
-    if (!protectAdminPage()) {
-        return;
-    }
-
-    const role =
-        sessionStorage.getItem("adminRole");
-
-    if (role !== "full") {
-
-        alert(
-            "You do not have permission to access this page."
-        );
-
-        window.location.replace(
-            "admin.html"
-        );
-
-    }
-
-}
-
-
-// ==========================
-// Apply Permissions
-// ==========================
-
-applyAdminPermissions();
-
-
-// ==========================
-// Session Timeout
-// ==========================
-
-const TIMEOUT =
-    15 * 60 * 1000;
-
-let logoutTimer;
-
-function logout() {
-
-    alert(
-        "Your session has expired due to inactivity."
-    );
-
-    sessionStorage.clear();
+if (!adminLoggedIn) {
 
     window.location.replace(
         "admin-login.html"
@@ -108,32 +21,29 @@ function logout() {
 
 }
 
-function resetTimer() {
 
-    clearTimeout(logoutTimer);
+// ==========================
+// Hide Full Admin Features
+// ==========================
 
-    logoutTimer =
-        setTimeout(
-            logout,
-            TIMEOUT
-        );
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
 
-}
+        if (adminRole !== "full") {
 
-[
-    "mousemove",
-    "mousedown",
-    "click",
-    "scroll",
-    "keypress",
-    "touchstart"
-].forEach(event => {
+            document
+                .querySelectorAll(
+                    ".full-admin-only"
+                )
+                .forEach(element => {
 
-    document.addEventListener(
-        event,
-        resetTimer
-    );
+                    element.style.display =
+                        "none";
 
-});
+                });
 
-resetTimer();
+        }
+
+    }
+);
