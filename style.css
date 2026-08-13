@@ -7,7 +7,7 @@
 
 
 /* ==========================
-   Page
+   BODY
 ========================== */
 
 body {
@@ -17,14 +17,13 @@ body {
     justify-content: center;
     align-items: center;
 
-    padding: 30px;
+    padding: 20px;
 
     background:
         linear-gradient(
             135deg,
-            #6d28d9 0%,
-            #7c3aed 45%,
-            #8b5cf6 100%
+            #6d28d9,
+            #8b5cf6
         );
 
     overflow-x: hidden;
@@ -32,40 +31,40 @@ body {
 
 
 /* ==========================
-   Login Card
+   LOGIN CARD
 ========================== */
 
 .login-card {
-    width: min(520px, 100%);
+    width: 390px;
+    max-width: calc(100vw - 30px);
 
     background: #ffffff;
 
-    padding: 45px 50px;
+    padding: 42px 34px;
 
-    border-radius: 24px;
+    border-radius: 28px;
 
     box-shadow:
-        0 25px 70px rgba(0, 0, 0, 0.25);
-
-    position: relative;
+        0 20px 60px
+        rgba(0, 0, 0, 0.22);
 }
 
 
 /* ==========================
-   Logo
+   LOGO
 ========================== */
 
 .logo {
     text-align: center;
 
-    font-size: 62px;
+    font-size: 58px;
 
-    margin-bottom: 14px;
+    margin-bottom: 12px;
 }
 
 
 /* ==========================
-   Title
+   TITLE
 ========================== */
 
 .login-card h1 {
@@ -73,16 +72,16 @@ body {
 
     color: #111827;
 
-    font-size: 31px;
+    font-size: 30px;
 
     line-height: 1.2;
 
-    margin-bottom: 8px;
+    margin-bottom: 7px;
 }
 
 
 /* ==========================
-   Subtitle
+   SUBTITLE
 ========================== */
 
 .subtitle {
@@ -90,16 +89,16 @@ body {
 
     color: #7c3aed;
 
-    font-size: 17px;
+    font-size: 16px;
 
     font-weight: 600;
 
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
 
 /* ==========================
-   Description
+   DESCRIPTION
 ========================== */
 
 .description {
@@ -107,53 +106,59 @@ body {
 
     color: #6b7280;
 
-    font-size: 14px;
+    font-size: 13px;
 
     line-height: 1.6;
 
-    margin-bottom: 28px;
+    margin-bottom: 25px;
 }
 
 
 /* ==========================
-   Labels
+   LABEL
 ========================== */
 
 label {
     display: block;
 
-    margin-bottom: 8px;
+    margin-bottom: 7px;
+
+    font-size: 13px;
 
     font-weight: 600;
 
     color: #374151;
-
-    font-size: 14px;
 }
 
 
 /* ==========================
-   Inputs
+   INPUT
 ========================== */
 
 input {
     width: 100%;
 
-    padding: 14px 15px;
+    padding: 13px 14px;
 
-    margin-bottom: 20px;
+    margin-bottom: 18px;
 
     border: 1px solid #d1d5db;
 
     border-radius: 10px;
 
-    font-size: 15px;
-
     background: #ffffff;
+
+    color: #111827;
+
+    font-size: 14px;
 
     transition:
         border-color 0.2s,
         box-shadow 0.2s;
+}
+
+input::placeholder {
+    color: #9ca3af;
 }
 
 input:focus {
@@ -162,18 +167,19 @@ input:focus {
     border-color: #7c3aed;
 
     box-shadow:
-        0 0 0 4px rgba(124, 58, 237, 0.12);
+        0 0 0 4px
+        rgba(124, 58, 237, 0.12);
 }
 
 
 /* ==========================
-   Login Button
+   LOGIN BUTTON
 ========================== */
 
 button {
     width: 100%;
 
-    padding: 14px 16px;
+    padding: 14px;
 
     border: none;
 
@@ -188,7 +194,7 @@ button {
 
     color: #ffffff;
 
-    font-size: 16px;
+    font-size: 15px;
 
     font-weight: 600;
 
@@ -213,13 +219,13 @@ button:active {
 
 
 /* ==========================
-   Login Instructions
+   LOGIN INSTRUCTIONS
 ========================== */
 
 .login-note {
-    margin: 20px 0;
+    margin: 18px 0;
 
-    padding: 15px 16px;
+    padding: 14px 15px;
 
     background: #eff6ff;
 
@@ -229,7 +235,7 @@ button:active {
 
     color: #374151;
 
-    font-size: 13px;
+    font-size: 12px;
 
     line-height: 1.7;
 }
@@ -244,28 +250,28 @@ button:active {
 
 
 /* ==========================
-   Security
+   SECURITY
 ========================== */
 
 .security {
-    margin-top: 15px;
+    margin-top: 14px;
 
     text-align: center;
 
     color: #6b7280;
 
-    font-size: 13px;
+    font-size: 12px;
 }
 
 
 /* ==========================
-   Support
+   SUPPORT BOX
 ========================== */
 
 .support-box {
-    margin-top: 25px;
+    margin-top: 22px;
 
-    padding: 18px;
+    padding: 17px;
 
     background: #f9fafb;
 
@@ -274,10 +280,15 @@ button:active {
     border-radius: 14px;
 }
 
+
+/* ==========================
+   SUPPORT TITLE
+========================== */
+
 .support-title {
     text-align: center;
 
-    font-size: 17px;
+    font-size: 16px;
 
     font-weight: 700;
 
@@ -286,17 +297,27 @@ button:active {
     margin-bottom: 8px;
 }
 
+
+/* ==========================
+   SUPPORT TEXT
+========================== */
+
 .support-text {
     text-align: center;
 
     color: #6b7280;
 
-    line-height: 1.6;
+    font-size: 12px;
 
-    font-size: 13px;
+    line-height: 1.6;
 
     margin-bottom: 12px;
 }
+
+
+/* ==========================
+   SUPPORT PHONE
+========================== */
 
 .support-phone {
     display: block;
@@ -309,7 +330,7 @@ button:active {
 
     font-weight: 600;
 
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .support-phone:hover {
@@ -318,34 +339,34 @@ button:active {
 
 
 /* ==========================
-   Error Message
+   ERROR MESSAGE
 ========================== */
 
 #msg {
-    margin-top: 16px;
+    margin-top: 15px;
 
     text-align: center;
+
+    font-size: 13px;
 
     font-weight: 600;
 
     color: #dc2626;
-
-    font-size: 14px;
 }
 
 
 /* ==========================
-   Footer
+   FOOTER
 ========================== */
 
 .footer {
-    margin-top: 25px;
+    margin-top: 22px;
 
     text-align: center;
 
     color: #9ca3af;
 
-    font-size: 12px;
+    font-size: 11px;
 
     line-height: 1.8;
 }
@@ -358,13 +379,15 @@ button:active {
 @media (min-width: 769px) {
 
     body {
-        padding: 40px;
+        padding: 30px;
     }
 
     .login-card {
-        width: 520px;
+        width: 390px;
 
-        padding: 45px 50px;
+        max-width: 390px;
+
+        padding: 42px 34px;
     }
 
 }
@@ -374,22 +397,26 @@ button:active {
    TABLET
 ================================================== */
 
-@media (min-width: 481px) and (max-width: 768px) {
+@media (min-width: 481px)
+and (max-width: 768px) {
 
     body {
-        padding: 25px;
+        padding: 20px;
     }
 
     .login-card {
-        width: 460px;
+        width: 380px;
 
-        padding: 38px 40px;
+        max-width:
+            calc(100vw - 40px);
 
-        border-radius: 20px;
+        padding: 38px 30px;
+
+        border-radius: 24px;
     }
 
     .logo {
-        font-size: 55px;
+        font-size: 54px;
     }
 
     .login-card h1 {
@@ -409,20 +436,16 @@ button:active {
         min-height: 100svh;
 
         padding: 15px;
-
-        align-items: center;
     }
 
     .login-card {
         width: 100%;
 
+        max-width: 100%;
+
         padding: 30px 22px;
 
-        border-radius: 18px;
-
-        box-shadow:
-            0 15px 40px
-            rgba(0, 0, 0, 0.22);
+        border-radius: 22px;
     }
 
     .logo {
@@ -433,8 +456,6 @@ button:active {
 
     .login-card h1 {
         font-size: 24px;
-
-        line-height: 1.25;
     }
 
     .subtitle {
@@ -444,65 +465,63 @@ button:active {
     .description {
         font-size: 12px;
 
-        line-height: 1.5;
-
         margin-bottom: 22px;
     }
 
     label {
-        font-size: 13px;
+        font-size: 12px;
     }
 
     input {
-        padding: 13px;
+        padding: 12px;
 
         margin-bottom: 16px;
 
-        font-size: 14px;
+        font-size: 13px;
     }
 
     button {
         padding: 13px;
 
-        font-size: 15px;
+        font-size: 14px;
     }
 
     .login-note {
         margin: 16px 0;
 
-        padding: 13px;
+        padding: 12px;
 
-        font-size: 12px;
+        font-size: 11px;
 
         line-height: 1.6;
     }
 
     .support-box {
-        margin-top: 20px;
+        margin-top: 18px;
 
-        padding: 15px;
+        padding: 14px;
     }
 
     .support-title {
-        font-size: 15px;
-    }
-
-    .support-text {
-        font-size: 12px;
-    }
-
-    .support-phone {
         font-size: 14px;
     }
 
+    .support-text {
+        font-size: 11px;
+    }
+
+    .support-phone {
+        font-size: 13px;
+    }
+
     .security {
-        font-size: 12px;
+        font-size: 11px;
     }
 
     .footer {
-        margin-top: 20px;
+        margin-top: 18px;
 
-        font-size: 11px;
+        font-size: 10px;
     }
 
 }
@@ -521,7 +540,7 @@ button:active {
     .login-card {
         padding: 25px 18px;
 
-        border-radius: 16px;
+        border-radius: 18px;
     }
 
     .logo {
@@ -533,11 +552,23 @@ button:active {
     }
 
     .subtitle {
-        font-size: 14px;
+        font-size: 13px;
     }
 
     .description {
-        font-size: 11px;
+        font-size: 10px;
+    }
+
+    input {
+        padding: 11px;
+
+        font-size: 12px;
+    }
+
+    button {
+        padding: 12px;
+
+        font-size: 13px;
     }
 
 }
