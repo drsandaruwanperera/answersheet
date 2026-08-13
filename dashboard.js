@@ -86,10 +86,10 @@ async function updateActiveStatus() {
 // Immediately mark active
 updateActiveStatus();
 
-// Update every 30 seconds
+// Update every 20 seconds
 setInterval(
     updateActiveStatus,
-    30000
+    20000
 );
 
 // Update when student returns to tab
