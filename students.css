@@ -46,7 +46,7 @@ body {
 
 .sidebar li:hover,
 .sidebar .active {
-    background: rgba(255,255,255,0.15);
+    background: #374151;
 }
 
 
