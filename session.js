@@ -1,31 +1,98 @@
 // ==========================
+// Admin Role Protection
+// ==========================
+
+function applyAdminPermissions() {
+
+    const isAdmin =
+        sessionStorage.getItem("adminLoggedIn") === "true";
+
+    if (!isAdmin) {
+        return;
+    }
+
+    const role =
+        sessionStorage.getItem("adminRole") || "limited";
+
+    const fullAdminItems =
+        document.querySelectorAll(".full-admin-only");
+
+    if (role !== "full") {
+
+        fullAdminItems.forEach(item => {
+            item.style.display = "none";
+        });
+
+    }
+
+}
+
+
+// ==========================
+// Page Protection
+// ==========================
+
+function protectAdminPage() {
+
+    const isAdmin =
+        sessionStorage.getItem("adminLoggedIn") === "true";
+
+    if (!isAdmin) {
+
+        window.location.replace(
+            "admin-login.html"
+        );
+
+        return false;
+    }
+
+    return true;
+}
+
+
+// ==========================
+// Full Admin Only Pages
+// ==========================
+
+function protectFullAdminPage() {
+
+    if (!protectAdminPage()) {
+        return;
+    }
+
+    const role =
+        sessionStorage.getItem("adminRole");
+
+    if (role !== "full") {
+
+        alert(
+            "You do not have permission to access this page."
+        );
+
+        window.location.replace(
+            "admin.html"
+        );
+
+    }
+
+}
+
+
+// ==========================
+// Apply Permissions
+// ==========================
+
+applyAdminPermissions();
+
+
+// ==========================
 // Session Timeout
 // ==========================
 
 const TIMEOUT =
-    15 * 60 * 1000; // 15 minutes
+    15 * 60 * 1000;
 
 let logoutTimer;
-
-
-// ==========================
-// Check Current Session
-// ==========================
-
-const isAdmin =
-    sessionStorage.getItem(
-        "adminLoggedIn"
-    ) === "true";
-
-const isStudent =
-    sessionStorage.getItem(
-        "loggedIn"
-    ) === "true";
-
-
-// ==========================
-// Logout
-// ==========================
 
 function logout() {
 
@@ -33,57 +100,17 @@ function logout() {
         "Your session has expired due to inactivity."
     );
 
-
-    // Clear session
-
     sessionStorage.clear();
 
-
-    // Admin → Admin Login
-
-    if (isAdmin) {
-
-        window.location.replace(
-            "admin-login.html"
-        );
-
-        return;
-
-    }
-
-
-    // Student → Student Login
-
-    if (isStudent) {
-
-        window.location.replace(
-            "index.html"
-        );
-
-        return;
-
-    }
-
-
-    // Default
-
     window.location.replace(
-        "index.html"
+        "admin-login.html"
     );
 
 }
 
-
-// ==========================
-// Reset Timer
-// ==========================
-
 function resetTimer() {
 
-    clearTimeout(
-        logoutTimer
-    );
-
+    clearTimeout(logoutTimer);
 
     logoutTimer =
         setTimeout(
@@ -93,11 +120,6 @@ function resetTimer() {
 
 }
 
-
-// ==========================
-// User Activity
-// ==========================
-
 [
     "mousemove",
     "mousedown",
@@ -105,20 +127,13 @@ function resetTimer() {
     "scroll",
     "keypress",
     "touchstart"
-].forEach(
-    event => {
+].forEach(event => {
 
-        document.addEventListener(
-            event,
-            resetTimer
-        );
+    document.addEventListener(
+        event,
+        resetTimer
+    );
 
-    }
-);
-
-
-// ==========================
-// Start Timer
-// ==========================
+});
 
 resetTimer();
