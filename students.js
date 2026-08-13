@@ -137,9 +137,14 @@ let allStudents = [];
 
 let currentStudent = "";
 
+const adminRole =
+    sessionStorage.getItem("adminRole") || "limited";
+
+const isFullAdmin =
+    adminRole === "full";
+
 const ACTIVE_LIMIT =
     90 * 1000;
-
 
 // ==========================
 // Detect Student Type
