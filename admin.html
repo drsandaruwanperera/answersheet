@@ -95,24 +95,139 @@
     </div>
 
 </div>
-        <!-- Toolbar -->
+        <!-- ==========================
+     Student Analytics
+========================== -->
 
-        <div class="toolbar">
+<div class="dashboard-analytics">
 
-            <input
-                type="text"
-                id="search"
-                placeholder="🔍 Search Student ID">
+    <div class="analytics-header">
 
-            <button id="addStudentBtn">
+        <div>
+            <h2>Student Overview</h2>
 
-                ➕ Add Student
+            <p>
+                Student distribution and current activity
+            </p>
+        </div>
 
-            </button>
+        <button
+            class="view-students-btn"
+            onclick="location.href='students.html'"
+        >
+            👨‍🎓 Manage Students
+        </button>
+
+    </div>
+
+
+    <div class="analytics-grid">
+
+        <!-- Grade 10 -->
+
+        <div class="analytics-box">
+
+            <div class="analytics-title">
+                🎓 Grade 10
+            </div>
+
+            <div
+                class="analytics-number"
+                id="dashboardGrade10"
+            >
+                0
+            </div>
+
+            <div class="analytics-bar">
+
+                <div
+                    id="grade10Bar"
+                    class="analytics-fill"
+                ></div>
+
+            </div>
 
         </div>
 
-        <!-- Student Table -->
+
+        <!-- Grade 11 -->
+
+        <div class="analytics-box">
+
+            <div class="analytics-title">
+                🎓 Grade 11
+            </div>
+
+            <div
+                class="analytics-number"
+                id="dashboardGrade11"
+            >
+                0
+            </div>
+
+            <div class="analytics-bar">
+
+                <div
+                    id="grade11Bar"
+                    class="analytics-fill"
+                ></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- A/L -->
+
+        <div class="analytics-box">
+
+            <div class="analytics-title">
+                📚 A/L Students
+            </div>
+
+            <div
+                class="analytics-number"
+                id="dashboardAL"
+            >
+                0
+            </div>
+
+            <div class="analytics-bar">
+
+                <div
+                    id="alBar"
+                    class="analytics-fill"
+                ></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Active -->
+
+        <div class="analytics-box active-box">
+
+            <div class="analytics-title">
+                🟢 Active Students
+            </div>
+
+            <div
+                class="analytics-number active-number"
+                id="dashboardActive"
+            >
+                0
+            </div>
+
+            <p class="analytics-subtext">
+                Currently active
+            </p>
+
+        </div>
+
+    </div>
+
+</div>        <!-- Student Table -->
 
         <table>
 
