@@ -1240,41 +1240,7 @@ if (grade !== null) {
             // Load Paper Settings
             // ==========================
 
-            const papersSnapshot =
-                await getDocs(
-                    collection(
-                        db,
-                        "papers"
-                    )
-                );
-
-
-            const paperSettings =
-                {};
-
-
-            papersSnapshot.forEach(
-                paperDoc => {
-
-                    paperSettings[
-                        paperDoc.id
-                    ] =
-                        paperDoc.data();
-
-                }
-            );
-
-
-            // ==========================
-            // Default Paper Permissions
-            // ==========================
-
-            for (
-                let i = 1;
-                i <= 10;
-                i++
-            ) {
-
+           
                 const paper =
                     "paper" +
                     String(i).padStart(
