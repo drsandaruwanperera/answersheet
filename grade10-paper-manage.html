@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Manage Grade 10 Paper</title>
+
+    <link
+        rel="stylesheet"
+        href="grade10-paper-manage.css"
+    >
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <div>
+
+            <h1>
+                ⚙️ Manage Model Paper
+            </h1>
+
+            <p id="paperInfo">
+                Grade 10
+            </p>
+
+        </div>
+
+        <button
+            onclick="history.back()"
+        >
+            ← Back
+        </button>
+
+    </div>
+
+
+    <!-- ==========================
+         Part A
+    =========================== -->
+
+    <div class="section-card">
+
+        <h2>
+            📝 Part A
+        </h2>
+
+
+        <div class="upload-card">
+
+            <h3>
+                📄 MCQ Paper
+            </h3>
+
+            <p>
+                Upload the MCQ PDF.
+            </p>
+
+            <input
+                type="file"
+                id="mcqPdf"
+                accept="application/pdf"
+            >
+
+            <button
+                id="uploadMcqBtn"
+            >
+                📤 Upload MCQ PDF
+            </button>
+
+            <p
+                id="mcqStatus"
+                class="status"
+            ></p>
+
+        </div>
+
+
+        <div class="upload-card">
+
+            <h3>
+                📝 MCQ Answer
+            </h3>
+
+            <p>
+                Select all answer images at once.
+            </p>
+
+            <input
+                type="file"
+                id="mcqAnswerImages"
+                accept="image/*"
+                multiple
+            >
+
+            <button
+                id="uploadMcqAnswerBtn"
+            >
+                📤 Upload MCQ Answers
+            </button>
+
+            <p
+                id="mcqAnswerStatus"
+                class="status"
+            ></p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================
+         Part B
+    =========================== -->
+
+    <div class="section-card">
+
+        <h2>
+            📚 Part B
+        </h2>
+
+
+        <div class="upload-card">
+
+            <h3>
+                📄 Question Paper
+            </h3>
+
+            <p>
+                Upload the Question Paper PDF.
+            </p>
+
+            <input
+                type="file"
+                id="questionPdf"
+                accept="application/pdf"
+            >
+
+            <button
+                id="uploadQuestionBtn"
+            >
+                📤 Upload Question Paper
+            </button>
+
+            <p
+                id="questionStatus"
+                class="status"
+            ></p>
+
+        </div>
+
+
+        <div class="upload-card">
+
+            <h3>
+                📝 Answer Scheme
+            </h3>
+
+            <p>
+                Select all answer scheme images at once.
+            </p>
+
+            <input
+                type="file"
+                id="answerImages"
+                accept="image/*"
+                multiple
+            >
+
+            <button
+                id="uploadAnswerBtn"
+            >
+                📤 Upload Answer Scheme
+            </button>
+
+            <p
+                id="answerStatus"
+                class="status"
+            ></p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script
+    type="module"
+    src="grade10-paper-manage.js"
+></script>
+
+</body>
+
+</html>
