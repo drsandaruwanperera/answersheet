@@ -13,9 +13,7 @@ import {
     getDocs
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
-import {
-    getStorage
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-storage.js";
+
 
 
 const firebaseConfig = {
