@@ -1,1 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Grade 10 - Student Assessment Portal</title>
+
+    <link
+        rel="stylesheet"
+        href="dashboard.css"
+    >
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Header -->
+
+    <div class="header">
+
+        <div>
+
+            <h2>
+                📘 Student Assessment Portal
+            </h2>
+
+            <p>
+                Grade 10 Student ID :
+                <span id="studentId"></span>
+            </p>
+
+        </div>
+
+        <button id="logoutBtn">
+            🚪 Sign Out
+        </button>
+
+    </div>
+
+
+    <!-- Grade -->
+
+    <div class="progress-card">
+
+        <h3>
+            🎓 Grade 10
+        </h3>
+
+        <p>
+            Welcome to the Grade 10 Student Portal.
+        </p>
+
+    </div>
+
+
+    <!-- Study Materials -->
+
+    <h2 class="paper-title">
+        📚 Study Materials
+    </h2>
+
+
+    <div class="material-grid">
+
+        <!-- Model Papers -->
+
+        <div
+            class="material-card"
+            onclick="
+                location.href =
+                'model-papers-grade10.html?id=' +
+                encodeURIComponent(
+                    document.getElementById('studentId').textContent
+                )
+            "
+        >
+
+            <div class="material-icon">
+                📘
+            </div>
+
+            <h3>
+                Model Papers
+            </h3>
+
+            <p>
+                Grade 10 Model Papers
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Instructions -->
+
+    <div class="card">
+
+        <h3>
+            📝 Instructions
+        </h3>
+
+        <ul>
+
+            <li>
+                Do Not Share Your Login Credentials
+            </li>
+
+            <li>
+                Contact The Administrator If You Need Assistance
+            </li>
+
+        </ul>
+
+    </div>
+
+
+    <!-- Support -->
+
+    <div class="info-grid">
+
+        <div class="card">
+
+            <h3>
+                📢 Announcements
+            </h3>
+
+            <p>
+                No new announcements.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>
+                📞 Support
+            </h3>
+
+            <p>
+                077 901 1780
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <footer>
+
+        © 2026 Student Assessment Portal
+
+    </footer>
+
+</div>
+
+
+<script
+    type="module"
+    src="dashboard-grade10.js"
+></script>
+
+</body>
+
+</html>
