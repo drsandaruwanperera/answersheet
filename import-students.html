@@ -1,70 +1,354 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>Import Students</title>
 
-    <link rel="stylesheet" href="import-students.css">
+    <link
+        rel="stylesheet"
+        href="import-students.css"
+    >
 
     <!-- SheetJS -->
     <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+
 </head>
+
 
 <body>
 
+
 <div class="container">
 
-    <h2>📥 Import Students</h2>
 
-    <p>
-    </p>
+    <!-- ==========================
+         Header
+    =========================== -->
 
-    <table class="sample">
-        <tr>
-            <th>Student ID</th>
-            <th>Password</th>
-        </tr>
+    <div class="page-header">
 
-        <tr>
-            <td>001</td>
-            <td>1234</td>
-        </tr>
+        <div>
 
-        <tr>
-            <td>002</td>
-            <td>5678</td>
-        </tr>
-    </table>
+            <h2>
+                📥 Import Students
+            </h2>
 
-    <br>
+            <p>
+                Import student accounts from Excel files
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==========================
+         Information
+    =========================== -->
+
+    <div class="info-box">
+
+        <strong>
+            📌 Import Rules
+        </strong>
+
+        <ul>
+
+            <li>
+                26000–26999 → Grade 11
+            </li>
+
+            <li>
+                27000–27999 → Grade 10
+            </li>
+
+            <li>
+                All other Student IDs → A/L
+            </li>
+
+            <li>
+                Imported students must change their password on first login.
+            </li>
+
+        </ul>
+
+    </div>
+
+
+
+    <!-- ==========================
+         Category
+    =========================== -->
+
+    <h3>
+        Select Student Category
+    </h3>
+
+
+    <div class="category-grid">
+
+
+        <button
+            type="button"
+            class="category-btn"
+            data-type="al"
+        >
+
+            <span class="category-icon">
+                📚
+            </span>
+
+            <span>
+                <strong>
+                    Import A/L
+                </strong>
+
+                <small>
+                    Advanced Level Students
+                </small>
+            </span>
+
+        </button>
+
+
+
+        <button
+            type="button"
+            class="category-btn"
+            data-type="grade10"
+        >
+
+            <span class="category-icon">
+                🎓
+            </span>
+
+            <span>
+
+                <strong>
+                    Import Grade 10
+                </strong>
+
+                <small>
+                    Grade 10 Students
+                </small>
+
+            </span>
+
+        </button>
+
+
+
+        <button
+            type="button"
+            class="category-btn"
+            data-type="grade11"
+        >
+
+            <span class="category-icon">
+                🎓
+            </span>
+
+            <span>
+
+                <strong>
+                    Import Grade 11
+                </strong>
+
+                <small>
+                    Grade 11 Students
+                </small>
+
+            </span>
+
+        </button>
+
+
+    </div>
+
+
 
     <input
-        type="file"
-        id="excelFile"
-        accept=".xlsx,.xls">
+        type="hidden"
+        id="selectedType"
+        value=""
+    >
 
-    <br><br>
 
-    <button id="importBtn">
-        Import Students
+
+    <!-- ==========================
+         Excel Format
+    =========================== -->
+
+    <div class="format-header">
+
+        <div>
+
+            <h3>
+                📄 Excel Format
+            </h3>
+
+            <p>
+                Your Excel file should contain these columns:
+            </p>
+
+        </div>
+
+
+        <button
+            type="button"
+            id="downloadTemplateBtn"
+            class="template-btn"
+        >
+            📥 Download Sample Template
+        </button>
+
+    </div>
+
+
+
+    <table class="sample">
+
+        <thead>
+
+            <tr>
+
+                <th>
+                    Student ID
+                </th>
+
+                <th>
+                    Password
+                </th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            <tr>
+
+                <td>
+                    001
+                </td>
+
+                <td>
+                    1234
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    002
+                </td>
+
+                <td>
+                    5678
+                </td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+
+
+    <!-- ==========================
+         File Upload
+    =========================== -->
+
+    <div class="upload-box">
+
+        <label for="excelFile">
+
+            📂 Select Excel File
+
+        </label>
+
+
+        <input
+            type="file"
+            id="excelFile"
+            accept=".xlsx,.xls"
+        >
+
+
+        <p id="fileName">
+            No file selected
+        </p>
+
+    </div>
+
+
+
+    <!-- ==========================
+         Import
+    =========================== -->
+
+    <button
+        id="importBtn"
+        class="import-btn"
+        type="button"
+    >
+
+        📥 Import Students
+
     </button>
 
-    <br><br>
 
-    <div id="result"></div>
 
-    <br>
+    <!-- ==========================
+         Result
+    =========================== -->
 
-    <button onclick="location.href='admin.html'">
-        ← Back
+    <div
+        id="result"
+        class="result"
+    ></div>
+
+
+
+    <!-- ==========================
+         Back
+    =========================== -->
+
+    <button
+        class="back-btn"
+        type="button"
+        onclick="location.href='admin.html'"
+    >
+
+        ← Back to Admin
+
     </button>
+
 
 </div>
 
+
+
 <script src="session.js"></script>
-<script type="module" src="import-students.js"></script>
+
+<script
+    type="module"
+    src="import-students.js"
+></script>
+
 
 </body>
+
 </html>
-                
