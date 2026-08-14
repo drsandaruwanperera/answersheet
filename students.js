@@ -1123,10 +1123,85 @@ saveNewStudent.addEventListener(
             // Detect Type
             // ==========================
 
-            const detected =
-                detectStudentType(
-                    id
-                );
+            // ==========================
+// Selected Student Type
+// ==========================
+
+const selectedType =
+    newStudentType.value;
+
+
+// ==========================
+// Category Required
+// ==========================
+
+if (
+    !["al", "grade10", "grade11"]
+        .includes(selectedType)
+) {
+
+    alert(
+        "Please select Student Category."
+    );
+
+    return;
+
+}
+
+
+// ==========================
+// Grade Information
+// ==========================
+
+let studentType =
+    selectedType;
+
+let grade = null;
+
+
+if (
+    selectedType === "grade10"
+) {
+
+    grade = 10;
+
+}
+else if (
+    selectedType === "grade11"
+) {
+
+    grade = 11;
+
+}
+
+
+// ==========================
+// Student Data
+// ==========================
+
+const studentData = {
+
+    password:
+        password,
+
+    mustChangePassword:
+        mustChange,
+
+    studentType:
+        studentType,
+
+    lastActiveAt:
+        0
+
+};
+
+
+if (grade !== null) {
+
+    studentData.grade =
+        grade;
+
+}
 
 
             // ==========================
