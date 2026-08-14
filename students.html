@@ -18,29 +18,516 @@
     >
 
 </head>
+
+
+<body>
+
+
 <!-- ==========================
-     Edit Student Modal
+     Sidebar
 =========================== -->
 
-<div id="editModal" class="modal">
+<div class="sidebar">
+
+    <h2>👨🏻‍💻 Admin</h2>
+
+    <ul>
+
+        <li onclick="location.href='admin.html'">
+            📊 Dashboard
+        </li>
+
+        <li class="active">
+            👨‍🎓 Students
+        </li>
+
+        <li
+            class="full-admin-only"
+            onclick="location.href='paper-settings.html'"
+        >
+            📚 Papers
+        </li>
+
+        <li
+            class="full-admin-only"
+            onclick="location.href='import-students.html'"
+        >
+            📥 Import Students
+        </li>
+
+        <li
+            class="full-admin-only"
+            onclick="location.href='reports.html'"
+        >
+            📈 Reports
+        </li>
+
+        <li
+            class="full-admin-only"
+            onclick="location.href='settings.html'"
+        >
+            ⚙️ Settings
+        </li>
+
+        <li id="logoutBtn">
+            🚪 Logout
+        </li>
+
+    </ul>
+
+</div>
+
+
+
+<!-- ==========================
+     Main
+=========================== -->
+
+<div class="main">
+
+    <header>
+
+        <div>
+
+            <h1>
+                Students
+            </h1>
+
+            <p>
+                Manage student accounts and activity
+            </p>
+
+        </div>
+
+
+        <button
+            class="add-btn"
+            id="addStudentBtn"
+            type="button"
+        >
+            ➕ Add Student
+        </button>
+
+    </header>
+
+
+
+    <!-- ==========================
+         Summary Cards
+    =========================== -->
+
+    <div class="cards">
+
+        <div class="card">
+
+            <span>👨‍🎓</span>
+
+            <div>
+
+                <p>Total Students</p>
+
+                <h2 id="totalStudents">
+                    0
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <span>🎓</span>
+
+            <div>
+
+                <p>Grade 10</p>
+
+                <h2 id="grade10Students">
+                    0
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <span>🎓</span>
+
+            <div>
+
+                <p>Grade 11</p>
+
+                <h2 id="grade11Students">
+                    0
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <span>📚</span>
+
+            <div>
+
+                <p>A/L Students</p>
+
+                <h2 id="alStudents">
+                    0
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="card active-card">
+
+            <span>🟢</span>
+
+            <div>
+
+                <p>Active Now</p>
+
+                <h2 id="activeStudents">
+                    0
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==========================
+         Filters
+    =========================== -->
+
+    <div class="filters">
+
+        <div class="search-box">
+
+            🔍
+
+            <input
+                type="text"
+                id="search"
+                placeholder="Search Student ID..."
+            >
+
+        </div>
+
+
+        <select id="typeFilter">
+
+            <option value="all">
+                All Students
+            </option>
+
+            <option value="grade10">
+                Grade 10
+            </option>
+
+            <option value="grade11">
+                Grade 11
+            </option>
+
+            <option value="al">
+                A/L
+            </option>
+
+        </select>
+
+
+        <select id="statusFilter">
+
+            <option value="all">
+                All Status
+            </option>
+
+            <option value="active">
+                🟢 Active
+            </option>
+
+            <option value="offline">
+                ⚪ Offline
+            </option>
+
+        </select>
+
+    </div>
+
+
+
+    <!-- ==========================
+         Student Table
+    =========================== -->
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Student ID
+                    </th>
+
+                    <th>
+                        Type / Grade
+                    </th>
+
+                    <th>
+                        Viewed
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <th>
+                        Password
+                    </th>
+
+                    <th>
+                        Action
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="studentTable">
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+
+<!-- ==================================================
+     ADD STUDENT MODAL
+=================================================== -->
+
+<div
+    id="addModal"
+    class="modal"
+>
 
     <div class="modal-content">
 
         <div class="modal-header">
 
             <div>
-                <h2>Edit Student</h2>
-                <p>Manage student account and paper access</p>
+
+                <h2>
+                    Add Student
+                </h2>
+
+                <p>
+                    Create a new student account
+                </p>
+
             </div>
 
+
             <button
-                id="closeEdit"
+                id="closeAdd"
                 class="close-btn"
+                type="button"
             >
                 ✕
             </button>
 
         </div>
+
+
+
+        <!-- ==========================
+             Student Category
+        =========================== -->
+
+        <label>
+            Student Category
+        </label>
+
+
+        <div class="student-category">
+
+            <button
+                type="button"
+                class="category-btn"
+                data-type="al"
+            >
+                🎓 A/L Student
+            </button>
+
+
+            <button
+                type="button"
+                class="category-btn"
+                data-type="grade10"
+            >
+                🎓 Grade 10
+            </button>
+
+
+            <button
+                type="button"
+                class="category-btn"
+                data-type="grade11"
+            >
+                🎓 Grade 11
+            </button>
+
+        </div>
+
+
+        <input
+            type="hidden"
+            id="newStudentType"
+            value=""
+        >
+
+
+        <div
+            id="newStudentGrade"
+            class="grade-status"
+        ></div>
+
+
+
+        <!-- ==========================
+             Student ID
+        =========================== -->
+
+        <label>
+            Student ID
+        </label>
+
+        <input
+            type="text"
+            id="newStudentId"
+            placeholder="Enter Student ID"
+            autocomplete="off"
+        >
+
+
+
+        <!-- ==========================
+             Password
+        =========================== -->
+
+        <label>
+            Password
+        </label>
+
+        <input
+            type="text"
+            id="newStudentPassword"
+            placeholder="Enter Password"
+            autocomplete="off"
+        >
+
+
+
+        <!-- ==========================
+             Force Password Change
+        =========================== -->
+
+        <label class="check-row">
+
+            <input
+                type="checkbox"
+                id="newMustChange"
+            >
+
+            Force password change on first login
+
+        </label>
+
+
+
+        <!-- ==========================
+             Buttons
+        =========================== -->
+
+        <div class="modal-buttons">
+
+            <button
+                id="cancelAdd"
+                class="cancel-btn"
+                type="button"
+            >
+                Cancel
+            </button>
+
+
+            <button
+                id="saveNewStudent"
+                class="save-btn"
+                type="button"
+            >
+                💾 Save Student
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ==================================================
+     EDIT STUDENT MODAL
+=================================================== -->
+
+<div
+    id="editModal"
+    class="modal"
+>
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2>
+                    Edit Student
+                </h2>
+
+                <p>
+                    Manage student account and paper access
+                </p>
+
+            </div>
+
+
+            <button
+                id="closeEdit"
+                class="close-btn"
+                type="button"
+            >
+                ✕
+            </button>
+
+        </div>
+
 
 
         <!-- Student ID -->
@@ -56,11 +543,13 @@
         >
 
 
+
         <!-- Password -->
 
         <label>
             Password
         </label>
+
 
         <div class="password-row">
 
@@ -70,6 +559,7 @@
                 placeholder="Student password"
             >
 
+
             <button
                 id="resetPasswordBtn"
                 type="button"
@@ -78,6 +568,7 @@
             </button>
 
         </div>
+
 
 
         <!-- Force Password Change -->
@@ -94,11 +585,13 @@
         </label>
 
 
+
         <!-- Paper Permissions -->
 
         <h3>
-            📚 Paper Permissions
+            📚 A/L Paper Permissions
         </h3>
+
 
         <div class="paper-tools">
 
@@ -109,12 +602,14 @@
                 ✅ Select All
             </button>
 
+
             <button
                 id="removeAllPapers"
                 type="button"
             >
                 ❌ Remove All
             </button>
+
 
             <button
                 id="resetViewed"
@@ -126,59 +621,100 @@
         </div>
 
 
+
         <div class="papers">
 
             <label>
-                <input type="checkbox" id="paper01">
+                <input
+                    type="checkbox"
+                    id="paper01"
+                >
                 Paper 01
             </label>
 
+
             <label>
-                <input type="checkbox" id="paper02">
+                <input
+                    type="checkbox"
+                    id="paper02"
+                >
                 Paper 02
             </label>
 
+
             <label>
-                <input type="checkbox" id="paper03">
+                <input
+                    type="checkbox"
+                    id="paper03"
+                >
                 Paper 03
             </label>
 
+
             <label>
-                <input type="checkbox" id="paper04">
+                <input
+                    type="checkbox"
+                    id="paper04"
+                >
                 Paper 04
             </label>
 
+
             <label>
-                <input type="checkbox" id="paper05">
+                <input
+                    type="checkbox"
+                    id="paper05"
+                >
                 Paper 05
             </label>
 
+
             <label>
-                <input type="checkbox" id="paper06">
+                <input
+                    type="checkbox"
+                    id="paper06"
+                >
                 Paper 06
             </label>
 
+
             <label>
-                <input type="checkbox" id="paper07">
+                <input
+                    type="checkbox"
+                    id="paper07"
+                >
                 Paper 07
             </label>
 
+
             <label>
-                <input type="checkbox" id="paper08">
+                <input
+                    type="checkbox"
+                    id="paper08"
+                >
                 Paper 08
             </label>
 
+
             <label>
-                <input type="checkbox" id="paper09">
+                <input
+                    type="checkbox"
+                    id="paper09"
+                >
                 Paper 09
             </label>
 
+
             <label>
-                <input type="checkbox" id="paper10">
+                <input
+                    type="checkbox"
+                    id="paper10"
+                >
                 Paper 10
             </label>
 
         </div>
+
 
 
         <!-- Buttons -->
@@ -193,6 +729,7 @@
                 🗑 Delete
             </button>
 
+
             <div>
 
                 <button
@@ -202,6 +739,7 @@
                 >
                     Cancel
                 </button>
+
 
                 <button
                     id="updateStudent"
@@ -218,405 +756,20 @@
     </div>
 
 </div>
-<body>
 
-    <!-- ==========================
-         Sidebar
-    =========================== -->
 
-    <div class="sidebar">
 
-        <h2>👨🏻‍💻 Admin</h2>
-
-        <ul>
-
-            <li onclick="location.href='admin.html'">
-                📊 Dashboard
-            </li>
-
-            <li class="active">
-                👨‍🎓 Students
-            </li>
-
-            <li
-    class="full-admin-only"
-    onclick="location.href='paper-settings.html'"
->
-    📚 Papers
-</li>
-
-<li
-    class="full-admin-only"
-    onclick="location.href='import-students.html'"
->
-    📥 Import Students
-</li>
-
-<li
-    class="full-admin-only"
-    onclick="location.href='reports.html'"
->
-    📈 Reports
-</li>
-
-<li
-    class="full-admin-only"
-    onclick="location.href='settings.html'"
->
-    ⚙️ Settings
-</li>
-            <li id="logoutBtn">
-                🚪 Logout
-            </li>
-
-        </ul>
-
-    </div>
-
-
-    <!-- ==========================
-         Main
-    =========================== -->
-
-    <div class="main">
-
-        <header>
-
-            <div>
-
-                <h1>Students</h1>
-
-                <p>
-                    Manage student accounts and activity
-                </p>
-
-            </div>
-
- <button
-    class="add-btn"
-    id="addStudentBtn"
-    type="button"
-    onclick="alert('ADD BUTTON WORKS')"
->
-    ➕ Add Student
-</button>
-
-        </header>
-
-
-        <!-- ==========================
-             Summary Cards
-        =========================== -->
-
-        <div class="cards">
-
-            <div class="card">
-
-                <span>👨‍🎓</span>
-
-                <div>
-
-                    <p>Total Students</p>
-
-                    <h2 id="totalStudents">
-                        0
-                    </h2>
-
-                </div>
-
-            </div>
-
-
-            <div class="card">
-
-                <span>🎓</span>
-
-                <div>
-
-                    <p>Grade 10</p>
-
-                    <h2 id="grade10Students">
-                        0
-                    </h2>
-
-                </div>
-
-            </div>
-
-
-            <div class="card">
-
-                <span>🎓</span>
-
-                <div>
-
-                    <p>Grade 11</p>
-
-                    <h2 id="grade11Students">
-                        0
-                    </h2>
-
-                </div>
-
-            </div>
-
-
-            <div class="card">
-
-                <span>📚</span>
-
-                <div>
-
-                    <p>A/L Students</p>
-
-                    <h2 id="alStudents">
-                        0
-                    </h2>
-
-                </div>
-
-            </div>
-
-
-            <div class="card active-card">
-
-                <span>🟢</span>
-
-                <div>
-
-                    <p>Active Now</p>
-
-                    <h2 id="activeStudents">
-                        0
-                    </h2>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- ==========================
-             Filters
-        =========================== -->
-
-        <div class="filters">
-
-            <div class="search-box">
-
-                🔍
-
-                <input
-                    type="text"
-                    id="search"
-                    placeholder="Search Student ID..."
-                >
-
-            </div>
-
-
-            <select id="typeFilter">
-
-                <option value="all">
-                    All Students
-                </option>
-
-                <option value="grade10">
-                    Grade 10
-                </option>
-
-                <option value="grade11">
-                    Grade 11
-                </option>
-
-                <option value="al">
-                    A/L
-                </option>
-
-            </select>
-
-
-            <select id="statusFilter">
-
-                <option value="all">
-                    All Status
-                </option>
-
-                <option value="active">
-                    🟢 Active
-                </option>
-
-                <option value="offline">
-                    ⚪ Offline
-                </option>
-
-            </select>
-
-        </div>
-
-
-        <!-- ==========================
-             Student Table
-        =========================== -->
-
-        <div class="table-container">
-
-            <table>
-
-                <thead>
-
-                    <tr>
-
-                        <th>Student ID</th>
-
-                        <th>Type / Grade</th>
-
-                        <th>Viewed</th>
-
-                        <th>Status</th>
-
-                        <th>Password</th>
-
-                        <th>Action</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody id="studentTable">
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-    </div>
-
-
-    <!-- ==========================
-         Script
-    =========================== -->
-    <!-- Add Student Modal -->
-
-    <div id="addModal" class="modal">
-
-        <div class="modal-content">
-
-            <div class="modal-header">
-
-                <div>
-                    <h2>Add Student</h2>
-                    <p>Create a new student account</p>
-                </div>
-
-                <button
-                    id="closeAdd"
-                    class="close-btn"
-                    type="button"
-                >
-                    ✕
-                </button>
-
-            </div>
-
-            <label>Student ID</label>
-
-            <input
-                type="text"
-                id="newStudentId"
-                placeholder="Enter Student ID"
-            >
-
-<label>
-    Student Category
-</label>
-
-<div class="student-category">
-
-    <button
-        type="button"
-        class="category-btn"
-        data-type="al"
-    >
-        🎓 A/L Student
-    </button>
-
-    <button
-        type="button"
-        class="category-btn"
-        data-type="grade10"
-    >
-        🎓 Grade 10
-    </button>
-
-    <button
-        type="button"
-        class="category-btn"
-        data-type="grade11"
-    >
-        🎓 Grade 11
-    </button>
-
-</div>
-
-<input
-    type="hidden"
-    id="newStudentType"
-    value=""
->
-            
-            <div
-                id="newStudentGrade"
-                class="grade-status"
-            ></div>
-
-            <label>Password</label>
-
-            <input
-                type="text"
-                id="newStudentPassword"
-                placeholder="Enter Password"
-            >
-
-            <label class="check-row">
-
-                <input
-                    type="checkbox"
-                    id="newMustChange"
-                >
-
-                Force password change on first login
-
-            </label>
-
-            <div class="modal-buttons">
-
-                <button
-                    id="cancelAdd"
-                    class="cancel-btn"
-                    type="button"
-                >
-                    Cancel
-                </button>
-
-                <button
-                    id="saveNewStudent"
-                    class="save-btn"
-                    type="button"
-                >
-                    💾 Save Student
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
+<!-- ==========================
+     Scripts
+=========================== -->
 
 <script src="session.js"></script>
-    <script type="module" src="students.js"></script>
+
+<script
+    type="module"
+    src="students.js"
+></script>
+
 
 </body>
 
