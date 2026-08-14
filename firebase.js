@@ -1,35 +1,71 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+import {
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 
 import {
-  getFirestore,
-  doc,
-  getDoc,
-  updateDoc,
-  setDoc,
-  deleteDoc,
-  collection,
-  getDocs
+    getFirestore,
+    doc,
+    getDoc,
+    updateDoc,
+    setDoc,
+    deleteDoc,
+    collection,
+    getDocs
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
+import {
+    getStorage
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-storage.js";
+
+
 const firebaseConfig = {
-  apiKey: "...",
-  authDomain: "answersheet2026.firebaseapp.com",
-  projectId: "answersheet2026",
-  storageBucket: "answersheet2026.firebasestorage.app",
-  messagingSenderId: "953495846284",
-  appId: "1:953495846284:web:0f1f9def812a5cbef16aa9"
+
+    apiKey: "...",
+
+    authDomain:
+        "answersheet2026.firebaseapp.com",
+
+    projectId:
+        "answersheet2026",
+
+    storageBucket:
+        "answersheet2026.firebasestorage.app",
+
+    messagingSenderId:
+        "953495846284",
+
+    appId:
+        "1:953495846284:web:0f1f9def812a5cbef16aa9"
+
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+
+const app =
+    initializeApp(
+        firebaseConfig
+    );
+
+
+const db =
+    getFirestore(app);
+
+
+const storage =
+    getStorage(app);
+
 
 export {
-  db,
-  doc,
-  getDoc,
-  updateDoc,
-  setDoc,
-  deleteDoc,
-  collection,
-  getDocs
+
+    db,
+
+    storage,
+
+    doc,
+    getDoc,
+    updateDoc,
+    setDoc,
+    deleteDoc,
+    collection,
+    getDocs
+
 };
