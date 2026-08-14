@@ -967,7 +967,7 @@ addStudentBtn.addEventListener(
             "flex";
 
         newStudentId.focus();
-
+newStudentType.value = "";
     }
 );
 
