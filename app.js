@@ -28,11 +28,65 @@ loginBtn.addEventListener("click", async () => {
     sessionStorage.setItem("studentId", studentId);
 
     if (data.mustChangePassword === true) {
-        window.location.href = "change-password.html?id=" + studentId;
-    } else {
-        window.location.href = "dashboard.html?id=" + studentId;
+
+    window.location.href =
+        "change-password.html?id=" +
+        encodeURIComponent(studentId);
+
+} else {
+
+    const studentNumber = Number(studentId);
+
+    // Grade 11 → 26000 series
+    if (
+        Number.isInteger(studentNumber) &&
+        studentNumber >= 26000 &&
+        studentNumber <= 26999
+    ) {
+
+        sessionStorage.setItem(
+            "studentGrade",
+            "grade11"
+        );
+
+        window.location.href =
+            "dashboard-grade11.html?id=" +
+            encodeURIComponent(studentId);
+
     }
 
-});
+    // Grade 10 → 27000 series
+    else if (
+        Number.isInteger(studentNumber) &&
+        studentNumber >= 27000 &&
+        studentNumber <= 27999
+    ) {
+
+        sessionStorage.setItem(
+            "studentGrade",
+            "grade10"
+        );
+
+        window.location.href =
+            "dashboard-grade10.html?id=" +
+            encodeURIComponent(studentId);
+
+    }
+
+    // Other IDs → existing dashboard
+    else {
+
+        sessionStorage.setItem(
+            "studentGrade",
+            "al"
+        );
+
+        window.location.href =
+            "dashboard.html?id=" +
+            encodeURIComponent(studentId);
+
+    }
+
+}
 
 console.log("app.js loaded");
