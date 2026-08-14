@@ -785,6 +785,97 @@ async function loadStudents() {
 // ==========================
 // ADD STUDENT
 // ==========================
+// ==========================
+// Student Category Selection
+// ==========================
+
+const categoryButtons =
+    document.querySelectorAll(
+        ".category-btn"
+    );
+
+const newStudentType =
+    document.getElementById(
+        "newStudentType"
+    );
+
+
+categoryButtons.forEach(
+    button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                const type =
+                    button.dataset.type;
+
+
+                // Remove previous selection
+
+                categoryButtons.forEach(
+                    item => {
+
+                        item.classList.remove(
+                            "selected"
+                        );
+
+                    }
+                );
+
+
+                // Select current button
+
+                button.classList.add(
+                    "selected"
+                );
+
+
+                // Save selected type
+
+                newStudentType.value =
+                    type;
+
+
+                // Show selected grade
+
+                if (
+                    type === "grade10"
+                ) {
+
+                    newStudentGrade.textContent =
+                        "✓ Grade 10 Student";
+
+                    newStudentGrade.className =
+                        "grade-status grade10";
+
+                }
+                else if (
+                    type === "grade11"
+                ) {
+
+                    newStudentGrade.textContent =
+                        "✓ Grade 11 Student";
+
+                    newStudentGrade.className =
+                        "grade-status grade11";
+
+                }
+                else {
+
+                    newStudentGrade.textContent =
+                        "✓ A/L Student";
+
+                    newStudentGrade.className =
+                        "grade-status al";
+
+                }
+
+            }
+        );
+
+    }
+);
 
 newStudentId.addEventListener(
     "input",
