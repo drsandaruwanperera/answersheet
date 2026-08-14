@@ -683,3 +683,7 @@ body {
     }
 
 }
+/* Hide old sample table */
+.sample {
+    display: none !important;
+}
