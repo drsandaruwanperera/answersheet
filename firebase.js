@@ -14,8 +14,6 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 
-
-
 const firebaseConfig = {
 
     apiKey: "...",
@@ -48,15 +46,9 @@ const db =
     getFirestore(app);
 
 
-const storage =
-    getStorage(app);
-
-
 export {
 
     db,
-
-    storage,
 
     doc,
     getDoc,
