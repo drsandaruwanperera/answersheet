@@ -1,574 +1,494 @@
+/* =========================================
+   STUDENT LOGIN - PROFESSIONAL DESIGN
+========================================= */
+
 * {
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
-    font-family: "Segoe UI", Arial, sans-serif;
 }
 
-
-/* ==========================
-   BODY
-========================== */
-
 body {
+    margin: 0;
     min-height: 100vh;
+
+    font-family:
+        Inter,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    background:
+        linear-gradient(
+            135deg,
+            #4f46e5 0%,
+            #7c3aed 50%,
+            #9333ea 100%
+        );
 
     display: flex;
     justify-content: center;
     align-items: center;
 
-    padding: 20px;
+    padding: 30px 16px;
+
+    color: #172033;
+}
+
+
+/* =========================================
+   MAIN LOGIN CARD
+========================================= */
+
+.login-card {
+    width: min(460px, 100%);
+
+    background: rgba(255, 255, 255, 0.98);
+
+    border: 1px solid rgba(255, 255, 255, 0.8);
+
+    border-radius: 24px;
+
+    padding: 38px 38px 30px;
+
+    box-shadow:
+        0 30px 70px rgba(15, 23, 42, 0.25),
+        0 8px 25px rgba(15, 23, 42, 0.10);
+
+    text-align: center;
+
+    animation:
+        cardAppear 0.45s ease;
+}
+
+@keyframes cardAppear {
+
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+
+/* =========================================
+   LOGO
+========================================= */
+
+.logo {
+    width: 68px;
+    height: 68px;
+
+    margin: 0 auto 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 18px;
 
     background:
         linear-gradient(
             135deg,
-            #6d28d9,
-            #8b5cf6
+            #eef2ff,
+            #f5f3ff
         );
 
-    overflow-x: hidden;
-}
-
-
-/* ==========================
-   LOGIN CARD
-========================== */
-
-.login-card {
-    width: 390px;
-    max-width: calc(100vw - 30px);
-
-    background: #ffffff;
-
-    padding: 42px 34px;
-
-    border-radius: 28px;
+    font-size: 38px;
 
     box-shadow:
-        0 20px 60px
-        rgba(0, 0, 0, 0.22);
+        0 8px 20px
+        rgba(79, 70, 229, 0.12);
 }
 
 
-/* ==========================
-   LOGO
-========================== */
-
-.logo {
-    text-align: center;
-
-    font-size: 58px;
-
-    margin-bottom: 12px;
-}
-
-
-/* ==========================
+/* =========================================
    TITLE
-========================== */
+========================================= */
 
 .login-card h1 {
-    text-align: center;
+    margin: 0;
 
-    color: #111827;
+    font-size: 27px;
 
-    font-size: 30px;
+    line-height: 1.25;
 
-    line-height: 1.2;
+    font-weight: 750;
 
-    margin-bottom: 7px;
+    color: #172033;
 }
-
-
-/* ==========================
-   SUBTITLE
-========================== */
 
 .subtitle {
-    text-align: center;
+    margin: 8px 0 0;
 
-    color: #7c3aed;
+    color: #6366f1;
 
-    font-size: 16px;
+    font-size: 14px;
 
-    font-weight: 600;
-
-    margin-bottom: 10px;
+    font-weight: 650;
 }
 
-
-/* ==========================
-   DESCRIPTION
-========================== */
-
 .description {
-    text-align: center;
+    margin: 12px auto 28px;
 
-    color: #6b7280;
+    max-width: 340px;
+
+    color: #64748b;
 
     font-size: 13px;
 
     line-height: 1.6;
-
-    margin-bottom: 25px;
 }
 
 
-/* ==========================
-   LABEL
-========================== */
+/* =========================================
+   LABELS
+========================================= */
 
-label {
+.login-card label {
     display: block;
 
-    margin-bottom: 7px;
+    margin: 0 0 8px;
+
+    text-align: left;
 
     font-size: 13px;
 
-    font-weight: 600;
+    font-weight: 700;
 
-    color: #374151;
+    color: #334155;
 }
 
 
-/* ==========================
-   INPUT
-========================== */
+/* =========================================
+   INPUT GROUP
+========================================= */
 
-input {
-    width: 100%;
-
-    padding: 13px 14px;
+.input-group {
+    position: relative;
 
     margin-bottom: 18px;
+}
 
-    border: 1px solid #d1d5db;
+.input-group input {
+    width: 100%;
 
-    border-radius: 10px;
+    height: 50px;
+
+    padding: 0 15px;
+
+    border: 1.5px solid #dbe2ea;
+
+    border-radius: 11px;
 
     background: #ffffff;
 
-    color: #111827;
+    color: #1e293b;
 
     font-size: 14px;
 
-    transition:
-        border-color 0.2s,
-        box-shadow 0.2s;
-}
-
-input::placeholder {
-    color: #9ca3af;
-}
-
-input:focus {
     outline: none;
 
-    border-color: #7c3aed;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+.input-group input::placeholder {
+    color: #94a3b8;
+}
+
+.input-group input:hover {
+    border-color: #c7d2fe;
+}
+
+.input-group input:focus {
+    border-color: #6366f1;
+
+    background: #ffffff;
 
     box-shadow:
         0 0 0 4px
-        rgba(124, 58, 237, 0.12);
+        rgba(99, 102, 241, 0.10);
 }
 
 
-/* ==========================
-   LOGIN BUTTON
-========================== */
+/* =========================================
+   PASSWORD TOGGLE
+========================================= */
 
-button {
+.toggle-password {
+    position: absolute;
+
+    right: 14px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-size: 17px;
+
+    transition:
+        background 0.15s ease;
+}
+
+.toggle-password:hover {
+    background: #f1f5f9;
+}
+
+
+/* =========================================
+   SIGN IN BUTTON
+========================================= */
+
+#loginBtn {
     width: 100%;
 
-    padding: 14px;
+    height: 51px;
 
-    border: none;
+    margin-top: 4px;
 
-    border-radius: 10px;
+    border: 0;
+
+    border-radius: 11px;
 
     background:
         linear-gradient(
-            90deg,
-            #7c3aed,
-            #9333ea
+            135deg,
+            #4f46e5,
+            #7c3aed
         );
 
     color: #ffffff;
 
-    font-size: 15px;
-
-    font-weight: 600;
-
-    cursor: pointer;
-
-    transition:
-        transform 0.2s,
-        box-shadow 0.2s;
-}
-
-button:hover {
-    transform: translateY(-2px);
-
-    box-shadow:
-        0 10px 25px
-        rgba(124, 58, 237, 0.30);
-}
-
-button:active {
-    transform: translateY(0);
-}
-
-
-/* ==========================
-   LOGIN INSTRUCTIONS
-========================== */
-
-.login-note {
-    margin: 18px 0;
-
-    padding: 14px 15px;
-
-    background: #eff6ff;
-
-    border-left: 5px solid #2563eb;
-
-    border-radius: 10px;
-
-    color: #374151;
-
-    font-size: 12px;
-
-    line-height: 1.7;
-}
-
-.login-note strong {
-    color: #1d4ed8;
-}
-
-.login-note p {
-    margin-top: 7px;
-}
-
-
-/* ==========================
-   SECURITY
-========================== */
-
-.security {
-    margin-top: 14px;
-
-    text-align: center;
-
-    color: #6b7280;
-
-    font-size: 12px;
-}
-
-
-/* ==========================
-   SUPPORT BOX
-========================== */
-
-.support-box {
-    margin-top: 22px;
-
-    padding: 17px;
-
-    background: #f9fafb;
-
-    border: 1px solid #e5e7eb;
-
-    border-radius: 14px;
-}
-
-
-/* ==========================
-   SUPPORT TITLE
-========================== */
-
-.support-title {
-    text-align: center;
-
-    font-size: 16px;
+    font-size: 14px;
 
     font-weight: 700;
 
-    color: #111827;
+    cursor: pointer;
 
-    margin-bottom: 8px;
+    box-shadow:
+        0 9px 20px
+        rgba(79, 70, 229, 0.22);
+
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        opacity 0.18s ease;
+}
+
+#loginBtn:hover {
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 12px 25px
+        rgba(79, 70, 229, 0.28);
+}
+
+#loginBtn:active {
+    transform: translateY(0);
+}
+
+#loginBtn:disabled {
+    opacity: 0.65;
+
+    cursor: not-allowed;
+
+    transform: none;
 }
 
 
-/* ==========================
-   SUPPORT TEXT
-========================== */
+/* =========================================
+   LOGIN INSTRUCTIONS
+========================================= */
 
-.support-text {
-    text-align: center;
+.login-note {
+    margin-top: 18px;
 
-    color: #6b7280;
+    padding: 16px;
 
-    font-size: 12px;
+    border: 1px solid #dbeafe;
 
-    line-height: 1.6;
+    border-left: 4px solid #4f46e5;
 
-    margin-bottom: 12px;
+    border-radius: 11px;
+
+    background: #f8faff;
+
+    text-align: left;
 }
 
+.login-note strong {
+    color: #3730a3;
+}
 
-/* ==========================
-   SUPPORT PHONE
-========================== */
-
-.support-phone {
+.login-note > strong {
     display: block;
 
-    text-align: center;
+    margin-bottom: 9px;
 
-    text-decoration: none;
-
-    color: #7c3aed;
-
-    font-weight: 600;
-
-    font-size: 14px;
+    font-size: 13px;
 }
 
-.support-phone:hover {
-    color: #6d28d9;
+.login-note p {
+    margin: 8px 0;
+
+    color: #64748b;
+
+    font-size: 11px;
+
+    line-height: 1.55;
+}
+
+.login-note p strong {
+    color: #475569;
 }
 
 
-/* ==========================
-   ERROR MESSAGE
-========================== */
+/* =========================================
+   SUPPORT BOX
+========================================= */
 
-#msg {
+.support-box {
     margin-top: 15px;
 
-    text-align: center;
+    padding: 15px;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 11px;
+
+    background: #f8fafc;
+}
+
+.support-title {
+    margin: 0 0 6px;
+
+    color: #334155;
 
     font-size: 13px;
 
-    font-weight: 600;
+    font-weight: 700;
+}
 
-    color: #dc2626;
+.support-text {
+    margin: 0 0 9px;
+
+    color: #64748b;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+}
+
+.support-phone {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 7px 12px;
+
+    border-radius: 8px;
+
+    background: #eef2ff;
+
+    color: #4338ca;
+
+    text-decoration: none;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    transition:
+        background 0.18s ease;
+}
+
+.support-phone:hover {
+    background: #e0e7ff;
 }
 
 
-/* ==========================
+/* =========================================
+   MESSAGE
+========================================= */
+
+#msg {
+    margin: 14px 0 0;
+
+    min-height: 18px;
+
+    color: #dc2626;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+/* =========================================
    FOOTER
-========================== */
+========================================= */
 
 .footer {
     margin-top: 22px;
 
-    text-align: center;
+    padding-top: 17px;
 
-    color: #9ca3af;
+    border-top: 1px solid #eef2f7;
+}
 
-    font-size: 11px;
+.footer p {
+    margin: 3px 0;
 
-    line-height: 1.8;
+    color: #94a3b8;
+
+    font-size: 10px;
 }
 
 
-/* ==================================================
-   LAPTOP / DESKTOP
-================================================== */
-
-@media (min-width: 769px) {
-
-    body {
-        padding: 30px;
-    }
-
-    .login-card {
-        width: 390px;
-
-        max-width: 390px;
-
-        padding: 42px 34px;
-    }
-
-}
-
-
-/* ==================================================
-   TABLET
-================================================== */
-
-@media (min-width: 481px)
-and (max-width: 768px) {
-
-    body {
-        padding: 20px;
-    }
-
-    .login-card {
-        width: 380px;
-
-        max-width:
-            calc(100vw - 40px);
-
-        padding: 38px 30px;
-
-        border-radius: 24px;
-    }
-
-    .logo {
-        font-size: 54px;
-    }
-
-    .login-card h1 {
-        font-size: 28px;
-    }
-
-}
-
-
-/* ==================================================
+/* =========================================
    MOBILE
-================================================== */
+========================================= */
 
-@media (max-width: 480px) {
+@media (max-width: 520px) {
 
     body {
-        min-height: 100svh;
+        padding: 18px 12px;
 
-        padding: 15px;
+        align-items: flex-start;
     }
 
     .login-card {
-        width: 100%;
+        margin-top: 20px;
 
-        max-width: 100%;
+        padding: 30px 22px 24px;
 
-        padding: 30px 22px;
-
-        border-radius: 22px;
-    }
-
-    .logo {
-        font-size: 48px;
-
-        margin-bottom: 10px;
+        border-radius: 20px;
     }
 
     .login-card h1 {
         font-size: 24px;
     }
 
-    .subtitle {
-        font-size: 15px;
-    }
-
     .description {
-        font-size: 12px;
-
-        margin-bottom: 22px;
-    }
-
-    label {
-        font-size: 12px;
-    }
-
-    input {
-        padding: 12px;
-
-        margin-bottom: 16px;
-
-        font-size: 13px;
-    }
-
-    button {
-        padding: 13px;
-
-        font-size: 14px;
-    }
-
-    .login-note {
-        margin: 16px 0;
-
-        padding: 12px;
-
-        font-size: 11px;
-
-        line-height: 1.6;
-    }
-
-    .support-box {
-        margin-top: 18px;
-
-        padding: 14px;
-    }
-
-    .support-title {
-        font-size: 14px;
-    }
-
-    .support-text {
-        font-size: 11px;
-    }
-
-    .support-phone {
-        font-size: 13px;
-    }
-
-    .security {
-        font-size: 11px;
-    }
-
-    .footer {
-        margin-top: 18px;
-
-        font-size: 10px;
-    }
-
-}
-
-
-/* ==================================================
-   VERY SMALL PHONES
-================================================== */
-
-@media (max-width: 360px) {
-
-    body {
-        padding: 10px;
-    }
-
-    .login-card {
-        padding: 25px 18px;
-
-        border-radius: 18px;
-    }
-
-    .logo {
-        font-size: 42px;
-    }
-
-    .login-card h1 {
-        font-size: 21px;
-    }
-
-    .subtitle {
-        font-size: 13px;
-    }
-
-    .description {
-        font-size: 10px;
-    }
-
-    input {
-        padding: 11px;
-
-        font-size: 12px;
-    }
-
-    button {
-        padding: 12px;
-
-        font-size: 13px;
+        margin-bottom: 24px;
     }
 
 }
