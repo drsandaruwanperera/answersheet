@@ -1027,6 +1027,10 @@ window.addEventListener(
 // Save New Student
 // ==========================
 
+// ==========================
+// Save New Student
+// ==========================
+
 saveNewStudent.addEventListener(
     "click",
     async () => {
@@ -1042,9 +1046,12 @@ saveNewStudent.addEventListener(
         const mustChange =
             newMustChange.checked;
 
+        const selectedType =
+            newStudentType.value;
+
 
         // ==========================
-        // Validation
+        // Validate Student ID
         // ==========================
 
         if (!id) {
@@ -1060,6 +1067,10 @@ saveNewStudent.addEventListener(
         }
 
 
+        // ==========================
+        // Validate Password
+        // ==========================
+
         if (!password) {
 
             alert(
@@ -1073,12 +1084,31 @@ saveNewStudent.addEventListener(
         }
 
 
-        if (
-            password.length < 4
-        ) {
+        if (password.length < 4) {
 
             alert(
                 "Password must contain at least 4 characters."
+            );
+
+            return;
+
+        }
+
+
+        // ==========================
+        // Validate Category
+        // ==========================
+
+        if (
+            ![
+                "al",
+                "grade10",
+                "grade11"
+            ].includes(selectedType)
+        ) {
+
+            alert(
+                "Please select Student Category."
             );
 
             return;
@@ -1106,9 +1136,7 @@ saveNewStudent.addEventListener(
                 );
 
 
-            if (
-                existing.exists()
-            ) {
+            if (existing.exists()) {
 
                 alert(
                     "A student with this ID already exists."
@@ -1119,6 +1147,201 @@ saveNewStudent.addEventListener(
             }
 
 
+            // ==========================
+            // Grade
+            // ==========================
+
+            let grade = null;
+
+
+            if (
+                selectedType ===
+                "grade10"
+            ) {
+
+                grade = 10;
+
+            }
+            else if (
+                selectedType ===
+                "grade11"
+            ) {
+
+                grade = 11;
+
+            }
+
+
+            // ==========================
+            // Student Data
+            // ==========================
+
+            const studentData = {
+
+                password:
+                    password,
+
+                mustChangePassword:
+                    mustChange,
+
+                studentType:
+                    selectedType,
+
+                lastActiveAt:
+                    0
+
+            };
+
+
+            // Add Grade 10 / 11
+
+            if (grade !== null) {
+
+                studentData.grade =
+                    grade;
+
+            }
+
+
+            // ==========================
+            // A/L Paper Permissions
+            // ==========================
+
+            if (
+                selectedType ===
+                "al"
+            ) {
+
+                const papersSnapshot =
+                    await getDocs(
+                        collection(
+                            db,
+                            "papers"
+                        )
+                    );
+
+
+                const paperSettings =
+                    {};
+
+
+                papersSnapshot.forEach(
+                    paperDoc => {
+
+                        paperSettings[
+                            paperDoc.id
+                        ] =
+                            paperDoc.data();
+
+                    }
+                );
+
+
+                for (
+                    let i = 1;
+                    i <= 10;
+                    i++
+                ) {
+
+                    const paper =
+                        "paper" +
+                        String(i).padStart(
+                            2,
+                            "0"
+                        );
+
+
+                    const settings =
+                        paperSettings[
+                            paper
+                        ];
+
+
+                    studentData[
+                        paper
+                    ] =
+                        settings?.defaultAvailable === true;
+
+
+                    studentData[
+                        paper + "Viewed"
+                    ] =
+                        false;
+
+
+                    studentData[
+                        paper + "Pages"
+                    ] =
+                        settings?.pages || 10;
+
+                }
+
+            }
+
+
+            // ==========================
+            // Save Student
+            // ==========================
+
+            await setDoc(
+                studentRef,
+                studentData
+            );
+
+
+            // ==========================
+            // Success
+            // ==========================
+
+            alert(
+                "Student added successfully!\n\n" +
+                "Student ID: " +
+                id +
+                "\nType: " +
+                (
+                    selectedType === "grade10"
+                        ? "Grade 10"
+                        : selectedType === "grade11"
+                            ? "Grade 11"
+                            : "A/L"
+                ) +
+                (
+                    grade !== null
+                        ? "\nGrade: " + grade
+                        : ""
+                )
+            );
+
+
+            // ==========================
+            // Close Modal
+            // ==========================
+
+            closeAddModal();
+
+
+            // ==========================
+            // Reload Students
+            // ==========================
+
+            await loadStudents();
+
+        }
+        catch (error) {
+
+            console.error(
+                "Add student error:",
+                error
+            );
+
+            alert(
+                "Failed to add student."
+            );
+
+        }
+
+    }
+);
             // ==========================
             // Detect Type
             // ==========================
