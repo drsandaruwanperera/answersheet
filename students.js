@@ -1347,6 +1347,7 @@ saveNewStudent.addEventListener(
             // ==========================
 
             // ==========================
+// ==========================
 // Selected Student Type
 // ==========================
 
@@ -1359,8 +1360,11 @@ const selectedType =
 // ==========================
 
 if (
-    !["al", "grade10", "grade11"]
-        .includes(selectedType)
+    ![
+        "al",
+        "grade10",
+        "grade11"
+    ].includes(selectedType)
 ) {
 
     alert(
@@ -1396,8 +1400,6 @@ else if (
     grade = 11;
 
 }
-
-
 // ==========================
 // Student Data
 // ==========================
