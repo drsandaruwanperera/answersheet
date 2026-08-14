@@ -62,6 +62,13 @@ const logoutBtn =
 // ==========================
 // Add Modal
 // ==========================
+const saveNewStudent =
+    document.getElementById("saveNewStudent");
+const newStudentType =
+    document.getElementById("newStudentType");
+
+const categoryButtons =
+    document.querySelectorAll(".category-btn");
 
 const addModal =
     document.getElementById("addModal");
@@ -780,7 +787,482 @@ async function loadStudents() {
     }
 
 }
+// ==========================
+// ADD STUDENT
+// ==========================
 
+
+// ==========================
+// Category Selection
+// ==========================
+
+categoryButtons.forEach(
+    button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                const type =
+                    button.dataset.type;
+
+
+                categoryButtons.forEach(
+                    item => {
+
+                        item.classList.remove(
+                            "selected"
+                        );
+
+                    }
+                );
+
+
+                button.classList.add(
+                    "selected"
+                );
+
+
+                newStudentType.value =
+                    type;
+
+
+                if (
+                    type === "grade10"
+                ) {
+
+                    newStudentGrade.textContent =
+                        "✓ Grade 10 Student";
+
+                    newStudentGrade.className =
+                        "grade-status grade10";
+
+                }
+                else if (
+                    type === "grade11"
+                ) {
+
+                    newStudentGrade.textContent =
+                        "✓ Grade 11 Student";
+
+                    newStudentGrade.className =
+                        "grade-status grade11";
+
+                }
+                else {
+
+                    newStudentGrade.textContent =
+                        "✓ A/L Student";
+
+                    newStudentGrade.className =
+                        "grade-status al";
+
+                }
+
+            }
+        );
+
+    }
+);
+
+
+// ==========================
+// Open Add Modal
+// ==========================
+
+addStudentBtn.addEventListener(
+    "click",
+    () => {
+
+        console.log(
+            "Add Student clicked"
+        );
+
+
+        newStudentId.value = "";
+
+        newStudentGrade.textContent = "";
+
+        newStudentGrade.className =
+            "grade-status";
+
+        newStudentPassword.value = "";
+
+        newMustChange.checked =
+            false;
+
+        newStudentType.value =
+            "";
+
+
+        categoryButtons.forEach(
+            button => {
+
+                button.classList.remove(
+                    "selected"
+                );
+
+            }
+        );
+
+
+        addModal.style.display =
+            "flex";
+
+
+        newStudentId.focus();
+
+    }
+);
+
+
+// ==========================
+// Close Add Modal
+// ==========================
+
+function closeAddModal() {
+
+    addModal.style.display =
+        "none";
+
+}
+
+
+closeAdd.addEventListener(
+    "click",
+    closeAddModal
+);
+
+
+cancelAdd.addEventListener(
+    "click",
+    closeAddModal
+);
+
+
+// ==========================
+// Close Outside
+// ==========================
+
+window.addEventListener(
+    "click",
+    event => {
+
+        if (
+            event.target === addModal
+        ) {
+
+            closeAddModal();
+
+        }
+
+        if (
+            event.target === editModal
+        ) {
+
+            closeEditModal();
+
+        }
+
+    }
+);
+
+
+// ==========================
+// Save New Student
+// ==========================
+
+saveNewStudent.addEventListener(
+    "click",
+    async () => {
+
+        const id =
+            newStudentId.value
+                .trim();
+
+        const password =
+            newStudentPassword.value
+                .trim();
+
+        const mustChange =
+            newMustChange.checked;
+
+        const selectedType =
+            newStudentType.value;
+
+
+        // ==========================
+        // Validation
+        // ==========================
+
+        if (!id) {
+
+            alert(
+                "Please enter Student ID."
+            );
+
+            newStudentId.focus();
+
+            return;
+
+        }
+
+
+        if (!password) {
+
+            alert(
+                "Please enter a password."
+            );
+
+            newStudentPassword.focus();
+
+            return;
+
+        }
+
+
+        if (
+            password.length < 4
+        ) {
+
+            alert(
+                "Password must contain at least 4 characters."
+            );
+
+            return;
+
+        }
+
+
+        if (
+            ![
+                "al",
+                "grade10",
+                "grade11"
+            ].includes(
+                selectedType
+            )
+        ) {
+
+            alert(
+                "Please select Student Category."
+            );
+
+            return;
+
+        }
+
+
+        try {
+
+            const studentRef =
+                doc(
+                    db,
+                    "students",
+                    id
+                );
+
+
+            const existing =
+                await getDoc(
+                    studentRef
+                );
+
+
+            if (
+                existing.exists()
+            ) {
+
+                alert(
+                    "A student with this ID already exists."
+                );
+
+                return;
+
+            }
+
+
+            // ==========================
+            // Grade
+            // ==========================
+
+            let grade = null;
+
+
+            if (
+                selectedType ===
+                "grade10"
+            ) {
+
+                grade = 10;
+
+            }
+            else if (
+                selectedType ===
+                "grade11"
+            ) {
+
+                grade = 11;
+
+            }
+
+
+            // ==========================
+            // Student Data
+            // ==========================
+
+            const studentData = {
+
+                password:
+                    password,
+
+                mustChangePassword:
+                    mustChange,
+
+                studentType:
+                    selectedType,
+
+                lastActiveAt:
+                    0
+
+            };
+
+
+            if (
+                grade !== null
+            ) {
+
+                studentData.grade =
+                    grade;
+
+            }
+
+
+            // ==========================
+            // A/L Paper Permissions
+            // ==========================
+
+            if (
+                selectedType ===
+                "al"
+            ) {
+
+                const papersSnapshot =
+                    await getDocs(
+                        collection(
+                            db,
+                            "papers"
+                        )
+                    );
+
+
+                const paperSettings =
+                    {};
+
+
+                papersSnapshot.forEach(
+                    paperDoc => {
+
+                        paperSettings[
+                            paperDoc.id
+                        ] =
+                            paperDoc.data();
+
+                    }
+                );
+
+
+                for (
+                    let i = 1;
+                    i <= 10;
+                    i++
+                ) {
+
+                    const paper =
+                        "paper" +
+                        String(i)
+                            .padStart(
+                                2,
+                                "0"
+                            );
+
+
+                    const settings =
+                        paperSettings[
+                            paper
+                        ];
+
+
+                    studentData[
+                        paper
+                    ] =
+                        settings?.defaultAvailable === true;
+
+
+                    studentData[
+                        paper + "Viewed"
+                    ] =
+                        false;
+
+
+                    studentData[
+                        paper + "Pages"
+                    ] =
+                        settings?.pages || 10;
+
+                }
+
+            }
+
+
+            // ==========================
+            // Save
+            // ==========================
+
+            await setDoc(
+                studentRef,
+                studentData
+            );
+
+
+            const typeText =
+                selectedType === "grade10"
+                    ? "Grade 10"
+                    : selectedType === "grade11"
+                        ? "Grade 11"
+                        : "A/L";
+
+
+            alert(
+                "Student added successfully!\n\n" +
+                "Student ID: " +
+                id +
+                "\nType: " +
+                typeText
+            );
+
+
+            closeAddModal();
+
+
+            await loadStudents();
+
+        }
+        catch (error) {
+
+            console.error(
+                "Add student error:",
+                error
+            );
+
+            alert(
+                "Failed to add student."
+            );
+
+        }
+
+    }
+);
 
 
 
