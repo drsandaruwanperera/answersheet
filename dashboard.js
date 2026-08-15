@@ -80,8 +80,10 @@ const logoutBtn =
 // =========================================
 
 if (studentIdElement) {
+
     studentIdElement.textContent =
         studentId || "—";
+
 }
 
 
@@ -93,20 +95,22 @@ let studentRef = null;
 
 if (studentId) {
 
-    studentRef = doc(
-        db,
-        "students",
-        studentId
-    );
+    studentRef =
+        doc(
+            db,
+            "students",
+            studentId
+        );
 
 }
 
 
 // =========================================
-// CURRENT DATA
+// CURRENT STUDENT DATA
 // =========================================
 
 let currentStudentData = null;
+
 let currentStudentType = null;
 
 
@@ -114,18 +118,14 @@ let currentStudentType = null;
 // DETECT STUDENT TYPE
 // =========================================
 //
-// RULES:
+// 26000 - 26999 = Grade 11
+// 27000 - 27999 = Grade 10
 //
-// 26000 - 26999  = Grade 11
-// 27000 - 27999  = Grade 10
+// 2005xxxxxxxx = A/L
+// 2006xxxxxxxx = A/L
+// 2007xxxxxxxx = A/L
 //
-// First 4 digits:
-//
-// 2005xxxxxxxx   = A/L
-// 2006xxxxxxxx   = A/L
-// 2007xxxxxxxx   = A/L
-//
-// Also supports Firebase studentType / grade.
+// ID detection has priority.
 // =========================================
 
 function getStudentType(data) {
@@ -137,13 +137,8 @@ function getStudentType(data) {
 
 
     // =====================================
-    // IMPORTANT:
-    // ID NUMBER HAS PRIORITY
+    // 5 DIGIT STUDENT IDs
     // =====================================
-
-    // -------------------------------------
-    // GRADE 11
-    // -------------------------------------
 
     if (
         /^\d{5}$/.test(cleanId)
@@ -151,6 +146,11 @@ function getStudentType(data) {
 
         const number =
             Number(cleanId);
+
+
+        // ---------------------------------
+        // GRADE 11
+        // ---------------------------------
 
         if (
             number >= 26000 &&
@@ -160,6 +160,11 @@ function getStudentType(data) {
             return "grade11";
 
         }
+
+
+        // ---------------------------------
+        // GRADE 10
+        // ---------------------------------
 
         if (
             number >= 27000 &&
@@ -174,7 +179,7 @@ function getStudentType(data) {
 
 
     // =====================================
-    // A/L - FIRST FOUR DIGITS
+    // A/L NIC / ID
     // =====================================
 
     const firstFour =
@@ -215,8 +220,8 @@ function getStudentType(data) {
                 "studentType"
             ) || ""
         )
-        .toLowerCase()
-        .trim();
+            .toLowerCase()
+            .trim();
 
 
     if (
@@ -253,15 +258,15 @@ function getStudentType(data) {
 
 
     // =====================================
-    // FIREBASE STUDENT TYPE FALLBACK
+    // FIREBASE STUDENT TYPE
     // =====================================
 
     const firebaseType =
         String(
             data?.studentType || ""
         )
-        .toLowerCase()
-        .trim();
+            .toLowerCase()
+            .trim();
 
 
     if (
@@ -298,15 +303,15 @@ function getStudentType(data) {
 
 
     // =====================================
-    // FIREBASE GRADE FALLBACK
+    // FIREBASE GRADE
     // =====================================
 
     const firebaseGrade =
         String(
             data?.grade || ""
         )
-        .toLowerCase()
-        .trim();
+            .toLowerCase()
+            .trim();
 
 
     if (
@@ -344,10 +349,6 @@ function getStudentType(data) {
     }
 
 
-    // =====================================
-    // UNKNOWN
-    // =====================================
-
     return null;
 
 }
@@ -359,17 +360,32 @@ function getStudentType(data) {
 
 function getGradeName(type) {
 
-    if (type === "grade11") {
+    if (
+        type === "grade11"
+    ) {
+
         return "Grade 11";
+
     }
 
-    if (type === "grade10") {
+
+    if (
+        type === "grade10"
+    ) {
+
         return "Grade 10";
+
     }
 
-    if (type === "al") {
+
+    if (
+        type === "al"
+    ) {
+
         return "Advanced Level";
+
     }
+
 
     return "Student";
 
@@ -416,7 +432,8 @@ function updateGreeting(name) {
         hour < 12
     ) {
 
-        greeting = "Good morning";
+        greeting =
+            "Good morning";
 
     }
 
@@ -425,13 +442,15 @@ function updateGreeting(name) {
         hour < 17
     ) {
 
-        greeting = "Good afternoon";
+        greeting =
+            "Good afternoon";
 
     }
 
     else {
 
-        greeting = "Good evening";
+        greeting =
+            "Good evening";
 
     }
 
@@ -446,44 +465,56 @@ function updateGreeting(name) {
 // MATERIAL CONFIGURATION
 // =========================================
 //
-// Grade 11:
-// Model Papers
-// Past Papers (2016 - 2025)
-//
-// Grade 10:
-// Model Papers only
-//
-// A/L:
+// A/L
 // Model Papers
 // Province Papers
+//
+// Grade 10
+// Model Papers ONLY
+//
+// Grade 11
+// Model Papers
+// Past Papers 2016 - 2025
 // =========================================
 
 function getMaterialConfig(type) {
 
+
     // =====================================
-    // GRADE 11
+    // A/L
     // =====================================
 
-    if (type === "grade11") {
+    if (
+        type === "al"
+    ) {
 
         return {
 
             model: {
-                title: "Model Papers",
+
+                title:
+                    "Model Papers",
+
                 description:
-                    "Grade 11 Model Papers",
+                    "Advanced Level Model Papers",
 
                 url:
-                    "grade11-model-papers.html"
+                    "model-papers.html"
+
             },
 
+
             second: {
-                title: "Past Papers",
+
+                title:
+                    "Province Papers",
+
                 description:
-                    "Grade 11 Past Papers 2016 - 2025",
+                    "Provincial Examination Papers",
 
                 url:
-                    "grade11-past-papers.html"
+                    "past-papers.html"
+
             }
 
         };
@@ -495,20 +526,28 @@ function getMaterialConfig(type) {
     // GRADE 10
     // =====================================
 
-    if (type === "grade10") {
+    if (
+        type === "grade10"
+    ) {
 
         return {
 
             model: {
-                title: "Model Papers",
+
+                title:
+                    "Model Papers",
+
                 description:
                     "Grade 10 Model Papers",
 
                 url:
                     "grade10-model-papers.html"
+
             },
 
-            second: null
+
+            second:
+                null
 
         };
 
@@ -516,29 +555,40 @@ function getMaterialConfig(type) {
 
 
     // =====================================
-    // A/L
+    // GRADE 11
     // =====================================
 
-    if (type === "al") {
+    if (
+        type === "grade11"
+    ) {
 
         return {
 
             model: {
-                title: "Model Papers",
+
+                title:
+                    "Model Papers",
+
                 description:
-                    "Advanced Level Model Papers",
+                    "Grade 11 Model Papers",
 
                 url:
-                    "model-papers.html"
+                    "grade11-model-papers.html"
+
             },
 
+
             second: {
-                title: "Province Papers",
+
+                title:
+                    "Past Papers",
+
                 description:
-                    "Provincial Examination Papers",
+                    "Grade 11 Past Papers 2016 - 2025",
 
                 url:
-                    "past-papers.html"
+                    "grade11-past-papers.html"
+
             }
 
         };
@@ -552,8 +602,11 @@ function getMaterialConfig(type) {
 
     return {
 
-        model: null,
-        second: null
+        model:
+            null,
+
+        second:
+            null
 
     };
 
@@ -561,7 +614,7 @@ function getMaterialConfig(type) {
 
 
 // =========================================
-// UPDATE CARD TEXT
+// UPDATE MATERIAL CARDS
 // =========================================
 
 function updateMaterialCards(type) {
@@ -574,26 +627,33 @@ function updateMaterialCards(type) {
     // MODEL CARD
     // =====================================
 
-    if (modelPapersCard) {
+    if (
+        modelPapersCard
+    ) {
 
-        if (!config.model) {
-
-            modelPapersCard.style.display =
-                "none";
-
-        }
-
-        else {
+        if (
+            config.model
+        ) {
 
             modelPapersCard.style.display =
                 "";
 
         }
 
+        else {
+
+            modelPapersCard.style.display =
+                "none";
+
+        }
+
     }
 
 
-    if (modelPapersTitle && config.model) {
+    if (
+        modelPapersTitle &&
+        config.model
+    ) {
 
         modelPapersTitle.textContent =
             config.model.title;
@@ -616,9 +676,20 @@ function updateMaterialCards(type) {
     // SECOND CARD
     // =====================================
 
-    if (!config.second) {
+    if (
+        pastPapersCard
+    ) {
 
-        if (pastPapersCard) {
+        if (
+            config.second
+        ) {
+
+            pastPapersCard.style.display =
+                "";
+
+        }
+
+        else {
 
             pastPapersCard.style.display =
                 "none";
@@ -627,30 +698,25 @@ function updateMaterialCards(type) {
 
     }
 
-    else {
 
-        if (pastPapersCard) {
+    if (
+        pastPapersTitle &&
+        config.second
+    ) {
 
-            pastPapersCard.style.display =
-                "";
+        pastPapersTitle.textContent =
+            config.second.title;
 
-        }
-
-
-        if (pastPapersTitle) {
-
-            pastPapersTitle.textContent =
-                config.second.title;
-
-        }
+    }
 
 
-        if (pastPapersDescription) {
+    if (
+        pastPapersDescription &&
+        config.second
+    ) {
 
-            pastPapersDescription.textContent =
-                config.second.description;
-
-        }
+        pastPapersDescription.textContent =
+            config.second.description;
 
     }
 
@@ -676,15 +742,15 @@ function setupMaterialCards(type) {
         config.model
     ) {
 
-        const modelUrl =
+        const url =
             config.model.url;
 
 
         modelPapersCard.onclick =
-            () => {
+            function () {
 
                 window.location.href =
-                    modelUrl +
+                    url +
                     "?id=" +
                     encodeURIComponent(
                         studentId
@@ -694,7 +760,7 @@ function setupMaterialCards(type) {
 
 
         modelPapersCard.onkeydown =
-            (event) => {
+            function (event) {
 
                 if (
                     event.key === "Enter" ||
@@ -703,8 +769,9 @@ function setupMaterialCards(type) {
 
                     event.preventDefault();
 
+
                     window.location.href =
-                        modelUrl +
+                        url +
                         "?id=" +
                         encodeURIComponent(
                             studentId
@@ -718,7 +785,7 @@ function setupMaterialCards(type) {
 
 
     // =====================================
-    // SECOND PAPERS
+    // SECOND CARD
     // =====================================
 
     if (
@@ -726,15 +793,15 @@ function setupMaterialCards(type) {
         config.second
     ) {
 
-        const secondUrl =
+        const url =
             config.second.url;
 
 
         pastPapersCard.onclick =
-            () => {
+            function () {
 
                 window.location.href =
-                    secondUrl +
+                    url +
                     "?id=" +
                     encodeURIComponent(
                         studentId
@@ -744,7 +811,7 @@ function setupMaterialCards(type) {
 
 
         pastPapersCard.onkeydown =
-            (event) => {
+            function (event) {
 
                 if (
                     event.key === "Enter" ||
@@ -753,8 +820,9 @@ function setupMaterialCards(type) {
 
                     event.preventDefault();
 
+
                     window.location.href =
-                        secondUrl +
+                        url +
                         "?id=" +
                         encodeURIComponent(
                             studentId
@@ -770,13 +838,16 @@ function setupMaterialCards(type) {
 
 
 // =========================================
-// LOAD PAPER PROGRESS
+// CALCULATE PROGRESS
 // =========================================
 
-function calculatePaperProgress(data) {
+function calculateProgress(data) {
 
-    let totalPapers = 0;
-    let viewedPapers = 0;
+    let totalPapers =
+        0;
+
+    let viewedPapers =
+        0;
 
 
     for (
@@ -818,8 +889,13 @@ function calculatePaperProgress(data) {
 
 
     return {
-        totalPapers,
-        viewedPapers
+
+        total:
+            totalPapers,
+
+        viewed:
+            viewedPapers
+
     };
 
 }
@@ -831,48 +907,47 @@ function calculatePaperProgress(data) {
 
 function updateProgress(data) {
 
-    const result =
-        calculatePaperProgress(data);
+    const progress =
+        calculateProgress(data);
 
 
-    const total =
-        result.totalPapers;
-
-    const viewed =
-        result.viewedPapers;
-
-
-    if (totalPapersElement) {
+    if (
+        totalPapersElement
+    ) {
 
         totalPapersElement.textContent =
-            total;
+            progress.total;
 
     }
 
 
-    if (viewedPapersElement) {
+    if (
+        viewedPapersElement
+    ) {
 
         viewedPapersElement.textContent =
-            viewed;
+            progress.viewed;
 
     }
 
 
-    const progress =
-        total > 0
+    const percentage =
+        progress.total > 0
             ? Math.round(
                 (
-                    viewed /
-                    total
+                    progress.viewed /
+                    progress.total
                 ) * 100
             )
             : 0;
 
 
-    if (progressValueElement) {
+    if (
+        progressValueElement
+    ) {
 
         progressValueElement.textContent =
-            progress + "%";
+            percentage + "%";
 
     }
 
@@ -885,7 +960,9 @@ function updateProgress(data) {
 
 async function loadDashboard() {
 
-    if (!studentRef) {
+    if (
+        !studentRef
+    ) {
 
         console.error(
             "Student ID not found."
@@ -904,7 +981,9 @@ async function loadDashboard() {
             );
 
 
-        if (!snapshot.exists()) {
+        if (
+            !snapshot.exists()
+        ) {
 
             console.error(
                 "Student not found:",
@@ -925,11 +1004,13 @@ async function loadDashboard() {
 
 
         // =================================
-        // DETECT TYPE
+        // DETECT STUDENT TYPE
         // =================================
 
         const studentType =
-            getStudentType(data);
+            getStudentType(
+                data
+            );
 
 
         currentStudentType =
@@ -946,7 +1027,9 @@ async function loadDashboard() {
             );
 
 
-        if (studentGradeElement) {
+        if (
+            studentGradeElement
+        ) {
 
             studentGradeElement.textContent =
                 gradeName;
@@ -954,7 +1037,9 @@ async function loadDashboard() {
         }
 
 
-        if (gradeLabelElement) {
+        if (
+            gradeLabelElement
+        ) {
 
             gradeLabelElement.textContent =
                 gradeName;
@@ -963,11 +1048,13 @@ async function loadDashboard() {
 
 
         // =================================
-        // NAME + GREETING
+        // DISPLAY NAME
         // =================================
 
         const studentName =
-            getStudentName(data);
+            getStudentName(
+                data
+            );
 
 
         updateGreeting(
@@ -976,7 +1063,7 @@ async function loadDashboard() {
 
 
         // =================================
-        // MATERIALS
+        // UPDATE MATERIALS
         // =================================
 
         updateMaterialCards(
@@ -990,7 +1077,7 @@ async function loadDashboard() {
 
 
         // =================================
-        // PROGRESS
+        // UPDATE PROGRESS
         // =================================
 
         updateProgress(
@@ -1003,7 +1090,7 @@ async function loadDashboard() {
         // =================================
 
         console.log(
-            "=============================="
+            "================================"
         );
 
         console.log(
@@ -1012,7 +1099,7 @@ async function loadDashboard() {
         );
 
         console.log(
-            "Detected Type:",
+            "Detected Student Type:",
             studentType
         );
 
@@ -1039,7 +1126,7 @@ async function loadDashboard() {
         );
 
         console.log(
-            "=============================="
+            "================================"
         );
 
     }
@@ -1062,8 +1149,12 @@ async function loadDashboard() {
 
 async function updateActiveStatus() {
 
-    if (!studentRef) {
+    if (
+        !studentRef
+    ) {
+
         return;
+
     }
 
 
@@ -1072,13 +1163,17 @@ async function updateActiveStatus() {
         await updateDoc(
             studentRef,
             {
+
                 lastActiveAt:
                     Date.now()
+
             }
         );
 
 
-        if (onlineStatusElement) {
+        if (
+            onlineStatusElement
+        ) {
 
             onlineStatusElement.innerHTML =
                 `
@@ -1103,7 +1198,7 @@ async function updateActiveStatus() {
 
 
 // =========================================
-// START
+// START DASHBOARD
 // =========================================
 
 loadDashboard();
@@ -1145,7 +1240,7 @@ function markActivity() {
     "scroll",
     "touchstart"
 ].forEach(
-    eventName => {
+    function (eventName) {
 
         document.addEventListener(
             eventName,
@@ -1169,7 +1264,7 @@ const IDLE_LIMIT =
 
 const idleChecker =
     setInterval(
-        async () => {
+        async function () {
 
             const idleTime =
                 Date.now() -
@@ -1194,7 +1289,9 @@ const idleChecker =
                 // MARK OFFLINE
                 // =========================
 
-                if (studentRef) {
+                if (
+                    studentRef
+                ) {
 
                     try {
 
@@ -1263,7 +1360,7 @@ const idleChecker =
 
 document.addEventListener(
     "visibilitychange",
-    () => {
+    function () {
 
         if (
             document.visibilityState ===
@@ -1276,7 +1373,9 @@ document.addEventListener(
             updateActiveStatus();
 
 
-            if (currentStudentData) {
+            if (
+                currentStudentData
+            ) {
 
                 updateGreeting(
                     getStudentName(
@@ -1296,11 +1395,13 @@ document.addEventListener(
 // LOGOUT
 // =========================================
 
-if (logoutBtn) {
+if (
+    logoutBtn
+) {
 
     logoutBtn.addEventListener(
         "click",
-        async () => {
+        async function () {
 
             const confirmed =
                 confirm(
@@ -1308,10 +1409,18 @@ if (logoutBtn) {
                 );
 
 
-            if (!confirmed) {
+            if (
+                !confirmed
+            ) {
+
                 return;
+
             }
 
+
+            // =============================
+            // STOP TIMERS
+            // =============================
 
             clearInterval(
                 heartbeat
@@ -1326,7 +1435,9 @@ if (logoutBtn) {
             // MARK OFFLINE
             // =============================
 
-            if (studentRef) {
+            if (
+                studentRef
+            ) {
 
                 try {
 
