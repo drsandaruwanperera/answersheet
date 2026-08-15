@@ -1,8 +1,7 @@
 import {
     db,
     doc,
-    getDoc,
-    updateDoc
+    getDoc
 } from "./firebase.js";
 
 
@@ -13,19 +12,17 @@ import {
 if (
     sessionStorage.getItem("loggedIn") !== "true"
 ) {
-    window.location.replace("index.html");
+
+    window.location.replace(
+        "index.html"
+    );
+
 }
 
 
 // =========================================
 // GET STUDENT ID
 // =========================================
-//
-// First try URL:
-// model-papers.html?id=26000
-//
-// If URL has no ID, use login session.
-//
 
 const params =
     new URLSearchParams(
@@ -38,11 +35,9 @@ const studentId =
     sessionStorage.getItem("studentId");
 
 
-// =========================================
-// SAVE ID TO SESSION
-// =========================================
-
-if (studentId) {
+if (
+    studentId
+) {
 
     sessionStorage.setItem(
         "studentId",
@@ -58,27 +53,24 @@ if (studentId) {
 
 async function loadModelPapers() {
 
-    if (!studentId) {
+    if (
+        !studentId
+    ) {
 
         alert(
             "Student ID not found. Please login again."
         );
-
-        sessionStorage.clear();
 
         window.location.replace(
             "index.html"
         );
 
         return;
+
     }
 
 
     try {
-
-        // =====================================
-        // STUDENT REFERENCE
-        // =====================================
 
         const studentRef =
             doc(
@@ -88,22 +80,15 @@ async function loadModelPapers() {
             );
 
 
-        // =====================================
-        // GET STUDENT
-        // =====================================
-
         const snap =
             await getDoc(
                 studentRef
             );
 
 
-        if (!snap.exists()) {
-
-            console.error(
-                "Student document not found:",
-                studentId
-            );
+        if (
+            !snap.exists()
+        ) {
 
             alert(
                 "Student account not found."
@@ -114,6 +99,7 @@ async function loadModelPapers() {
             );
 
             return;
+
         }
 
 
@@ -121,14 +107,8 @@ async function loadModelPapers() {
             snap.data();
 
 
-        console.log(
-            "✅ Model Papers loaded for:",
-            studentId
-        );
-
-
         // =====================================
-        // LOAD PAPERS
+        // PAPERS 01 - 10
         // =====================================
 
         for (
@@ -145,7 +125,8 @@ async function loadModelPapers() {
 
 
             const permissionField =
-                "paper" + number;
+                "paper" +
+                number;
 
 
             const viewedField =
@@ -159,8 +140,12 @@ async function loadModelPapers() {
                 );
 
 
-            if (!btn) {
+            if (
+                !btn
+            ) {
+
                 continue;
+
             }
 
 
@@ -178,11 +163,12 @@ async function loadModelPapers() {
                     "none";
 
                 continue;
+
             }
 
 
             // =================================
-            // PERMISSION AVAILABLE
+            // SHOW PAPER
             // =================================
 
             btn.style.display =
@@ -209,10 +195,12 @@ async function loadModelPapers() {
                 `;
 
 
-                btn.onclick = null;
+                btn.onclick =
+                    null;
 
 
                 continue;
+
             }
 
 
@@ -230,17 +218,22 @@ async function loadModelPapers() {
             `;
 
 
-            // =================================
-            // CLICK
-            // =================================
-
             btn.onclick =
-                () => openPaper(i);
+                () => {
+
+                    openPaper(
+                        i
+                    );
+
+                };
 
         }
 
     }
-    catch (error) {
+
+    catch (
+        error
+    ) {
 
         console.error(
             "Model Papers Error:",
@@ -260,12 +253,20 @@ async function loadModelPapers() {
 // =========================================
 // OPEN PAPER
 // =========================================
+//
+// IMPORTANT:
+// Do NOT mark Viewed here.
+//
+// viewer.js will mark it as viewed.
+//
 
-async function openPaper(
+function openPaper(
     paperNumber
 ) {
 
-    if (!studentId) {
+    if (
+        !studentId
+    ) {
 
         alert(
             "Student ID not found. Please login again."
@@ -276,6 +277,7 @@ async function openPaper(
         );
 
         return;
+
     }
 
 
@@ -288,141 +290,27 @@ async function openPaper(
         );
 
 
-    const permissionField =
-        "paper" + number;
+    const paper =
+        "paper" +
+        number;
 
 
-    const viewedField =
-        permissionField +
-        "Viewed";
-
-
-    try {
-
-        // =====================================
-        // GET STUDENT
-        // =====================================
-
-        const studentRef =
-            doc(
-                db,
-                "students",
-                studentId
-            );
-
-
-        const snap =
-            await getDoc(
-                studentRef
-            );
-
-
-        if (
-            !snap.exists()
-        ) {
-
-            alert(
-                "Student account not found."
-            );
-
-            return;
-        }
-
-
-        const data =
-            snap.data();
-
-
-        // =====================================
-        // CHECK PERMISSION
-        // =====================================
-
-        if (
-            data[
-                permissionField
-            ] !== true
-        ) {
-
-            alert(
-                "You do not have permission to view this paper."
-            );
-
-            return;
-        }
-
-
-        // =====================================
-        // CHECK VIEWED
-        // =====================================
-
-        if (
-            data[
-                viewedField
-            ] === true
-        ) {
-
-            alert(
-                "This Model Paper has already been viewed."
-            );
-
-            return;
-        }
-
-
-        // =====================================
-        // MARK AS VIEWED
-        // =====================================
-
-        await updateDoc(
-            studentRef,
-            {
-                [viewedField]:
-                    true
-            }
-        );
-
-
-        console.log(
-            "✅ Marked as viewed:",
-            viewedField
-        );
-
-
-        // =====================================
-        // OPEN VIEWER
-        // =====================================
-
-        window.location.replace(
-            "viewer.html?paper=" +
-            encodeURIComponent(
-                permissionField
-            ) +
-            "&id=" +
-            encodeURIComponent(
-                studentId
-            )
-        );
-
-    }
-    catch (error) {
-
-        console.error(
-            "Open Paper Error:",
-            error
-        );
-
-
-        alert(
-            "Unable to open this paper."
-        );
-
-    }
+    window.location.replace(
+        "viewer.html?paper=" +
+        encodeURIComponent(
+            paper
+        ) +
+        "&id=" +
+        encodeURIComponent(
+            studentId
+        )
+    );
 
 }
 
 
 // =========================================
-// MAKE FUNCTION AVAILABLE
+// MAKE AVAILABLE
 // =========================================
 
 window.openPaper =
