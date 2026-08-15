@@ -50,25 +50,6 @@ const answerBtn =
 
 
 // ==========================
-// Validate Parameters
-// ==========================
-
-if (
-    !["1", "2", "3"].includes(term) ||
-    !/^\d{2}$/.test(paper)
-) {
-
-    alert(
-        "Invalid Model Paper."
-    );
-
-    window.location.href =
-        "grade11-model-papers.html";
-
-}
-
-
-// ==========================
 // Term Names
 // ==========================
 
@@ -85,96 +66,128 @@ const termNames = {
 
 };
 
-const termName =
-    termNames[term];
-
 
 // ==========================
-// Page Title
+// Validate
 // ==========================
 
-paperTitle.textContent =
-    "📘 Model Paper - " +
-    paper;
+const validTerm =
+    ["1", "2", "3"].includes(term);
 
-paperSubtitle.textContent =
-    "Grade 11 • " +
-    termName;
-
-
-// ==========================
-// PDF Base Path
-// ==========================
-
-const basePath =
-    `papers/grade11/term${term}/paper${paper}`;
+const validPaper =
+    /^\d{2}$/.test(
+        paper || ""
+    );
 
 
-// ==========================
-// Part A - MCQ
-// ==========================
+if (
+    !validTerm ||
+    !validPaper
+) {
 
-mcqBtn.addEventListener(
-    "click",
-    () => {
+    window.location.href =
+        "grade11-model-papers.html";
 
-        window.open(
-            `${basePath}/mcq.pdf`,
-            "_blank"
-        );
+}
+else {
 
-    }
-);
+    // ==========================
+    // Term Name
+    // ==========================
 
-
-// ==========================
-// Part A - MCQ Answer
-// ==========================
-
-mcqAnswerBtn.addEventListener(
-    "click",
-    () => {
-
-        window.location.href =
-            `grade11-answer.html?` +
-            `term=${encodeURIComponent(term)}` +
-            `&paper=${encodeURIComponent(paper)}` +
-            `type=mcq`;
-
-    }
-);
+    const termName =
+        termNames[term];
 
 
-// ==========================
-// Part B - Question Paper
-// ==========================
+    // ==========================
+    // Set Title
+    // ==========================
 
-questionBtn.addEventListener(
-    "click",
-    () => {
-
-        window.open(
-            `${basePath}/question.pdf`,
-            "_blank"
-        );
-
-    }
-);
+    paperTitle.textContent =
+        "📘 Model Paper - " +
+        paper;
 
 
-// ==========================
-// Part B - Answer Scheme
-// ==========================
+    paperSubtitle.textContent =
+        "Grade 11 • " +
+        termName;
 
-answerBtn.addEventListener(
-    "click",
-    () => {
 
-        window.location.href =
-            `grade11-answer.html?` +
-            `term=${encodeURIComponent(term)}` +
-            `&paper=${encodeURIComponent(paper)}` +
-            `type=answer`;
+    // ==========================
+    // PDF Folder
+    // ==========================
 
-    }
-);
+    const basePath =
+        `papers/grade11/term${term}/paper${paper}`;
+
+
+    // ==========================
+    // MCQ PDF
+    // ==========================
+
+    mcqBtn.addEventListener(
+        "click",
+        () => {
+
+            window.open(
+                `${basePath}/mcq.pdf`,
+                "_blank"
+            );
+
+        }
+    );
+
+
+    // ==========================
+    // MCQ Answer
+    // ==========================
+
+    mcqAnswerBtn.addEventListener(
+        "click",
+        () => {
+
+            window.location.href =
+                `grade11-answer.html?` +
+                `term=${encodeURIComponent(term)}` +
+                `&paper=${encodeURIComponent(paper)}` +
+                `&type=mcq`;
+
+        }
+    );
+
+
+    // ==========================
+    // Question Paper
+    // ==========================
+
+    questionBtn.addEventListener(
+        "click",
+        () => {
+
+            window.open(
+                `${basePath}/question.pdf`,
+                "_blank"
+            );
+
+        }
+    );
+
+
+    // ==========================
+    // Answer Scheme
+    // ==========================
+
+    answerBtn.addEventListener(
+        "click",
+        () => {
+
+            window.location.href =
+                `grade11-answer.html?` +
+                `term=${encodeURIComponent(term)}` +
+                `&paper=${encodeURIComponent(paper)}` +
+                `&type=answer`;
+
+        }
+    );
+
+}
