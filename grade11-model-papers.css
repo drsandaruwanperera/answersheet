@@ -1,0 +1,242 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: #f5f7fb;
+    padding: 30px 20px;
+    color: #111827;
+}
+
+.container {
+    width: 100%;
+    max-width: 1100px;
+    margin: auto;
+}
+
+/* ==========================
+   Header
+========================== */
+
+.header {
+    background: #ffffff;
+
+    padding: 25px 30px;
+
+    border-radius: 20px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 20px;
+
+    margin-bottom: 30px;
+
+    box-shadow:
+        0 8px 25px
+        rgba(0, 0, 0, 0.08);
+}
+
+.header h1 {
+    font-size: 28px;
+}
+
+.header button {
+    border: none;
+
+    background: #7c3aed;
+
+    color: #ffffff;
+
+    padding: 12px 20px;
+
+    border-radius: 10px;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.header button:hover {
+    background: #6d28d9;
+
+    transform: translateY(-1px);
+}
+
+
+/* ==========================
+   Cards
+========================== */
+
+.term-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 25px;
+}
+
+.term-card {
+    background: #ffffff;
+
+    min-height: 230px;
+
+    padding: 35px 25px;
+
+    border-radius: 20px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+
+    cursor: pointer;
+
+    border: 2px solid transparent;
+
+    box-shadow:
+        0 10px 30px
+        rgba(0, 0, 0, 0.08);
+
+    transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.term-card:hover {
+    transform: translateY(-6px);
+
+    border-color: #7c3aed;
+
+    box-shadow:
+        0 15px 35px
+        rgba(124, 58, 237, 0.18);
+}
+
+
+/* ==========================
+   Past Papers Highlight
+========================== */
+
+.term-card:last-child {
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff,
+            #faf7ff
+        );
+}
+
+.term-card:last-child:hover {
+    border-color: #7c3aed;
+}
+
+
+/* ==========================
+   Icons
+========================== */
+
+.term-icon {
+    width: 75px;
+    height: 75px;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    background: #ede9fe;
+
+    border-radius: 18px;
+
+    font-size: 38px;
+
+    margin-bottom: 20px;
+}
+
+.term-card:last-child .term-icon {
+    background: #f3e8ff;
+}
+
+
+/* ==========================
+   Text
+========================== */
+
+.term-card h2 {
+    font-size: 22px;
+
+    margin-bottom: 8px;
+}
+
+.term-card p {
+    color: #6b7280;
+
+    font-size: 15px;
+}
+
+
+/* ==========================
+   Mobile / Tablet
+========================== */
+
+@media (max-width: 800px) {
+
+    .term-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .term-card {
+        min-height: 190px;
+    }
+
+}
+
+
+/* ==========================
+   Small Mobile
+========================== */
+
+@media (max-width: 500px) {
+
+    body {
+        padding: 15px;
+    }
+
+    .header {
+        padding: 20px;
+
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    .header h1 {
+        font-size: 23px;
+    }
+
+    .header button {
+        width: 100%;
+    }
+
+    .term-card {
+        padding: 30px 20px;
+    }
+
+}
