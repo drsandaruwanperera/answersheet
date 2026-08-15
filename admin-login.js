@@ -4,6 +4,12 @@ import {
     getDocs
 } from "./firebase.js";
 
+
+console.log("================================");
+console.log("✅ ADMIN LOGIN JS LOADED");
+console.log("================================");
+
+
 const loginBtn =
     document.getElementById("loginBtn");
 
@@ -17,7 +23,7 @@ const msg =
     document.getElementById("msg");
 
 
-async function adminLogin() {
+async function loginAdmin() {
 
     const username =
         usernameInput.value.trim();
@@ -26,9 +32,8 @@ async function adminLogin() {
         passwordInput.value.trim();
 
 
-    // ==========================
-    // VALIDATION
-    // ==========================
+    msg.textContent = "";
+
 
     if (!username || !password) {
 
@@ -40,33 +45,19 @@ async function adminLogin() {
     }
 
 
-    // ==========================
-    // LOADING
-    // ==========================
-
     loginBtn.disabled = true;
 
     loginBtn.textContent =
         "Signing in...";
 
-    msg.textContent = "";
-
 
     try {
 
         console.log(
-            "Admin login started..."
-        );
-
-        console.log(
-            "Username:",
+            "Checking admin:",
             username
         );
 
-
-        // ==========================
-        // GET ADMINS
-        // ==========================
 
         const snapshot =
             await getDocs(
@@ -78,7 +69,7 @@ async function adminLogin() {
 
 
         console.log(
-            "Admin documents:",
+            "Admins found:",
             snapshot.size
         );
 
@@ -94,21 +85,17 @@ async function adminLogin() {
 
 
                 console.log(
-                    "Admin:",
-                    adminDoc.id,
-                    data
+                    "Admin document:",
+                    adminDoc.id
                 );
 
 
-                const dbUsername =
+                if (
                     String(
                         data.username || ""
                     )
-                    .trim();
-
-
-                if (
-                    dbUsername.toLowerCase()
+                    .trim()
+                    .toLowerCase()
                     ===
                     username.toLowerCase()
                 ) {
@@ -121,17 +108,13 @@ async function adminLogin() {
         );
 
 
-        // ==========================
-        // USERNAME CHECK
-        // ==========================
-
         if (!account) {
 
             msg.textContent =
                 "Invalid username or password.";
 
             console.error(
-                "Username not found."
+                "❌ Admin username not found."
             );
 
             return;
@@ -139,26 +122,19 @@ async function adminLogin() {
         }
 
 
-        // ==========================
-        // PASSWORD CHECK
-        // ==========================
-
-        const dbPassword =
+        if (
             String(
                 account.password || ""
-            )
-            .trim();
-
-
-        if (
-            dbPassword !== password
+            ).trim()
+            !==
+            password
         ) {
 
             msg.textContent =
                 "Invalid username or password.";
 
             console.error(
-                "Password incorrect."
+                "❌ Wrong admin password."
             );
 
             return;
@@ -170,8 +146,9 @@ async function adminLogin() {
         // LOGIN SUCCESS
         // ==========================
 
-        const role =
-            account.role || "limited";
+        console.log(
+            "✅ ADMIN LOGIN SUCCESS"
+        );
 
 
         sessionStorage.setItem(
@@ -181,7 +158,7 @@ async function adminLogin() {
 
         sessionStorage.setItem(
             "adminRole",
-            role
+            account.role || "limited"
         );
 
         sessionStorage.setItem(
@@ -191,20 +168,18 @@ async function adminLogin() {
 
 
         console.log(
-            "✅ ADMIN LOGIN SUCCESS"
-        );
-
-        console.log(
-            "Role:",
-            role
+            "Session:",
+            sessionStorage.getItem(
+                "adminLoggedIn"
+            )
         );
 
 
         // ==========================
-        // GO ADMIN PANEL
+        // REDIRECT
         // ==========================
 
-        window.location.replace(
+        window.location.assign(
             "admin.html"
         );
 
@@ -213,10 +188,9 @@ async function adminLogin() {
     catch (error) {
 
         console.error(
-            "ADMIN LOGIN ERROR:",
+            "❌ ADMIN LOGIN ERROR:",
             error
         );
-
 
         msg.textContent =
             "Login failed: " +
@@ -229,30 +203,18 @@ async function adminLogin() {
         loginBtn.disabled = false;
 
         loginBtn.textContent =
-            "Login";
+            "Sign In →";
 
     }
 
 }
 
 
-// ==========================
-// BUTTON
-// ==========================
+loginBtn.addEventListener(
+    "click",
+    loginAdmin
+);
 
-if (loginBtn) {
-
-    loginBtn.addEventListener(
-        "click",
-        adminLogin
-    );
-
-}
-
-
-// ==========================
-// ENTER KEY
-// ==========================
 
 document.addEventListener(
     "keydown",
@@ -262,14 +224,9 @@ document.addEventListener(
             event.key === "Enter"
         ) {
 
-            adminLogin();
+            loginAdmin();
 
         }
 
     }
 );
-
-
-console.log(
-    "✅ Admin Login JS Loaded"
-);s
