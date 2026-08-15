@@ -14,7 +14,12 @@
 
     <link
         rel="stylesheet"
-        href="admin.css?v=4"
+        href="admin.css"
+    >
+
+    <link
+        rel="icon"
+        href="data:,"
     >
 
 </head>
@@ -26,9 +31,9 @@
 <div class="admin-layout">
 
 
-    <!-- ==================================================
+    <!-- =====================================================
          SIDEBAR
-    =================================================== -->
+    ====================================================== -->
 
     <aside class="sidebar">
 
@@ -38,7 +43,7 @@
         <div class="sidebar-brand">
 
             <div class="brand-logo">
-                🛡️
+                🎓👨🏻‍💻
             </div>
 
             <div>
@@ -56,7 +61,7 @@
         </div>
 
 
-        <!-- ADMINISTRATION -->
+        <!-- NAV LABEL -->
 
         <div class="sidebar-label">
             ADMINISTRATION
@@ -68,12 +73,12 @@
         <nav class="sidebar-nav">
 
 
-            <!-- Dashboard -->
+            <!-- DASHBOARD -->
 
             <a
                 href="admin.html"
                 class="nav-item active"
-                id="dashboardMenu"
+                id="dashboardNav"
             >
 
                 <span class="nav-icon">
@@ -87,12 +92,12 @@
             </a>
 
 
-            <!-- Students -->
+            <!-- STUDENTS -->
 
             <a
                 href="students.html"
                 class="nav-item"
-                id="studentsMenu"
+                id="studentsNav"
             >
 
                 <span class="nav-icon">
@@ -106,12 +111,12 @@
             </a>
 
 
-            <!-- Paper Management -->
+            <!-- PAPER MANAGEMENT -->
 
             <a
                 href="paper-management.html"
-                class="nav-item"
-                id="papersMenu"
+                class="nav-item superadmin-only"
+                id="paperManagementNav"
             >
 
                 <span class="nav-icon">
@@ -125,12 +130,12 @@
             </a>
 
 
-            <!-- Import Student -->
+            <!-- IMPORT STUDENTS -->
 
             <a
-                href="import-student.html"
-                class="nav-item"
-                id="importMenu"
+                href="import-students.html"
+                class="nav-item superadmin-only"
+                id="importStudentsNav"
             >
 
                 <span class="nav-icon">
@@ -138,18 +143,18 @@
                 </span>
 
                 <span>
-                    Import Student
+                    Import Students
                 </span>
 
             </a>
 
 
-            <!-- Statistics -->
+            <!-- STATISTICS -->
 
             <a
                 href="statistics.html"
-                class="nav-item"
-                id="statisticsMenu"
+                class="nav-item superadmin-only"
+                id="statisticsNav"
             >
 
                 <span class="nav-icon">
@@ -162,18 +167,23 @@
 
             </a>
 
+
         </nav>
 
 
-        <!-- SIDEBAR BOTTOM -->
+        <!-- =================================================
+             SIDEBAR BOTTOM
+        ================================================== -->
 
         <div class="sidebar-bottom">
 
 
+            <!-- ADMIN USER -->
+
             <div class="admin-user-card">
 
                 <div class="admin-user-icon">
-                    👤
+                    👨‍💼
                 </div>
 
                 <div class="admin-user-info">
@@ -191,6 +201,8 @@
             </div>
 
 
+            <!-- LOGOUT -->
+
             <button
                 type="button"
                 id="logoutBtn"
@@ -204,22 +216,27 @@
 
             </button>
 
+
         </div>
+
 
     </aside>
 
 
 
-    <!-- ==================================================
+    <!-- =====================================================
          MAIN CONTENT
-    =================================================== -->
+    ====================================================== -->
 
     <main class="main-content">
 
 
-        <!-- HEADER -->
+        <!-- =================================================
+             PAGE HEADER
+        ================================================== -->
 
         <header class="page-header">
+
 
             <div>
 
@@ -246,18 +263,19 @@
 
             </div>
 
+
         </header>
 
 
 
-        <!-- ==================================================
+        <!-- =================================================
              SUMMARY CARDS
-        =================================================== -->
+        ================================================== -->
 
         <section class="summary-grid">
 
 
-            <!-- Students -->
+            <!-- STUDENTS -->
 
             <div class="summary-card">
 
@@ -284,7 +302,8 @@
             </div>
 
 
-            <!-- Paper Views -->
+
+            <!-- PAPER VIEWS -->
 
             <div class="summary-card">
 
@@ -311,7 +330,8 @@
             </div>
 
 
-            <!-- Active -->
+
+            <!-- ACTIVE -->
 
             <div class="summary-card">
 
@@ -337,42 +357,40 @@
 
             </div>
 
+
         </section>
 
 
 
-        <!-- ==================================================
-             ACTIVITY OVERVIEW
-        =================================================== -->
+        <!-- =================================================
+             PORTAL ACTIVITY
+        ================================================== -->
 
         <section class="dashboard-card">
 
 
             <div class="card-header">
 
-                <div>
+                <p class="card-label">
+                    OVERVIEW
+                </p>
 
-                    <p class="card-label">
-                        OVERVIEW
-                    </p>
+                <h2>
+                    Portal Activity
+                </h2>
 
-                    <h2>
-                        Portal Activity
-                    </h2>
-
-                    <p>
-                        Student and paper activity overview.
-                    </p>
-
-                </div>
+                <p>
+                    Student and paper activity overview.
+                </p>
 
             </div>
+
 
 
             <div class="chart-list">
 
 
-                <!-- Total Students -->
+                <!-- TOTAL STUDENTS -->
 
                 <div class="chart-row">
 
@@ -402,8 +420,8 @@
                         <div class="chart-track">
 
                             <div
-                                class="chart-bar purple-bar"
                                 id="chartTotalStudents"
+                                class="chart-bar purple-bar"
                             ></div>
 
                         </div>
@@ -412,8 +430,8 @@
 
 
                     <strong
-                        class="chart-number"
                         id="chartTotalStudentsValue"
+                        class="chart-number"
                     >
                         0
                     </strong>
@@ -422,7 +440,7 @@
 
 
 
-                <!-- Paper Views -->
+                <!-- PAPER VIEWS -->
 
                 <div class="chart-row">
 
@@ -452,8 +470,8 @@
                         <div class="chart-track">
 
                             <div
-                                class="chart-bar blue-bar"
                                 id="chartPaperViews"
+                                class="chart-bar blue-bar"
                             ></div>
 
                         </div>
@@ -462,8 +480,8 @@
 
 
                     <strong
-                        class="chart-number"
                         id="chartPaperViewsValue"
+                        class="chart-number"
                     >
                         0
                     </strong>
@@ -472,7 +490,7 @@
 
 
 
-                <!-- Grade 10 -->
+                <!-- GRADE 10 -->
 
                 <div class="chart-row">
 
@@ -502,8 +520,8 @@
                         <div class="chart-track">
 
                             <div
-                                class="chart-bar orange-bar"
                                 id="chartGrade10"
+                                class="chart-bar orange-bar"
                             ></div>
 
                         </div>
@@ -512,8 +530,8 @@
 
 
                     <strong
-                        class="chart-number"
                         id="chartGrade10Value"
+                        class="chart-number"
                     >
                         0
                     </strong>
@@ -522,7 +540,7 @@
 
 
 
-                <!-- Grade 11 -->
+                <!-- GRADE 11 -->
 
                 <div class="chart-row">
 
@@ -552,8 +570,8 @@
                         <div class="chart-track">
 
                             <div
-                                class="chart-bar green-bar"
                                 id="chartGrade11"
+                                class="chart-bar green-bar"
                             ></div>
 
                         </div>
@@ -562,8 +580,8 @@
 
 
                     <strong
-                        class="chart-number"
                         id="chartGrade11Value"
+                        class="chart-number"
                     >
                         0
                     </strong>
@@ -572,7 +590,7 @@
 
 
 
-                <!-- Advanced Level -->
+                <!-- ADVANCED LEVEL -->
 
                 <div class="chart-row">
 
@@ -602,8 +620,8 @@
                         <div class="chart-track">
 
                             <div
-                                class="chart-bar pink-bar"
                                 id="chartAL"
+                                class="chart-bar pink-bar"
                             ></div>
 
                         </div>
@@ -612,8 +630,8 @@
 
 
                     <strong
-                        class="chart-number"
                         id="chartALValue"
+                        class="chart-number"
                     >
                         0
                     </strong>
@@ -622,7 +640,7 @@
 
 
 
-                <!-- Active -->
+                <!-- ACTIVE -->
 
                 <div class="chart-row">
 
@@ -652,8 +670,8 @@
                         <div class="chart-track">
 
                             <div
-                                class="chart-bar cyan-bar"
                                 id="chartActive"
+                                class="chart-bar cyan-bar"
                             ></div>
 
                         </div>
@@ -662,13 +680,14 @@
 
 
                     <strong
-                        class="chart-number"
                         id="chartActiveValue"
+                        class="chart-number"
                     >
                         0
                     </strong>
 
                 </div>
+
 
             </div>
 
@@ -676,36 +695,38 @@
 
 
 
-        <!-- ==================================================
+        <!-- =================================================
              MANAGEMENT CARDS
-        =================================================== -->
+        ================================================== -->
 
         <section class="management-grid">
 
 
             <!-- STUDENT MANAGEMENT -->
 
-            <div
-                class="management-card"
-                id="studentManagementCard"
-            >
+            <article class="management-card">
+
 
                 <div class="management-icon purple">
                     👥
                 </div>
 
+
                 <p class="card-label">
                     STUDENTS
                 </p>
+
 
                 <h2>
                     Student Management
                 </h2>
 
+
                 <p>
                     View and manage registered student
-                    accounts and activity.
+                    accounts, permissions and activity.
                 </p>
+
 
                 <a
                     href="students.html"
@@ -714,33 +735,38 @@
                     Open Student Management →
                 </a>
 
-            </div>
+
+            </article>
 
 
 
             <!-- PAPER MANAGEMENT -->
 
-            <div
-                class="management-card"
-                id="paperManagementCard"
+            <article
+                class="management-card superadmin-card"
             >
+
 
                 <div class="management-icon blue">
                     📚
                 </div>
 
+
                 <p class="card-label">
                     RESOURCES
                 </p>
+
 
                 <h2>
                     Paper Management
                 </h2>
 
+
                 <p>
                     Manage model papers, past papers
                     and assessment resources.
                 </p>
+
 
                 <a
                     href="paper-management.html"
@@ -749,68 +775,78 @@
                     Open Paper Management →
                 </a>
 
-            </div>
+
+            </article>
 
 
 
             <!-- IMPORT -->
 
-            <div
-                class="management-card"
-                id="importStudentCard"
+            <article
+                class="management-card superadmin-card"
             >
+
 
                 <div class="management-icon green">
                     📥
                 </div>
 
+
                 <p class="card-label">
-                    STUDENTS
+                    DATA
                 </p>
+
 
                 <h2>
                     Import Students
                 </h2>
 
+
                 <p>
-                    Import and register multiple student
-                    accounts into the portal.
+                    Import student accounts and
+                    registration data into the portal.
                 </p>
 
+
                 <a
-                    href="import-student.html"
+                    href="import-students.html"
                     class="management-link"
                 >
-                    Import Students →
+                    Import Student Data →
                 </a>
 
-            </div>
+
+            </article>
 
 
 
             <!-- STATISTICS -->
 
-            <div
-                class="management-card"
-                id="statisticsCard"
+            <article
+                class="management-card superadmin-card"
             >
+
 
                 <div class="management-icon orange">
                     📊
                 </div>
 
+
                 <p class="card-label">
                     ANALYTICS
                 </p>
+
 
                 <h2>
                     Statistics
                 </h2>
 
+
                 <p>
-                    View detailed student and paper
-                    usage statistics.
+                    View detailed student activity,
+                    paper usage and portal statistics.
                 </p>
+
 
                 <a
                     href="statistics.html"
@@ -819,13 +855,17 @@
                     View Statistics →
                 </a>
 
-            </div>
+
+            </article>
+
 
         </section>
 
 
 
-        <!-- FOOTER -->
+        <!-- =================================================
+             FOOTER
+        ================================================== -->
 
         <footer class="admin-footer">
 
@@ -841,25 +881,27 @@
 
             </div>
 
-            <span>
+
+            <div>
                 © 2026
-            </span>
+            </div>
 
         </footer>
 
+
     </main>
+
 
 </div>
 
 
-
-<!-- ==================================================
+<!-- =====================================================
      JAVASCRIPT
-=================================================== -->
+====================================================== -->
 
 <script
     type="module"
-    src="admin.js?v=4"
+    src="admin.js"
 ></script>
 
 
