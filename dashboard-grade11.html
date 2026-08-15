@@ -1,1 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Grade 11 Student Portal</title>
+
+    <link
+        rel="stylesheet"
+        href="dashboard-grade11.css"
+    >
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <div>
+
+            <h2>
+                📘 Grade 11 Student Portal
+            </h2>
+
+            <p>
+                Student ID :
+                <span id="studentId"></span>
+            </p>
+
+        </div>
+
+        <button id="logoutBtn">
+            🚪 Sign Out
+        </button>
+
+    </div>
+
+
+    <!-- ==========================
+         Study Materials
+    =========================== -->
+
+    <h2 class="section-title">
+        📚 Study Materials
+    </h2>
+
+
+    <div class="material-grid">
+
+        <div
+            class="material-card"
+            onclick="location.href='grade11-model-papers.html'"
+        >
+
+            <div class="material-icon">
+                📘
+            </div>
+
+            <h3>
+                Model Papers
+            </h3>
+
+            <p>
+                Grade 11 Model Papers
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="info-card">
+
+        <h3>
+            📢 Instructions
+        </h3>
+
+        <ul>
+
+            <li>
+                Use only your own Student ID and Password.
+            </li>
+
+            <li>
+                Do not share your login credentials.
+            </li>
+
+            <li>
+                Contact the administrator if you need assistance.
+            </li>
+
+        </ul>
+
+    </div>
+
+
+    <footer>
+        © 2026 Student Assessment Portal
+    </footer>
+
+</div>
+
+
+<script
+    type="module"
+    src="dashboard-grade11.js"
+></script>
+
+</body>
+
+</html>
