@@ -26,15 +26,13 @@
 <div class="container">
 
 
-    <!-- =====================================================
+    <!-- =================================
          HEADER
-    ====================================================== -->
+    ================================== -->
 
     <header class="header">
 
-
         <div class="brand-area">
-
 
             <div class="brand-icon">
                 🎓
@@ -50,10 +48,11 @@
 
                 <div class="student-meta">
 
-
                     <span>
                         Student ID:
-                        <strong id="studentId">—</strong>
+                        <strong id="studentId">
+                            —
+                        </strong>
                     </span>
 
 
@@ -63,7 +62,9 @@
 
 
                     <span>
-                        <strong id="studentGrade">—</strong>
+                        <strong id="studentGrade">
+                            —
+                        </strong>
                     </span>
 
 
@@ -78,16 +79,14 @@
 
                     </span>
 
-
                 </div>
 
             </div>
 
-
         </div>
 
 
-        <!-- Logout -->
+        <!-- SIGN OUT -->
 
         <button
             id="logoutBtn"
@@ -99,17 +98,15 @@
 
         </button>
 
-
     </header>
 
 
 
-    <!-- =====================================================
+    <!-- =================================
          WELCOME
-    ====================================================== -->
+    ================================== -->
 
     <section class="welcome-section">
-
 
         <div>
 
@@ -133,20 +130,131 @@
 
         </div>
 
+    </section>
+
+
+
+    <!-- =================================
+         SUMMARY CARDS
+    ================================== -->
+
+    <section class="summary-grid">
+
+
+        <!-- TOTAL PAPERS -->
+
+        <div class="summary-card">
+
+            <div class="summary-icon purple">
+                📚
+            </div>
+
+
+            <div>
+
+                <span>
+                    Total Papers
+                </span>
+
+
+                <strong id="totalPapers">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- VIEWED PAPERS -->
+
+        <div class="summary-card">
+
+            <div class="summary-icon blue">
+                📄
+            </div>
+
+
+            <div>
+
+                <span>
+                    Papers Viewed
+                </span>
+
+
+                <strong id="viewedPapers">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ACCOUNT STATUS -->
+
+        <div class="summary-card">
+
+            <div class="summary-icon green">
+                🟢
+            </div>
+
+
+            <div>
+
+                <span>
+                    Account Status
+                </span>
+
+
+                <strong>
+                    Active
+                </strong>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- PROGRESS -->
+
+        <div class="summary-card">
+
+            <div class="summary-icon orange">
+                🎯
+            </div>
+
+
+            <div>
+
+                <span>
+                    Progress
+                </span>
+
+
+                <strong id="progressValue">
+                    0%
+                </strong>
+
+            </div>
+
+        </div>
 
     </section>
 
 
 
-    <!-- =====================================================
+    <!-- =================================
          STUDY MATERIALS
-    ====================================================== -->
+    ================================== -->
 
     <section class="section">
 
 
         <div class="section-heading">
-
 
             <div>
 
@@ -161,18 +269,23 @@
 
             </div>
 
-
         </div>
 
 
 
-        <div class="material-grid">
+        <!-- =================================
+             MATERIAL GRID
+        ================================== -->
+
+        <div
+            class="material-grid"
+            id="materialGrid"
+        >
 
 
-            <!-- =================================================
+            <!-- =================================
                  MODEL PAPERS
-                 Grade 10 / Grade 11 / A/L
-            ================================================== -->
+            ================================== -->
 
             <div
                 class="material-card"
@@ -200,23 +313,18 @@
                 </div>
 
 
-                <h3>
+                <h3 id="modelPapersTitle">
                     Model Papers
                 </h3>
 
 
                 <p id="modelPapersDescription">
-
-                    Practice with structured model
-                    papers and prepare with confidence.
-
+                    Model Papers
                 </p>
 
 
                 <span class="card-link">
-
                     Explore Model Papers →
-
                 </span>
 
 
@@ -224,17 +332,19 @@
 
 
 
-            <!-- =================================================
-                 GRADE 11 PAST PAPERS
-                 Only Grade 11
-            ================================================== -->
+            <!-- =================================
+                 SECOND CARD
+                 
+                 A/L       → Province Papers
+                 Grade 11  → Past Papers
+                 Grade 10  → Hidden
+            ================================== -->
 
             <div
                 class="material-card"
-                id="grade11PastPapersCard"
+                id="pastPapersCard"
                 role="button"
                 tabindex="0"
-                style="display: none;"
             >
 
 
@@ -256,81 +366,18 @@
                 </div>
 
 
-                <h3>
+                <h3 id="pastPapersTitle">
                     Past Papers
                 </h3>
 
 
-                <p>
-
-                    Grade 11 Past Papers
-                    <strong>
-                        2016 - 2025
-                    </strong>
-
+                <p id="pastPapersDescription">
+                    Past Papers
                 </p>
 
 
                 <span class="card-link">
-
-                    Explore Past Papers →
-
-                </span>
-
-
-            </div>
-
-
-
-            <!-- =================================================
-                 A/L PROVINCE PAPERS
-                 Only A/L
-            ================================================== -->
-
-            <div
-                class="material-card"
-                id="provincePapersCard"
-                role="button"
-                tabindex="0"
-                style="display: none;"
-            >
-
-
-                <div class="material-top">
-
-
-                    <div
-                        class="material-icon blue-bg"
-                    >
-                        📖
-                    </div>
-
-
-                    <span class="card-arrow">
-                        →
-                    </span>
-
-
-                </div>
-
-
-                <h3>
-                    Province Papers
-                </h3>
-
-
-                <p>
-
-                    Review previous examination
-                    papers and improve your preparation.
-
-                </p>
-
-
-                <span class="card-link">
-
-                    Explore Province Papers →
-
+                    Explore Papers →
                 </span>
 
 
@@ -339,19 +386,18 @@
 
         </div>
 
-
     </section>
 
 
 
-    <!-- =====================================================
+    <!-- =================================
          INFORMATION
-    ====================================================== -->
+    ================================== -->
 
     <section class="info-grid">
 
 
-        <!-- Announcements -->
+        <!-- ANNOUNCEMENTS -->
 
         <div class="info-card">
 
@@ -381,7 +427,7 @@
 
 
 
-        <!-- Support -->
+        <!-- SUPPORT -->
 
         <div class="info-card">
 
@@ -401,10 +447,8 @@
 
 
                 <p>
-
                     Contact the system administrator
                     if you need help.
-
                 </p>
 
 
@@ -412,11 +456,8 @@
                     href="tel:0779011780"
                     class="support-link"
                 >
-
                     📞 077 901 1780
-
                 </a>
-
 
             </div>
 
@@ -428,9 +469,9 @@
 
 
 
-    <!-- =====================================================
+    <!-- =================================
          INSTRUCTIONS
-    ====================================================== -->
+    ================================== -->
 
     <section class="instructions-card">
 
@@ -453,10 +494,8 @@
 
 
                 <p>
-
                     Please follow these guidelines
                     while using the portal.
-
                 </p>
 
             </div>
@@ -469,10 +508,9 @@
         <div class="instruction-list">
 
 
-            <!-- Instruction 01 -->
+            <!-- 01 -->
 
             <div class="instruction-item">
-
 
                 <span>
                     01
@@ -480,21 +518,17 @@
 
 
                 <p>
-
                     Use only your own Student ID
                     and Password.
-
                 </p>
-
 
             </div>
 
 
 
-            <!-- Instruction 02 -->
+            <!-- 02 -->
 
             <div class="instruction-item">
-
 
                 <span>
                     02
@@ -502,21 +536,17 @@
 
 
                 <p>
-
                     Do not share your login
                     credentials with anyone.
-
                 </p>
-
 
             </div>
 
 
 
-            <!-- Instruction 03 -->
+            <!-- 03 -->
 
             <div class="instruction-item">
-
 
                 <span>
                     03
@@ -524,26 +554,22 @@
 
 
                 <p>
-
                     Contact the administrator if
                     you need assistance.
-
                 </p>
-
 
             </div>
 
 
         </div>
 
-
     </section>
 
 
 
-    <!-- =====================================================
+    <!-- =================================
          FOOTER
-    ====================================================== -->
+    ================================== -->
 
     <footer>
 
@@ -563,13 +589,16 @@
 
 
 
-<!-- =====================================================
+<!-- =================================
      DASHBOARD JAVASCRIPT
-====================================================== -->
+
+     ?v=10 forces browser to load
+     the latest dashboard.js
+================================== -->
 
 <script
     type="module"
-    src="dashboard.js"
+    src="dashboard.js?v=10"
 ></script>
 
 
