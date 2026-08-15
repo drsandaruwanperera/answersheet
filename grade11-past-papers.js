@@ -1,5 +1,10 @@
 // ==========================
-// Get Year
+// Grade 11 Past Paper
+// ==========================
+
+
+// ==========================
+// Get URL Parameters
 // ==========================
 
 const params =
@@ -42,11 +47,12 @@ const partBAnswerBtn =
 
 
 // ==========================
-// Validate Year
+// Check Year
 // ==========================
 
 const yearNumber =
     Number(year);
+
 
 if (
     !Number.isInteger(yearNumber) ||
@@ -61,11 +67,15 @@ if (
     window.location.href =
         "grade11-past-papers.html";
 
+    throw new Error(
+        "Invalid past paper year."
+    );
+
 }
 
 
 // ==========================
-// Login Check
+// Check Login
 // ==========================
 
 if (
@@ -77,11 +87,15 @@ if (
     window.location.href =
         "index.html";
 
+    throw new Error(
+        "Student is not logged in."
+    );
+
 }
 
 
 // ==========================
-// Set Title
+// Set Page Title
 // ==========================
 
 paperTitle.textContent =
@@ -90,8 +104,28 @@ paperTitle.textContent =
 
 
 // ==========================
-// PDF Base Path
+// PDF Folder
 // ==========================
+//
+// Folder structure:
+//
+// papers/
+//   grade11/
+//     past/
+//       2025/
+//         part-a.pdf
+//         part-b.pdf
+//
+//       2024/
+//         part-a.pdf
+//         part-b.pdf
+//
+//       ...
+//
+//       2016/
+//         part-a.pdf
+//         part-b.pdf
+//
 
 const basePath =
     `papers/grade11/past/${year}/`;
@@ -105,8 +139,11 @@ partABtn.addEventListener(
     "click",
     () => {
 
+        const pdfPath =
+            `${basePath}part-a.pdf`;
+
         window.open(
-            `${basePath}part-a.pdf`,
+            pdfPath,
             "_blank"
         );
 
@@ -122,10 +159,14 @@ partAAnswerBtn.addEventListener(
     "click",
     () => {
 
+        const answerUrl =
+            "grade11-past-answer.html?" +
+            "year=" +
+            encodeURIComponent(year) +
+            "&part=a";
+
         window.location.href =
-            `grade11-past-answer.html?` +
-            `year=${encodeURIComponent(year)}` +
-            `&part=a`;
+            answerUrl;
 
     }
 );
@@ -139,8 +180,11 @@ partBBtn.addEventListener(
     "click",
     () => {
 
+        const pdfPath =
+            `${basePath}part-b.pdf`;
+
         window.open(
-            `${basePath}part-b.pdf`,
+            pdfPath,
             "_blank"
         );
 
@@ -156,10 +200,14 @@ partBAnswerBtn.addEventListener(
     "click",
     () => {
 
+        const answerUrl =
+            "grade11-past-answer.html?" +
+            "year=" +
+            encodeURIComponent(year) +
+            "&part=b";
+
         window.location.href =
-            `grade11-past-answer.html?` +
-            `year=${encodeURIComponent(year)}` +
-            `&part=b`;
+            answerUrl;
 
     }
 );
@@ -170,6 +218,15 @@ partBAnswerBtn.addEventListener(
 // ==========================
 
 console.log(
-    "✅ Grade 11 Past Paper Loaded:",
+    "✅ Grade 11 Past Paper Loaded"
+);
+
+console.log(
+    "Year:",
     year
+);
+
+console.log(
+    "PDF Folder:",
+    basePath
 );
