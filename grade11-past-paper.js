@@ -1,5 +1,5 @@
 // ==========================
-// Get URL Parameters
+// Get Year
 // ==========================
 
 const params =
@@ -10,46 +10,12 @@ const params =
 const year =
     params.get("year");
 
-
-// ==========================
-// Elements
-// ==========================
-
-const paperTitle =
-    document.getElementById(
-        "paperTitle"
-    );
-
-const partABtn =
-    document.getElementById(
-        "partABtn"
-    );
-
-const partAAnswerBtn =
-    document.getElementById(
-        "partAAnswerBtn"
-    );
-
-const partBBtn =
-    document.getElementById(
-        "partBBtn"
-    );
-
-const partBAnswerBtn =
-    document.getElementById(
-        "partBAnswerBtn"
-    );
-
-
-// ==========================
-// Validate Year
-// ==========================
 const yearNumber =
     Number(year);
 
 
 // ==========================
-// Redirect if Year Missing
+// If No Valid Year
 // ==========================
 
 if (
@@ -64,109 +30,139 @@ if (
     );
 
 }
+else {
 
-// ==========================
-// Login Check
-// ==========================
+    // ==========================
+    // Login Check
+    // ==========================
 
-if (
-    sessionStorage.getItem(
-        "loggedIn"
-    ) !== "true"
-) {
+    if (
+        sessionStorage.getItem(
+            "loggedIn"
+        ) !== "true"
+    ) {
 
-    window.location.href =
-        "index.html";
+        window.location.replace(
+            "index.html"
+        );
+
+    }
+    else {
+
+        // ==========================
+        // Elements
+        // ==========================
+
+        const paperTitle =
+            document.getElementById(
+                "paperTitle"
+            );
+
+        const partABtn =
+            document.getElementById(
+                "partABtn"
+            );
+
+        const partAAnswerBtn =
+            document.getElementById(
+                "partAAnswerBtn"
+            );
+
+        const partBBtn =
+            document.getElementById(
+                "partBBtn"
+            );
+
+        const partBAnswerBtn =
+            document.getElementById(
+                "partBAnswerBtn"
+            );
+
+
+        // ==========================
+        // Title
+        // ==========================
+
+        paperTitle.textContent =
+            "📚 Grade 11 Past Paper - " +
+            year;
+
+
+        // ==========================
+        // PDF Folder
+        // ==========================
+
+        const basePath =
+            `papers/grade11/past/${year}/`;
+
+
+        // ==========================
+        // Part A
+        // ==========================
+
+        partABtn.addEventListener(
+            "click",
+            () => {
+
+                window.open(
+                    `${basePath}part-a.pdf`,
+                    "_blank"
+                );
+
+            }
+        );
+
+
+        // ==========================
+        // Part A Answer
+        // ==========================
+
+        partAAnswerBtn.addEventListener(
+            "click",
+            () => {
+
+                window.location.href =
+                    `grade11-past-answer.html?` +
+                    `year=${encodeURIComponent(year)}` +
+                    `&part=a`;
+
+            }
+        );
+
+
+        // ==========================
+        // Part B
+        // ==========================
+
+        partBBtn.addEventListener(
+            "click",
+            () => {
+
+                window.open(
+                    `${basePath}part-b.pdf`,
+                    "_blank"
+                );
+
+            }
+        );
+
+
+        // ==========================
+        // Part B Answer
+        // ==========================
+
+        partBAnswerBtn.addEventListener(
+            "click",
+            () => {
+
+                window.location.href =
+                    `grade11-past-answer.html?` +
+                    `year=${encodeURIComponent(year)}` +
+                    `&part=b`;
+
+            }
+        );
+
+    }
 
 }
-
-
-// ==========================
-// Set Title
-// ==========================
-
-paperTitle.textContent =
-    "📚 Grade 11 Past Paper - " +
-    year;
-
-
-// ==========================
-// PDF Folder
-// ==========================
-
-const basePath =
-    `papers/grade11/past/${year}/`;
-
-
-// ==========================
-// Part A PDF
-// ==========================
-
-partABtn.addEventListener(
-    "click",
-    () => {
-
-        window.open(
-            `${basePath}part-a.pdf`,
-            "_blank"
-        );
-
-    }
-);
-
-
-// ==========================
-// Part A Answer
-// ==========================
-
-partAAnswerBtn.addEventListener(
-    "click",
-    () => {
-
-        window.location.href =
-            `grade11-past-answer.html?` +
-            `year=${encodeURIComponent(year)}` +
-            `&part=a`;
-
-    }
-);
-
-
-// ==========================
-// Part B PDF
-// ==========================
-
-partBBtn.addEventListener(
-    "click",
-    () => {
-
-        window.open(
-            `${basePath}part-b.pdf`,
-            "_blank"
-        );
-
-    }
-);
-
-
-// ==========================
-// Part B Answer
-// ==========================
-
-partBAnswerBtn.addEventListener(
-    "click",
-    () => {
-
-        window.location.href =
-            `grade11-past-answer.html?` +
-            `year=${encodeURIComponent(year)}` +
-            `&part=b`;
-
-    }
-);
-
-
-console.log(
-    "✅ Grade 11 Past Paper Loaded:",
-    year
-);
