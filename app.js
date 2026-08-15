@@ -4,9 +4,18 @@ import {
     getDoc
 } from "./firebase.js";
 
+
+// ==========================
+// Login Button
+// ==========================
+
 const loginBtn =
     document.getElementById("loginBtn");
 
+
+// ==========================
+// Login
+// ==========================
 
 loginBtn.addEventListener(
     "click",
@@ -29,6 +38,13 @@ loginBtn.addEventListener(
 
 
         // ==========================
+        // Clear Message
+        // ==========================
+
+        msg.textContent = "";
+
+
+        // ==========================
         // Validation
         // ==========================
 
@@ -44,6 +60,10 @@ loginBtn.addEventListener(
 
         try {
 
+            // ==========================
+            // Get Student
+            // ==========================
+
             const ref =
                 doc(
                     db,
@@ -51,9 +71,14 @@ loginBtn.addEventListener(
                     studentId
                 );
 
+
             const snap =
                 await getDoc(ref);
 
+
+            // ==========================
+            // Student Not Found
+            // ==========================
 
             if (!snap.exists()) {
 
@@ -101,13 +126,113 @@ loginBtn.addEventListener(
             );
 
 
-            // Save Grade
+            // ==========================
+            // Detect Student Grade
+            // ==========================
 
-            if (data.grade) {
+            const studentNumber =
+                Number(studentId);
+
+            let studentGrade = null;
+
+
+            // ==========================
+            // Grade 11
+            // 26000 - 26999
+            // ==========================
+
+            if (
+                Number.isInteger(studentNumber) &&
+                studentNumber >= 26000 &&
+                studentNumber <= 26999
+            ) {
+
+                studentGrade = 11;
+
+            }
+
+
+            // ==========================
+            // Grade 10
+            // 27000 - 27999
+            // ==========================
+
+            else if (
+                Number.isInteger(studentNumber) &&
+                studentNumber >= 27000 &&
+                studentNumber <= 27999
+            ) {
+
+                studentGrade = 10;
+
+            }
+
+
+            // ==========================
+            // Firebase Grade Fallback
+            // ==========================
+
+            else if (
+                String(data.grade) ===
+                "10"
+            ) {
+
+                studentGrade = 10;
+
+            }
+
+            else if (
+                String(data.grade) ===
+                "11"
+            ) {
+
+                studentGrade = 11;
+
+            }
+
+
+            // ==========================
+            // Student Type Fallback
+            // ==========================
+
+            else if (
+                data.studentType ===
+                "grade10"
+            ) {
+
+                studentGrade = 10;
+
+            }
+
+            else if (
+                data.studentType ===
+                "grade11"
+            ) {
+
+                studentGrade = 11;
+
+            }
+
+
+            // ==========================
+            // Save Grade
+            // ==========================
+
+            if (
+                studentGrade !== null
+            ) {
 
                 sessionStorage.setItem(
                     "studentGrade",
-                    String(data.grade)
+                    String(studentGrade)
+                );
+
+            }
+
+            else {
+
+                sessionStorage.removeItem(
+                    "studentGrade"
                 );
 
             }
@@ -138,8 +263,7 @@ loginBtn.addEventListener(
             // ==========================
 
             if (
-                String(data.grade) ===
-                "10"
+                studentGrade === 10
             ) {
 
                 window.location.href =
@@ -158,8 +282,7 @@ loginBtn.addEventListener(
             // ==========================
 
             if (
-                String(data.grade) ===
-                "11"
+                studentGrade === 11
             ) {
 
                 window.location.href =
@@ -184,6 +307,12 @@ loginBtn.addEventListener(
                 );
 
         }
+
+
+        // ==========================
+        // Error
+        // ==========================
+
         catch (error) {
 
             console.error(
@@ -200,6 +329,10 @@ loginBtn.addEventListener(
 );
 
 
+// ==========================
+// Loaded
+// ==========================
+
 console.log(
-    "app.js loaded"
+    "✅ Student Login Loaded"
 );
