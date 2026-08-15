@@ -6,704 +6,661 @@ import {
 
 
 // =========================================
-// LOGIN BUTTON
+// ELEMENTS
 // =========================================
 
+const studentIdInput =
+    document.getElementById("studentId");
+
+const passwordInput =
+    document.getElementById("password");
+
 const loginBtn =
-    document.getElementById(
-        "loginBtn"
-    );
+    document.getElementById("loginBtn");
+
+const msg =
+    document.getElementById("msg");
+
+
+// =========================================
+// SHOW MESSAGE
+// =========================================
+
+function showMessage(message, type = "error") {
+
+    if (!msg) {
+        return;
+    }
+
+    msg.textContent = message;
+
+    msg.style.color =
+        type === "success"
+            ? "#16a34a"
+            : "#dc2626";
+
+}
+
+
+// =========================================
+// GET STUDENT TYPE
+// =========================================
+//
+// 26000 - 26999 = Grade 11
+// 27000 - 27999 = Grade 10
+//
+// 2005xxxxxxx = A/L
+// 2006xxxxxxx = A/L
+// 2007xxxxxxx = A/L
+// 2008xxxxxxx = A/L
+// 2009xxxxxxx = A/L
+//
+// Old NIC = A/L
+// =========================================
+
+function detectStudentType(
+    studentId,
+    data = {}
+) {
+
+    const cleanId =
+        String(studentId || "")
+            .trim()
+            .replace(/\s+/g, "")
+            .toUpperCase();
+
+
+    // =====================================
+    // 1. FIREBASE studentType
+    // =====================================
+
+    const firebaseType =
+        String(
+            data?.studentType || ""
+        )
+            .trim()
+            .toLowerCase();
+
+
+    if (
+        firebaseType === "grade10" ||
+        firebaseType === "grade 10"
+    ) {
+
+        return "grade10";
+
+    }
+
+
+    if (
+        firebaseType === "grade11" ||
+        firebaseType === "grade 11"
+    ) {
+
+        return "grade11";
+
+    }
+
+
+    if (
+        firebaseType === "al" ||
+        firebaseType === "a/l" ||
+        firebaseType === "a level" ||
+        firebaseType === "advanced" ||
+        firebaseType === "advanced level"
+    ) {
+
+        return "al";
+
+    }
+
+
+    // =====================================
+    // 2. FIREBASE grade
+    // =====================================
+
+    const firebaseGrade =
+        String(
+            data?.grade || ""
+        )
+            .trim()
+            .toLowerCase();
+
+
+    if (
+        firebaseGrade === "10" ||
+        firebaseGrade === "grade10" ||
+        firebaseGrade === "grade 10"
+    ) {
+
+        return "grade10";
+
+    }
+
+
+    if (
+        firebaseGrade === "11" ||
+        firebaseGrade === "grade11" ||
+        firebaseGrade === "grade 11"
+    ) {
+
+        return "grade11";
+
+    }
+
+
+    if (
+        firebaseGrade === "al" ||
+        firebaseGrade === "a/l" ||
+        firebaseGrade === "a level" ||
+        firebaseGrade === "advanced" ||
+        firebaseGrade === "advanced level"
+    ) {
+
+        return "al";
+
+    }
+
+
+    // =====================================
+    // 3. GRADE 11 ID
+    // =====================================
+
+    if (
+        /^\d{5}$/.test(cleanId)
+    ) {
+
+        const number =
+            Number(cleanId);
+
+
+        if (
+            number >= 26000 &&
+            number <= 26999
+        ) {
+
+            return "grade11";
+
+        }
+
+
+        // =================================
+        // GRADE 10
+        // =================================
+
+        if (
+            number >= 27000 &&
+            number <= 27999
+        ) {
+
+            return "grade10";
+
+        }
+
+    }
+
+
+    // =====================================
+    // 4. A/L 2005 - 2009
+    // =====================================
+
+    if (
+        /^(2005|2006|2007|2008|2009)\d+$/.
+            test(cleanId)
+    ) {
+
+        return "al";
+
+    }
+
+
+    // =====================================
+    // 5. OLD NIC
+    // Example:
+    // 123456789V
+    // 123456789X
+    // =====================================
+
+    if (
+        /^\d{9}[VX]$/.test(cleanId)
+    ) {
+
+        return "al";
+
+    }
+
+
+    // =====================================
+    // UNKNOWN
+    // =====================================
+
+    return null;
+
+}
+
+
+// =========================================
+// GET DISPLAY GRADE
+// =========================================
+
+function getGradeName(type) {
+
+    if (type === "grade10") {
+        return "Grade 10";
+    }
+
+    if (type === "grade11") {
+        return "Grade 11";
+    }
+
+    if (type === "al") {
+        return "Advanced Level";
+    }
+
+    return "Student";
+
+}
 
 
 // =========================================
 // LOGIN
 // =========================================
 
-if (loginBtn) {
+async function loginStudent() {
 
-    loginBtn.addEventListener(
-        "click",
-        async () => {
-
-            // =================================
-            // GET INPUT VALUES
-            // =================================
-
-            const studentId =
-                document
-                    .getElementById("studentId")
-                    .value
-                    .trim();
-
-            const password =
-                document
-                    .getElementById("password")
-                    .value
-                    .trim();
-
-            const msg =
-                document.getElementById(
-                    "msg"
-                );
+    const studentId =
+        studentIdInput?.value
+            ?.trim() || "";
 
 
-            // =================================
-            // CLEAR MESSAGE
-            // =================================
-
-            msg.textContent = "";
+    const password =
+        passwordInput?.value
+            ?.trim() || "";
 
 
-            // =================================
-            // VALIDATION
-            // =================================
+    // =====================================
+    // VALIDATION
+    // =====================================
 
-            if (
-                !studentId ||
-                !password
-            ) {
+    if (!studentId) {
 
-                msg.textContent =
-                    "Please enter Student ID and Password.";
+        showMessage(
+            "Please enter your Student ID."
+        );
 
-                return;
+        studentIdInput?.focus();
 
-            }
+        return;
 
-
-            // =================================
-            // LOADING
-            // =================================
-
-            loginBtn.disabled =
-                true;
-
-            loginBtn.textContent =
-                "Signing in...";
+    }
 
 
-            try {
+    if (!password) {
 
-                // =================================
-                // CLEAN STUDENT ID
-                // =================================
+        showMessage(
+            "Please enter your password."
+        );
 
-                const cleanStudentId =
-                    String(
-                        studentId
-                    )
-                    .trim()
-                    .replace(
-                        /\s+/g,
-                        ""
-                    );
+        passwordInput?.focus();
+
+        return;
+
+    }
 
 
-                // =================================
-                // GET STUDENT FROM FIREBASE
-                // =================================
+    // =====================================
+    // DISABLE BUTTON
+    // =====================================
 
-                const studentRef =
-                    doc(
-                        db,
-                        "students",
-                        cleanStudentId
-                    );
+    if (loginBtn) {
 
+        loginBtn.disabled = true;
 
-                const studentSnapshot =
-                    await getDoc(
-                        studentRef
-                    );
+        loginBtn.innerHTML =
+            `
+            <span>Signing In...</span>
+            `;
+
+    }
 
 
-                // =================================
-                // STUDENT NOT FOUND
-                // =================================
+    showMessage("");
 
-                if (
-                    !studentSnapshot.exists()
-                ) {
 
-                    msg.textContent =
-                        "Student ID not found.";
+    try {
 
-                    return;
+        // =================================
+        // STUDENT DOCUMENT
+        // =================================
 
+        const studentRef =
+            doc(
+                db,
+                "students",
+                studentId
+            );
+
+
+        const studentSnap =
+            await getDoc(
+                studentRef
+            );
+
+
+        // =================================
+        // STUDENT NOT FOUND
+        // =================================
+
+        if (
+            !studentSnap.exists()
+        ) {
+
+            showMessage(
+                "Invalid Student ID or password."
+            );
+
+            return;
+
+        }
+
+
+        const data =
+            studentSnap.data();
+
+
+        // =================================
+        // PASSWORD
+        // =================================
+
+        const storedPassword =
+            String(
+                data?.password ?? ""
+            );
+
+
+        if (
+            storedPassword !==
+            password
+        ) {
+
+            showMessage(
+                "Invalid Student ID or password."
+            );
+
+            return;
+
+        }
+
+
+        // =================================
+        // DETECT CATEGORY
+        // =================================
+
+        const studentType =
+            detectStudentType(
+                studentId,
+                data
+            );
+
+
+        // =================================
+        // CATEGORY NOT FOUND
+        // =================================
+
+        if (!studentType) {
+
+            console.error(
+                "Student category could not be detected.",
+                {
+                    studentId,
+                    studentType:
+                        data?.studentType,
+                    grade:
+                        data?.grade
                 }
+            );
 
 
-                // =================================
-                // STUDENT DATA
-                // =================================
+            showMessage(
+                "Student category is not configured. Please contact the administrator."
+            );
 
-                const data =
-                    studentSnapshot.data();
+            return;
 
+        }
 
-                // =================================
-                // PASSWORD CHECK
-                // =================================
-
-                if (
-                    String(
-                        data.password || ""
-                    ) !==
-                    password
-                ) {
-
-                    msg.textContent =
-                        "Wrong Password.";
-
-                    return;
-
-                }
 
+        // =================================
+        // GRADE NAME
+        // =================================
 
-                // =================================
-                // STUDENT TYPE
-                // =================================
-
-                let studentType =
-                    null;
-
-
-                // =================================
-                // NUMBER VERSION
-                // =================================
-
-                const studentNumber =
-                    Number(
-                        cleanStudentId
-                    );
-
-
-                // =================================
-                // GRADE 11
-                // =================================
-                //
-                // 26000 - 26999
-                //
-
-                if (
-                    /^\d{5}$/.test(
-                        cleanStudentId
-                    ) &&
-                    Number.isInteger(
-                        studentNumber
-                    ) &&
-                    studentNumber >= 26000 &&
-                    studentNumber <= 26999
-                ) {
-
-                    studentType =
-                        "grade11";
-
-                }
-
-
-                // =================================
-                // GRADE 10
-                // =================================
-                //
-                // 27000 - 27999
-                //
-
-                else if (
-                    /^\d{5}$/.test(
-                        cleanStudentId
-                    ) &&
-                    Number.isInteger(
-                        studentNumber
-                    ) &&
-                    studentNumber >= 27000 &&
-                    studentNumber <= 27999
-                ) {
+        const gradeName =
+            getGradeName(
+                studentType
+            );
 
-                    studentType =
-                        "grade10";
-
-                }
-
-
-                // =================================
-                // A/L STUDENT
-                // =================================
-                //
-                // First 4 digits:
-                //
-                // 2005
-                // 2006
-                // 2007
-                //
-                // Example:
-                // 200578900180
-                //
-
-                else if (
-                    cleanStudentId.startsWith(
-                        "2005"
-                    ) ||
-                    cleanStudentId.startsWith(
-                        "2006"
-                    ) ||
-                    cleanStudentId.startsWith(
-                        "2007"
-                    )
-                ) {
-
-                    studentType =
-                        "al";
-
-                }
-
-
-                // =================================
-                // A/L - OLD NIC
-                // =================================
-                //
-                // Example:
-                //
-                // 987654321V
-                // 987654321X
-                //
-
-                else if (
-                    /^\d{9}[VvXx]$/.test(
-                        cleanStudentId
-                    )
-                ) {
-
-                    studentType =
-                        "al";
-
-                }
-
-
-                // =================================
-                // FIREBASE STUDENT TYPE FALLBACK
-                // =================================
-
-                if (
-                    !studentType
-                ) {
-
-                    const firebaseType =
-                        String(
-                            data.studentType ||
-                            ""
-                        )
-                        .toLowerCase()
-                        .trim()
-                        .replace(
-                            /\s+/g,
-                            " "
-                        );
-
-
-                    // Grade 10
-
-                    if (
-                        firebaseType ===
-                            "grade10" ||
-                        firebaseType ===
-                            "grade 10"
-                    ) {
-
-                        studentType =
-                            "grade10";
-
-                    }
-
-
-                    // Grade 11
-
-                    else if (
-                        firebaseType ===
-                            "grade11" ||
-                        firebaseType ===
-                            "grade 11"
-                    ) {
-
-                        studentType =
-                            "grade11";
-
-                    }
-
-
-                    // A/L
-
-                    else if (
-                        firebaseType ===
-                            "al" ||
-                        firebaseType ===
-                            "a/l" ||
-                        firebaseType ===
-                            "a level" ||
-                        firebaseType ===
-                            "a-level" ||
-                        firebaseType ===
-                            "advanced" ||
-                        firebaseType ===
-                            "advanced level" ||
-                        firebaseType ===
-                            "advancedlevel"
-                    ) {
-
-                        studentType =
-                            "al";
-
-                    }
-
-                }
-
-
-                // =================================
-                // FIREBASE GRADE FALLBACK
-                // =================================
-
-                if (
-                    !studentType
-                ) {
-
-                    const firebaseGrade =
-                        String(
-                            data.grade ||
-                            ""
-                        )
-                        .toLowerCase()
-                        .trim()
-                        .replace(
-                            /\s+/g,
-                            " "
-                        );
-
-
-                    // Grade 10
-
-                    if (
-                        firebaseGrade ===
-                            "10" ||
-                        firebaseGrade ===
-                            "grade10" ||
-                        firebaseGrade ===
-                            "grade 10"
-                    ) {
-
-                        studentType =
-                            "grade10";
-
-                    }
-
-
-                    // Grade 11
-
-                    else if (
-                        firebaseGrade ===
-                            "11" ||
-                        firebaseGrade ===
-                            "grade11" ||
-                        firebaseGrade ===
-                            "grade 11"
-                    ) {
-
-                        studentType =
-                            "grade11";
-
-                    }
-
-
-                    // A/L
-
-                    else if (
-                        firebaseGrade ===
-                            "al" ||
-                        firebaseGrade ===
-                            "a/l" ||
-                        firebaseGrade ===
-                            "a level" ||
-                        firebaseGrade ===
-                            "a-level" ||
-                        firebaseGrade ===
-                            "advanced" ||
-                        firebaseGrade ===
-                            "advanced level"
-                    ) {
-
-                        studentType =
-                            "al";
-
-                    }
-
-                }
-
-
-                // =================================
-                // FIREBASE STUDENT GRADE FALLBACK
-                // =================================
-
-                if (
-                    !studentType
-                ) {
-
-                    const firebaseStudentGrade =
-                        String(
-                            data.studentGrade ||
-                            ""
-                        )
-                        .toLowerCase()
-                        .trim()
-                        .replace(
-                            /\s+/g,
-                            " "
-                        );
-
-
-                    if (
-                        firebaseStudentGrade ===
-                            "10" ||
-                        firebaseStudentGrade ===
-                            "grade10" ||
-                        firebaseStudentGrade ===
-                            "grade 10"
-                    ) {
-
-                        studentType =
-                            "grade10";
-
-                    }
-
-                    else if (
-                        firebaseStudentGrade ===
-                            "11" ||
-                        firebaseStudentGrade ===
-                            "grade11" ||
-                        firebaseStudentGrade ===
-                            "grade 11"
-                    ) {
-
-                        studentType =
-                            "grade11";
-
-                    }
-
-                    else if (
-                        firebaseStudentGrade ===
-                            "al" ||
-                        firebaseStudentGrade ===
-                            "a/l" ||
-                        firebaseStudentGrade ===
-                            "a level" ||
-                        firebaseStudentGrade ===
-                            "a-level" ||
-                        firebaseStudentGrade ===
-                            "advanced" ||
-                        firebaseStudentGrade ===
-                            "advanced level"
-                    ) {
-
-                        studentType =
-                            "al";
-
-                    }
-
-                }
-
-
-                // =================================
-                // STUDENT TYPE NOT FOUND
-                // =================================
-
-                if (
-                    !studentType
-                ) {
-
-                    console.error(
-                        "Student type could not be detected.",
-                        {
-                            studentId:
-                                cleanStudentId,
-
-                            data:
-                                data
-                        }
-                    );
-
-
-                    msg.textContent =
-                        "Student category is not configured. Please contact the administrator.";
-
-                    return;
-
-                }
-
-
-                // =================================
-                // SAVE LOGIN SESSION
-                // =================================
-
-                sessionStorage.setItem(
-                    "loggedIn",
-                    "true"
-                );
-
-
-                sessionStorage.setItem(
-                    "studentId",
-                    cleanStudentId
-                );
-
-
-                // =================================
-                // SAVE STUDENT TYPE
-                // =================================
-
-                sessionStorage.setItem(
-                    "studentType",
-                    studentType
-                );
-
 
-                // =================================
-                // SAVE COMPATIBILITY GRADE
-                // =================================
-
-                if (
-                    studentType ===
-                    "grade10"
-                ) {
-
-                    sessionStorage.setItem(
-                        "studentGrade",
-                        "10"
-                    );
-
-                }
-
-                else if (
-                    studentType ===
-                    "grade11"
-                ) {
-
-                    sessionStorage.setItem(
-                        "studentGrade",
-                        "11"
-                    );
-
-                }
-
-                else if (
-                    studentType ===
-                    "al"
-                ) {
-
-                    sessionStorage.setItem(
-                        "studentGrade",
-                        "al"
-                    );
-
-                }
-
-
-                // =================================
-                // CONSOLE
-                // =================================
-
-                console.log(
-                    "================================"
-                );
-
-                console.log(
-                    "✅ LOGIN SUCCESS"
-                );
-
-                console.log(
-                    "Student ID:",
-                    cleanStudentId
-                );
-
-                console.log(
-                    "Student Type:",
-                    studentType
-                );
-
-                console.log(
-                    "Firebase Student Type:",
-                    data.studentType
-                );
-
-                console.log(
-                    "Firebase Grade:",
-                    data.grade
-                );
-
-                console.log(
-                    "================================"
-                );
-
-
-                // =================================
-                // FORCE PASSWORD CHANGE
-                // =================================
-
-                if (
-                    data.mustChangePassword ===
-                    true
-                ) {
-
-                    window.location.replace(
-                        "change-password.html?id=" +
-                        encodeURIComponent(
-                            cleanStudentId
-                        )
-                    );
-
-                    return;
-
-                }
-
-
-                // =================================
-                // COMMON DASHBOARD
-                // =================================
+        // =================================
+        // SAVE SESSION
+        // =================================
+
+        sessionStorage.setItem(
+            "loggedIn",
+            "true"
+        );
+
+
+        sessionStorage.setItem(
+            "studentId",
+            studentId
+        );
+
+
+        sessionStorage.setItem(
+            "studentType",
+            studentType
+        );
+
+
+        sessionStorage.setItem(
+            "studentGrade",
+            gradeName
+        );
+
+
+        // =================================
+        // SAVE STUDENT NAME
+        // =================================
+
+        const studentName =
+            data?.name ||
+            data?.studentName ||
+            data?.fullName ||
+            data?.displayName ||
+            "Student";
+
+
+        sessionStorage.setItem(
+            "studentName",
+            studentName
+        );
+
+
+        // =================================
+        // DEBUG
+        // =================================
+
+        console.log(
+            "================================"
+        );
+
+        console.log(
+            "LOGIN SUCCESS"
+        );
+
+        console.log(
+            "Student ID:",
+            studentId
+        );
+
+        console.log(
+            "Student Type:",
+            studentType
+        );
+
+        console.log(
+            "Grade:",
+            gradeName
+        );
+
+        console.log(
+            "Student Name:",
+            studentName
+        );
+
+        console.log(
+            "================================"
+        );
+
+
+        // =================================
+        // SUCCESS MESSAGE
+        // =================================
+
+        showMessage(
+            "Login successful. Redirecting...",
+            "success"
+        );
+
+
+        // =================================
+        // REDIRECT
+        // =================================
+
+        setTimeout(
+            () => {
 
                 window.location.replace(
                     "dashboard.html"
                 );
 
+            },
+            300
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Student login error:",
+            error
+        );
+
+
+        showMessage(
+            "Unable to sign in. Please try again."
+        );
+
+    }
+
+    finally {
+
+        if (loginBtn) {
+
+            loginBtn.disabled = false;
+
+            loginBtn.innerHTML =
+                `
+                <span>Sign In</span>
+                <span class="login-arrow">→</span>
+                `;
+
+        }
+
+    }
+
+}
+
+
+// =========================================
+// LOGIN BUTTON
+// =========================================
+
+if (loginBtn) {
+
+    loginBtn.addEventListener(
+        "click",
+        loginStudent
+    );
+
+}
+
+
+// =========================================
+// ENTER KEY
+// =========================================
+
+[
+    studentIdInput,
+    passwordInput
+].forEach(
+    input => {
+
+        if (!input) {
+            return;
+        }
+
+
+        input.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key === "Enter"
+                ) {
+
+                    event.preventDefault();
+
+                    loginStudent();
+
+                }
+
+            }
+        );
+
+    }
+);
+
+
+// =========================================
+// CLEAR MESSAGE WHEN TYPING
+// =========================================
+
+if (studentIdInput) {
+
+    studentIdInput.addEventListener(
+        "input",
+        () => {
+
+            if (msg) {
+                msg.textContent = "";
             }
 
+        }
+    );
 
-            // =====================================
-            // ERROR
-            // =====================================
-
-            catch (error) {
-
-                console.error(
-                    "Login error:",
-                    error
-                );
+}
 
 
-                msg.textContent =
-                    "Login failed. Please try again.";
+if (passwordInput) {
 
-            }
+    passwordInput.addEventListener(
+        "input",
+        () => {
 
-
-            // =====================================
-            // RESET BUTTON
-            // =====================================
-
-            finally {
-
-                loginBtn.disabled =
-                    false;
-
-                loginBtn.textContent =
-                    "Sign In";
-
+            if (msg) {
+                msg.textContent = "";
             }
 
         }
@@ -713,36 +670,13 @@ if (loginBtn) {
 
 
 // =========================================
-// ENTER KEY LOGIN
-// =========================================
-
-document.addEventListener(
-    "keydown",
-    event => {
-
-        if (
-            event.key === "Enter"
-        ) {
-
-            if (
-                loginBtn &&
-                !loginBtn.disabled
-            ) {
-
-                loginBtn.click();
-
-            }
-
-        }
-
-    }
-);
-
-
-// =========================================
-// LOADED
+// START
 // =========================================
 
 console.log(
-    "✅ Student Login Loaded"
+    "✅ Student Login System Loaded"
+);
+
+console.log(
+    "Supported A/L batches: 2005, 2006, 2007, 2008, 2009"
 );
