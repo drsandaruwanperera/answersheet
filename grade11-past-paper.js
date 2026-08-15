@@ -15,7 +15,42 @@ const yearNumber =
 
 
 // ==========================
-// If No Valid Year
+// Elements
+// ==========================
+
+const paperTitle =
+    document.getElementById(
+        "paperTitle"
+    );
+
+const paperSubtitle =
+    document.getElementById(
+        "paperSubtitle"
+    );
+
+const partABtn =
+    document.getElementById(
+        "partABtn"
+    );
+
+const partAAnswerBtn =
+    document.getElementById(
+        "partAAnswerBtn"
+    );
+
+const partBBtn =
+    document.getElementById(
+        "partBBtn"
+    );
+
+const partBAnswerBtn =
+    document.getElementById(
+        "partBAnswerBtn"
+    );
+
+
+// ==========================
+// Validate Year
 // ==========================
 
 if (
@@ -50,46 +85,19 @@ else {
     else {
 
         // ==========================
-        // Elements
-        // ==========================
-
-        const paperTitle =
-            document.getElementById(
-                "paperTitle"
-            );
-
-        const partABtn =
-            document.getElementById(
-                "partABtn"
-            );
-
-        const partAAnswerBtn =
-            document.getElementById(
-                "partAAnswerBtn"
-            );
-
-        const partBBtn =
-            document.getElementById(
-                "partBBtn"
-            );
-
-        const partBAnswerBtn =
-            document.getElementById(
-                "partBAnswerBtn"
-            );
-
-
-        // ==========================
-        // Title
+        // Set Title
         // ==========================
 
         paperTitle.textContent =
             "📚 Grade 11 Past Paper - " +
             year;
 
+        paperSubtitle.textContent =
+            "Select Part A or Part B";
+
 
         // ==========================
-        // PDF Folder
+        // PDF Base Path
         // ==========================
 
         const basePath =
@@ -97,7 +105,7 @@ else {
 
 
         // ==========================
-        // Part A
+        // Part A PDF
         // ==========================
 
         partABtn.addEventListener(
@@ -131,7 +139,7 @@ else {
 
 
         // ==========================
-        // Part B
+        // Part B PDF
         // ==========================
 
         partBBtn.addEventListener(
