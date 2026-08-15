@@ -8,8 +8,8 @@
 body {
     min-height: 100vh;
     background: #f5f7fb;
-    padding: 30px 20px;
     color: #111827;
+    padding: 30px 20px;
 }
 
 .container {
@@ -19,7 +19,9 @@ body {
 }
 
 
-/* Header */
+/* ==========================
+   Header
+========================== */
 
 .header {
     background: #ffffff;
@@ -43,11 +45,15 @@ body {
 
 .header h1 {
     font-size: 28px;
+    font-weight: 700;
 }
 
 .header p {
+    margin-top: 7px;
+
     color: #6b7280;
-    margin-top: 5px;
+
+    font-size: 15px;
 }
 
 .header button {
@@ -55,7 +61,7 @@ body {
 
     background: #7c3aed;
 
-    color: white;
+    color: #ffffff;
 
     padding: 12px 20px;
 
@@ -66,33 +72,41 @@ body {
     font-weight: 600;
 
     cursor: pointer;
+
+    transition: 0.2s ease;
 }
 
 .header button:hover {
     background: #6d28d9;
+
+    transform: translateY(-1px);
 }
 
 
-/* Years */
+/* ==========================
+   Part Grid
+========================== */
 
-.year-grid {
+.part-grid {
     display: grid;
 
     grid-template-columns:
-        repeat(3, 1fr);
+        repeat(2, 1fr);
 
     gap: 25px;
 }
 
 
-/* Card */
+/* ==========================
+   Part Card
+========================== */
 
-.year-card {
-    background: white;
+.part-card {
+    background: #ffffff;
 
-    min-height: 210px;
+    min-height: 300px;
 
-    padding: 30px 25px;
+    padding: 32px 28px;
 
     border-radius: 20px;
 
@@ -100,13 +114,11 @@ body {
 
     flex-direction: column;
 
-    justify-content: center;
-
     align-items: center;
 
-    text-align: center;
+    justify-content: center;
 
-    cursor: pointer;
+    text-align: center;
 
     border: 2px solid transparent;
 
@@ -114,80 +126,166 @@ body {
         0 10px 30px
         rgba(0, 0, 0, 0.08);
 
-    transition: 0.25s ease;
+    transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
 }
 
-.year-card:hover {
-    transform: translateY(-6px);
+.part-card:hover {
+    transform: translateY(-5px);
 
     border-color: #7c3aed;
 
     box-shadow:
         0 15px 35px
-        rgba(124, 58, 237, 0.18);
+        rgba(124, 58, 237, 0.16);
 }
 
 
-/* Icon */
+/* ==========================
+   Icon
+========================== */
 
-.year-icon {
-    width: 70px;
-    height: 70px;
+.part-icon {
+    width: 75px;
+    height: 75px;
 
     display: flex;
 
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 
     background: #ede9fe;
 
     border-radius: 18px;
 
-    font-size: 36px;
+    font-size: 38px;
 
-    margin-bottom: 18px;
+    margin-bottom: 20px;
 }
 
-.year-card h2 {
-    font-size: 24px;
+
+/* ==========================
+   Text
+========================== */
+
+.part-card h2 {
+    font-size: 23px;
 
     margin-bottom: 8px;
 }
 
-.year-card p {
+.part-card p {
     color: #6b7280;
 
     font-size: 15px;
+
+    margin-bottom: 22px;
 }
 
 
-/* Responsive */
+/* ==========================
+   Buttons
+========================== */
+
+.option-grid {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 12px;
+}
+
+.option-grid button {
+    border: none;
+
+    background: #7c3aed;
+
+    color: #ffffff;
+
+    padding: 13px 12px;
+
+    border-radius: 10px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.option-grid button:hover {
+    background: #6d28d9;
+
+    transform: translateY(-2px);
+}
+
+
+/* ==========================
+   Answer Button
+========================== */
+
+#partAAnswerBtn,
+#partBAnswerBtn {
+    background: #eef2ff;
+
+    color: #4f46e5;
+
+    border: 1px solid #c7d2fe;
+}
+
+#partAAnswerBtn:hover,
+#partBAnswerBtn:hover {
+    background: #e0e7ff;
+}
+
+
+/* ==========================
+   Mobile
+========================== */
 
 @media (max-width: 800px) {
 
-    .year-grid {
-        grid-template-columns:
-            repeat(2, 1fr);
+    body {
+        padding: 20px 15px;
+    }
+
+    .part-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .part-card {
+        min-height: 280px;
     }
 
 }
 
+
 @media (max-width: 500px) {
 
-    body {
-        padding: 15px;
+    .header {
+        padding: 20px;
+
+        flex-direction: column;
+
+        align-items: stretch;
     }
 
-    .header {
-        flex-direction: column;
-        align-items: stretch;
+    .header h1 {
+        font-size: 23px;
     }
 
     .header button {
         width: 100%;
     }
 
-    .year-grid {
+    .option-grid {
         grid-template-columns: 1fr;
     }
 
