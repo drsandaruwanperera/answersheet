@@ -5,6 +5,7 @@
 import {
     db,
     doc,
+    getDoc,
     updateDoc
 } from "./firebase.js";
 
@@ -17,48 +18,58 @@ if (
     sessionStorage.getItem("loggedIn") !== "true"
 ) {
 
-    window.location.replace(
-        "index.html"
-    );
+    window.location.replace("index.html");
 
 }
 
 
 // ==========================
-// Get Student ID
+// Student Information
 // ==========================
 
 const studentId =
-    sessionStorage.getItem(
-        "studentId"
-    );
+    sessionStorage.getItem("studentId");
+
+const storedGrade =
+    sessionStorage.getItem("studentGrade");
 
 
 // ==========================
-// Get Student Grade
-// ==========================
-
-const studentGrade =
-    sessionStorage.getItem(
-        "studentGrade"
-    );
-
-
-// ==========================
-// Display Student ID
+// Elements
 // ==========================
 
 const studentIdElement =
-    document.getElementById(
-        "studentId"
-    );
+    document.getElementById("studentId");
 
-if (studentIdElement) {
+const studentGradeElement =
+    document.getElementById("studentGrade");
 
-    studentIdElement.textContent =
-        studentId || "";
+const studentNameElement =
+    document.getElementById("studentName");
 
-}
+const greetingElement =
+    document.getElementById("greeting");
+
+const gradeLabelElement =
+    document.getElementById("gradeLabel");
+
+const statusElement =
+    document.getElementById("onlineStatus");
+
+const totalPapersElement =
+    document.getElementById("totalPapers");
+
+const viewedPapersElement =
+    document.getElementById("viewedPapers");
+
+const progressElement =
+    document.getElementById("progressValue");
+
+const modelPapersCard =
+    document.getElementById("modelPapersCard");
+
+const pastPapersCard =
+    document.getElementById("pastPapersCard");
 
 
 // ==========================
@@ -80,14 +91,436 @@ if (studentId) {
 
 
 // ==========================
+// Grade Helper
+// ==========================
+
+function getGradeType(value) {
+
+    const grade =
+        String(value || "")
+            .toLowerCase()
+            .trim();
+
+
+    if (
+        grade === "10" ||
+        grade === "grade10" ||
+        grade === "grade 10"
+    ) {
+
+        return "grade10";
+
+    }
+
+
+    if (
+        grade === "11" ||
+        grade === "grade11" ||
+        grade === "grade 11"
+    ) {
+
+        return "grade11";
+
+    }
+
+
+    if (
+        grade === "al" ||
+        grade === "a/l" ||
+        grade === "advanced" ||
+        grade === "advancedlevel"
+    ) {
+
+        return "al";
+
+    }
+
+
+    return "grade11";
+
+}
+
+
+// ==========================
+// Grade Display
+// ==========================
+
+function getGradeDisplay(
+    type
+) {
+
+    if (type === "grade10") {
+
+        return "Grade 10";
+
+    }
+
+    if (type === "grade11") {
+
+        return "Grade 11";
+
+    }
+
+    return "Advanced Level";
+
+}
+
+
+// ==========================
+// Grade Paths
+// ==========================
+
+function getDashboardData(
+    type
+) {
+
+    if (type === "grade10") {
+
+        return {
+
+            grade:
+                "Grade 10",
+
+            model:
+                "grade10-model-papers.html",
+
+            past:
+                "grade10-past-papers.html"
+
+        };
+
+    }
+
+
+    if (type === "al") {
+
+        return {
+
+            grade:
+                "Advanced Level",
+
+            model:
+                "al-model-papers.html",
+
+            past:
+                "al-past-papers.html"
+
+        };
+
+    }
+
+
+    return {
+
+        grade:
+            "Grade 11",
+
+        model:
+            "grade11-model-papers.html",
+
+        past:
+            "grade11-past-paper.html"
+
+    };
+
+}
+
+
+// ==========================
+// Greeting
+// ==========================
+
+function updateGreeting(
+    studentName
+) {
+
+    const hour =
+        new Date().getHours();
+
+
+    let greeting = "Good evening";
+
+
+    if (hour >= 5 && hour < 12) {
+
+        greeting =
+            "Good morning";
+
+    }
+
+    else if (
+        hour >= 12 &&
+        hour < 17
+    ) {
+
+        greeting =
+            "Good afternoon";
+
+    }
+
+
+    if (greetingElement) {
+
+        greetingElement.textContent =
+            `${greeting}, ${studentName} 👋`;
+
+    }
+
+}
+
+
+// ==========================
+// Load Student
+// ==========================
+
+async function loadStudent() {
+
+    if (!studentRef) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const snapshot =
+            await getDoc(
+                studentRef
+            );
+
+
+        if (!snapshot.exists()) {
+
+            console.error(
+                "Student record not found."
+            );
+
+            return;
+
+        }
+
+
+        const data =
+            snapshot.data();
+
+
+        // ==========================
+        // Detect Grade
+        // ==========================
+
+        const type =
+            getGradeType(
+                data.studentType ||
+                storedGrade ||
+                data.grade
+            );
+
+
+        const gradeInfo =
+            getDashboardData(
+                type
+            );
+
+
+        // ==========================
+        // Student Name
+        // ==========================
+
+        const studentName =
+            data.name ||
+            data.studentName ||
+            data.fullName ||
+            "Student";
+
+
+        // ==========================
+        // Display
+        // ==========================
+
+        if (studentIdElement) {
+
+            studentIdElement.textContent =
+                studentId || "";
+
+        }
+
+
+        if (studentGradeElement) {
+
+            studentGradeElement.textContent =
+                gradeInfo.grade;
+
+        }
+
+
+        if (gradeLabelElement) {
+
+            gradeLabelElement.textContent =
+                gradeInfo.grade;
+
+        }
+
+
+        if (studentNameElement) {
+
+            studentNameElement.textContent =
+                studentName;
+
+        }
+
+
+        updateGreeting(
+            studentName
+        );
+
+
+        // ==========================
+        // Resource Links
+        // ==========================
+
+        if (modelPapersCard) {
+
+            modelPapersCard.onclick =
+                () => {
+
+                    window.location.href =
+                        gradeInfo.model;
+
+                };
+
+        }
+
+
+        if (pastPapersCard) {
+
+            pastPapersCard.onclick =
+                () => {
+
+                    window.location.href =
+                        gradeInfo.past;
+
+                };
+
+        }
+
+
+        // ==========================
+        // Paper Statistics
+        // ==========================
+
+        let totalPapers = 0;
+
+        let viewedPapers = 0;
+
+
+        for (
+            let i = 1;
+            i <= 50;
+            i++
+        ) {
+
+            const field =
+                "paper" +
+                String(i).padStart(
+                    2,
+                    "0"
+                ) +
+                "Viewed";
+
+
+            if (
+                Object.prototype.hasOwnProperty
+                    .call(data, field)
+            ) {
+
+                totalPapers++;
+
+
+                if (
+                    data[field] === true
+                ) {
+
+                    viewedPapers++;
+
+                }
+
+            }
+
+        }
+
+
+        if (totalPapersElement) {
+
+            totalPapersElement.textContent =
+                totalPapers;
+
+        }
+
+
+        if (viewedPapersElement) {
+
+            viewedPapersElement.textContent =
+                viewedPapers;
+
+        }
+
+
+        const progress =
+            totalPapers > 0
+                ? Math.round(
+                    (
+                        viewedPapers /
+                        totalPapers
+                    ) * 100
+                )
+                : 0;
+
+
+        if (progressElement) {
+
+            progressElement.textContent =
+                progress + "%";
+
+        }
+
+
+        console.log(
+            "✅ Student Dashboard Loaded",
+            {
+                studentId,
+                studentName,
+                type,
+                grade: gradeInfo.grade
+            }
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Failed to load student:",
+            error
+        );
+
+    }
+
+}
+
+
+// ==========================
 // Update Last Active
 // ==========================
 
 async function updateLastActive() {
 
     if (!studentRef) {
+
         return;
+
     }
+
 
     try {
 
@@ -95,19 +528,20 @@ async function updateLastActive() {
             studentRef,
             {
                 lastActiveAt:
-                    Date.now(),
-
-                grade:
-                    String(
-                        studentGrade || "11"
-                    ),
-
-                studentType:
-                    "grade11"
+                    Date.now()
             }
         );
 
+
+        if (statusElement) {
+
+            statusElement.textContent =
+                "Online";
+
+        }
+
     }
+
     catch (error) {
 
         console.error(
@@ -121,8 +555,10 @@ async function updateLastActive() {
 
 
 // ==========================
-// Initial Active Status
+// Initial Load
 // ==========================
+
+loadStudent();
 
 updateLastActive();
 
@@ -130,9 +566,6 @@ updateLastActive();
 // ==========================
 // Heartbeat
 // ==========================
-//
-// Update every 30 seconds
-//
 
 const heartbeat =
     setInterval(
@@ -153,8 +586,6 @@ function markActivity() {
 
     lastActivity =
         Date.now();
-
-    updateLastActive();
 
 }
 
@@ -183,9 +614,6 @@ function markActivity() {
 // ==========================
 // Automatic Logout
 // ==========================
-//
-// 5 minutes inactive
-//
 
 const IDLE_LIMIT =
     5 * 60 * 1000;
@@ -193,7 +621,7 @@ const IDLE_LIMIT =
 
 const idleChecker =
     setInterval(
-        () => {
+        async () => {
 
             const idleTime =
                 Date.now() -
@@ -212,6 +640,31 @@ const idleChecker =
                 clearInterval(
                     idleChecker
                 );
+
+
+                if (studentRef) {
+
+                    try {
+
+                        await updateDoc(
+                            studentRef,
+                            {
+                                lastActiveAt: 0
+                            }
+                        );
+
+                    }
+
+                    catch (error) {
+
+                        console.error(
+                            "Failed to mark offline:",
+                            error
+                        );
+
+                    }
+
+                }
 
 
                 sessionStorage.removeItem(
@@ -276,17 +729,20 @@ const logoutBtn =
         "logoutBtn"
     );
 
+
 if (logoutBtn) {
 
     logoutBtn.addEventListener(
         "click",
         async () => {
 
-            if (
-                !confirm(
+            const confirmed =
+                confirm(
                     "Are you sure you want to sign out?"
-                )
-            ) {
+                );
+
+
+            if (!confirmed) {
 
                 return;
 
@@ -303,7 +759,7 @@ if (logoutBtn) {
 
 
             // ==========================
-            // Mark Student Offline
+            // Mark Offline
             // ==========================
 
             if (studentRef) {
@@ -318,6 +774,7 @@ if (logoutBtn) {
                     );
 
                 }
+
                 catch (error) {
 
                     console.error(
@@ -366,10 +823,6 @@ if (logoutBtn) {
 // ==========================
 
 console.log(
-    "✅ Grade 11 Dashboard Loaded"
-);
-
-console.log(
-    "🟢 Grade 11 Live Tracking Active:",
+    "🟢 Dynamic Student Dashboard Active:",
     studentId
 );
