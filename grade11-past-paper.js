@@ -44,25 +44,26 @@ const partBAnswerBtn =
 // ==========================
 // Validate Year
 // ==========================
-
 const yearNumber =
     Number(year);
 
+
+// ==========================
+// Redirect if Year Missing
+// ==========================
+
 if (
+    !year ||
     !Number.isInteger(yearNumber) ||
     yearNumber < 2016 ||
     yearNumber > 2025
 ) {
 
-    alert(
-        "Invalid Past Paper."
+    window.location.replace(
+        "grade11-past-papers.html"
     );
 
-    window.location.href =
-        "grade11-past-papers.html";
-
 }
-
 
 // ==========================
 // Login Check
