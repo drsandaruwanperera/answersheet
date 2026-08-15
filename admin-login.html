@@ -14,28 +14,34 @@
 
     <link
         rel="stylesheet"
-        href="admin-login.css"
+        href="./admin-login.css?v=3"
     >
 
 </head>
 
 <body>
 
-<div class="admin-login-page">
+<div class="admin-page">
 
-    <div class="admin-login-card">
 
-        <!-- LEFT -->
+    <!-- =========================================
+         LEFT BRAND PANEL
+    ========================================== -->
 
-        <div class="admin-brand">
+    <section class="admin-brand">
 
-            <div class="brand-icon">
-                👨‍💻
+        <div class="brand-circle circle-one"></div>
+        <div class="brand-circle circle-two"></div>
+
+        <div class="brand-content">
+
+            <div class="admin-logo">
+                🧑‍💼
             </div>
 
-            <span class="brand-label">
+            <p class="brand-label">
                 ADMINISTRATION
-            </span>
+            </p>
 
             <h1>
                 Student<br>
@@ -43,133 +49,221 @@
                 <span>Portal</span>
             </h1>
 
-            <p>
+            <p class="brand-description">
                 Manage students, assessment papers
                 and portal resources from one secure
                 administration panel.
             </p>
 
 
-            <div class="admin-features">
+            <!-- FEATURE 01 -->
 
-                <div class="feature">
-                    <span>👥</span>
-                    <div>
-                        <strong>Student Management</strong>
-                        <small>Manage student accounts</small>
-                    </div>
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    👥
                 </div>
 
-                <div class="feature">
-                    <span>📚</span>
-                    <div>
-                        <strong>Paper Management</strong>
-                        <small>Control assessment resources</small>
-                    </div>
-                </div>
+                <div>
 
-                <div class="feature">
-                    <span>🔐</span>
-                    <div>
-                        <strong>Secure Administration</strong>
-                        <small>Protected administrator access</small>
-                    </div>
+                    <strong>
+                        Student Management
+                    </strong>
+
+                    <span>
+                        Manage student accounts
+                    </span>
+
                 </div>
 
             </div>
 
 
-            <div class="secure-text">
-                <span></span>
+            <!-- FEATURE 02 -->
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    📚
+                </div>
+
+                <div>
+
+                    <strong>
+                        Paper Management
+                    </strong>
+
+                    <span>
+                        Control assessment resources
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- FEATURE 03 -->
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    🔐
+                </div>
+
+                <div>
+
+                    <strong>
+                        Secure Administration
+                    </strong>
+
+                    <span>
+                        Protected administrator access
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="secure-status">
+
+                <span class="status-dot"></span>
+
                 Secure Admin Access
+
             </div>
 
         </div>
 
+    </section>
 
-        <!-- RIGHT -->
 
-        <div class="login-area">
 
-            <div class="login-icon">
+    <!-- =========================================
+         RIGHT LOGIN PANEL
+    ========================================== -->
+
+    <section class="admin-login">
+
+        <div class="login-content">
+
+
+            <div class="welcome-icon">
                 🛡️
             </div>
 
-            <span class="welcome-label">
+
+            <p class="login-label">
                 WELCOME BACK
-            </span>
+            </p>
+
 
             <h2>
                 Admin Sign In
             </h2>
 
+
             <p class="login-description">
-                Sign in to manage the Student
-                Assessment Portal.
+                Sign in to manage the
+                Student Assessment Portal.
             </p>
 
 
-            <!-- Username -->
+            <!-- USERNAME -->
 
-            <label for="username">
-                Username
-            </label>
+            <div class="form-group">
 
-            <div class="input-box">
+                <label for="username">
+                    Username
+                </label>
 
-                <span>👤</span>
+                <div class="input-wrapper">
 
-                <input
-                    type="text"
-                    id="username"
-                    placeholder="Enter your username"
-                    autocomplete="username"
-                >
+                    <span class="input-icon">
+                        👤
+                    </span>
 
-            </div>
+                    <input
+                        type="text"
+                        id="username"
+                        placeholder="Enter your username"
+                        autocomplete="username"
+                    >
 
-
-            <!-- Password -->
-
-            <label for="password">
-                Password
-            </label>
-
-            <div class="input-box">
-
-                <span>🔒</span>
-
-                <input
-                    type="password"
-                    id="password"
-                    placeholder="Enter your password"
-                    autocomplete="current-password"
-                >
+                </div>
 
             </div>
 
 
-            <!-- Login -->
+            <!-- PASSWORD -->
+
+            <div class="form-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">
+                        🔒
+                    </span>
+
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                    >
+
+                    <button
+                        type="button"
+                        id="togglePassword"
+                        class="password-toggle"
+                        aria-label="Show password"
+                    >
+                        👁️
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- LOGIN -->
 
             <button
-                id="loginBtn"
                 type="button"
+                id="loginBtn"
+                class="login-btn"
             >
-                Sign In →
+
+                <span>
+                    Sign In
+                </span>
+
+                <span>
+                    →
+                </span>
+
             </button>
 
 
+            <!-- MESSAGE -->
+
             <p
                 id="msg"
-                class="login-message"
+                class="message"
             ></p>
 
 
+            <!-- SECURITY BOX -->
+
             <div class="security-box">
 
-                <span>
+                <div class="security-icon">
                     🔐
-                </span>
+                </div>
 
                 <div>
 
@@ -187,6 +281,8 @@
             </div>
 
 
+            <!-- BACK -->
+
             <a
                 href="index.html"
                 class="back-link"
@@ -194,19 +290,87 @@
                 ← Back to Student Login
             </a>
 
-
-            <footer>
-                © 2026 Student Assessment Portal
-            </footer>
-
         </div>
 
-    </div>
+
+        <footer>
+
+            <p>
+                © 2026 Student Assessment Portal
+            </p>
+
+            <span>
+                Administrator Access
+            </span>
+
+        </footer>
+
+    </section>
 
 </div>
 
 
-<script type="module" src="admin-login.js?v=3"></script>
+<script
+    type="module"
+    src="./admin-login.js?v=3"
+></script>
+
+
+<script>
+
+const togglePassword =
+    document.getElementById("togglePassword");
+
+const password =
+    document.getElementById("password");
+
+
+if (togglePassword && password) {
+
+    togglePassword.addEventListener(
+        "click",
+        function () {
+
+            if (password.type === "password") {
+
+                password.type = "text";
+
+                togglePassword.textContent = "🙈";
+
+            } else {
+
+                password.type = "password";
+
+                togglePassword.textContent = "👁️";
+
+            }
+
+        }
+    );
+
+}
+
+
+document.addEventListener(
+    "keydown",
+    function (event) {
+
+        if (event.key === "Enter") {
+
+            const button =
+                document.getElementById("loginBtn");
+
+            if (button) {
+                button.click();
+            }
+
+        }
+
+    }
+);
+
+</script>
 
 </body>
+
 </html>
