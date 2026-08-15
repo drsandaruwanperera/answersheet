@@ -6,25 +6,91 @@ import {
 
 
 // =====================================================
-// ADMIN ACCESS PROTECTION
+// ADMIN AUTHENTICATION
 // =====================================================
 
+const adminLoggedIn =
+    sessionStorage.getItem(
+        "adminLoggedIn"
+    );
+
+
+// ---------------------------------------------
+// Not logged in
+// ---------------------------------------------
+
 if (
-    sessionStorage.getItem("adminLoggedIn") !== "true"
+    adminLoggedIn !== "true"
 ) {
 
     window.location.replace(
         "admin-login.html"
     );
 
+    throw new Error(
+        "Admin authentication required."
+    );
+
 }
+
+
+// =====================================================
+// ADMIN SESSION
+// =====================================================
+
+const adminUsername =
+    sessionStorage.getItem(
+        "adminUsername"
+    ) || "Admin";
+
+
+const adminRole =
+    String(
+        sessionStorage.getItem(
+            "adminRole"
+        ) || "limited"
+    )
+    .toLowerCase()
+    .trim();
+
+
+// =====================================================
+// ROLE CHECK
+// =====================================================
+
+const isSuperAdmin =
+    adminRole === "superadmin";
+
+
+const isLimitedAdmin =
+    adminRole === "limited" ||
+    adminRole === "admin";
 
 
 // =====================================================
 // ELEMENTS
 // =====================================================
 
+
+// ---------------------------------------------
+// User
+// ---------------------------------------------
+
+const adminUsernameElement =
+    document.getElementById(
+        "adminUsername"
+    );
+
+
+const adminRoleElement =
+    document.getElementById(
+        "adminRole"
+    );
+
+
+// ---------------------------------------------
 // Summary
+// ---------------------------------------------
 
 const totalStudents =
     document.getElementById(
@@ -44,9 +110,9 @@ const activeStudents =
     );
 
 
-// =====================================================
-// CHART ELEMENTS
-// =====================================================
+// ---------------------------------------------
+// Charts
+// ---------------------------------------------
 
 const chartTotalStudents =
     document.getElementById(
@@ -120,31 +186,43 @@ const chartActiveValue =
     );
 
 
-// =====================================================
-// ADMIN ELEMENTS
-// =====================================================
+// ---------------------------------------------
+// Navigation
+// ---------------------------------------------
 
-const logoutBtn =
+const dashboardMenu =
     document.getElementById(
-        "logoutBtn"
+        "dashboardMenu"
     );
 
 
-const adminUsername =
+const studentsMenu =
     document.getElementById(
-        "adminUsername"
+        "studentsMenu"
     );
 
 
-const adminRole =
+const papersMenu =
     document.getElementById(
-        "adminRole"
+        "papersMenu"
     );
 
 
-// =====================================================
-// MANAGEMENT CARDS
-// =====================================================
+const importMenu =
+    document.getElementById(
+        "importMenu"
+    );
+
+
+const statisticsMenu =
+    document.getElementById(
+        "statisticsMenu"
+    );
+
+
+// ---------------------------------------------
+// Management Cards
+// ---------------------------------------------
 
 const studentManagementCard =
     document.getElementById(
@@ -158,153 +236,368 @@ const paperManagementCard =
     );
 
 
+const importStudentCard =
+    document.getElementById(
+        "importStudentCard"
+    );
+
+
+const statisticsCard =
+    document.getElementById(
+        "statisticsCard"
+    );
+
+
+// ---------------------------------------------
+// Logout
+// ---------------------------------------------
+
+const logoutBtn =
+    document.getElementById(
+        "logoutBtn"
+    );
+
+
 // =====================================================
-// SETTINGS
+// DISPLAY ADMIN INFORMATION
 // =====================================================
 
-// Student is considered active when
+if (
+    adminUsernameElement
+) {
+
+    adminUsernameElement.textContent =
+        adminUsername;
+
+}
+
+
+if (
+    adminRoleElement
+) {
+
+    if (isSuperAdmin) {
+
+        adminRoleElement.textContent =
+            "Super Administrator";
+
+    }
+
+    else {
+
+        adminRoleElement.textContent =
+            "Administrator";
+
+    }
+
+}
+
+
+// =====================================================
+// ROLE PERMISSIONS
+// =====================================================
+//
+// LIMITED ADMIN
+//
+// Dashboard       ✅
+// Students        ✅
+// Paper Management ❌
+// Import Student  ❌
+// Statistics      ❌
+// Logout          ✅
+//
+//
+// SUPER ADMIN
+//
+// Dashboard       ✅
+// Students        ✅
+// Paper Management ✅
+// Import Student  ✅
+// Statistics      ✅
+// Logout          ✅
+// =====================================================
+
+
+// =====================================================
+// HIDE LIMITED ADMIN FEATURES
+// =====================================================
+
+if (
+    isLimitedAdmin
+) {
+
+    // ---------------------------------------------
+    // Paper Management
+    // ---------------------------------------------
+
+    if (
+        papersMenu
+    ) {
+
+        papersMenu.style.display =
+            "none";
+
+    }
+
+
+    // ---------------------------------------------
+    // Import Student
+    // ---------------------------------------------
+
+    if (
+        importMenu
+    ) {
+
+        importMenu.style.display =
+            "none";
+
+    }
+
+
+    // ---------------------------------------------
+    // Statistics
+    // ---------------------------------------------
+
+    if (
+        statisticsMenu
+    ) {
+
+        statisticsMenu.style.display =
+            "none";
+
+    }
+
+
+    // ---------------------------------------------
+    // Paper Card
+    // ---------------------------------------------
+
+    if (
+        paperManagementCard
+    ) {
+
+        paperManagementCard.style.display =
+            "none";
+
+    }
+
+
+    // ---------------------------------------------
+    // Import Card
+    // ---------------------------------------------
+
+    if (
+        importStudentCard
+    ) {
+
+        importStudentCard.style.display =
+            "none";
+
+    }
+
+
+    // ---------------------------------------------
+    // Statistics Card
+    // ---------------------------------------------
+
+    if (
+        statisticsCard
+    ) {
+
+        statisticsCard.style.display =
+            "none";
+
+    }
+
+}
+
+
+// =====================================================
+// SUPER ADMIN FEATURES
+// =====================================================
+
+if (
+    isSuperAdmin
+) {
+
+    if (
+        papersMenu
+    ) {
+
+        papersMenu.style.display =
+            "";
+
+    }
+
+
+    if (
+        importMenu
+    ) {
+
+        importMenu.style.display =
+            "";
+
+    }
+
+
+    if (
+        statisticsMenu
+    ) {
+
+        statisticsMenu.style.display =
+            "";
+
+    }
+
+
+    if (
+        paperManagementCard
+    ) {
+
+        paperManagementCard.style.display =
+            "";
+
+    }
+
+
+    if (
+        importStudentCard
+    ) {
+
+        importStudentCard.style.display =
+            "";
+
+    }
+
+
+    if (
+        statisticsCard
+    ) {
+
+        statisticsCard.style.display =
+            "";
+
+    }
+
+}
+
+
+// =====================================================
+// ACTIVE STUDENT SETTINGS
+// =====================================================
+//
+// Student is considered online when
 // lastActiveAt is within 90 seconds.
+// =====================================================
 
 const ACTIVE_LIMIT =
     90 * 1000;
 
 
 // =====================================================
-// SHOW ADMIN INFORMATION
-// =====================================================
-
-function loadAdminInformation() {
-
-    const username =
-        sessionStorage.getItem(
-            "adminUsername"
-        );
-
-
-    const role =
-        sessionStorage.getItem(
-            "adminRole"
-        );
-
-
-    if (
-        adminUsername
-    ) {
-
-        adminUsername.textContent =
-            username ||
-            "Admin";
-
-    }
-
-
-    if (
-        adminRole
-    ) {
-
-        if (
-            role
-        ) {
-
-            adminRole.textContent =
-                formatRole(
-                    role
-                );
-
-        }
-
-        else {
-
-            adminRole.textContent =
-                "Administrator";
-
-        }
-
-    }
-
-}
-
-
-// =====================================================
-// FORMAT ROLE
-// =====================================================
-
-function formatRole(
-    role
-) {
-
-    const cleanRole =
-        String(
-            role || ""
-        )
-        .trim()
-        .toLowerCase();
-
-
-    if (
-        cleanRole ===
-        "superadmin"
-    ) {
-
-        return "Super Admin";
-
-    }
-
-
-    if (
-        cleanRole ===
-        "admin"
-    ) {
-
-        return "Administrator";
-
-    }
-
-
-    if (
-        cleanRole ===
-        "limited"
-    ) {
-
-        return "Limited";
-
-    }
-
-
-    if (
-        cleanRole ===
-        "manager"
-    ) {
-
-        return "Manager";
-
-    }
-
-
-    return role || "Administrator";
-
-}
-
-
-// =====================================================
-// DETECT STUDENT TYPE
-// =====================================================
-//
-// Rules:
-//
-// 26000 - 26999 = Grade 11
-// 27000 - 27999 = Grade 10
-// 2005...       = A/L
-// 2006...       = A/L
-// 2007...       = A/L
-//
-// Firebase studentType / grade are also supported.
+// GET STUDENT TYPE
 // =====================================================
 
 function getStudentType(
     data,
     studentId
 ) {
+
+    // ---------------------------------------------
+    // Firebase studentType
+    // ---------------------------------------------
+
+    const firebaseType =
+        String(
+            data?.studentType || ""
+        )
+        .toLowerCase()
+        .trim();
+
+
+    if (
+        firebaseType === "grade10" ||
+        firebaseType === "grade 10"
+    ) {
+
+        return "grade10";
+
+    }
+
+
+    if (
+        firebaseType === "grade11" ||
+        firebaseType === "grade 11"
+    ) {
+
+        return "grade11";
+
+    }
+
+
+    if (
+        firebaseType === "al" ||
+        firebaseType === "a/l" ||
+        firebaseType === "a level" ||
+        firebaseType === "advanced" ||
+        firebaseType === "advanced level"
+    ) {
+
+        return "al";
+
+    }
+
+
+    // ---------------------------------------------
+    // Firebase grade
+    // ---------------------------------------------
+
+    const grade =
+        String(
+            data?.grade || ""
+        )
+        .toLowerCase()
+        .trim();
+
+
+    if (
+        grade === "10" ||
+        grade === "grade10" ||
+        grade === "grade 10"
+    ) {
+
+        return "grade10";
+
+    }
+
+
+    if (
+        grade === "11" ||
+        grade === "grade11" ||
+        grade === "grade 11"
+    ) {
+
+        return "grade11";
+
+    }
+
+
+    if (
+        grade === "al" ||
+        grade === "a/l" ||
+        grade === "a level" ||
+        grade === "advanced" ||
+        grade === "advanced level"
+    ) {
+
+        return "al";
+
+    }
+
+
+    // ---------------------------------------------
+    // Student ID detection
+    // ---------------------------------------------
 
     const cleanId =
         String(
@@ -317,63 +610,47 @@ function getStudentType(
         );
 
 
-    // =================================================
-    // STUDENT ID DETECTION
-    // =================================================
-
-    const studentNumber =
-        Number(
-            cleanId
-        );
-
-
-    // -------------------------------------------------
-    // GRADE 11
-    // -------------------------------------------------
+    // Grade 11
+    // 26000 - 26999
 
     if (
         /^\d{5}$/.test(
             cleanId
-        ) &&
-        Number.isInteger(
-            studentNumber
-        ) &&
-        studentNumber >=
-            26000 &&
-        studentNumber <=
-            26999
+        )
     ) {
 
-        return "grade11";
+        const number =
+            Number(
+                cleanId
+            );
+
+
+        if (
+            number >= 26000 &&
+            number <= 26999
+        ) {
+
+            return "grade11";
+
+        }
+
+
+        // Grade 10
+        // 27000 - 27999
+
+        if (
+            number >= 27000 &&
+            number <= 27999
+        ) {
+
+            return "grade10";
+
+        }
 
     }
 
 
-    // -------------------------------------------------
-    // GRADE 10
-    // -------------------------------------------------
-
-    if (
-        /^\d{5}$/.test(
-            cleanId
-        ) &&
-        Number.isInteger(
-            studentNumber
-        ) &&
-        studentNumber >=
-            27000 &&
-        studentNumber <=
-            27999
-    ) {
-
-        return "grade10";
-
-    }
-
-
-    // -------------------------------------------------
-    // A/L - 2005
-    // -------------------------------------------------
+    // A/L 2005
 
     if (
         cleanId.startsWith(
@@ -386,9 +663,7 @@ function getStudentType(
     }
 
 
-    // -------------------------------------------------
-    // A/L - 2006
-    // -------------------------------------------------
+    // A/L 2006
 
     if (
         cleanId.startsWith(
@@ -401,9 +676,7 @@ function getStudentType(
     }
 
 
-    // -------------------------------------------------
-    // A/L - 2007
-    // -------------------------------------------------
+    // A/L 2007
 
     if (
         cleanId.startsWith(
@@ -416,14 +689,10 @@ function getStudentType(
     }
 
 
-    // -------------------------------------------------
-    // OLD NIC
-    // Example:
-    // 123456789V
-    // -------------------------------------------------
+    // Old NIC
 
     if (
-        /^\d{9}[VvXx]$/.test(
+        /^\d{9}[vVxX]$/.test(
             cleanId
         )
     ) {
@@ -433,123 +702,7 @@ function getStudentType(
     }
 
 
-    // =================================================
-    // FIREBASE studentType
-    // =================================================
-
-    const firebaseType =
-        String(
-            data?.studentType ||
-            ""
-        )
-        .toLowerCase()
-        .trim();
-
-
-    if (
-        firebaseType ===
-            "grade10" ||
-        firebaseType ===
-            "grade 10"
-    ) {
-
-        return "grade10";
-
-    }
-
-
-    if (
-        firebaseType ===
-            "grade11" ||
-        firebaseType ===
-            "grade 11"
-    ) {
-
-        return "grade11";
-
-    }
-
-
-    if (
-        firebaseType ===
-            "al" ||
-        firebaseType ===
-            "a/l" ||
-        firebaseType ===
-            "a level" ||
-        firebaseType ===
-            "advanced" ||
-        firebaseType ===
-            "advanced level"
-    ) {
-
-        return "al";
-
-    }
-
-
-    // =================================================
-    // FIREBASE grade
-    // =================================================
-
-    const firebaseGrade =
-        String(
-            data?.grade ||
-            ""
-        )
-        .toLowerCase()
-        .trim();
-
-
-    if (
-        firebaseGrade ===
-            "10" ||
-        firebaseGrade ===
-            "grade10" ||
-        firebaseGrade ===
-            "grade 10"
-    ) {
-
-        return "grade10";
-
-    }
-
-
-    if (
-        firebaseGrade ===
-            "11" ||
-        firebaseGrade ===
-            "grade11" ||
-        firebaseGrade ===
-            "grade 11"
-    ) {
-
-        return "grade11";
-
-    }
-
-
-    if (
-        firebaseGrade ===
-            "al" ||
-        firebaseGrade ===
-            "a/l" ||
-        firebaseGrade ===
-            "a level" ||
-        firebaseGrade ===
-            "advanced" ||
-        firebaseGrade ===
-            "advanced level"
-    ) {
-
-        return "al";
-
-    }
-
-
-    // =================================================
-    // UNKNOWN
-    // =================================================
+    // Default
 
     return "al";
 
@@ -557,7 +710,7 @@ function getStudentType(
 
 
 // =====================================================
-// CHECK ACTIVE STUDENT
+// CHECK ACTIVE
 // =====================================================
 
 function isStudentActive(
@@ -566,8 +719,7 @@ function isStudentActive(
 
     const lastActive =
         Number(
-            data?.lastActiveAt ||
-            0
+            data?.lastActiveAt || 0
         );
 
 
@@ -585,18 +737,9 @@ function isStudentActive(
         lastActive;
 
 
-    if (
-        difference < 0
-    ) {
-
-        return false;
-
-    }
-
-
     return (
-        difference <=
-        ACTIVE_LIMIT
+        difference >= 0 &&
+        difference <= ACTIVE_LIMIT
     );
 
 }
@@ -634,25 +777,23 @@ function updateBar(
             (
                 value /
                 maxValue
-            ) *
-            100;
+            ) * 100;
 
     }
 
 
     percentage =
-        Math.max(
-            0,
-            Math.min(
+        Math.min(
+            Math.max(
                 percentage,
-                100
-            )
+                0
+            ),
+            100
         );
 
 
     bar.style.width =
-        percentage +
-        "%";
+        percentage + "%";
 
 
     valueElement.textContent =
@@ -670,7 +811,7 @@ async function loadDashboard() {
     try {
 
         console.log(
-            "Loading admin dashboard..."
+            "Loading students..."
         );
 
 
@@ -683,57 +824,50 @@ async function loadDashboard() {
             );
 
 
-        // =================================================
-        // COUNTERS
-        // =================================================
+        // ---------------------------------------------
+        // Counters
+        // ---------------------------------------------
 
         let students =
             0;
 
-
         let viewed =
             0;
-
 
         let grade10Count =
             0;
 
-
         let grade11Count =
             0;
 
-
         let alCount =
             0;
-
 
         let activeCount =
             0;
 
 
-        // =================================================
-        // READ STUDENTS
-        // =================================================
+        // ---------------------------------------------
+        // Read students
+        // ---------------------------------------------
 
         snapshot.forEach(
-            (
-                docSnap
-            ) => {
+            studentDoc => {
 
                 students++;
 
 
                 const data =
-                    docSnap.data();
+                    studentDoc.data();
 
 
                 const studentId =
-                    docSnap.id;
+                    studentDoc.id;
 
 
-                // =========================================
-                // STUDENT TYPE
-                // =========================================
+                // -------------------------------------
+                // Student type
+                // -------------------------------------
 
                 const type =
                     getStudentType(
@@ -743,8 +877,7 @@ async function loadDashboard() {
 
 
                 if (
-                    type ===
-                    "grade10"
+                    type === "grade10"
                 ) {
 
                     grade10Count++;
@@ -752,24 +885,25 @@ async function loadDashboard() {
                 }
 
                 else if (
-                    type ===
-                    "grade11"
+                    type === "grade11"
                 ) {
 
                     grade11Count++;
 
                 }
 
-                else {
+                else if (
+                    type === "al"
+                ) {
 
                     alCount++;
 
                 }
 
 
-                // =========================================
-                // ACTIVE
-                // =========================================
+                // -------------------------------------
+                // Active
+                // -------------------------------------
 
                 if (
                     isStudentActive(
@@ -782,9 +916,9 @@ async function loadDashboard() {
                 }
 
 
-                // =========================================
-                // PAPER VIEWS
-                // =========================================
+                // -------------------------------------
+                // Paper views
+                // -------------------------------------
 
                 for (
                     let i = 1;
@@ -804,8 +938,7 @@ async function loadDashboard() {
 
 
                     if (
-                        data[field] ===
-                        true
+                        data[field] === true
                     ) {
 
                         viewed++;
@@ -853,7 +986,7 @@ async function loadDashboard() {
 
 
         // =================================================
-        // CHART SCALE
+        // BAR SCALE
         // =================================================
 
         const maxValue =
@@ -869,7 +1002,7 @@ async function loadDashboard() {
 
 
         // =================================================
-        // TOTAL STUDENTS
+        // UPDATE BARS
         // =================================================
 
         updateBar(
@@ -880,10 +1013,6 @@ async function loadDashboard() {
         );
 
 
-        // =================================================
-        // PAPER VIEWS
-        // =================================================
-
         updateBar(
             chartPaperViews,
             chartPaperViewsValue,
@@ -891,10 +1020,6 @@ async function loadDashboard() {
             maxValue
         );
 
-
-        // =================================================
-        // GRADE 10
-        // =================================================
 
         updateBar(
             chartGrade10,
@@ -904,10 +1029,6 @@ async function loadDashboard() {
         );
 
 
-        // =================================================
-        // GRADE 11
-        // =================================================
-
         updateBar(
             chartGrade11,
             chartGrade11Value,
@@ -916,10 +1037,6 @@ async function loadDashboard() {
         );
 
 
-        // =================================================
-        // A/L
-        // =================================================
-
         updateBar(
             chartAL,
             chartALValue,
@@ -927,10 +1044,6 @@ async function loadDashboard() {
             maxValue
         );
 
-
-        // =================================================
-        // ACTIVE
-        // =================================================
 
         updateBar(
             chartActive,
@@ -941,19 +1054,59 @@ async function loadDashboard() {
 
 
         // =================================================
-        // DEBUG
+        // CONSOLE
         // =================================================
 
         console.log(
-            "Dashboard updated:",
-            {
-                students,
-                viewed,
-                grade10Count,
-                grade11Count,
-                alCount,
-                activeCount
-            }
+            "================================"
+        );
+
+        console.log(
+            "Admin Dashboard Updated"
+        );
+
+        console.log(
+            "Admin:",
+            adminUsername
+        );
+
+        console.log(
+            "Role:",
+            adminRole
+        );
+
+        console.log(
+            "Students:",
+            students
+        );
+
+        console.log(
+            "Paper Views:",
+            viewed
+        );
+
+        console.log(
+            "Grade 10:",
+            grade10Count
+        );
+
+        console.log(
+            "Grade 11:",
+            grade11Count
+        );
+
+        console.log(
+            "A/L:",
+            alCount
+        );
+
+        console.log(
+            "Active:",
+            activeCount
+        );
+
+        console.log(
+            "================================"
         );
 
     }
@@ -963,175 +1116,41 @@ async function loadDashboard() {
     ) {
 
         console.error(
-            "Dashboard load error:",
+            "Dashboard loading error:",
             error
         );
 
+
+        if (
+            totalStudents
+        ) {
+
+            totalStudents.textContent =
+                "—";
+
+        }
+
+
+        if (
+            totalViewed
+        ) {
+
+            totalViewed.textContent =
+                "—";
+
+        }
+
+
+        if (
+            activeStudents
+        ) {
+
+            activeStudents.textContent =
+                "—";
+
+        }
+
     }
-
-}
-
-
-// =====================================================
-// OPEN STUDENT MANAGEMENT
-// =====================================================
-
-function openStudentManagement() {
-
-    window.location.href =
-        "students.html";
-
-}
-
-
-// =====================================================
-// STUDENT MANAGEMENT CARD
-// =====================================================
-
-if (
-    studentManagementCard
-) {
-
-    studentManagementCard.addEventListener(
-        "click",
-        openStudentManagement
-    );
-
-
-    studentManagementCard.addEventListener(
-        "keydown",
-        (
-            event
-        ) => {
-
-            if (
-                event.key ===
-                    "Enter" ||
-                event.key ===
-                    " "
-            ) {
-
-                event.preventDefault();
-
-                openStudentManagement();
-
-            }
-
-        }
-    );
-
-}
-
-
-// =====================================================
-// OPEN PAPER MANAGEMENT
-// =====================================================
-
-function openPaperManagement() {
-
-    window.location.href =
-        "paper-management.html";
-
-}
-
-
-// =====================================================
-// PAPER MANAGEMENT CARD
-// =====================================================
-
-if (
-    paperManagementCard
-) {
-
-    paperManagementCard.addEventListener(
-        "click",
-        openPaperManagement
-    );
-
-
-    paperManagementCard.addEventListener(
-        "keydown",
-        (
-            event
-        ) => {
-
-            if (
-                event.key ===
-                    "Enter" ||
-                event.key ===
-                    " "
-            ) {
-
-                event.preventDefault();
-
-                openPaperManagement();
-
-            }
-
-        }
-    );
-
-}
-
-
-// =====================================================
-// SIDEBAR STUDENTS LINK
-// =====================================================
-
-const studentsNav =
-    document.querySelector(
-        'a[href="students.html"]'
-    );
-
-
-if (
-    studentsNav
-) {
-
-    studentsNav.addEventListener(
-        "click",
-        (
-            event
-        ) => {
-
-            event.preventDefault();
-
-            window.location.href =
-                "students.html";
-
-        }
-    );
-
-}
-
-
-// =====================================================
-// SIDEBAR PAPER MANAGEMENT
-// =====================================================
-
-const paperManagementNav =
-    document.querySelector(
-        'a[href="paper-management.html"]'
-    );
-
-
-if (
-    paperManagementNav
-) {
-
-    paperManagementNav.addEventListener(
-        "click",
-        (
-            event
-        ) => {
-
-            event.preventDefault();
-
-            window.location.href =
-                "paper-management.html";
-
-        }
-    );
 
 }
 
@@ -1163,28 +1182,26 @@ if (
             }
 
 
-            // =========================================
-            // CLEAR ADMIN SESSION
-            // =========================================
+            // -----------------------------------------
+            // Clear admin session
+            // -----------------------------------------
 
             sessionStorage.removeItem(
                 "adminLoggedIn"
             );
 
-
             sessionStorage.removeItem(
                 "adminRole"
             );
-
 
             sessionStorage.removeItem(
                 "adminUsername"
             );
 
 
-            // =========================================
-            // GO TO LOGIN
-            // =========================================
+            // -----------------------------------------
+            // Redirect
+            // -----------------------------------------
 
             window.location.replace(
                 "admin-login.html"
@@ -1197,25 +1214,131 @@ if (
 
 
 // =====================================================
-// INITIALIZE ADMIN INFORMATION
+// PROTECT RESTRICTED LINKS
+// =====================================================
+//
+// This is an additional protection on the dashboard.
+// Hidden menu items cannot be opened from here.
 // =====================================================
 
-loadAdminInformation();
+function protectRestrictedLink(
+    element,
+    allowed
+) {
+
+    if (
+        !element
+    ) {
+
+        return;
+
+    }
+
+
+    element.addEventListener(
+        "click",
+        event => {
+
+            if (
+                !allowed
+            ) {
+
+                event.preventDefault();
+
+                alert(
+                    "You do not have permission to access this section."
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+// Limited admin restrictions
+
+protectRestrictedLink(
+    papersMenu,
+    isSuperAdmin
+);
+
+protectRestrictedLink(
+    importMenu,
+    isSuperAdmin
+);
+
+protectRestrictedLink(
+    statisticsMenu,
+    isSuperAdmin
+);
+
+
+// Management cards
+
+protectRestrictedLink(
+    paperManagementCard,
+    isSuperAdmin
+);
+
+protectRestrictedLink(
+    importStudentCard,
+    isSuperAdmin
+);
+
+protectRestrictedLink(
+    statisticsCard,
+    isSuperAdmin
+);
 
 
 // =====================================================
-// INITIAL DASHBOARD LOAD
+// PREVENT LIMITED ADMIN FROM DIRECT CARD ACCESS
 // =====================================================
 
-loadDashboard();
+if (
+    isLimitedAdmin
+) {
+
+    if (
+        paperManagementCard
+    ) {
+
+        paperManagementCard.style.display =
+            "none";
+
+    }
+
+
+    if (
+        importStudentCard
+    ) {
+
+        importStudentCard.style.display =
+            "none";
+
+    }
+
+
+    if (
+        statisticsCard
+    ) {
+
+        statisticsCard.style.display =
+            "none";
+
+    }
+
+}
 
 
 // =====================================================
 // LIVE REFRESH
 // =====================================================
-//
-// Refresh dashboard every 30 seconds.
-//
+
+loadDashboard();
+
 
 const refreshTimer =
     setInterval(
@@ -1225,11 +1348,8 @@ const refreshTimer =
 
 
 // =====================================================
-// TAB VISIBILITY
+// PAGE VISIBILITY
 // =====================================================
-//
-// Reload immediately when admin returns to tab.
-//
 
 document.addEventListener(
     "visibilitychange",
@@ -1253,7 +1373,7 @@ document.addEventListener(
 // =====================================================
 
 console.log(
-    "===================================="
+    "================================"
 );
 
 console.log(
@@ -1261,19 +1381,20 @@ console.log(
 );
 
 console.log(
-    "Admin:",
-    sessionStorage.getItem(
-        "adminUsername"
-    )
+    "Username:",
+    adminUsername
 );
 
 console.log(
     "Role:",
-    sessionStorage.getItem(
-        "adminRole"
-    )
+    adminRole
 );
 
 console.log(
-    "===================================="
+    "Super Admin:",
+    isSuperAdmin
+);
+
+console.log(
+    "================================"
 );
