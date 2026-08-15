@@ -1,232 +1,242 @@
 import {
     db,
-    collection,
-    getDocs
+    doc,
+    getDoc
 } from "./firebase.js";
 
+console.log("ADMIN LOGIN JS STARTED");
 
-console.log("================================");
-console.log("✅ ADMIN LOGIN JS LOADED");
-console.log("================================");
+document.addEventListener("DOMContentLoaded", () => {
 
+    const loginBtn =
+        document.getElementById("loginBtn");
 
-const loginBtn =
-    document.getElementById("loginBtn");
+    const usernameInput =
+        document.getElementById("username");
 
-const usernameInput =
-    document.getElementById("username");
+    const passwordInput =
+        document.getElementById("password");
 
-const passwordInput =
-    document.getElementById("password");
-
-const msg =
-    document.getElementById("msg");
+    const msg =
+        document.getElementById("msg");
 
 
-async function loginAdmin() {
+    if (!loginBtn) {
 
-    const username =
-        usernameInput.value.trim();
-
-    const password =
-        passwordInput.value.trim();
-
-
-    msg.textContent = "";
-
-
-    if (!username || !password) {
-
-        msg.textContent =
-            "Please enter username and password.";
+        console.error(
+            "loginBtn not found"
+        );
 
         return;
-
     }
 
 
-    loginBtn.disabled = true;
+    loginBtn.addEventListener(
+        "click",
+        async () => {
 
-    loginBtn.textContent =
-        "Signing in...";
+            const username =
+                usernameInput.value.trim();
 
-
-    try {
-
-        console.log(
-            "Checking admin:",
-            username
-        );
+            const password =
+                passwordInput.value.trim();
 
 
-        const snapshot =
-            await getDocs(
-                collection(
-                    db,
-                    "admins"
-                )
-            );
+            msg.textContent = "";
 
 
-        console.log(
-            "Admins found:",
-            snapshot.size
-        );
+            if (!username || !password) {
+
+                msg.textContent =
+                    "Please enter username and password.";
+
+                return;
+            }
 
 
-        let account = null;
+            loginBtn.disabled = true;
+
+            loginBtn.textContent =
+                "Signing in...";
 
 
-        snapshot.forEach(
-            adminDoc => {
-
-                const data =
-                    adminDoc.data();
-
+            try {
 
                 console.log(
-                    "Admin document:",
-                    adminDoc.id
+                    "Checking admin login..."
                 );
 
 
+                // =================================
+                // GET ADMIN DOCUMENT
+                // =================================
+
+                const adminRef =
+                    doc(
+                        db,
+                        "admins",
+                        username
+                    );
+
+
+                const adminSnap =
+                    await getDoc(
+                        adminRef
+                    );
+
+
+                console.log(
+                    "Admin document exists:",
+                    adminSnap.exists()
+                );
+
+
+                // =================================
+                // NOT FOUND
+                // =================================
+
+                if (!adminSnap.exists()) {
+
+                    msg.textContent =
+                        "Invalid username or password.";
+
+                    return;
+                }
+
+
+                const adminData =
+                    adminSnap.data();
+
+
+                console.log(
+                    "Admin data loaded."
+                );
+
+
+                // =================================
+                // CHECK USERNAME
+                // =================================
+
                 if (
                     String(
-                        data.username || ""
-                    )
-                    .trim()
-                    .toLowerCase()
-                    ===
+                        adminData.username || ""
+                    ).trim().toLowerCase()
+                    !==
                     username.toLowerCase()
                 ) {
 
-                    account = data;
+                    msg.textContent =
+                        "Invalid username or password.";
 
+                    return;
                 }
 
+
+                // =================================
+                // CHECK PASSWORD
+                // =================================
+
+                if (
+                    String(
+                        adminData.password || ""
+                    ).trim()
+                    !==
+                    password
+                ) {
+
+                    msg.textContent =
+                        "Invalid username or password.";
+
+                    return;
+                }
+
+
+                // =================================
+                // LOGIN SUCCESS
+                // =================================
+
+                const role =
+                    adminData.role ||
+                    "limited";
+
+
+                sessionStorage.setItem(
+                    "adminLoggedIn",
+                    "true"
+                );
+
+
+                sessionStorage.setItem(
+                    "adminRole",
+                    role
+                );
+
+
+                sessionStorage.setItem(
+                    "adminUsername",
+                    username
+                );
+
+
+                console.log(
+                    "ADMIN LOGIN SUCCESS"
+                );
+
+
+                // =================================
+                // OPEN ADMIN PANEL
+                // =================================
+
+                window.location.href =
+                    "admin.html";
+
             }
-        );
+
+            catch (error) {
+
+                console.error(
+                    "ADMIN LOGIN ERROR:",
+                    error
+                );
 
 
-        if (!account) {
+                msg.textContent =
+                    "Login failed: " +
+                    error.message;
 
-            msg.textContent =
-                "Invalid username or password.";
+            }
 
-            console.error(
-                "❌ Admin username not found."
-            );
+            finally {
 
-            return;
+                loginBtn.disabled =
+                    false;
 
-        }
+                loginBtn.textContent =
+                    "Sign In →";
 
-
-        if (
-            String(
-                account.password || ""
-            ).trim()
-            !==
-            password
-        ) {
-
-            msg.textContent =
-                "Invalid username or password.";
-
-            console.error(
-                "❌ Wrong admin password."
-            );
-
-            return;
+            }
 
         }
+    );
 
 
-        // ==========================
-        // LOGIN SUCCESS
-        // ==========================
+    // =================================
+    // ENTER KEY
+    // =================================
 
-        console.log(
-            "✅ ADMIN LOGIN SUCCESS"
-        );
+    passwordInput.addEventListener(
+        "keydown",
+        event => {
 
+            if (
+                event.key === "Enter"
+            ) {
 
-        sessionStorage.setItem(
-            "adminLoggedIn",
-            "true"
-        );
+                loginBtn.click();
 
-        sessionStorage.setItem(
-            "adminRole",
-            account.role || "limited"
-        );
-
-        sessionStorage.setItem(
-            "adminUsername",
-            username
-        );
-
-
-        console.log(
-            "Session:",
-            sessionStorage.getItem(
-                "adminLoggedIn"
-            )
-        );
-
-
-        // ==========================
-        // REDIRECT
-        // ==========================
-
-        window.location.assign(
-            "admin.html"
-        );
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "❌ ADMIN LOGIN ERROR:",
-            error
-        );
-
-        msg.textContent =
-            "Login failed: " +
-            error.message;
-
-    }
-
-    finally {
-
-        loginBtn.disabled = false;
-
-        loginBtn.textContent =
-            "Sign In →";
-
-    }
-
-}
-
-
-loginBtn.addEventListener(
-    "click",
-    loginAdmin
-);
-
-
-document.addEventListener(
-    "keydown",
-    event => {
-
-        if (
-            event.key === "Enter"
-        ) {
-
-            loginAdmin();
+            }
 
         }
+    );
 
-    }
-);
+});
