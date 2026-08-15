@@ -4,108 +4,14 @@ import {
     getDocs
 } from "./firebase.js";
 
-
-// =========================================
-// ELEMENTS
-// =========================================
-
-const loginBtn =
-    document.getElementById("loginBtn");
-
-const usernameInput =
-    document.getElementById("username");
-
-const passwordInput =
-    document.getElementById("password");
-
-const msg =
-    document.getElementById("msg");
-
-const togglePassword =
-    document.getElementById("togglePassword");
-
-
-// =========================================
-// SHOW MESSAGE
-// =========================================
-
-function showMessage(text) {
-
-    if (!msg) {
-
-        alert(text);
-
-        return;
-
-    }
-
-    msg.textContent = text;
-
-}
-
-
-// =========================================
-// CLEAR MESSAGE
-// =========================================
-
-function clearMessage() {
-
-    if (msg) {
-
-        msg.textContent = "";
-
-    }
-
-}
-
-
-// =========================================
-// TOGGLE PASSWORD
-// =========================================
-
-if (togglePassword) {
-
-    togglePassword.addEventListener(
-        "click",
-        () => {
-
-            if (
-                passwordInput.type ===
-                "password"
-            ) {
-
-                passwordInput.type =
-                    "text";
-
-                togglePassword.textContent =
-                    "🙈";
-
-            }
-
-            else {
-
-                passwordInput.type =
-                    "password";
-
-                togglePassword.textContent =
-                    "👁️";
-
-            }
-
-        }
-    );
-
-}
-
-
-// =========================================
-// LOGIN
-// =========================================
+const loginBtn = document.getElementById("loginBtn");
+const usernameInput = document.getElementById("username");
+const passwordInput = document.getElementById("password");
+const msg = document.getElementById("msg");
 
 async function loginAdmin() {
 
-    clearMessage();
-
+    msg.textContent = "";
 
     const username =
         usernameInput.value.trim();
@@ -113,159 +19,102 @@ async function loginAdmin() {
     const password =
         passwordInput.value.trim();
 
+    if (!username || !password) {
 
-    // =====================================
-    // VALIDATION
-    // =====================================
-
-    if (!username) {
-
-        showMessage(
-            "Please enter your username."
-        );
-
-        usernameInput.focus();
+        msg.textContent =
+            "Please enter username and password.";
 
         return;
-
     }
-
-
-    if (!password) {
-
-        showMessage(
-            "Please enter your password."
-        );
-
-        passwordInput.focus();
-
-        return;
-
-    }
-
-
-    // =====================================
-    // LOADING
-    // =====================================
 
     loginBtn.disabled = true;
-
-    loginBtn.innerHTML =
-        "Signing in...";
-
+    loginBtn.textContent = "Checking...";
 
     try {
 
-        console.log(
-            "🔐 Checking admin account..."
-        );
-
-
-        // =================================
-        // GET ADMINS
-        // =================================
+        console.log("========== ADMIN LOGIN ==========");
+        console.log("Username entered:", username);
 
         const snapshot =
             await getDocs(
-                collection(
-                    db,
-                    "admins"
-                )
+                collection(db, "admins")
             );
 
-
         console.log(
-            "Admin documents:",
+            "Admins collection documents:",
             snapshot.size
         );
 
-
         let account = null;
 
+        snapshot.forEach(adminDoc => {
 
-        // =================================
-        // FIND USERNAME
-        // =================================
+            const data = adminDoc.data();
 
-        snapshot.forEach(
-            adminDoc => {
+            console.log(
+                "Admin document:",
+                adminDoc.id,
+                data
+            );
 
-                const data =
-                    adminDoc.data();
+            if (
+                String(data.username || "")
+                    .trim()
+                    .toLowerCase()
+                ===
+                username.toLowerCase()
+            ) {
 
-
-                const savedUsername =
-                    String(
-                        data.username || ""
-                    )
-                        .trim()
-                        .toLowerCase();
-
-
-                if (
-                    savedUsername ===
-                    username.toLowerCase()
-                ) {
-
-                    account = data;
-
-                }
+                account = data;
 
             }
-        );
 
+        });
 
-        // =================================
-        // NOT FOUND
-        // =================================
 
         if (!account) {
 
-            showMessage(
-                "Invalid username or password."
+            console.error(
+                "❌ Username not found in admins collection."
             );
 
-            return;
+            msg.textContent =
+                "Username not found.";
 
+            return;
         }
 
 
-        // =================================
-        // PASSWORD
-        // =================================
-
-        const savedPassword =
-            String(
-                account.password || ""
-            ).trim();
+        console.log(
+            "✅ Username found."
+        );
 
 
         if (
-            password !==
-            savedPassword
+            String(account.password || "").trim()
+            !==
+            password
         ) {
 
-            showMessage(
-                "Invalid username or password."
+            console.error(
+                "❌ Password does not match."
             );
 
-            return;
+            msg.textContent =
+                "Wrong password.";
 
+            return;
         }
 
 
-        // =================================
-        // ROLE
-        // =================================
+        console.log(
+            "✅ Password correct."
+        );
+
 
         const role =
-            account.role ||
-            "admin";
+            account.role || "admin";
 
-
-        // =================================
-        // SAVE SESSION
-        // =================================
 
         sessionStorage.setItem(
             "adminLoggedIn",
@@ -284,13 +133,16 @@ async function loginAdmin() {
 
 
         console.log(
-            "✅ Admin login successful"
+            "✅ SESSION CREATED"
         );
 
+        console.log(
+            "adminLoggedIn:",
+            sessionStorage.getItem(
+                "adminLoggedIn"
+            )
+        );
 
-        // =================================
-        // REDIRECT
-        // =================================
 
         window.location.replace(
             "admin.html"
@@ -301,14 +153,14 @@ async function loginAdmin() {
     catch (error) {
 
         console.error(
-            "❌ Admin login error:",
-            error
+            "❌ FIREBASE ADMIN LOGIN ERROR"
         );
 
+        console.error(error);
 
-        showMessage(
-            "Login failed. Please check your Firebase connection."
-        );
+        msg.textContent =
+            "Firebase error: " +
+            error.message;
 
     }
 
@@ -316,34 +168,19 @@ async function loginAdmin() {
 
         loginBtn.disabled = false;
 
-        loginBtn.innerHTML =
-            `
-            <span>Sign In</span>
-            <span>→</span>
-            `;
+        loginBtn.textContent =
+            "Sign In";
 
     }
 
 }
 
 
-// =========================================
-// BUTTON
-// =========================================
+loginBtn.addEventListener(
+    "click",
+    loginAdmin
+);
 
-if (loginBtn) {
-
-    loginBtn.addEventListener(
-        "click",
-        loginAdmin
-    );
-
-}
-
-
-// =========================================
-// ENTER KEY
-// =========================================
 
 document.addEventListener(
     "keydown",
@@ -353,8 +190,6 @@ document.addEventListener(
             event.key === "Enter"
         ) {
 
-            event.preventDefault();
-
             loginAdmin();
 
         }
@@ -363,10 +198,6 @@ document.addEventListener(
 );
 
 
-// =========================================
-// READY
-// =========================================
-
 console.log(
-    "✅ Admin Login Loaded"
+    "✅ admin-login.js loaded"
 );
