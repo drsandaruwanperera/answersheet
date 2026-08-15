@@ -1,175 +1,442 @@
+// ==========================================
+// ADMIN LOGIN
+// ==========================================
+
 import {
     db,
     collection,
     getDocs
 } from "./firebase.js";
 
+
+// ==========================================
+// Elements
+// ==========================================
+
 const loginBtn =
     document.getElementById("loginBtn");
 
+const usernameInput =
+    document.getElementById("username");
 
-loginBtn.addEventListener(
-    "click",
-    async () => {
+const passwordInput =
+    document.getElementById("password");
 
-        const username =
-            document
-                .getElementById("username")
-                .value
-                .trim();
-
-        const password =
-            document
-                .getElementById("password")
-                .value
-                .trim();
-
-        const msg =
-            document.getElementById("msg");
+const msg =
+    document.getElementById("msg");
 
 
-        msg.textContent = "";
+// ==========================================
+// Check Elements
+// ==========================================
+
+if (!loginBtn) {
+
+    console.error(
+        "❌ loginBtn not found in admin-login.html"
+    );
+
+}
+
+if (!usernameInput) {
+
+    console.error(
+        "❌ username input not found"
+    );
+
+}
+
+if (!passwordInput) {
+
+    console.error(
+        "❌ password input not found"
+    );
+
+}
 
 
-        // ==========================
-        // Validation
-        // ==========================
+// ==========================================
+// Show Message
+// ==========================================
 
-        if (!username || !password) {
+function showMessage(message, type = "error") {
 
-            msg.textContent =
-                "Please enter username and password.";
+    if (!msg) {
+
+        // If #msg doesn't exist,
+        // use alert as fallback.
+
+        alert(message);
+
+        return;
+
+    }
+
+    msg.textContent = message;
+
+    msg.className =
+        "login-message " + type;
+
+}
+
+
+// ==========================================
+// Clear Message
+// ==========================================
+
+function clearMessage() {
+
+    if (!msg) {
+        return;
+    }
+
+    msg.textContent = "";
+
+    msg.className =
+        "login-message";
+
+}
+
+
+// ==========================================
+// Login Function
+// ==========================================
+
+async function loginAdmin() {
+
+    clearMessage();
+
+
+    // ======================================
+    // Get Values
+    // ======================================
+
+    const username =
+        usernameInput?.value.trim() || "";
+
+    const password =
+        passwordInput?.value.trim() || "";
+
+
+    // ======================================
+    // Validation
+    // ======================================
+
+    if (!username) {
+
+        showMessage(
+            "Please enter your username."
+        );
+
+        usernameInput?.focus();
+
+        return;
+
+    }
+
+
+    if (!password) {
+
+        showMessage(
+            "Please enter your password."
+        );
+
+        passwordInput?.focus();
+
+        return;
+
+    }
+
+
+    // ======================================
+    // Loading State
+    // ======================================
+
+    const originalText =
+        loginBtn.textContent;
+
+    loginBtn.disabled = true;
+
+    loginBtn.textContent =
+        "Signing in...";
+
+
+    try {
+
+        console.log(
+            "🔐 Checking admin login..."
+        );
+
+
+        // ==================================
+        // Get Admin Accounts
+        // ==================================
+
+        const snapshot =
+            await getDocs(
+                collection(
+                    db,
+                    "admins"
+                )
+            );
+
+
+        console.log(
+            "Admin accounts found:",
+            snapshot.size
+        );
+
+
+        let account = null;
+
+
+        // ==================================
+        // Find Username
+        // ==================================
+
+        snapshot.forEach(
+            adminDoc => {
+
+                const data =
+                    adminDoc.data();
+
+
+                console.log(
+                    "Checking admin:",
+                    data.username
+                );
+
+
+                if (
+                    String(data.username || "")
+                        .trim()
+                        .toLowerCase()
+                    ===
+                    username.toLowerCase()
+                ) {
+
+                    account = {
+                        id: adminDoc.id,
+                        ...data
+                    };
+
+                }
+
+            }
+        );
+
+
+        // ==================================
+        // Username Not Found
+        // ==================================
+
+        if (!account) {
+
+            showMessage(
+                "Invalid username or password."
+            );
+
+            console.warn(
+                "❌ Admin username not found:",
+                username
+            );
 
             return;
 
         }
 
 
-        try {
+        // ==================================
+        // Password Check
+        // ==================================
 
-            // ==========================
-            // Get Admin Accounts
-            // ==========================
-
-            const snapshot =
-                await getDocs(
-                    collection(
-                        db,
-                        "admins"
-                    )
-                );
+        const savedPassword =
+            String(
+                account.password || ""
+            ).trim();
 
 
-            let account = null;
+        if (
+            password !==
+            savedPassword
+        ) {
 
-
-            snapshot.forEach(
-                adminDoc => {
-
-                    const data =
-                        adminDoc.data();
-
-
-                    if (
-                        data.username ===
-                        username
-                    ) {
-
-                        account = data;
-
-                    }
-
-                }
+            showMessage(
+                "Invalid username or password."
             );
 
-
-            // ==========================
-            // Account Not Found
-            // ==========================
-
-            if (!account) {
-
-                msg.textContent =
-                    "Invalid username or password.";
-
-                return;
-
-            }
-
-
-            // ==========================
-            // Check Password
-            // ==========================
-
-            if (
-                password !==
-                account.password
-            ) {
-
-                msg.textContent =
-                    "Invalid username or password.";
-
-                return;
-
-            }
-
-
-            // ==========================
-            // Get Role
-            // ==========================
-
-            const role =
-                account.role ||
-                "limited";
-
-
-            // ==========================
-            // Save Admin Session
-            // ==========================
-
-            sessionStorage.setItem(
-                "adminLoggedIn",
-                "true"
+            console.warn(
+                "❌ Wrong admin password"
             );
 
-            sessionStorage.setItem(
-                "adminRole",
-                role
-            );
+            return;
 
-            sessionStorage.setItem(
-                "adminUsername",
-                username
-            );
+        }
 
 
-            console.log(
-                "Admin login:",
+        // ==================================
+        // Get Role
+        // ==================================
+
+        const role =
+            account.role ||
+            "limited";
+
+
+        // ==================================
+        // Save Session
+        // ==================================
+
+        sessionStorage.setItem(
+            "adminLoggedIn",
+            "true"
+        );
+
+        sessionStorage.setItem(
+            "adminRole",
+            role
+        );
+
+        sessionStorage.setItem(
+            "adminUsername",
+            username
+        );
+
+
+        console.log(
+            "✅ Admin login successful",
+            {
                 username,
-                "Role:",
                 role
-            );
+            }
+        );
 
 
-            // ==========================
-            // Dashboard
-            // ==========================
+        // ==================================
+        // Redirect
+        // ==================================
 
-            window.location.href =
-                "admin.html";
-
-        }
-        catch (error) {
-
-            console.error(
-                "Admin login error:",
-                error
-            );
-
-            msg.textContent =
-                "Login failed. Please try again.";
-
-        }
+        window.location.replace(
+            "admin.html"
+        );
 
     }
+
+    catch (error) {
+
+        console.error(
+            "❌ Admin login error:",
+            error
+        );
+
+
+        showMessage(
+            "Login failed. Please check your Firebase connection."
+        );
+
+    }
+
+    finally {
+
+        loginBtn.disabled = false;
+
+        loginBtn.textContent =
+            originalText;
+
+    }
+
+}
+
+
+// ==========================================
+// Button Click
+// ==========================================
+
+if (loginBtn) {
+
+    loginBtn.addEventListener(
+        "click",
+        loginAdmin
+    );
+
+}
+
+
+// ==========================================
+// Enter Key Login
+// ==========================================
+
+if (passwordInput) {
+
+    passwordInput.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key === "Enter"
+            ) {
+
+                event.preventDefault();
+
+                loginAdmin();
+
+            }
+
+        }
+    );
+
+}
+
+
+if (usernameInput) {
+
+    usernameInput.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key === "Enter"
+            ) {
+
+                event.preventDefault();
+
+                loginAdmin();
+
+            }
+
+        }
+    );
+
+}
+
+
+// ==========================================
+// Already Logged In
+// ==========================================
+
+if (
+    sessionStorage.getItem(
+        "adminLoggedIn"
+    ) === "true"
+) {
+
+    console.log(
+        "Admin already logged in."
+    );
+
+    // Uncomment this if you want
+    // already logged-in admins to
+    // automatically skip the login page.
+
+    // window.location.replace("admin.html");
+
+}
+
+
+// ==========================================
+// Console
+// ==========================================
+
+console.log(
+    "✅ Admin Login JS Loaded"
 );
