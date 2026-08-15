@@ -1,1 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Admin Dashboard | Student Assessment Portal</title>
+
+    <link
+        rel="stylesheet"
+        href="admin.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<div class="admin-layout">
+
+
+    <!-- =================================
+         SIDEBAR
+    ================================== -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-brand">
+
+            <div class="sidebar-logo">
+                🛡️
+            </div>
+
+            <div>
+
+                <strong>
+                    Student
+                </strong>
+
+                <span>
+                    Assessment Portal
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="sidebar-section-title">
+            ADMINISTRATION
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a
+                href="#dashboard"
+                class="nav-item active"
+            >
+                <span>🏠</span>
+                <span>Dashboard</span>
+            </a>
+
+
+            <a
+                href="#students"
+                class="nav-item"
+            >
+                <span>👥</span>
+                <span>Students</span>
+            </a>
+
+
+            <a
+                href="#papers"
+                class="nav-item"
+            >
+                <span>📚</span>
+                <span>Paper Management</span>
+            </a>
+
+
+            <a
+                href="#statistics"
+                class="nav-item"
+            >
+                <span>📊</span>
+                <span>Statistics</span>
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <div class="admin-profile">
+
+                <div class="profile-avatar">
+                    👤
+                </div>
+
+                <div>
+
+                    <strong id="adminUsername">
+                        Admin
+                    </strong>
+
+                    <span id="adminRole">
+                        Administrator
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <button
+                id="logoutBtn"
+                class="logout-btn"
+                type="button"
+            >
+                <span>🚪</span>
+                Sign Out
+            </button>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =================================
+         MAIN
+    ================================== -->
+
+    <main class="main-content">
+
+
+        <!-- HEADER -->
+
+        <header class="topbar">
+
+            <div>
+
+                <p class="topbar-label">
+                    ADMINISTRATION
+                </p>
+
+                <h1>
+                    Dashboard
+                </h1>
+
+                <p class="topbar-description">
+                    Overview of your Student Assessment Portal
+                </p>
+
+            </div>
+
+
+            <div class="topbar-right">
+
+                <div class="live-status">
+
+                    <span class="live-dot"></span>
+
+                    System Online
+
+                </div>
+
+
+                <div class="topbar-admin">
+
+                    <div class="topbar-avatar">
+                        👨‍💼
+                    </div>
+
+                    <div>
+
+                        <strong id="topAdminUsername">
+                            Admin
+                        </strong>
+
+                        <span>
+                            Administrator
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =================================
+             SUMMARY CARDS
+        ================================== -->
+
+        <section
+            class="summary-grid"
+            id="dashboard"
+        >
+
+
+            <!-- TOTAL STUDENTS -->
+
+            <div class="summary-card purple">
+
+                <div class="summary-card-top">
+
+                    <div class="summary-icon">
+                        👥
+                    </div>
+
+                    <span class="summary-badge">
+                        Students
+                    </span>
+
+                </div>
+
+                <p>
+                    Total Students
+                </p>
+
+                <strong id="totalStudents">
+                    0
+                </strong>
+
+                <span class="summary-footer">
+                    Registered student accounts
+                </span>
+
+            </div>
+
+
+
+            <!-- PAPER VIEWS -->
+
+            <div class="summary-card blue">
+
+                <div class="summary-card-top">
+
+                    <div class="summary-icon">
+                        📄
+                    </div>
+
+                    <span class="summary-badge">
+                        Activity
+                    </span>
+
+                </div>
+
+                <p>
+                    Total Paper Views
+                </p>
+
+                <strong id="totalViewed">
+                    0
+                </strong>
+
+                <span class="summary-footer">
+                    Completed paper views
+                </span>
+
+            </div>
+
+
+
+            <!-- ACTIVE -->
+
+            <div class="summary-card green">
+
+                <div class="summary-card-top">
+
+                    <div class="summary-icon">
+                        🟢
+                    </div>
+
+                    <span class="summary-badge">
+                        Live
+                    </span>
+
+                </div>
+
+                <p>
+                    Active Students
+                </p>
+
+                <strong id="activeStudents">
+                    0
+                </strong>
+
+                <span class="summary-footer">
+                    Active in the last 90 seconds
+                </span>
+
+            </div>
+
+
+
+            <!-- SYSTEM -->
+
+            <div class="summary-card orange">
+
+                <div class="summary-card-top">
+
+                    <div class="summary-icon">
+                        🔐
+                    </div>
+
+                    <span class="summary-badge">
+                        Secure
+                    </span>
+
+                </div>
+
+                <p>
+                    System Status
+                </p>
+
+                <strong>
+                    Online
+                </strong>
+
+                <span class="summary-footer">
+                    Firebase connection active
+                </span>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =================================
+             ANALYTICS
+        ================================== -->
+
+        <section
+            class="content-card"
+            id="statistics"
+        >
+
+            <div class="card-heading">
+
+                <div>
+
+                    <span class="card-kicker">
+                        ANALYTICS
+                    </span>
+
+                    <h2>
+                        Portal Statistics
+                    </h2>
+
+                    <p>
+                        Current student and assessment activity
+                    </p>
+
+                </div>
+
+                <span class="refresh-badge">
+                    ↻ Live data
+                </span>
+
+            </div>
+
+
+
+            <div class="statistics-list">
+
+
+                <!-- TOTAL STUDENTS -->
+
+                <div class="stat-row">
+
+                    <div class="stat-label">
+
+                        <div class="stat-icon purple-icon">
+                            👥
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Total Students
+                            </strong>
+
+                            <span>
+                                All registered students
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-progress">
+
+                        <div class="progress-track">
+
+                            <div
+                                class="progress-fill purple-fill"
+                                id="chartTotalStudents"
+                            ></div>
+
+                        </div>
+
+                        <strong
+                            id="chartTotalStudentsValue"
+                        >
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- PAPER VIEWS -->
+
+                <div class="stat-row">
+
+                    <div class="stat-label">
+
+                        <div class="stat-icon blue-icon">
+                            📄
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Paper Views
+                            </strong>
+
+                            <span>
+                                Papers viewed by students
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-progress">
+
+                        <div class="progress-track">
+
+                            <div
+                                class="progress-fill blue-fill"
+                                id="chartPaperViews"
+                            ></div>
+
+                        </div>
+
+                        <strong
+                            id="chartPaperViewsValue"
+                        >
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- GRADE 10 -->
+
+                <div class="stat-row">
+
+                    <div class="stat-label">
+
+                        <div class="stat-icon orange-icon">
+                            🎓
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Grade 10
+                            </strong>
+
+                            <span>
+                                Grade 10 students
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-progress">
+
+                        <div class="progress-track">
+
+                            <div
+                                class="progress-fill orange-fill"
+                                id="chartGrade10"
+                            ></div>
+
+                        </div>
+
+                        <strong
+                            id="chartGrade10Value"
+                        >
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- GRADE 11 -->
+
+                <div class="stat-row">
+
+                    <div class="stat-label">
+
+                        <div class="stat-icon green-icon">
+                            🎓
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Grade 11
+                            </strong>
+
+                            <span>
+                                Grade 11 students
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-progress">
+
+                        <div class="progress-track">
+
+                            <div
+                                class="progress-fill green-fill"
+                                id="chartGrade11"
+                            ></div>
+
+                        </div>
+
+                        <strong
+                            id="chartGrade11Value"
+                        >
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- A/L -->
+
+                <div class="stat-row">
+
+                    <div class="stat-label">
+
+                        <div class="stat-icon pink-icon">
+                            🎓
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Advanced Level
+                            </strong>
+
+                            <span>
+                                A/L students
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-progress">
+
+                        <div class="progress-track">
+
+                            <div
+                                class="progress-fill pink-fill"
+                                id="chartAL"
+                            ></div>
+
+                        </div>
+
+                        <strong
+                            id="chartALValue"
+                        >
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ACTIVE -->
+
+                <div class="stat-row">
+
+                    <div class="stat-label">
+
+                        <div class="stat-icon cyan-icon">
+                            🟢
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Active Students
+                            </strong>
+
+                            <span>
+                                Currently active students
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-progress">
+
+                        <div class="progress-track">
+
+                            <div
+                                class="progress-fill cyan-fill"
+                                id="chartActive"
+                            ></div>
+
+                        </div>
+
+                        <strong
+                            id="chartActiveValue"
+                        >
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================
+             MANAGEMENT CARDS
+        ================================== -->
+
+        <section
+            class="management-grid"
+            id="students"
+        >
+
+
+            <div class="management-card">
+
+                <div class="management-icon purple-bg">
+                    👥
+                </div>
+
+                <div>
+
+                    <span class="card-kicker">
+                        STUDENTS
+                    </span>
+
+                    <h3>
+                        Student Management
+                    </h3>
+
+                    <p>
+                        View and manage registered
+                        student accounts and activity.
+                    </p>
+
+                </div>
+
+                <span class="coming-soon">
+                    Available in Student Management
+                </span>
+
+            </div>
+
+
+
+            <div
+                class="management-card"
+                id="papers"
+            >
+
+                <div class="management-icon blue-bg">
+                    📚
+                </div>
+
+                <div>
+
+                    <span class="card-kicker">
+                        RESOURCES
+                    </span>
+
+                    <h3>
+                        Paper Management
+                    </h3>
+
+                    <p>
+                        Manage model papers, past papers
+                        and assessment resources.
+                    </p>
+
+                </div>
+
+                <span class="coming-soon">
+                    Paper Management
+                </span>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =================================
+             FOOTER
+        ================================== -->
+
+        <footer class="dashboard-footer">
+
+            <div>
+
+                <strong>
+                    Student Assessment Portal
+                </strong>
+
+                <span>
+                    Administration Dashboard
+                </span>
+
+            </div>
+
+
+            <span>
+                © 2026
+            </span>
+
+        </footer>
+
+
+    </main>
+
+</div>
+
+
+
+<script
+    type="module"
+    src="admin.js"
+></script>
+
+
+<script>
+
+const username =
+    sessionStorage.getItem(
+        "adminUsername"
+    ) || "Admin";
+
+
+const role =
+    sessionStorage.getItem(
+        "adminRole"
+    ) || "Administrator";
+
+
+const usernameElements = [
+
+    document.getElementById(
+        "adminUsername"
+    ),
+
+    document.getElementById(
+        "topAdminUsername"
+    )
+
+];
+
+
+usernameElements.forEach(
+    element => {
+
+        if (element) {
+
+            element.textContent =
+                username;
+
+        }
+
+    }
+);
+
+
+const roleElement =
+    document.getElementById(
+        "adminRole"
+    );
+
+
+if (roleElement) {
+
+    roleElement.textContent =
+        role;
+
+}
+
+</script>
+
+
+</body>
+
+</html>
