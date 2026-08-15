@@ -210,6 +210,8 @@ function detectStudentType(data) {
         firstFour === "2005" ||
         firstFour === "2006" ||
         firstFour === "2007"
+        firstFour === "2008"
+        firstFour === "2009"
     ) {
 
         return "al";
