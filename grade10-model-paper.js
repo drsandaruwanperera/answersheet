@@ -50,7 +50,7 @@ const answerBtn =
 
 
 // ==========================
-// Validate Parameters
+// Validate
 // ==========================
 
 if (
@@ -62,8 +62,9 @@ if (
         "Invalid Model Paper."
     );
 
-    window.location.href =
-        "grade10-model-papers.html";
+    window.location.replace(
+        "grade10-model-papers.html"
+    );
 
 }
 
@@ -74,14 +75,9 @@ if (
 
 const termNames = {
 
-    "1":
-        "1st Term",
-
-    "2":
-        "2nd Term",
-
-    "3":
-        "3rd Term"
+    "1": "1st Term",
+    "2": "2nd Term",
+    "3": "3rd Term"
 
 };
 
@@ -93,13 +89,21 @@ const termName =
 // Page Title
 // ==========================
 
-paperTitle.textContent =
-    "📘 Model Paper - " +
-    paper;
+if (paperTitle) {
 
-paperSubtitle.textContent =
-    "Grade 10 • " +
-    termName;
+    paperTitle.textContent =
+        "📘 Model Paper - " +
+        paper;
+
+}
+
+if (paperSubtitle) {
+
+    paperSubtitle.textContent =
+        "Grade 10 • " +
+        termName;
+
+}
 
 
 // ==========================
@@ -107,74 +111,114 @@ paperSubtitle.textContent =
 // ==========================
 
 const basePath =
-    `papers/grade10/term${term}/paper${paper}`;
+    `./papers/grade10/term${term}/paper${paper}`;
 
 
 // ==========================
 // Part A - MCQ
 // ==========================
 
-mcqBtn.addEventListener(
-    "click",
-    () => {
+if (mcqBtn) {
 
-        window.open(
-            `${basePath}/mcq.pdf`,
-            "_blank"
-        );
+    mcqBtn.addEventListener(
+        "click",
+        () => {
 
-    }
-);
+            const pdf =
+                `${basePath}/mcq.pdf`;
+
+            window.open(
+                pdf,
+                "_blank"
+            );
+
+        }
+    );
+
+}
 
 
 // ==========================
 // Part A - MCQ Answer
 // ==========================
 
-mcqAnswerBtn.addEventListener(
-    "click",
-    () => {
+if (mcqAnswerBtn) {
 
-        window.location.href =
-            `grade10-answer.html?` +
-            `term=${encodeURIComponent(term)}` +
-            `&paper=${encodeURIComponent(paper)}` +
-            `type=mcq`;
+    mcqAnswerBtn.addEventListener(
+        "click",
+        () => {
 
-    }
-);
+            const url =
+                `grade10-answer.html?` +
+                `term=${encodeURIComponent(term)}` +
+                `&paper=${encodeURIComponent(paper)}` +
+                `&type=mcq`;
+
+            window.location.assign(
+                url
+            );
+
+        }
+    );
+
+}
 
 
 // ==========================
 // Part B - Question Paper
 // ==========================
 
-questionBtn.addEventListener(
-    "click",
-    () => {
+if (questionBtn) {
 
-        window.open(
-            `${basePath}/question.pdf`,
-            "_blank"
-        );
+    questionBtn.addEventListener(
+        "click",
+        () => {
 
-    }
-);
+            const pdf =
+                `${basePath}/question.pdf`;
+
+            window.open(
+                pdf,
+                "_blank"
+            );
+
+        }
+    );
+
+}
 
 
 // ==========================
-// Part B - Answer Scheme
+// Part B - Answer
 // ==========================
 
-answerBtn.addEventListener(
-    "click",
-    () => {
+if (answerBtn) {
 
-        window.location.href =
-            `grade10-answer.html?` +
-            `term=${encodeURIComponent(term)}` +
-            `&paper=${encodeURIComponent(paper)}` +
-            `type=answer`;
+    answerBtn.addEventListener(
+        "click",
+        () => {
 
+            const url =
+                `grade10-answer.html?` +
+                `term=${encodeURIComponent(term)}` +
+                `&paper=${encodeURIComponent(paper)}` +
+                `&type=answer`;
+
+            window.location.assign(
+                url
+            );
+
+        }
+    );
+
+}
+
+
+console.log(
+    "✅ Grade 10 Model Paper Loaded",
+    {
+        term,
+        paper,
+        basePath
     }
 );
