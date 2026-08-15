@@ -19,21 +19,27 @@
 
 </head>
 
+
 <body>
+
 
 <div class="container">
 
-    <!-- ==========================
-         Header
-    =========================== -->
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
 
     <header class="header">
 
+
         <div class="brand-area">
+
 
             <div class="brand-icon">
                 🎓
             </div>
+
 
             <div>
 
@@ -41,50 +47,69 @@
                     Student Assessment Portal
                 </h1>
 
+
                 <div class="student-meta">
+
 
                     <span>
                         Student ID:
                         <strong id="studentId">—</strong>
                     </span>
 
-                    <span class="meta-dot">•</span>
+
+                    <span class="meta-dot">
+                        •
+                    </span>
+
 
                     <span>
                         <strong id="studentGrade">—</strong>
                     </span>
 
+
                     <span
                         class="online-badge"
                         id="onlineStatus"
                     >
+
                         <span class="online-dot"></span>
+
                         Online
+
                     </span>
+
 
                 </div>
 
             </div>
 
+
         </div>
 
+
+        <!-- Logout -->
 
         <button
             id="logoutBtn"
             class="logout-btn"
             type="button"
         >
+
             🚪 Sign Out
+
         </button>
+
 
     </header>
 
 
-    <!-- ==========================
-         Welcome Section
-    =========================== -->
+
+    <!-- =====================================================
+         WELCOME
+    ====================================================== -->
 
     <section class="welcome-section">
+
 
         <div>
 
@@ -92,9 +117,11 @@
                 STUDENT PORTAL
             </p>
 
+
             <h2 id="greeting">
                 Welcome, Student 👋
             </h2>
+
 
             <p class="welcome-text">
 
@@ -106,117 +133,20 @@
 
         </div>
 
-    </section>
-
-
-    <!-- ==========================
-         Summary Cards
-    =========================== -->
-
-    <section class="summary-grid">
-
-
-        <!-- Total Papers -->
-
-        <div class="summary-card">
-
-            <div class="summary-icon purple">
-                📚
-            </div>
-
-            <div>
-
-                <span>
-                    Total Papers
-                </span>
-
-                <strong id="totalPapers">
-                    0
-                </strong>
-
-            </div>
-
-        </div>
-
-
-        <!-- Viewed -->
-
-        <div class="summary-card">
-
-            <div class="summary-icon blue">
-                📄
-            </div>
-
-            <div>
-
-                <span>
-                    Papers Viewed
-                </span>
-
-                <strong id="viewedPapers">
-                    0
-                </strong>
-
-            </div>
-
-        </div>
-
-
-        <!-- Online -->
-
-        <div class="summary-card">
-
-            <div class="summary-icon green">
-                🟢
-            </div>
-
-            <div>
-
-                <span>
-                    Account Status
-                </span>
-
-                <strong>
-                    Active
-                </strong>
-
-            </div>
-
-        </div>
-
-
-        <!-- Progress -->
-
-        <div class="summary-card">
-
-            <div class="summary-icon orange">
-                🎯
-            </div>
-
-            <div>
-
-                <span>
-                    Progress
-                </span>
-
-                <strong id="progressValue">
-                    0%
-                </strong>
-
-            </div>
-
-        </div>
 
     </section>
 
 
-    <!-- ==========================
-         Study Materials
-    =========================== -->
+
+    <!-- =====================================================
+         STUDY MATERIALS
+    ====================================================== -->
 
     <section class="section">
 
+
         <div class="section-heading">
+
 
             <div>
 
@@ -224,21 +154,25 @@
                     📚 Study Materials
                 </h2>
 
+
                 <p>
                     Access your learning resources
                 </p>
 
             </div>
 
+
         </div>
+
 
 
         <div class="material-grid">
 
 
-            <!-- ==========================
-                 Model Papers
-            =========================== -->
+            <!-- =================================================
+                 MODEL PAPERS
+                 Grade 10 / Grade 11 / A/L
+            ================================================== -->
 
             <div
                 class="material-card"
@@ -247,80 +181,172 @@
                 tabindex="0"
             >
 
+
                 <div class="material-top">
 
-                    <div class="material-icon purple-bg">
+
+                    <div
+                        class="material-icon purple-bg"
+                    >
                         📘
                     </div>
+
 
                     <span class="card-arrow">
                         →
                     </span>
 
+
                 </div>
+
 
                 <h3>
                     Model Papers
                 </h3>
 
-                <p>
+
+                <p id="modelPapersDescription">
+
                     Practice with structured model
                     papers and prepare with confidence.
+
                 </p>
 
+
                 <span class="card-link">
+
                     Explore Model Papers →
+
                 </span>
+
 
             </div>
 
 
-            <!-- ==========================
-                 Province Papers
-            =========================== -->
+
+            <!-- =================================================
+                 GRADE 11 PAST PAPERS
+                 Only Grade 11
+            ================================================== -->
 
             <div
                 class="material-card"
-                id="pastPapersCard"
+                id="grade11PastPapersCard"
                 role="button"
                 tabindex="0"
+                style="display: none;"
             >
+
 
                 <div class="material-top">
 
-                    <div class="material-icon blue-bg">
+
+                    <div
+                        class="material-icon blue-bg"
+                    >
                         📖
                     </div>
+
 
                     <span class="card-arrow">
                         →
                     </span>
 
+
                 </div>
+
+
+                <h3>
+                    Past Papers
+                </h3>
+
+
+                <p>
+
+                    Grade 11 Past Papers
+                    <strong>
+                        2016 - 2025
+                    </strong>
+
+                </p>
+
+
+                <span class="card-link">
+
+                    Explore Past Papers →
+
+                </span>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 A/L PROVINCE PAPERS
+                 Only A/L
+            ================================================== -->
+
+            <div
+                class="material-card"
+                id="provincePapersCard"
+                role="button"
+                tabindex="0"
+                style="display: none;"
+            >
+
+
+                <div class="material-top">
+
+
+                    <div
+                        class="material-icon blue-bg"
+                    >
+                        📖
+                    </div>
+
+
+                    <span class="card-arrow">
+                        →
+                    </span>
+
+
+                </div>
+
 
                 <h3>
                     Province Papers
                 </h3>
 
+
                 <p>
-                    Review previous examination papers
-                    and improve your preparation.
+
+                    Review previous examination
+                    papers and improve your preparation.
+
                 </p>
 
+
                 <span class="card-link">
+
                     Explore Province Papers →
+
                 </span>
+
 
             </div>
 
+
         </div>
+
 
     </section>
 
 
-    <!-- ==========================
-         Information Grid
-    =========================== -->
+
+    <!-- =====================================================
+         INFORMATION
+    ====================================================== -->
 
     <section class="info-grid">
 
@@ -329,9 +355,13 @@
 
         <div class="info-card">
 
-            <div class="info-icon announcement-icon">
+
+            <div
+                class="info-icon announcement-icon"
+            >
                 📢
             </div>
+
 
             <div>
 
@@ -339,22 +369,29 @@
                     Announcements
                 </h3>
 
+
                 <p>
                     No new announcements.
                 </p>
 
             </div>
 
+
         </div>
+
 
 
         <!-- Support -->
 
         <div class="info-card">
 
-            <div class="info-icon support-icon">
+
+            <div
+                class="info-icon support-icon"
+            >
                 🛟
             </div>
+
 
             <div>
 
@@ -362,36 +399,51 @@
                     Need Assistance?
                 </h3>
 
+
                 <p>
+
                     Contact the system administrator
                     if you need help.
+
                 </p>
+
 
                 <a
                     href="tel:0779011780"
                     class="support-link"
                 >
+
                     📞 077 901 1780
+
                 </a>
+
 
             </div>
 
+
         </div>
+
 
     </section>
 
 
-    <!-- ==========================
-         Instructions
-    =========================== -->
+
+    <!-- =====================================================
+         INSTRUCTIONS
+    ====================================================== -->
 
     <section class="instructions-card">
 
+
         <div class="instructions-header">
 
-            <div class="info-icon instruction-icon">
+
+            <div
+                class="info-icon instruction-icon"
+            >
                 📝
             </div>
+
 
             <div>
 
@@ -399,67 +451,99 @@
                     Important Instructions
                 </h2>
 
+
                 <p>
+
                     Please follow these guidelines
                     while using the portal.
+
                 </p>
 
             </div>
 
+
         </div>
+
 
 
         <div class="instruction-list">
 
+
+            <!-- Instruction 01 -->
+
             <div class="instruction-item">
+
 
                 <span>
                     01
                 </span>
 
+
                 <p>
+
                     Use only your own Student ID
                     and Password.
+
                 </p>
+
 
             </div>
 
 
+
+            <!-- Instruction 02 -->
+
             <div class="instruction-item">
+
 
                 <span>
                     02
                 </span>
 
+
                 <p>
+
                     Do not share your login
                     credentials with anyone.
+
                 </p>
+
 
             </div>
 
 
+
+            <!-- Instruction 03 -->
+
             <div class="instruction-item">
+
 
                 <span>
                     03
                 </span>
 
+
                 <p>
+
                     Contact the administrator if
                     you need assistance.
+
                 </p>
+
 
             </div>
 
+
         </div>
+
 
     </section>
 
 
-    <!-- ==========================
-         Footer
-    =========================== -->
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
 
     <footer>
 
@@ -467,23 +551,27 @@
             © 2026 Student Assessment Portal
         </p>
 
+
         <span>
             Secure Student Access
         </span>
 
     </footer>
 
+
 </div>
 
 
-<!-- ==========================
-     Dashboard JavaScript
-=========================== -->
+
+<!-- =====================================================
+     DASHBOARD JAVASCRIPT
+====================================================== -->
 
 <script
     type="module"
     src="dashboard.js"
 ></script>
+
 
 </body>
 
