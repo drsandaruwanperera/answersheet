@@ -1,213 +1,108 @@
-// ==========================
-// Grade 11 Past Paper
-// ==========================
+// ========================================
+// Grade 11 Past Papers - Year Selection
+// ========================================
 
 
 // ==========================
-// Get URL Parameters
+// Get Container
 // ==========================
 
-const params =
-    new URLSearchParams(
-        window.location.search
-    );
-
-const year =
-    params.get("year");
-
-
-// ==========================
-// Elements
-// ==========================
-
-const paperTitle =
+const yearContainer =
     document.getElementById(
-        "paperTitle"
-    );
-
-const partABtn =
-    document.getElementById(
-        "partABtn"
-    );
-
-const partAAnswerBtn =
-    document.getElementById(
-        "partAAnswerBtn"
-    );
-
-const partBBtn =
-    document.getElementById(
-        "partBBtn"
-    );
-
-const partBAnswerBtn =
-    document.getElementById(
-        "partBAnswerBtn"
+        "yearContainer"
     );
 
 
 // ==========================
-// Check Year
+// Check Container
 // ==========================
 
-const yearNumber =
-    Number(year);
+if (!yearContainer) {
 
-
-if (
-    !Number.isInteger(yearNumber) ||
-    yearNumber < 2016 ||
-    yearNumber > 2025
-) {
-
-    alert(
-        "Invalid Past Paper."
-    );
-
-    window.location.href =
-        "grade11-past-papers.html";
-
-    throw new Error(
-        "Invalid past paper year."
+    console.error(
+        "yearContainer not found."
     );
 
 }
 
 
 // ==========================
-// Check Login
+// Years
 // ==========================
 
-if (
-    sessionStorage.getItem(
-        "loggedIn"
-    ) !== "true"
-) {
-
-    window.location.href =
-        "index.html";
-
-    throw new Error(
-        "Student is not logged in."
-    );
-
-}
+const years = [
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+];
 
 
 // ==========================
-// Set Page Title
+// Create Year Cards
 // ==========================
 
-paperTitle.textContent =
-    "📚 Grade 11 Past Paper - " +
-    year;
+years.forEach(
+    year => {
+
+        const card =
+            document.createElement(
+                "div"
+            );
 
 
-// ==========================
-// PDF Folder
-// ==========================
-//
-// Folder structure:
-//
-// papers/
-//   grade11/
-//     past/
-//       2025/
-//         part-a.pdf
-//         part-b.pdf
-//
-//       2024/
-//         part-a.pdf
-//         part-b.pdf
-//
-//       ...
-//
-//       2016/
-//         part-a.pdf
-//         part-b.pdf
-//
-
-const basePath =
-    `papers/grade11/past/${year}/`;
+        card.className =
+            "year-card";
 
 
-// ==========================
-// Part A PDF
-// ==========================
+        card.innerHTML = `
 
-partABtn.addEventListener(
-    "click",
-    () => {
+            <div class="year-icon">
+                📖
+            </div>
 
-        const pdfPath =
-            `${basePath}part-a.pdf`;
+            <h2>
+                ${year}
+            </h2>
 
-        window.open(
-            pdfPath,
-            "_blank"
+            <p>
+                Grade 11 Past Paper
+            </p>
+
+        `;
+
+
+        // ==========================
+        // Click
+        // ==========================
+
+        card.addEventListener(
+            "click",
+            () => {
+
+                window.location.href =
+                    "grade11-past-paper.html?year=" +
+                    encodeURIComponent(
+                        year
+                    );
+
+            }
         );
 
-    }
-);
 
+        // ==========================
+        // Add Card
+        // ==========================
 
-// ==========================
-// Part A Answer
-// ==========================
-
-partAAnswerBtn.addEventListener(
-    "click",
-    () => {
-
-        const answerUrl =
-            "grade11-past-answer.html?" +
-            "year=" +
-            encodeURIComponent(year) +
-            "&part=a";
-
-        window.location.href =
-            answerUrl;
-
-    }
-);
-
-
-// ==========================
-// Part B PDF
-// ==========================
-
-partBBtn.addEventListener(
-    "click",
-    () => {
-
-        const pdfPath =
-            `${basePath}part-b.pdf`;
-
-        window.open(
-            pdfPath,
-            "_blank"
+        yearContainer.appendChild(
+            card
         );
-
-    }
-);
-
-
-// ==========================
-// Part B Answer
-// ==========================
-
-partBAnswerBtn.addEventListener(
-    "click",
-    () => {
-
-        const answerUrl =
-            "grade11-past-answer.html?" +
-            "year=" +
-            encodeURIComponent(year) +
-            "&part=b";
-
-        window.location.href =
-            answerUrl;
 
     }
 );
@@ -218,15 +113,10 @@ partBAnswerBtn.addEventListener(
 // ==========================
 
 console.log(
-    "✅ Grade 11 Past Paper Loaded"
+    "✅ Grade 11 Past Papers Loaded"
 );
 
 console.log(
-    "Year:",
-    year
-);
-
-console.log(
-    "PDF Folder:",
-    basePath
+    "Years:",
+    years
 );
