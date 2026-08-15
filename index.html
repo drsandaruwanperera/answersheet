@@ -2,115 +2,481 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Student Assessment Portal - Secure Student Login"
+    >
+
     <title>Student Assessment Portal</title>
-    <link rel="stylesheet" href="style.css">
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
 </head>
 
 <body>
 
-<div class="login-card">
 
-    <div class="logo">🎓</div>
+<!-- ==========================
+     Background Decoration
+========================== -->
 
-    <h1>Student Assessment Portal</h1>
+<div class="background-shape shape-one"></div>
+<div class="background-shape shape-two"></div>
 
-    <p class="subtitle">Secure Student Login</p>
 
-    <p class="description">
-        Please sign in using your Student ID and Password
-        to access Model Papers.
-    </p>
+<!-- ==========================
+     Main
+========================== -->
 
-    <!-- Student ID -->
-    <label for="studentId">Student ID👤</label>
+<main class="login-wrapper">
 
-    <div class="input-group">
-        <input
-            type="text"
-            id="studentId"
-            placeholder="Enter Student ID">
-    </div>
 
-    <!-- Password -->
-    <label for="password">Password🔒</label>
+    <!-- ==========================
+         Branding Panel
+    =========================== -->
 
-    <div class="input-group">
-        <input
-            type="password"
-            id="password"
-            placeholder="Enter Password">
+    <section class="brand-panel">
 
-        <span class="toggle-password" id="togglePassword 👁️">
-        </span>
-    </div>
+        <div class="brand-content">
 
-    <button id="loginBtn">
-        Sign In
-    </button>
+            <div class="brand-logo">
+                🎓
+            </div>
 
-   <div class="login-note">
+            <div class="brand-label">
+                STUDENT PORTAL
+            </div>
 
-    <strong>📢 Login Instructions</strong>
+            <h1>
+                Student Assessment
+                <span>Portal</span>
+            </h1>
 
-    <p>
-        • Students who have been issued a
-        <strong>National Identity Card (NIC) Number</strong>
-        by the institution must use their
-        <strong>NIC Number</strong> as their
-        <strong>Student ID (Username)</strong>.
-    </p>
+            <p class="brand-description">
+                Your central place to access
+                Model Papers, Past Papers
+                and Assessment Resources.
+            </p>
 
-    <p>
-        • All other students must use the
-        <strong>Student ID assigned by the institution</strong>.
-    </p>
 
-</div>
-    
-    <div class="support-box">
+            <!-- ==========================
+                 Feature Cards
+            =========================== -->
 
-        <p class="support-title">🛟 Need Assistance?</p>
+            <div class="features">
 
-        <p class="support-text">
-            If You Are Unable To Sign In,<br>
-         Please Contact The System Administrator
-        </p>
+                <div class="feature">
 
-        <a href="tel:0779011780" class="support-phone">
-            📞 077 901 1780
-        </a>
+                    <div class="feature-icon">
+                        📚
+                    </div>
 
-    </div>
+                    <div>
 
-    <p id="msg"></p>
+                        <strong>
+                            Model Papers
+                        </strong>
 
-    <div class="footer">
-        <p>Version 1.0</p>
-        <p>© 2026 Student Assessment Portal</p>
-    </div>
+                        <span>
+                            Practice with structured papers
+                        </span>
 
-</div>
+                    </div>
 
-<script type="module" src="app.js"></script>
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        📝
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Answer Schemes
+                        </strong>
+
+                        <span>
+                            Review your answers
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        🎯
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Better Preparation
+                        </strong>
+
+                        <span>
+                            Prepare with confidence
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="brand-footer">
+
+                <span class="secure-dot"></span>
+
+                Secure Student Access
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================
+         Login Panel
+    =========================== -->
+
+    <section class="login-panel">
+
+        <div class="login-card">
+
+
+            <!-- Logo -->
+
+            <div class="mobile-logo">
+                🎓
+            </div>
+
+
+            <!-- Header -->
+
+            <div class="login-header">
+
+                <span class="welcome-label">
+                    WELCOME BACK
+                </span>
+
+                <h2>
+                    Sign in to your account
+                </h2>
+
+                <p>
+                    Enter your Student ID and
+                    password to continue.
+                </p>
+
+            </div>
+
+
+            <!-- ==========================
+                 Student ID
+            =========================== -->
+
+            <div class="form-group">
+
+                <label for="studentId">
+                    Student ID
+                </label>
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">
+                        👤
+                    </span>
+
+                    <input
+                        type="text"
+                        id="studentId"
+                        placeholder="Enter your Student ID"
+                        autocomplete="username"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- ==========================
+                 Password
+            =========================== -->
+
+            <div class="form-group">
+
+                <div class="password-label-row">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                </div>
+
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">
+                        🔒
+                    </span>
+
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                    >
+
+                    <button
+                        type="button"
+                        class="toggle-password"
+                        id="togglePassword"
+                        aria-label="Show password"
+                    >
+                        👁️
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==========================
+                 Login Button
+            =========================== -->
+
+            <button
+                type="button"
+                id="loginBtn"
+                class="login-btn"
+            >
+
+                <span>
+                    Sign In
+                </span>
+
+                <span class="login-arrow">
+                    →
+                </span>
+
+            </button>
+
+
+            <!-- ==========================
+                 Message
+            =========================== -->
+
+            <div
+                id="msg"
+                class="message"
+                aria-live="polite"
+            ></div>
+
+
+            <!-- ==========================
+                 Login Instructions
+            =========================== -->
+
+            <div class="login-note">
+
+                <div class="note-header">
+
+                    <span class="note-icon">
+                        📢
+                    </span>
+
+                    <strong>
+                        Login Instructions
+                    </strong>
+
+                </div>
+
+
+                <p>
+
+                    Students who have been issued a
+                    <strong>
+                        National Identity Card (NIC) Number
+                    </strong>
+                    by the institution must use their
+                    <strong>
+                        NIC Number
+                    </strong>
+                    as their Student ID (Username).
+
+                </p>
+
+
+                <p>
+
+                    All other students must use the
+                    <strong>
+                        Student ID assigned by the institution.
+                    </strong>
+
+                </p>
+
+            </div>
+
+
+            <!-- ==========================
+                 Support
+            =========================== -->
+
+            <div class="support-box">
+
+                <div class="support-icon">
+                    🛟
+                </div>
+
+                <div class="support-content">
+
+                    <strong>
+                        Need Assistance?
+                    </strong>
+
+                    <span>
+                        Unable to sign in?
+                        Contact the System Administrator.
+                    </span>
+
+                    <a
+                        href="tel:0779011780"
+                    >
+                        📞 077 901 1780
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==========================
+                 Footer
+            =========================== -->
+
+            <div class="login-footer">
+
+                <span>
+                    Version 1.0
+                </span>
+
+                <span>
+                    •
+                </span>
+
+                <span>
+                    © 2026 Student Assessment Portal
+                </span>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+</main>
+
+
+<!-- ==========================
+     Password Toggle
+========================== -->
 
 <script>
-const toggle = document.getElementById("togglePassword");
-const password = document.getElementById("password");
 
-toggle.addEventListener("click", () => {
+const togglePassword =
+    document.getElementById(
+        "togglePassword"
+    );
 
-    if(password.type === "password"){
-        password.type = "text";
-        toggle.textContent = "🙈";
-    }else{
-        password.type = "password";
-        toggle.textContent = "👁️";
-    }
+const passwordInput =
+    document.getElementById(
+        "password"
+    );
 
-});
+
+if (
+    togglePassword &&
+    passwordInput
+) {
+
+    togglePassword.addEventListener(
+        "click",
+        () => {
+
+            const isPassword =
+                passwordInput.type ===
+                "password";
+
+
+            if (isPassword) {
+
+                passwordInput.type =
+                    "text";
+
+                togglePassword.textContent =
+                    "🙈";
+
+                togglePassword.setAttribute(
+                    "aria-label",
+                    "Hide password"
+                );
+
+            }
+            else {
+
+                passwordInput.type =
+                    "password";
+
+                togglePassword.textContent =
+                    "👁️";
+
+                togglePassword.setAttribute(
+                    "aria-label",
+                    "Show password"
+                );
+
+            }
+
+        }
+    );
+
+}
+
 </script>
 
+
+<!-- ==========================
+     Existing Login System
+========================== -->
+
+<script
+    type="module"
+    src="app.js"
+></script>
+
+
 </body>
+
 </html>
