@@ -26,7 +26,7 @@ if (loginBtn) {
         async () => {
 
             // =================================
-            // GET INPUTS
+            // GET INPUT VALUES
             // =================================
 
             const studentId =
@@ -42,7 +42,9 @@ if (loginBtn) {
                     .trim();
 
             const msg =
-                document.getElementById("msg");
+                document.getElementById(
+                    "msg"
+                );
 
 
             // =================================
@@ -87,16 +89,18 @@ if (loginBtn) {
                 // =================================
 
                 const cleanStudentId =
-                    String(studentId)
-                        .trim()
-                        .replace(
-                            /\s+/g,
-                            ""
-                        );
+                    String(
+                        studentId
+                    )
+                    .trim()
+                    .replace(
+                        /\s+/g,
+                        ""
+                    );
 
 
                 // =================================
-                // GET STUDENT DOCUMENT
+                // GET STUDENT FROM FIREBASE
                 // =================================
 
                 const studentRef =
@@ -157,7 +161,7 @@ if (loginBtn) {
 
 
                 // =================================
-                // DETECT STUDENT TYPE
+                // STUDENT TYPE
                 // =================================
 
                 let studentType =
@@ -165,7 +169,7 @@ if (loginBtn) {
 
 
                 // =================================
-                // STUDENT NUMBER
+                // NUMBER VERSION
                 // =================================
 
                 const studentNumber =
@@ -223,18 +227,28 @@ if (loginBtn) {
 
 
                 // =================================
-                // A/L - NIC
+                // A/L STUDENT
                 // =================================
                 //
-                // 12 digit NIC
+                // First 4 digits:
+                //
+                // 2005
+                // 2006
+                // 2007
                 //
                 // Example:
                 // 200578900180
                 //
 
                 else if (
-                    /^\d{12}$/.test(
-                        cleanStudentId
+                    cleanStudentId.startsWith(
+                        "2005"
+                    ) ||
+                    cleanStudentId.startsWith(
+                        "2006"
+                    ) ||
+                    cleanStudentId.startsWith(
+                        "2007"
                     )
                 ) {
 
@@ -287,9 +301,7 @@ if (loginBtn) {
                         );
 
 
-                    // -----------------------------
                     // Grade 10
-                    // -----------------------------
 
                     if (
                         firebaseType ===
@@ -304,9 +316,7 @@ if (loginBtn) {
                     }
 
 
-                    // -----------------------------
                     // Grade 11
-                    // -----------------------------
 
                     else if (
                         firebaseType ===
@@ -321,9 +331,7 @@ if (loginBtn) {
                     }
 
 
-                    // -----------------------------
                     // A/L
-                    // -----------------------------
 
                     else if (
                         firebaseType ===
@@ -371,9 +379,7 @@ if (loginBtn) {
                         );
 
 
-                    // -----------------------------
                     // Grade 10
-                    // -----------------------------
 
                     if (
                         firebaseGrade ===
@@ -390,9 +396,7 @@ if (loginBtn) {
                     }
 
 
-                    // -----------------------------
                     // Grade 11
-                    // -----------------------------
 
                     else if (
                         firebaseGrade ===
@@ -409,9 +413,7 @@ if (loginBtn) {
                     }
 
 
-                    // -----------------------------
                     // A/L
-                    // -----------------------------
 
                     else if (
                         firebaseGrade ===
@@ -420,6 +422,8 @@ if (loginBtn) {
                             "a/l" ||
                         firebaseGrade ===
                             "a level" ||
+                        firebaseGrade ===
+                            "a-level" ||
                         firebaseGrade ===
                             "advanced" ||
                         firebaseGrade ===
@@ -469,7 +473,6 @@ if (loginBtn) {
 
                     }
 
-
                     else if (
                         firebaseStudentGrade ===
                             "11" ||
@@ -484,7 +487,6 @@ if (loginBtn) {
 
                     }
 
-
                     else if (
                         firebaseStudentGrade ===
                             "al" ||
@@ -492,6 +494,10 @@ if (loginBtn) {
                             "a/l" ||
                         firebaseStudentGrade ===
                             "a level" ||
+                        firebaseStudentGrade ===
+                            "a-level" ||
+                        firebaseStudentGrade ===
+                            "advanced" ||
                         firebaseStudentGrade ===
                             "advanced level"
                     ) {
@@ -518,18 +524,9 @@ if (loginBtn) {
                             studentId:
                                 cleanStudentId,
 
-                            studentData:
+                            data:
                                 data
                         }
-                    );
-
-
-                    sessionStorage.removeItem(
-                        "studentType"
-                    );
-
-                    sessionStorage.removeItem(
-                        "studentGrade"
                     );
 
 
@@ -613,7 +610,11 @@ if (loginBtn) {
                 // =================================
 
                 console.log(
-                    "✅ Login successful"
+                    "================================"
+                );
+
+                console.log(
+                    "✅ LOGIN SUCCESS"
                 );
 
                 console.log(
@@ -624,6 +625,20 @@ if (loginBtn) {
                 console.log(
                     "Student Type:",
                     studentType
+                );
+
+                console.log(
+                    "Firebase Student Type:",
+                    data.studentType
+                );
+
+                console.log(
+                    "Firebase Grade:",
+                    data.grade
+                );
+
+                console.log(
+                    "================================"
                 );
 
 
@@ -660,7 +675,7 @@ if (loginBtn) {
 
 
             // =====================================
-            // LOGIN ERROR
+            // ERROR
             // =====================================
 
             catch (error) {
@@ -678,7 +693,7 @@ if (loginBtn) {
 
 
             // =====================================
-            // RESET LOGIN BUTTON
+            // RESET BUTTON
             // =====================================
 
             finally {
