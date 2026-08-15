@@ -8,8 +8,8 @@
 body {
     min-height: 100vh;
     background: #f5f7fb;
-    padding: 30px 20px;
     color: #111827;
+    padding: 30px 20px;
 }
 
 .container {
@@ -17,6 +17,7 @@ body {
     max-width: 1100px;
     margin: auto;
 }
+
 
 /* ==========================
    Header
@@ -44,6 +45,15 @@ body {
 
 .header h1 {
     font-size: 28px;
+    font-weight: 700;
+}
+
+.header p {
+    margin-top: 7px;
+
+    color: #6b7280;
+
+    font-size: 15px;
 }
 
 .header button {
@@ -74,10 +84,10 @@ body {
 
 
 /* ==========================
-   Cards
+   Part Grid
 ========================== */
 
-.term-grid {
+.part-grid {
     display: grid;
 
     grid-template-columns:
@@ -86,12 +96,17 @@ body {
     gap: 25px;
 }
 
-.term-card {
+
+/* ==========================
+   Part Card
+========================== */
+
+.part-card {
     background: #ffffff;
 
-    min-height: 230px;
+    min-height: 310px;
 
-    padding: 35px 25px;
+    padding: 32px 28px;
 
     border-radius: 20px;
 
@@ -99,13 +114,11 @@ body {
 
     flex-direction: column;
 
-    justify-content: center;
-
     align-items: center;
 
-    text-align: center;
+    justify-content: center;
 
-    cursor: pointer;
+    text-align: center;
 
     border: 2px solid transparent;
 
@@ -119,42 +132,24 @@ body {
         box-shadow 0.25s ease;
 }
 
-.term-card:hover {
+.part-card:hover {
     transform: translateY(-6px);
 
     border-color: #7c3aed;
 
     box-shadow:
-        0 15px 35px
-        rgba(124, 58, 237, 0.18);
+        0 16px 38px
+        rgba(124, 58, 237, 0.16);
 }
 
 
 /* ==========================
-   Past Papers Highlight
+   Icon
 ========================== */
 
-.term-card:last-child {
-    background:
-        linear-gradient(
-            145deg,
-            #ffffff,
-            #faf7ff
-        );
-}
-
-.term-card:last-child:hover {
-    border-color: #7c3aed;
-}
-
-
-/* ==========================
-   Icons
-========================== */
-
-.term-icon {
-    width: 75px;
-    height: 75px;
+.part-icon {
+    width: 78px;
+    height: 78px;
 
     display: flex;
 
@@ -163,15 +158,11 @@ body {
 
     background: #ede9fe;
 
-    border-radius: 18px;
+    border-radius: 20px;
 
-    font-size: 38px;
+    font-size: 40px;
 
     margin-bottom: 20px;
-}
-
-.term-card:last-child .term-icon {
-    background: #f3e8ff;
 }
 
 
@@ -179,45 +170,104 @@ body {
    Text
 ========================== */
 
-.term-card h2 {
-    font-size: 22px;
+.part-card h2 {
+    font-size: 23px;
 
     margin-bottom: 8px;
 }
 
-.term-card p {
+.part-card p {
     color: #6b7280;
 
     font-size: 15px;
+
+    margin-bottom: 22px;
 }
 
 
 /* ==========================
-   Mobile / Tablet
+   Buttons
+========================== */
+
+.option-grid {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 12px;
+}
+
+.option-grid button {
+    border: none;
+
+    background: #7c3aed;
+
+    color: #ffffff;
+
+    padding: 13px 12px;
+
+    border-radius: 10px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.option-grid button:hover {
+    background: #6d28d9;
+
+    transform: translateY(-2px);
+}
+
+
+/* ==========================
+   Answer Buttons
+========================== */
+
+#mcqAnswerBtn,
+#answerBtn {
+    background: #eef2ff;
+
+    color: #4f46e5;
+
+    border: 1px solid #c7d2fe;
+}
+
+#mcqAnswerBtn:hover,
+#answerBtn:hover {
+    background: #e0e7ff;
+}
+
+
+/* ==========================
+   Mobile
 ========================== */
 
 @media (max-width: 800px) {
 
-    .term-grid {
+    body {
+        padding: 20px 15px;
+    }
+
+    .part-grid {
         grid-template-columns: 1fr;
     }
 
-    .term-card {
-        min-height: 190px;
+    .part-card {
+        min-height: 280px;
     }
 
 }
 
 
-/* ==========================
-   Small Mobile
-========================== */
-
 @media (max-width: 500px) {
-
-    body {
-        padding: 15px;
-    }
 
     .header {
         padding: 20px;
@@ -235,8 +285,8 @@ body {
         width: 100%;
     }
 
-    .term-card {
-        padding: 30px 20px;
+    .option-grid {
+        grid-template-columns: 1fr;
     }
 
 }
