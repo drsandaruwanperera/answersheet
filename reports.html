@@ -4,28 +4,71 @@
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Reports</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="stylesheet" href="reports.css">
+    <title>Student Assessment Portal - Reports</title>
+
+    <link
+        rel="stylesheet"
+        href="reports.css"
+    >
 
 </head>
 
 <body>
 
+
+<!-- ==========================
+     Sidebar
+========================== -->
+
 <div class="sidebar">
 
-    <h2>👨🏻‍💻 Admin</h2>
+    <h2>
+        👨🏻‍💻 Admin
+    </h2>
 
     <ul>
 
-        <li onclick="location.href='admin.html'">
+        <li
+            onclick="location.href='admin.html'"
+        >
             📊 Dashboard
+        </li>
+
+        <li
+            onclick="location.href='students.html'"
+        >
+            👨‍🎓 Students
+        </li>
+
+        <li
+            class="full-admin-only"
+            onclick="location.href='paper-settings.html'"
+        >
+            📚 Papers
+        </li>
+
+        <li
+            class="full-admin-only"
+            onclick="location.href='import-students.html'"
+        >
+            📥 Import Students
         </li>
 
         <li class="active">
             📈 Reports
+        </li>
+
+        <li
+            class="full-admin-only"
+            onclick="location.href='settings.html'"
+        >
+            ⚙️ Settings
         </li>
 
         <li id="logoutBtn">
@@ -36,93 +79,543 @@
 
 </div>
 
+
+<!-- ==========================
+     Main
+========================== -->
+
 <div class="main">
 
-<header>
 
-<h1>📈 Student Reports</h1>
+    <!-- Header -->
 
-</header>
+    <header class="page-header">
 
-<div class="cards">
+        <div>
 
-<div class="card">
+            <h1>
+                📈 Reports & Analytics
+            </h1>
 
-<h3>Total Students</h3>
+            <p>
+                Student activity, paper usage and performance overview
+            </p>
 
-<h2 id="totalStudents">0</h2>
+        </div>
+
+        <div class="header-actions">
+
+            <button
+                id="refreshBtn"
+                class="secondary-btn"
+            >
+                🔄 Refresh
+            </button>
+
+            <button
+                id="exportBtn"
+                class="primary-btn"
+            >
+                📥 Export CSV
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- ==========================
+         Filters
+    =========================== -->
+
+    <section class="filter-card">
+
+        <div class="filter-title">
+
+            <h2>
+                Report Filters
+            </h2>
+
+            <span>
+                Filter the current report
+            </span>
+
+        </div>
+
+
+        <div class="filters">
+
+            <div class="filter-group">
+
+                <label for="gradeFilter">
+                    Grade
+                </label>
+
+                <select id="gradeFilter">
+
+                    <option value="all">
+                        All Grades
+                    </option>
+
+                    <option value="10">
+                        Grade 10
+                    </option>
+
+                    <option value="11">
+                        Grade 11
+                    </option>
+
+                    <option value="al">
+                        A/L
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="filter-group">
+
+                <label for="activityFilter">
+                    Activity
+                </label>
+
+                <select id="activityFilter">
+
+                    <option value="all">
+                        All Students
+                    </option>
+
+                    <option value="active">
+                        Active Now
+                    </option>
+
+                    <option value="inactive">
+                        Inactive
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================
+         Overview Cards
+    =========================== -->
+
+    <section class="stats-grid">
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                👨‍🎓
+            </div>
+
+            <div>
+
+                <span>
+                    Total Students
+                </span>
+
+                <strong id="totalStudents">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🎓
+            </div>
+
+            <div>
+
+                <span>
+                    Grade 10
+                </span>
+
+                <strong id="grade10Count">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                📚
+            </div>
+
+            <div>
+
+                <span>
+                    Grade 11
+                </span>
+
+                <strong id="grade11Count">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🎓
+            </div>
+
+            <div>
+
+                <span>
+                    A/L
+                </span>
+
+                <strong id="alCount">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card active-card">
+
+            <div class="stat-icon">
+                🟢
+            </div>
+
+            <div>
+
+                <span>
+                    Active Now
+                </span>
+
+                <strong id="activeCount">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                📄
+            </div>
+
+            <div>
+
+                <span>
+                    Total Paper Views
+                </span>
+
+                <strong id="paperViews">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================
+         Analytics Grid
+    =========================== -->
+
+    <section class="analytics-grid">
+
+
+        <!-- Student Distribution -->
+
+        <div class="report-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h2>
+                        👥 Student Distribution
+                    </h2>
+
+                    <p>
+                        Students by academic level
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="distribution-list">
+
+                <div class="distribution-row">
+
+                    <div>
+                        <span>
+                            Grade 10
+                        </span>
+                    </div>
+
+                    <strong id="distribution10">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="distribution-row">
+
+                    <div>
+                        <span>
+                            Grade 11
+                        </span>
+                    </div>
+
+                    <strong id="distribution11">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="distribution-row">
+
+                    <div>
+                        <span>
+                            A/L
+                        </span>
+                    </div>
+
+                    <strong id="distributionAL">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Activity -->
+
+        <div class="report-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h2>
+                        🟢 Activity Overview
+                    </h2>
+
+                    <p>
+                        Current student activity
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="activity-summary">
+
+                <div class="activity-item">
+
+                    <span>
+                        Active
+                    </span>
+
+                    <strong id="activityActive">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="activity-item">
+
+                    <span>
+                        Inactive
+                    </span>
+
+                    <strong id="activityInactive">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================
+         Paper Usage
+    =========================== -->
+
+    <section class="report-card full-card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h2>
+                    📚 Paper Usage
+                </h2>
+
+                <p>
+                    Most accessed papers based on recorded views
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="paperUsage"
+            class="paper-usage"
+        >
+
+            <div class="empty-state">
+                Loading paper usage...
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================
+         Student Activity
+    =========================== -->
+
+    <section class="report-card full-card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h2>
+                    👤 Student Activity
+                </h2>
+
+                <p>
+                    Student-level activity summary
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Student ID
+                        </th>
+
+                        <th>
+                            Grade
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Paper Views
+                        </th>
+
+                        <th>
+                            Last Active
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="studentTableBody">
+
+                    <tr>
+
+                        <td
+                            colspan="5"
+                            class="loading-cell"
+                        >
+                            Loading...
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================
+         Footer
+    =========================== -->
+
+    <div class="report-footer">
+
+        <span>
+            🟢 Live data
+        </span>
+
+        <span>
+            •
+        </span>
+
+        <span id="lastUpdated">
+            Updating...
+        </span>
+
+    </div>
+
 
 </div>
 
-<div class="card">
-
-<h3>Total Paper Views</h3>
-
-<h2 id="totalViews">0</h2>
-
-</div>
-
-<div class="card">
-
-<h3>Average Progress</h3>
-
-<h2 id="averageProgress">0%</h2>
-
-</div>
-
-<div class="card">
-
-<h3>Completed Students</h3>
-
-<h2 id="completedStudents">0</h2>
-
-</div>
-
-</div>
-
-<div class="toolbar">
-
-<input
-type="text"
-id="search"
-placeholder="🔍 Search Student">
-
-<button id="exportBtn">
-📄 Export CSV
-</button>
-
-<button onclick="window.print()">
-🖨 Print
-</button>
-
-</div>
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>Student ID</th>
-<th>Viewed</th>
-<th>Progress</th>
-<th>Status</th>
-
-</tr>
-
-</thead>
-
-<tbody id="reportTable">
-
-</tbody>
-
-</table>
-
-</div>
 
 <script src="session.js"></script>
 
-<script type="module" src="reports.js"></script>
+<script
+    type="module"
+    src="reports.js"
+></script>
 
 </body>
 
