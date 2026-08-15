@@ -1,178 +1,1112 @@
-import * as firebase from "./firebase.js";
+import {
+    db,
+    collection,
+    getDocs
+} from "./firebase.js";
 
-const db = firebase.db;
-const collection = firebase.collection;
-const getDocs = firebase.getDocs;
 
-// Protect Admin Page
-if (sessionStorage.getItem("adminLoggedIn") !== "true") {
-    window.location.href = "admin-login.html";
+// ==========================
+// Protect Admin
+// ==========================
+
+if (
+    sessionStorage.getItem(
+        "adminLoggedIn"
+    ) !== "true"
+) {
+
+    window.location.replace(
+        "admin-login.html"
+    );
+
 }
 
-// Logout
-document.getElementById("logoutBtn").addEventListener("click", () => {
 
-    sessionStorage.removeItem("adminLoggedIn");
-    window.location.href = "admin-login.html";
+// ==========================
+// Elements
+// ==========================
 
-});
+const totalStudents =
+    document.getElementById(
+        "totalStudents"
+    );
 
-const table = document.getElementById("reportTable");
-const search = document.getElementById("search");
+const grade10Count =
+    document.getElementById(
+        "grade10Count"
+    );
 
-let students = [];
+const grade11Count =
+    document.getElementById(
+        "grade11Count"
+    );
 
-// Load Reports
-async function loadReports() {
+const alCount =
+    document.getElementById(
+        "alCount"
+    );
 
-    const snapshot = await getDocs(collection(db, "students"));
+const activeCount =
+    document.getElementById(
+        "activeCount"
+    );
 
-    students = [];
+const paperViews =
+    document.getElementById(
+        "paperViews"
+    );
 
-    let totalStudents = 0;
-    let totalViews = 0;
-    let completedStudents = 0;
+const distribution10 =
+    document.getElementById(
+        "distribution10"
+    );
 
-    snapshot.forEach(docSnap => {
+const distribution11 =
+    document.getElementById(
+        "distribution11"
+    );
 
-        totalStudents++;
+const distributionAL =
+    document.getElementById(
+        "distributionAL"
+    );
 
-        const data = docSnap.data();
+const activityActive =
+    document.getElementById(
+        "activityActive"
+    );
 
-        let viewed = 0;
+const activityInactive =
+    document.getElementById(
+        "activityInactive"
+    );
 
-        for (let i = 1; i <= 10; i++) {
+const paperUsage =
+    document.getElementById(
+        "paperUsage"
+    );
 
-            if (data["paper" + String(i).padStart(2, "0") + "Viewed"]) {
+const studentTableBody =
+    document.getElementById(
+        "studentTableBody"
+    );
 
-                viewed++;
+const gradeFilter =
+    document.getElementById(
+        "gradeFilter"
+    );
+
+const activityFilter =
+    document.getElementById(
+        "activityFilter"
+    );
+
+const refreshBtn =
+    document.getElementById(
+        "refreshBtn"
+    );
+
+const exportBtn =
+    document.getElementById(
+        "exportBtn"
+    );
+
+const logoutBtn =
+    document.getElementById(
+        "logoutBtn"
+    );
+
+const lastUpdated =
+    document.getElementById(
+        "lastUpdated"
+    );
+
+
+// ==========================
+// Settings
+// ==========================
+
+const ACTIVE_LIMIT =
+    90 * 1000;
+
+
+// ==========================
+// Data
+// ==========================
+
+let studentsData = [];
+
+
+// ==========================
+// Student Type
+// ==========================
+
+function getStudentType(data) {
+
+    if (
+        data?.studentType ===
+        "grade10"
+    ) {
+
+        return "grade10";
+
+    }
+
+
+    if (
+        data?.studentType ===
+        "grade11"
+    ) {
+
+        return "grade11";
+
+    }
+
+
+    if (
+        String(data?.grade) ===
+        "10"
+    ) {
+
+        return "grade10";
+
+    }
+
+
+    if (
+        String(data?.grade) ===
+        "11"
+    ) {
+
+        return "grade11";
+
+    }
+
+
+    return "al";
+
+}
+
+
+// ==========================
+// Active Check
+// ==========================
+
+function isActive(data) {
+
+    const lastActive =
+        Number(
+            data?.lastActiveAt || 0
+        );
+
+    if (!lastActive) {
+        return false;
+    }
+
+    return (
+        Date.now() -
+        lastActive
+        <= ACTIVE_LIMIT
+    );
+
+}
+
+
+// ==========================
+// Paper Views
+// ==========================
+
+function getPaperViews(data) {
+
+    let total = 0;
+
+    for (
+        let i = 1;
+        i <= 50;
+        i++
+    ) {
+
+        const field =
+            "paper" +
+            String(i).padStart(
+                2,
+                "0"
+            ) +
+            "Viewed";
+
+
+        if (
+            data[field] === true
+        ) {
+
+            total++;
+
+        }
+
+    }
+
+    return total;
+
+}
+
+
+// ==========================
+// Load Data
+// ==========================
+
+async function loadData() {
+
+    try {
+
+        const snapshot =
+            await getDocs(
+                collection(
+                    db,
+                    "students"
+                )
+            );
+
+
+        studentsData = [];
+
+
+        snapshot.forEach(
+            docSnap => {
+
+                const data =
+                    docSnap.data();
+
+
+                studentsData.push({
+
+                    id:
+                        docSnap.id,
+
+                    data:
+                        data,
+
+                    type:
+                        getStudentType(data),
+
+                    active:
+                        isActive(data),
+
+                    views:
+                        getPaperViews(data)
+
+                });
+
+            }
+        );
+
+
+        renderReports();
+
+        updateTime();
+
+    }
+    catch (error) {
+
+        console.error(
+            "Reports error:",
+            error
+        );
+
+
+        if (studentTableBody) {
+
+            studentTableBody.innerHTML = `
+
+                <tr>
+
+                    <td
+                        colspan="5"
+                        class="loading-cell"
+                    >
+                        Unable to load reports.
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+
+    }
+
+}
+
+
+// ==========================
+// Render Reports
+// ==========================
+
+function renderReports() {
+
+    const grade =
+        gradeFilter?.value ||
+        "all";
+
+    const activity =
+        activityFilter?.value ||
+        "all";
+
+
+    let filtered =
+        studentsData.filter(
+            student => {
+
+                if (
+                    grade !== "all" &&
+                    student.type !== grade
+                ) {
+
+                    return false;
+
+                }
+
+
+                if (
+                    activity === "active" &&
+                    !student.active
+                ) {
+
+                    return false;
+
+                }
+
+
+                if (
+                    activity === "inactive" &&
+                    student.active
+                ) {
+
+                    return false;
+
+                }
+
+
+                return true;
+
+            }
+        );
+
+
+    // ==========================
+    // Counts
+    // ==========================
+
+    const total =
+        filtered.length;
+
+
+    const g10 =
+        filtered.filter(
+            x => x.type === "grade10"
+        ).length;
+
+
+    const g11 =
+        filtered.filter(
+            x => x.type === "grade11"
+        ).length;
+
+
+    const al =
+        filtered.filter(
+            x => x.type === "al"
+        ).length;
+
+
+    const active =
+        filtered.filter(
+            x => x.active
+        ).length;
+
+
+    const inactive =
+        total - active;
+
+
+    const views =
+        filtered.reduce(
+            (
+                sum,
+                student
+            ) =>
+                sum +
+                student.views,
+            0
+        );
+
+
+    // ==========================
+    // Cards
+    // ==========================
+
+    setText(
+        totalStudents,
+        total
+    );
+
+    setText(
+        grade10Count,
+        g10
+    );
+
+    setText(
+        grade11Count,
+        g11
+    );
+
+    setText(
+        alCount,
+        al
+    );
+
+    setText(
+        activeCount,
+        active
+    );
+
+    setText(
+        paperViews,
+        views
+    );
+
+
+    setText(
+        distribution10,
+        g10
+    );
+
+    setText(
+        distribution11,
+        g11
+    );
+
+    setText(
+        distributionAL,
+        al
+    );
+
+
+    setText(
+        activityActive,
+        active
+    );
+
+    setText(
+        activityInactive,
+        inactive
+    );
+
+
+    renderPaperUsage(
+        filtered
+    );
+
+
+    renderStudents(
+        filtered
+    );
+
+}
+
+
+// ==========================
+// Set Text
+// ==========================
+
+function setText(
+    element,
+    value
+) {
+
+    if (element) {
+
+        element.textContent =
+            value;
+
+    }
+
+}
+
+
+// ==========================
+// Paper Usage
+// ==========================
+
+function renderPaperUsage(
+    students
+) {
+
+    const counts = {};
+
+
+    students.forEach(
+        student => {
+
+            for (
+                let i = 1;
+                i <= 50;
+                i++
+            ) {
+
+                const field =
+                    "paper" +
+                    String(i).padStart(
+                        2,
+                        "0"
+                    ) +
+                    "Viewed";
+
+
+                if (
+                    student.data[field] ===
+                    true
+                ) {
+
+                    const name =
+                        "Paper " +
+                        String(i).padStart(
+                            2,
+                            "0"
+                        );
+
+
+                    counts[name] =
+                        (
+                            counts[name] ||
+                            0
+                        ) + 1;
+
+                }
 
             }
 
         }
+    );
 
-        totalViews += viewed;
 
-        if (viewed === 10) {
+    const entries =
+        Object.entries(
+            counts
+        )
+        .sort(
+            (
+                a,
+                b
+            ) =>
+                b[1] -
+                a[1]
+        );
 
-            completedStudents++;
 
-        }
+    if (
+        !entries.length
+    ) {
 
-        students.push({
+        paperUsage.innerHTML = `
 
-            id: docSnap.id,
-            viewed: viewed
-
-        });
-
-    });
-
-    document.getElementById("totalStudents").textContent =
-        totalStudents;
-
-    document.getElementById("totalViews").textContent =
-        totalViews;
-
-    document.getElementById("averageProgress").textContent =
-        totalStudents === 0
-            ? "0%"
-            : Math.round((totalViews / (totalStudents * 10)) * 100) + "%";
-
-    document.getElementById("completedStudents").textContent =
-        completedStudents;
-
-    renderTable(students);
-
-}
-
-// Render Table
-function renderTable(list) {
-
-    table.innerHTML = "";
-
-    list.forEach(student => {
-
-        let progress = student.viewed * 10;
-
-        let status = "🔴 Not Started";
-        let cls = "not-started";
-
-        if (student.viewed === 10) {
-
-            status = "🟢 Complete";
-            cls = "complete";
-
-        } else if (student.viewed > 0) {
-
-            status = "🟡 In Progress";
-            cls = "progress";
-
-        }
-
-        table.innerHTML += `
-
-        <tr>
-
-            <td>${student.id}</td>
-
-            <td>${student.viewed}/10</td>
-
-            <td>${progress}%</td>
-
-            <td class="${cls}">
-                ${status}
-            </td>
-
-        </tr>
+            <div class="empty-state">
+                No paper-view data available.
+            </div>
 
         `;
 
-    });
+        return;
+
+    }
+
+
+    const max =
+        Math.max(
+            ...entries.map(
+                x => x[1]
+            ),
+            1
+        );
+
+
+    paperUsage.innerHTML =
+        entries
+            .slice(0, 15)
+            .map(
+                ([name, value]) => `
+
+                    <div class="paper-row">
+
+                        <div class="paper-name">
+                            ${name}
+                        </div>
+
+                        <div class="paper-track">
+
+                            <div
+                                class="paper-bar"
+                                style="width:${(
+                                    value /
+                                    max
+                                ) * 100}%"
+                            ></div>
+
+                        </div>
+
+                        <div class="paper-value">
+                            ${value}
+                        </div>
+
+                    </div>
+
+                `
+            )
+            .join("");
 
 }
 
-// Search
-search.addEventListener("input", () => {
 
-    const keyword = search.value.toLowerCase();
+// ==========================
+// Student Table
+// ==========================
 
-    renderTable(
+function renderStudents(
+    students
+) {
 
-        students.filter(student =>
+    if (
+        !students.length
+    ) {
 
-            student.id.toLowerCase().includes(keyword)
+        studentTableBody.innerHTML = `
 
+            <tr>
+
+                <td
+                    colspan="5"
+                    class="loading-cell"
+                >
+                    No students found.
+                </td>
+
+            </tr>
+
+        `;
+
+        return;
+
+    }
+
+
+    const sorted =
+        [...students]
+            .sort(
+                (a, b) => {
+
+                    if (
+                        a.active !==
+                        b.active
+                    ) {
+
+                        return a.active
+                            ? -1
+                            : 1;
+
+                    }
+
+                    return a.id.localeCompare(
+                        b.id
+                    );
+
+                }
+            );
+
+
+    studentTableBody.innerHTML =
+        sorted
+            .map(
+                student => {
+
+                    const lastActive =
+                        Number(
+                            student.data
+                                ?.lastActiveAt ||
+                            0
+                        );
+
+
+                    const lastActiveText =
+                        lastActive
+                            ? new Date(
+                                lastActive
+                            ).toLocaleString()
+                            : "Never";
+
+
+                    const grade =
+                        student.type ===
+                        "grade10"
+                            ? "Grade 10"
+                            : student.type ===
+                              "grade11"
+                                ? "Grade 11"
+                                : "A/L";
+
+
+                    return `
+
+                        <tr>
+
+                            <td>
+                                <strong>
+                                    ${escapeHTML(
+                                        student.id
+                                    )}
+                                </strong>
+                            </td>
+
+                            <td>
+                                ${grade}
+                            </td>
+
+                            <td>
+
+                                <span
+                                    class="status ${
+                                        student.active
+                                            ? "active"
+                                            : "inactive"
+                                    }"
+                                >
+
+                                    ${
+                                        student.active
+                                            ? "🟢 Active"
+                                            : "Offline"
+                                    }
+
+                                </span>
+
+                            </td>
+
+                            <td>
+                                ${student.views}
+                            </td>
+
+                            <td>
+                                ${lastActiveText}
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                }
+            )
+            .join("");
+
+}
+
+
+// ==========================
+// Escape HTML
+// ==========================
+
+function escapeHTML(
+    value
+) {
+
+    return String(value)
+        .replace(
+            /&/g,
+            "&amp;"
         )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 
+}
+
+
+// ==========================
+// Update Time
+// ==========================
+
+function updateTime() {
+
+    if (!lastUpdated) {
+        return;
+    }
+
+    lastUpdated.textContent =
+        "Last updated: " +
+        new Date()
+            .toLocaleTimeString();
+
+}
+
+
+// ==========================
+// CSV Export
+// ==========================
+
+function exportCSV() {
+
+    const grade =
+        gradeFilter?.value ||
+        "all";
+
+    const activity =
+        activityFilter?.value ||
+        "all";
+
+
+    const filtered =
+        studentsData.filter(
+            student => {
+
+                if (
+                    grade !== "all" &&
+                    student.type !== grade
+                ) {
+
+                    return false;
+
+                }
+
+
+                if (
+                    activity === "active" &&
+                    !student.active
+                ) {
+
+                    return false;
+
+                }
+
+
+                if (
+                    activity === "inactive" &&
+                    student.active
+                ) {
+
+                    return false;
+
+                }
+
+
+                return true;
+
+            }
+        );
+
+
+    const rows = [
+
+        [
+            "Student ID",
+            "Grade",
+            "Status",
+            "Paper Views",
+            "Last Active"
+        ]
+
+    ];
+
+
+    filtered.forEach(
+        student => {
+
+            const lastActive =
+                Number(
+                    student.data
+                        ?.lastActiveAt ||
+                    0
+                );
+
+
+            rows.push([
+
+                student.id,
+
+                student.type === "grade10"
+                    ? "Grade 10"
+                    : student.type === "grade11"
+                        ? "Grade 11"
+                        : "A/L",
+
+                student.active
+                    ? "Active"
+                    : "Offline",
+
+                student.views,
+
+                lastActive
+                    ? new Date(
+                        lastActive
+                    ).toLocaleString()
+                    : "Never"
+
+            ]);
+
+        }
     );
 
-});
 
-// Export CSV
-document.getElementById("exportBtn").addEventListener("click", () => {
+    const csv =
+        rows
+            .map(
+                row =>
+                    row
+                        .map(
+                            value =>
+                                `"${String(value)
+                                    .replace(
+                                        /"/g,
+                                        '""'
+                                    )}"`
+                        )
+                        .join(",")
+            )
+            .join("\n");
 
-    let csv = "Student ID,Viewed,Progress\n";
 
-    students.forEach(student => {
+    const blob =
+        new Blob(
+            [csv],
+            {
+                type:
+                    "text/csv;charset=utf-8;"
+            }
+        );
 
-        csv += `${student.id},${student.viewed}/10,${student.viewed * 10}%\n`;
 
-    });
+    const url =
+        URL.createObjectURL(
+            blob
+        );
 
-    const blob = new Blob([csv], {
-        type: "text/csv"
-    });
 
-    const a = document.createElement("a");
+    const link =
+        document.createElement(
+            "a"
+        );
 
-    a.href = URL.createObjectURL(blob);
+    link.href =
+        url;
 
-    a.download = "Student_Report.csv";
+    link.download =
+        "student-report.csv";
 
-    a.click();
+    document.body.appendChild(
+        link
+    );
 
-});
+    link.click();
 
-// Load
-loadReports();
+    link.remove();
+
+    URL.revokeObjectURL(
+        url
+    );
+
+}
+
+
+// ==========================
+// Events
+// ==========================
+
+if (gradeFilter) {
+
+    gradeFilter.addEventListener(
+        "change",
+        renderReports
+    );
+
+}
+
+
+if (activityFilter) {
+
+    activityFilter.addEventListener(
+        "change",
+        renderReports
+    );
+
+}
+
+
+if (refreshBtn) {
+
+    refreshBtn.addEventListener(
+        "click",
+        loadData
+    );
+
+}
+
+
+if (exportBtn) {
+
+    exportBtn.addEventListener(
+        "click",
+        exportCSV
+    );
+
+}
+
+
+if (logoutBtn) {
+
+    logoutBtn.addEventListener(
+        "click",
+        () => {
+
+            sessionStorage.removeItem(
+                "adminLoggedIn"
+            );
+
+            window.location.replace(
+                "admin-login.html"
+            );
+
+        }
+    );
+
+}
+
+
+// ==========================
+// Initial Load
+// ==========================
+
+loadData();
+
+
+// ==========================
+// Auto Refresh
+// ==========================
+
+setInterval(
+    loadData,
+    30000
+);
+
+
+console.log(
+    "✅ Reports module loaded"
+);
