@@ -1,0 +1,206 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+html,
+body {
+    background: #f5f7fb;
+    color: #111827;
+}
+
+body {
+    min-height: 100vh;
+}
+
+
+/* ==========================
+   Top Bar
+========================== */
+
+.top-bar {
+    position: sticky;
+    top: 0;
+
+    z-index: 1000;
+
+    min-height: 75px;
+
+    padding: 15px 25px;
+
+    background: #ffffff;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 20px;
+
+    box-shadow:
+        0 5px 20px
+        rgba(0, 0, 0, 0.08);
+}
+
+.top-bar button {
+    border: none;
+
+    background: #7c3aed;
+
+    color: #ffffff;
+
+    padding: 11px 18px;
+
+    border-radius: 10px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.top-bar button:hover {
+    background: #6d28d9;
+}
+
+.top-bar h1 {
+    font-size: 23px;
+}
+
+
+/* ==========================
+   Answer Container
+========================== */
+
+#answerContainer {
+    width: 100%;
+
+    max-width: 1000px;
+
+    margin: 30px auto;
+
+    padding: 0 20px;
+}
+
+
+/* ==========================
+   Answer Page
+========================== */
+
+.answer-page {
+    position: relative;
+
+    width: 100%;
+
+    margin-bottom: 25px;
+
+    overflow: hidden;
+
+    background: #ffffff;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 8px 25px
+        rgba(0, 0, 0, 0.10);
+
+    user-select: none;
+}
+
+.answer-page img {
+    display: block;
+
+    width: 100%;
+
+    height: auto;
+
+    pointer-events: none;
+
+    user-select: none;
+
+    -webkit-user-drag: none;
+}
+
+
+/* ==========================
+   Watermark
+========================== */
+
+.watermark {
+    position: absolute;
+
+    inset: 0;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    grid-template-rows:
+        repeat(5, 1fr);
+
+    align-items: center;
+
+    justify-items: center;
+
+    pointer-events: none;
+
+    overflow: hidden;
+
+    z-index: 2;
+}
+
+.watermark span {
+    font-size: 18px;
+
+    font-weight: 700;
+
+    color: rgba(124, 58, 237, 0.13);
+
+    transform: rotate(-28deg);
+
+    white-space: nowrap;
+
+    user-select: none;
+}
+
+
+/* ==========================
+   Mobile
+========================== */
+
+@media (max-width: 600px) {
+
+    .top-bar {
+        padding: 12px 15px;
+
+        min-height: 65px;
+    }
+
+    .top-bar h1 {
+        font-size: 17px;
+    }
+
+    .top-bar button {
+        padding: 9px 13px;
+    }
+
+    #answerContainer {
+        margin: 20px auto;
+
+        padding: 0 10px;
+    }
+
+    .answer-page {
+        border-radius: 8px;
+
+        margin-bottom: 15px;
+    }
+
+    .watermark span {
+        font-size: 12px;
+    }
+
+}
