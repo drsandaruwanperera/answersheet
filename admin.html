@@ -14,7 +14,7 @@
 
     <link
         rel="stylesheet"
-        href="admin-dashboard.css"
+        href="./admin.css"
     >
 
 </head>
@@ -33,40 +33,38 @@
     <aside class="sidebar">
 
 
-        <!-- BRAND -->
+        <!-- Brand -->
 
         <div class="sidebar-brand">
 
-            <div class="sidebar-logo">
+            <div class="brand-icon">
                 🛡️
             </div>
 
             <div>
 
-                <h2>
+                <h1>
                     Student
-                </h2>
+                </h1>
 
-                <span>
+                <p>
                     Assessment Portal
-                </span>
+                </p>
 
             </div>
 
         </div>
 
 
-        <!-- NAVIGATION -->
+        <!-- Administration -->
 
-        <div class="sidebar-section-title">
+        <div class="sidebar-label">
             ADMINISTRATION
         </div>
 
 
         <nav class="sidebar-nav">
 
-
-            <!-- DASHBOARD -->
 
             <a
                 href="admin.html"
@@ -84,8 +82,6 @@
             </a>
 
 
-            <!-- STUDENTS -->
-
             <a
                 href="students.html"
                 class="nav-item"
@@ -102,8 +98,6 @@
             </a>
 
 
-            <!-- PAPER MANAGEMENT -->
-
             <a
                 href="paper-management.html"
                 class="nav-item"
@@ -119,8 +113,6 @@
 
             </a>
 
-
-            <!-- STATISTICS -->
 
             <a
                 href="statistics.html"
@@ -141,7 +133,7 @@
         </nav>
 
 
-        <!-- ADMIN ACCOUNT -->
+        <!-- Bottom Admin -->
 
         <div class="sidebar-bottom">
 
@@ -152,7 +144,7 @@
                     👤
                 </div>
 
-                <div>
+                <div class="admin-account-info">
 
                     <strong id="adminUsername">
                         Admin
@@ -168,16 +160,18 @@
 
 
             <button
-                type="button"
                 id="logoutBtn"
                 class="logout-btn"
+                type="button"
             >
 
                 <span>
                     🚪
                 </span>
 
-                Sign Out
+                <span>
+                    Sign Out
+                </span>
 
             </button>
 
@@ -196,12 +190,9 @@
     <main class="main-content">
 
 
-        <!-- =================================================
-             TOP HEADER
-        ================================================== -->
+        <!-- Header -->
 
         <header class="top-header">
-
 
             <div>
 
@@ -209,9 +200,9 @@
                     ADMINISTRATION
                 </p>
 
-                <h1>
+                <h2>
                     Dashboard
-                </h1>
+                </h2>
 
                 <p class="page-description">
                     Overview of the Student Assessment Portal.
@@ -220,14 +211,15 @@
             </div>
 
 
-            <div class="header-status">
+            <div class="system-status">
 
                 <span class="status-dot"></span>
 
-                System Online
+                <span>
+                    System Online
+                </span>
 
             </div>
-
 
         </header>
 
@@ -240,97 +232,83 @@
         <section class="summary-grid">
 
 
-            <!-- TOTAL STUDENTS -->
+            <!-- Students -->
 
             <div class="summary-card">
 
-                <div class="summary-top">
+                <div class="summary-icon purple">
+                    👥
+                </div>
 
-                    <div class="summary-icon purple">
-                        👥
-                    </div>
+                <div class="summary-content">
 
-                    <span class="summary-tag">
+                    <span class="summary-label">
                         STUDENTS
                     </span>
 
-                </div>
-
-
-                <div class="summary-value">
-                    <span id="totalStudents">
+                    <strong id="totalStudents">
                         0
-                    </span>
+                    </strong>
+
+                    <small>
+                        Registered students
+                    </small>
+
                 </div>
-
-
-                <p>
-                    Registered students
-                </p>
 
             </div>
 
 
-
-            <!-- PAPER VIEWS -->
+            <!-- Paper Views -->
 
             <div class="summary-card">
 
-                <div class="summary-top">
+                <div class="summary-icon blue">
+                    📄
+                </div>
 
-                    <div class="summary-icon blue">
-                        📄
-                    </div>
+                <div class="summary-content">
 
-                    <span class="summary-tag">
+                    <span class="summary-label">
                         ACTIVITY
                     </span>
 
-                </div>
-
-
-                <div class="summary-value">
-                    <span id="totalViewed">
+                    <strong id="totalViewed">
                         0
-                    </span>
+                    </strong>
+
+                    <small>
+                        Papers viewed by students
+                    </small>
+
                 </div>
-
-
-                <p>
-                    Papers viewed by students
-                </p>
 
             </div>
 
 
-
-            <!-- ACTIVE -->
+            <!-- Active -->
 
             <div class="summary-card">
 
-                <div class="summary-top">
+                <div class="summary-icon green">
+                    🟢
+                </div>
 
-                    <div class="summary-icon green">
-                        🟢
-                    </div>
+                <div class="summary-content">
 
-                    <span class="summary-tag">
+                    <span class="summary-label">
                         ONLINE
                     </span>
 
-                </div>
-
-
-                <div class="summary-value">
-                    <span id="activeStudents">
+                    <strong id="activeStudents">
                         0
-                    </span>
+                    </strong>
+
+                    <small>
+                        Currently active students
+                    </small>
+
                 </div>
-
-
-                <p>
-                    Currently active students
-                </p>
 
             </div>
 
@@ -343,45 +321,37 @@
              ANALYTICS
         ================================================== -->
 
-        <section class="analytics-card">
+        <section class="panel">
 
 
-            <div class="section-heading">
-
+            <div class="panel-header">
 
                 <div>
 
-                    <span class="section-label">
+                    <p class="panel-label">
                         ANALYTICS
-                    </span>
+                    </p>
 
-                    <h2>
+                    <h3>
                         Portal Overview
-                    </h2>
+                    </h3>
 
                 </div>
 
-
                 <span class="live-badge">
-
-                    <span class="status-dot"></span>
-
+                    <span></span>
                     Live
-
                 </span>
 
-
             </div>
-
 
 
             <div class="chart-list">
 
 
-                <!-- TOTAL STUDENTS -->
+                <!-- Total Students -->
 
                 <div class="chart-row">
-
 
                     <div class="chart-info">
 
@@ -404,11 +374,11 @@
                     </div>
 
 
-                    <div class="bar-container">
+                    <div class="chart-track">
 
                         <div
                             id="chartTotalStudents"
-                            class="bar purple-bar"
+                            class="chart-bar purple-bar"
                         ></div>
 
                     </div>
@@ -421,15 +391,13 @@
                         0
                     </strong>
 
-
                 </div>
 
 
 
-                <!-- PAPER VIEWS -->
+                <!-- Paper Views -->
 
                 <div class="chart-row">
-
 
                     <div class="chart-info">
 
@@ -452,11 +420,11 @@
                     </div>
 
 
-                    <div class="bar-container">
+                    <div class="chart-track">
 
                         <div
                             id="chartPaperViews"
-                            class="bar blue-bar"
+                            class="chart-bar blue-bar"
                         ></div>
 
                     </div>
@@ -469,15 +437,13 @@
                         0
                     </strong>
 
-
                 </div>
 
 
 
-                <!-- GRADE 10 -->
+                <!-- Grade 10 -->
 
                 <div class="chart-row">
-
 
                     <div class="chart-info">
 
@@ -500,11 +466,11 @@
                     </div>
 
 
-                    <div class="bar-container">
+                    <div class="chart-track">
 
                         <div
                             id="chartGrade10"
-                            class="bar orange-bar"
+                            class="chart-bar orange-bar"
                         ></div>
 
                     </div>
@@ -517,15 +483,13 @@
                         0
                     </strong>
 
-
                 </div>
 
 
 
-                <!-- GRADE 11 -->
+                <!-- Grade 11 -->
 
                 <div class="chart-row">
-
 
                     <div class="chart-info">
 
@@ -548,11 +512,11 @@
                     </div>
 
 
-                    <div class="bar-container">
+                    <div class="chart-track">
 
                         <div
                             id="chartGrade11"
-                            class="bar green-bar"
+                            class="chart-bar green-bar"
                         ></div>
 
                     </div>
@@ -565,7 +529,6 @@
                         0
                     </strong>
 
-
                 </div>
 
 
@@ -573,7 +536,6 @@
                 <!-- A/L -->
 
                 <div class="chart-row">
-
 
                     <div class="chart-info">
 
@@ -596,11 +558,11 @@
                     </div>
 
 
-                    <div class="bar-container">
+                    <div class="chart-track">
 
                         <div
                             id="chartAL"
-                            class="bar pink-bar"
+                            class="chart-bar pink-bar"
                         ></div>
 
                     </div>
@@ -613,15 +575,13 @@
                         0
                     </strong>
 
-
                 </div>
 
 
 
-                <!-- ACTIVE -->
+                <!-- Active -->
 
                 <div class="chart-row">
-
 
                     <div class="chart-info">
 
@@ -644,11 +604,11 @@
                     </div>
 
 
-                    <div class="bar-container">
+                    <div class="chart-track">
 
                         <div
                             id="chartActive"
-                            class="bar cyan-bar"
+                            class="chart-bar cyan-bar"
                         ></div>
 
                     </div>
@@ -661,12 +621,10 @@
                         0
                     </strong>
 
-
                 </div>
 
 
             </div>
-
 
         </section>
 
@@ -679,83 +637,83 @@
         <section class="management-grid">
 
 
-            <!-- STUDENT MANAGEMENT -->
+            <!-- Student Management -->
 
             <div
-                class="management-card"
                 id="studentManagementCard"
+                class="management-card"
                 role="button"
                 tabindex="0"
             >
 
-
-                <div class="management-icon purple-bg">
+                <div class="management-icon purple">
                     👥
                 </div>
 
 
-                <span class="card-kicker">
-                    STUDENTS
-                </span>
+                <div class="management-content">
+
+                    <p class="management-label">
+                        STUDENTS
+                    </p>
+
+                    <h3>
+                        Student Management
+                    </h3>
+
+                    <p>
+                        View and manage registered
+                        student accounts and activity.
+                    </p>
 
 
-                <h3>
-                    Student Management
-                </h3>
+                    <span class="management-link">
+                        Open Student Management
+                        <span>→</span>
+                    </span>
 
-
-                <p>
-                    View and manage registered student
-                    accounts and activity.
-                </p>
-
-
-                <span class="management-link">
-                    Open Student Management
-                    →
-                </span>
-
+                </div>
 
             </div>
 
 
 
-            <!-- PAPER MANAGEMENT -->
+            <!-- Paper Management -->
 
             <div
-                class="management-card"
                 id="paperManagementCard"
+                class="management-card"
                 role="button"
                 tabindex="0"
             >
 
-
-                <div class="management-icon blue-bg">
+                <div class="management-icon blue">
                     📚
                 </div>
 
 
-                <span class="card-kicker">
-                    RESOURCES
-                </span>
+                <div class="management-content">
+
+                    <p class="management-label">
+                        RESOURCES
+                    </p>
+
+                    <h3>
+                        Paper Management
+                    </h3>
+
+                    <p>
+                        Manage model papers, past papers
+                        and assessment resources.
+                    </p>
 
 
-                <h3>
-                    Paper Management
-                </h3>
+                    <span class="management-link">
+                        Open Paper Management
+                        <span>→</span>
+                    </span>
 
-
-                <p>
-                    Manage model papers, past papers
-                    and assessment resources.
-                </p>
-
-
-                <span class="management-link">
-                    Open Paper Management
-                    →
-                </span>
-
+                </div>
 
             </div>
 
@@ -768,7 +726,7 @@
              FOOTER
         ================================================== -->
 
-        <footer class="dashboard-footer">
+        <footer class="footer">
 
             <div>
 
@@ -782,7 +740,6 @@
 
             </div>
 
-
             <span>
                 © 2026
             </span>
@@ -792,179 +749,18 @@
 
     </main>
 
+
 </div>
 
 
-
 <!-- =====================================================
-     ADMIN JAVASCRIPT
+     JAVASCRIPT
 ====================================================== -->
 
 <script
     type="module"
-    src="admin-dashboard.js"
+    src="./admin.js"
 ></script>
-
-
-
-<!-- =====================================================
-     CARD NAVIGATION
-====================================================== -->
-
-<script>
-
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
-
-
-        /* =========================================
-           STUDENT MANAGEMENT
-        ========================================= */
-
-        const studentCard =
-            document.getElementById(
-                "studentManagementCard"
-            );
-
-
-        function openStudents() {
-
-            window.location.href =
-                "students.html";
-
-        }
-
-
-        if (studentCard) {
-
-            studentCard.addEventListener(
-                "click",
-                openStudents
-            );
-
-
-            studentCard.addEventListener(
-                "keydown",
-                (event) => {
-
-                    if (
-                        event.key === "Enter" ||
-                        event.key === " "
-                    ) {
-
-                        event.preventDefault();
-
-                        openStudents();
-
-                    }
-
-                }
-            );
-
-        }
-
-
-
-        /* =========================================
-           PAPER MANAGEMENT
-        ========================================= */
-
-        const paperCard =
-            document.getElementById(
-                "paperManagementCard"
-            );
-
-
-        if (paperCard) {
-
-            paperCard.addEventListener(
-                "click",
-                () => {
-
-                    window.location.href =
-                        "paper-management.html";
-
-                }
-            );
-
-
-            paperCard.addEventListener(
-                "keydown",
-                (event) => {
-
-                    if (
-                        event.key === "Enter" ||
-                        event.key === " "
-                    ) {
-
-                        event.preventDefault();
-
-                        window.location.href =
-                            "paper-management.html";
-
-                    }
-
-                }
-            );
-
-        }
-
-
-
-        /* =========================================
-           ADMIN USERNAME / ROLE
-        ========================================= */
-
-        const username =
-            sessionStorage.getItem(
-                "adminUsername"
-            );
-
-
-        const role =
-            sessionStorage.getItem(
-                "adminRole"
-            );
-
-
-        const usernameElement =
-            document.getElementById(
-                "adminUsername"
-            );
-
-
-        const roleElement =
-            document.getElementById(
-                "adminRole"
-            );
-
-
-        if (
-            usernameElement &&
-            username
-        ) {
-
-            usernameElement.textContent =
-                username;
-
-        }
-
-
-        if (
-            roleElement &&
-            role
-        ) {
-
-            roleElement.textContent =
-                role;
-
-        }
-
-    }
-);
-
-</script>
 
 
 </body>
