@@ -6,30 +6,28 @@ import {
 } from "./firebase.js";
 
 
-// =====================================================
+// =========================================
 // CHECK LOGIN
-// =====================================================
+// =========================================
 
 if (
     sessionStorage.getItem("loggedIn") !== "true"
 ) {
-
     window.location.replace("index.html");
-
 }
 
 
-// =====================================================
+// =========================================
 // GET STUDENT ID
-// =====================================================
+// =========================================
 
 const studentId =
     sessionStorage.getItem("studentId");
 
 
-// =====================================================
+// =========================================
 // ELEMENTS
-// =====================================================
+// =========================================
 
 const studentIdElement =
     document.getElementById("studentId");
@@ -46,160 +44,147 @@ const gradeLabelElement =
 const onlineStatusElement =
     document.getElementById("onlineStatus");
 
+const totalPapersElement =
+    document.getElementById("totalPapers");
+
+const viewedPapersElement =
+    document.getElementById("viewedPapers");
+
+const progressValueElement =
+    document.getElementById("progressValue");
+
 const modelPapersCard =
     document.getElementById("modelPapersCard");
 
-const grade11PastPapersCard =
-    document.getElementById(
-        "grade11PastPapersCard"
-    );
+const pastPapersCard =
+    document.getElementById("pastPapersCard");
 
-const provincePapersCard =
-    document.getElementById(
-        "provincePapersCard"
-    );
+const modelPapersTitle =
+    document.getElementById("modelPapersTitle");
 
 const modelPapersDescription =
-    document.getElementById(
-        "modelPapersDescription"
-    );
+    document.getElementById("modelPapersDescription");
+
+const pastPapersTitle =
+    document.getElementById("pastPapersTitle");
+
+const pastPapersDescription =
+    document.getElementById("pastPapersDescription");
 
 const logoutBtn =
     document.getElementById("logoutBtn");
 
 
-// =====================================================
+// =========================================
 // DISPLAY STUDENT ID
-// =====================================================
+// =========================================
 
 if (studentIdElement) {
-
     studentIdElement.textContent =
         studentId || "—";
-
 }
 
 
-// =====================================================
+// =========================================
 // FIREBASE STUDENT REFERENCE
-// =====================================================
+// =========================================
 
 let studentRef = null;
 
 if (studentId) {
 
-    studentRef =
-        doc(
-            db,
-            "students",
-            studentId
-        );
+    studentRef = doc(
+        db,
+        "students",
+        studentId
+    );
 
 }
 
 
-// =====================================================
-// CURRENT STUDENT DATA
-// =====================================================
+// =========================================
+// CURRENT DATA
+// =========================================
 
 let currentStudentData = null;
-
 let currentStudentType = null;
 
 
-// =====================================================
+// =========================================
 // DETECT STUDENT TYPE
-// =====================================================
+// =========================================
 //
-// Priority:
+// RULES:
 //
-// 1. Student ID pattern
-// 2. Firebase studentType
-// 3. Firebase grade
-// 4. sessionStorage
+// 26000 - 26999  = Grade 11
+// 27000 - 27999  = Grade 10
 //
-// IMPORTANT:
+// First 4 digits:
 //
-// 26000 - 26999 = Grade 11
-// 27000 - 27999 = Grade 10
+// 2005xxxxxxxx   = A/L
+// 2006xxxxxxxx   = A/L
+// 2007xxxxxxxx   = A/L
 //
-// 2005xxxxxxxx = A/L
-// 2006xxxxxxxx = A/L
-// 2007xxxxxxxx = A/L
-//
-// Old NIC 9 digits + V/X = A/L
-// =====================================================
+// Also supports Firebase studentType / grade.
+// =========================================
 
 function getStudentType(data) {
 
     const cleanId =
         String(studentId || "")
             .trim()
-            .replace(/\s+/g, "")
-            .toUpperCase();
+            .replace(/\s+/g, "");
 
 
-    // =================================================
-    // STUDENT ID NUMBER
-    // =================================================
+    // =====================================
+    // IMPORTANT:
+    // ID NUMBER HAS PRIORITY
+    // =====================================
 
-    const studentNumber =
-        Number(cleanId);
-
-
-    // =================================================
+    // -------------------------------------
     // GRADE 11
-    // 26000 - 26999
-    // =================================================
+    // -------------------------------------
 
     if (
-        /^\d{5}$/.test(cleanId) &&
-        Number.isInteger(studentNumber) &&
-        studentNumber >= 26000 &&
-        studentNumber <= 26999
+        /^\d{5}$/.test(cleanId)
     ) {
 
-        return "grade11";
+        const number =
+            Number(cleanId);
+
+        if (
+            number >= 26000 &&
+            number <= 26999
+        ) {
+
+            return "grade11";
+
+        }
+
+        if (
+            number >= 27000 &&
+            number <= 27999
+        ) {
+
+            return "grade10";
+
+        }
 
     }
 
 
-    // =================================================
-    // GRADE 10
-    // 27000 - 27999
-    // =================================================
+    // =====================================
+    // A/L - FIRST FOUR DIGITS
+    // =====================================
+
+    const firstFour =
+        cleanId.substring(0, 4);
+
 
     if (
-        /^\d{5}$/.test(cleanId) &&
-        Number.isInteger(studentNumber) &&
-        studentNumber >= 27000 &&
-        studentNumber <= 27999
-    ) {
-
-        return "grade10";
-
-    }
-
-
-    // =================================================
-    // A/L - NIC 2005
-    // =================================================
-
-    if (
-        cleanId.startsWith("2005")
-    ) {
-
-        return "al";
-
-    }
-
-
-    // =================================================
-    // A/L - NIC 2006
-    // =================================================
-
-    if (
-        cleanId.startsWith("2006")
+        firstFour === "2005" ||
+        firstFour === "2006" ||
+        firstFour === "2007"
     ) {
 
         return "al";
@@ -207,28 +192,12 @@ function getStudentType(data) {
     }
 
 
-    // =================================================
-    // A/L - NIC 2007
-    // =================================================
-
-    if (
-        cleanId.startsWith("2007")
-    ) {
-
-        return "al";
-
-    }
-
-
-    // =================================================
+    // =====================================
     // OLD NIC
-    // Example:
-    // 123456789V
-    // 123456789X
-    // =================================================
+    // =====================================
 
     if (
-        /^\d{9}[VX]$/.test(cleanId)
+        /^\d{9}[VvXx]$/.test(cleanId)
     ) {
 
         return "al";
@@ -236,101 +205,9 @@ function getStudentType(data) {
     }
 
 
-    // =================================================
-    // FIREBASE STUDENT TYPE
-    // =================================================
-
-    const firebaseType =
-        String(
-            data?.studentType || ""
-        )
-        .toLowerCase()
-        .trim();
-
-
-    if (
-        firebaseType === "grade10" ||
-        firebaseType === "grade 10"
-    ) {
-
-        return "grade10";
-
-    }
-
-
-    if (
-        firebaseType === "grade11" ||
-        firebaseType === "grade 11"
-    ) {
-
-        return "grade11";
-
-    }
-
-
-    if (
-        firebaseType === "al" ||
-        firebaseType === "a/l" ||
-        firebaseType === "a level" ||
-        firebaseType === "advanced" ||
-        firebaseType === "advanced level"
-    ) {
-
-        return "al";
-
-    }
-
-
-    // =================================================
-    // FIREBASE GRADE
-    // =================================================
-
-    const firebaseGrade =
-        String(
-            data?.grade || ""
-        )
-        .toLowerCase()
-        .trim();
-
-
-    if (
-        firebaseGrade === "10" ||
-        firebaseGrade === "grade10" ||
-        firebaseGrade === "grade 10"
-    ) {
-
-        return "grade10";
-
-    }
-
-
-    if (
-        firebaseGrade === "11" ||
-        firebaseGrade === "grade11" ||
-        firebaseGrade === "grade 11"
-    ) {
-
-        return "grade11";
-
-    }
-
-
-    if (
-        firebaseGrade === "al" ||
-        firebaseGrade === "a/l" ||
-        firebaseGrade === "a level" ||
-        firebaseGrade === "advanced" ||
-        firebaseGrade === "advanced level"
-    ) {
-
-        return "al";
-
-    }
-
-
-    // =================================================
-    // SESSION STORAGE LAST
-    // =================================================
+    // =====================================
+    // SESSION STORAGE FALLBACK
+    // =====================================
 
     const sessionType =
         String(
@@ -343,21 +220,21 @@ function getStudentType(data) {
 
 
     if (
-        sessionType === "grade10" ||
-        sessionType === "grade 10"
-    ) {
-
-        return "grade10";
-
-    }
-
-
-    if (
         sessionType === "grade11" ||
         sessionType === "grade 11"
     ) {
 
         return "grade11";
+
+    }
+
+
+    if (
+        sessionType === "grade10" ||
+        sessionType === "grade 10"
+    ) {
+
+        return "grade10";
 
     }
 
@@ -375,46 +252,133 @@ function getStudentType(data) {
     }
 
 
+    // =====================================
+    // FIREBASE STUDENT TYPE FALLBACK
+    // =====================================
+
+    const firebaseType =
+        String(
+            data?.studentType || ""
+        )
+        .toLowerCase()
+        .trim();
+
+
+    if (
+        firebaseType === "grade11" ||
+        firebaseType === "grade 11"
+    ) {
+
+        return "grade11";
+
+    }
+
+
+    if (
+        firebaseType === "grade10" ||
+        firebaseType === "grade 10"
+    ) {
+
+        return "grade10";
+
+    }
+
+
+    if (
+        firebaseType === "al" ||
+        firebaseType === "a/l" ||
+        firebaseType === "a level" ||
+        firebaseType === "advanced" ||
+        firebaseType === "advanced level"
+    ) {
+
+        return "al";
+
+    }
+
+
+    // =====================================
+    // FIREBASE GRADE FALLBACK
+    // =====================================
+
+    const firebaseGrade =
+        String(
+            data?.grade || ""
+        )
+        .toLowerCase()
+        .trim();
+
+
+    if (
+        firebaseGrade === "11" ||
+        firebaseGrade === "grade11" ||
+        firebaseGrade === "grade 11"
+    ) {
+
+        return "grade11";
+
+    }
+
+
+    if (
+        firebaseGrade === "10" ||
+        firebaseGrade === "grade10" ||
+        firebaseGrade === "grade 10"
+    ) {
+
+        return "grade10";
+
+    }
+
+
+    if (
+        firebaseGrade === "al" ||
+        firebaseGrade === "a/l" ||
+        firebaseGrade === "a level" ||
+        firebaseGrade === "advanced" ||
+        firebaseGrade === "advanced level"
+    ) {
+
+        return "al";
+
+    }
+
+
+    // =====================================
+    // UNKNOWN
+    // =====================================
+
     return null;
 
 }
 
 
-// =====================================================
+// =========================================
 // GRADE DISPLAY NAME
-// =====================================================
+// =========================================
 
 function getGradeName(type) {
 
-    if (type === "grade10") {
-
-        return "Grade 10";
-
-    }
-
-
     if (type === "grade11") {
-
         return "Grade 11";
-
     }
 
+    if (type === "grade10") {
+        return "Grade 10";
+    }
 
     if (type === "al") {
-
         return "Advanced Level";
-
     }
-
 
     return "Student";
 
 }
 
 
-// =====================================================
+// =========================================
 // STUDENT NAME
-// =====================================================
+// =========================================
 
 function getStudentName(data) {
 
@@ -429,16 +393,14 @@ function getStudentName(data) {
 }
 
 
-// =====================================================
-// TIME BASED GREETING
-// =====================================================
+// =========================================
+// TIME GREETING
+// =========================================
 
 function updateGreeting(name) {
 
     if (!greetingElement) {
-
         return;
-
     }
 
 
@@ -480,325 +442,454 @@ function updateGreeting(name) {
 }
 
 
-// =====================================================
-// HIDE ALL MATERIAL CARDS
-// =====================================================
+// =========================================
+// MATERIAL CONFIGURATION
+// =========================================
+//
+// Grade 11:
+// Model Papers
+// Past Papers (2016 - 2025)
+//
+// Grade 10:
+// Model Papers only
+//
+// A/L:
+// Model Papers
+// Province Papers
+// =========================================
 
-function hideAllMaterialCards() {
+function getMaterialConfig(type) {
+
+    // =====================================
+    // GRADE 11
+    // =====================================
+
+    if (type === "grade11") {
+
+        return {
+
+            model: {
+                title: "Model Papers",
+                description:
+                    "Grade 11 Model Papers",
+
+                url:
+                    "grade11-model-papers.html"
+            },
+
+            second: {
+                title: "Past Papers",
+                description:
+                    "Grade 11 Past Papers 2016 - 2025",
+
+                url:
+                    "grade11-past-papers.html"
+            }
+
+        };
+
+    }
+
+
+    // =====================================
+    // GRADE 10
+    // =====================================
+
+    if (type === "grade10") {
+
+        return {
+
+            model: {
+                title: "Model Papers",
+                description:
+                    "Grade 10 Model Papers",
+
+                url:
+                    "grade10-model-papers.html"
+            },
+
+            second: null
+
+        };
+
+    }
+
+
+    // =====================================
+    // A/L
+    // =====================================
+
+    if (type === "al") {
+
+        return {
+
+            model: {
+                title: "Model Papers",
+                description:
+                    "Advanced Level Model Papers",
+
+                url:
+                    "model-papers.html"
+            },
+
+            second: {
+                title: "Province Papers",
+                description:
+                    "Provincial Examination Papers",
+
+                url:
+                    "past-papers.html"
+            }
+
+        };
+
+    }
+
+
+    // =====================================
+    // UNKNOWN
+    // =====================================
+
+    return {
+
+        model: null,
+        second: null
+
+    };
+
+}
+
+
+// =========================================
+// UPDATE CARD TEXT
+// =========================================
+
+function updateMaterialCards(type) {
+
+    const config =
+        getMaterialConfig(type);
+
+
+    // =====================================
+    // MODEL CARD
+    // =====================================
 
     if (modelPapersCard) {
 
-        modelPapersCard.style.display =
-            "none";
+        if (!config.model) {
+
+            modelPapersCard.style.display =
+                "none";
+
+        }
+
+        else {
+
+            modelPapersCard.style.display =
+                "";
+
+        }
 
     }
 
 
-    if (grade11PastPapersCard) {
+    if (modelPapersTitle && config.model) {
 
-        grade11PastPapersCard.style.display =
-            "none";
-
-    }
-
-
-    if (provincePapersCard) {
-
-        provincePapersCard.style.display =
-            "none";
+        modelPapersTitle.textContent =
+            config.model.title;
 
     }
 
-}
-
-
-// =====================================================
-// GET PAPER LINK
-// =====================================================
-
-function getStudentLinks(type) {
-
-    const encodedId =
-        encodeURIComponent(
-            studentId || ""
-        );
-
-
-    // =================================================
-    // GRADE 11
-    // =================================================
-
-    if (type === "grade11") {
-
-        return {
-
-            model:
-                "grade11-model-papers.html?id=" +
-                encodedId,
-
-            past:
-                "grade11-past-papers.html?id=" +
-                encodedId
-
-        };
-
-    }
-
-
-    // =================================================
-    // GRADE 10
-    // =================================================
-
-    if (type === "grade10") {
-
-        return {
-
-            model:
-                "grade10-model-paper.html?id=" +
-                encodedId
-
-        };
-
-    }
-
-
-    // =================================================
-    // A/L
-    // =================================================
-
-    if (type === "al") {
-
-        return {
-
-            model:
-                "model-papers.html?id=" +
-                encodedId,
-
-            province:
-                "province-paper.html?id=" +
-                encodedId
-
-        };
-
-    }
-
-
-    return {};
-
-}
-
-
-// =====================================================
-// SET CARD NAVIGATION
-// =====================================================
-
-function setupCardNavigation(
-    card,
-    url
-) {
 
     if (
-        !card ||
-        !url
+        modelPapersDescription &&
+        config.model
     ) {
 
-        return;
+        modelPapersDescription.textContent =
+            config.model.description;
 
     }
 
 
-    // Mouse click
+    // =====================================
+    // SECOND CARD
+    // =====================================
 
-    card.onclick = () => {
+    if (!config.second) {
 
-        window.location.href =
-            url;
+        if (pastPapersCard) {
 
-    };
+            pastPapersCard.style.display =
+                "none";
+
+        }
+
+    }
+
+    else {
+
+        if (pastPapersCard) {
+
+            pastPapersCard.style.display =
+                "";
+
+        }
 
 
-    // Keyboard
+        if (pastPapersTitle) {
 
-    card.onkeydown = event => {
+            pastPapersTitle.textContent =
+                config.second.title;
+
+        }
+
+
+        if (pastPapersDescription) {
+
+            pastPapersDescription.textContent =
+                config.second.description;
+
+        }
+
+    }
+
+}
+
+
+// =========================================
+// SET CARD LINKS
+// =========================================
+
+function setupMaterialCards(type) {
+
+    const config =
+        getMaterialConfig(type);
+
+
+    // =====================================
+    // MODEL PAPERS
+    // =====================================
+
+    if (
+        modelPapersCard &&
+        config.model
+    ) {
+
+        const modelUrl =
+            config.model.url;
+
+
+        modelPapersCard.onclick =
+            () => {
+
+                window.location.href =
+                    modelUrl +
+                    "?id=" +
+                    encodeURIComponent(
+                        studentId
+                    );
+
+            };
+
+
+        modelPapersCard.onkeydown =
+            (event) => {
+
+                if (
+                    event.key === "Enter" ||
+                    event.key === " "
+                ) {
+
+                    event.preventDefault();
+
+                    window.location.href =
+                        modelUrl +
+                        "?id=" +
+                        encodeURIComponent(
+                            studentId
+                        );
+
+                }
+
+            };
+
+    }
+
+
+    // =====================================
+    // SECOND PAPERS
+    // =====================================
+
+    if (
+        pastPapersCard &&
+        config.second
+    ) {
+
+        const secondUrl =
+            config.second.url;
+
+
+        pastPapersCard.onclick =
+            () => {
+
+                window.location.href =
+                    secondUrl +
+                    "?id=" +
+                    encodeURIComponent(
+                        studentId
+                    );
+
+            };
+
+
+        pastPapersCard.onkeydown =
+            (event) => {
+
+                if (
+                    event.key === "Enter" ||
+                    event.key === " "
+                ) {
+
+                    event.preventDefault();
+
+                    window.location.href =
+                        secondUrl +
+                        "?id=" +
+                        encodeURIComponent(
+                            studentId
+                        );
+
+                }
+
+            };
+
+    }
+
+}
+
+
+// =========================================
+// LOAD PAPER PROGRESS
+// =========================================
+
+function calculatePaperProgress(data) {
+
+    let totalPapers = 0;
+    let viewedPapers = 0;
+
+
+    for (
+        let i = 1;
+        i <= 10;
+        i++
+    ) {
+
+        const field =
+            "paper" +
+            String(i).padStart(
+                2,
+                "0"
+            ) +
+            "Viewed";
+
 
         if (
-            event.key === "Enter" ||
-            event.key === " "
+            Object.prototype.hasOwnProperty.call(
+                data,
+                field
+            )
         ) {
 
-            event.preventDefault();
+            totalPapers++;
 
-            window.location.href =
-                url;
+
+            if (
+                data[field] === true
+            ) {
+
+                viewedPapers++;
+
+            }
 
         }
 
+    }
+
+
+    return {
+        totalPapers,
+        viewedPapers
     };
 
 }
 
 
-// =====================================================
-// CONFIGURE MATERIALS
-// =====================================================
+// =========================================
+// DISPLAY PROGRESS
+// =========================================
 
-function configureMaterials(type) {
+function updateProgress(data) {
 
-    // First hide everything
-
-    hideAllMaterialCards();
-
-
-    const links =
-        getStudentLinks(type);
+    const result =
+        calculatePaperProgress(data);
 
 
-    // =================================================
-    // GRADE 11
-    // =================================================
+    const total =
+        result.totalPapers;
 
-    if (type === "grade11") {
-
-        if (modelPapersCard) {
-
-            modelPapersCard.style.display =
-                "block";
-
-        }
+    const viewed =
+        result.viewedPapers;
 
 
-        if (grade11PastPapersCard) {
+    if (totalPapersElement) {
 
-            grade11PastPapersCard.style.display =
-                "block";
-
-        }
-
-
-        if (modelPapersDescription) {
-
-            modelPapersDescription.textContent =
-                "Grade 11 Model Papers";
-
-        }
-
-
-        setupCardNavigation(
-            modelPapersCard,
-            links.model
-        );
-
-
-        setupCardNavigation(
-            grade11PastPapersCard,
-            links.past
-        );
-
-
-        return;
+        totalPapersElement.textContent =
+            total;
 
     }
 
 
-    // =================================================
-    // GRADE 10
-    // =================================================
+    if (viewedPapersElement) {
 
-    if (type === "grade10") {
-
-        if (modelPapersCard) {
-
-            modelPapersCard.style.display =
-                "block";
-
-        }
-
-
-        if (modelPapersDescription) {
-
-            modelPapersDescription.textContent =
-                "Grade 10 Model Papers";
-
-        }
-
-
-        setupCardNavigation(
-            modelPapersCard,
-            links.model
-        );
-
-
-        return;
+        viewedPapersElement.textContent =
+            viewed;
 
     }
 
 
-    // =================================================
-    // A/L
-    // =================================================
-
-    if (type === "al") {
-
-        if (modelPapersCard) {
-
-            modelPapersCard.style.display =
-                "block";
-
-        }
+    const progress =
+        total > 0
+            ? Math.round(
+                (
+                    viewed /
+                    total
+                ) * 100
+            )
+            : 0;
 
 
-        if (provincePapersCard) {
+    if (progressValueElement) {
 
-            provincePapersCard.style.display =
-                "block";
-
-        }
-
-
-        if (modelPapersDescription) {
-
-            modelPapersDescription.textContent =
-                "Advanced Level Model Papers";
-
-        }
-
-
-        setupCardNavigation(
-            modelPapersCard,
-            links.model
-        );
-
-
-        setupCardNavigation(
-            provincePapersCard,
-            links.province
-        );
-
-
-        return;
+        progressValueElement.textContent =
+            progress + "%";
 
     }
-
-
-    // =================================================
-    // UNKNOWN
-    // =================================================
-
-    console.warn(
-        "Student type could not be detected:",
-        studentId
-    );
 
 }
 
 
-// =====================================================
-// UPDATE ACTIVE STATUS
-// =====================================================
+// =========================================
+// LOAD DASHBOARD
+// =========================================
 
-async function updateActiveStatus() {
+async function loadDashboard() {
 
     if (!studentRef) {
+
+        console.error(
+            "Student ID not found."
+        );
 
         return;
 
@@ -807,25 +898,193 @@ async function updateActiveStatus() {
 
     try {
 
+        const snapshot =
+            await getDoc(
+                studentRef
+            );
+
+
+        if (!snapshot.exists()) {
+
+            console.error(
+                "Student not found:",
+                studentId
+            );
+
+            return;
+
+        }
+
+
+        const data =
+            snapshot.data();
+
+
+        currentStudentData =
+            data;
+
+
+        // =================================
+        // DETECT TYPE
+        // =================================
+
+        const studentType =
+            getStudentType(data);
+
+
+        currentStudentType =
+            studentType;
+
+
+        // =================================
+        // DISPLAY GRADE
+        // =================================
+
+        const gradeName =
+            getGradeName(
+                studentType
+            );
+
+
+        if (studentGradeElement) {
+
+            studentGradeElement.textContent =
+                gradeName;
+
+        }
+
+
+        if (gradeLabelElement) {
+
+            gradeLabelElement.textContent =
+                gradeName;
+
+        }
+
+
+        // =================================
+        // NAME + GREETING
+        // =================================
+
+        const studentName =
+            getStudentName(data);
+
+
+        updateGreeting(
+            studentName
+        );
+
+
+        // =================================
+        // MATERIALS
+        // =================================
+
+        updateMaterialCards(
+            studentType
+        );
+
+
+        setupMaterialCards(
+            studentType
+        );
+
+
+        // =================================
+        // PROGRESS
+        // =================================
+
+        updateProgress(
+            data
+        );
+
+
+        // =================================
+        // DEBUG
+        // =================================
+
+        console.log(
+            "=============================="
+        );
+
+        console.log(
+            "Student ID:",
+            studentId
+        );
+
+        console.log(
+            "Detected Type:",
+            studentType
+        );
+
+        console.log(
+            "Grade:",
+            gradeName
+        );
+
+        console.log(
+            "Firebase studentType:",
+            data.studentType
+        );
+
+        console.log(
+            "Firebase grade:",
+            data.grade
+        );
+
+        console.log(
+            "Material Config:",
+            getMaterialConfig(
+                studentType
+            )
+        );
+
+        console.log(
+            "=============================="
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Dashboard loading error:",
+            error
+        );
+
+    }
+
+}
+
+
+// =========================================
+// UPDATE ACTIVE STATUS
+// =========================================
+
+async function updateActiveStatus() {
+
+    if (!studentRef) {
+        return;
+    }
+
+
+    try {
+
         await updateDoc(
             studentRef,
             {
-
                 lastActiveAt:
                     Date.now()
-
             }
         );
 
 
-        if (
-            onlineStatusElement
-        ) {
+        if (onlineStatusElement) {
 
-            onlineStatusElement.innerHTML = `
+            onlineStatusElement.innerHTML =
+                `
                 <span class="online-dot"></span>
                 Online
-            `;
+                `;
 
         }
 
@@ -843,255 +1102,18 @@ async function updateActiveStatus() {
 }
 
 
-// =====================================================
-// LOAD DASHBOARD
-// =====================================================
-
-async function loadDashboard() {
-
-    if (!studentId) {
-
-        console.error(
-            "Student ID not found."
-        );
-
-        window.location.replace(
-            "index.html"
-        );
-
-        return;
-
-    }
-
-
-    if (!studentRef) {
-
-        return;
-
-    }
-
-
-    try {
-
-        // =============================================
-        // GET STUDENT
-        // =============================================
-
-        const snapshot =
-            await getDoc(
-                studentRef
-            );
-
-
-        if (!snapshot.exists()) {
-
-            console.error(
-                "Student not found in Firebase:",
-                studentId
-            );
-
-            alert(
-                "Student account not found."
-            );
-
-            sessionStorage.clear();
-
-            window.location.replace(
-                "index.html"
-            );
-
-            return;
-
-        }
-
-
-        const data =
-            snapshot.data();
-
-
-        currentStudentData =
-            data;
-
-
-        // =============================================
-        // DETECT TYPE
-        // =============================================
-
-        const studentType =
-            getStudentType(
-                data
-            );
-
-
-        currentStudentType =
-            studentType;
-
-
-        // =============================================
-        // GRADE NAME
-        // =============================================
-
-        const gradeName =
-            getGradeName(
-                studentType
-            );
-
-
-        // =============================================
-        // DISPLAY GRADE
-        // =============================================
-
-        if (
-            studentGradeElement
-        ) {
-
-            studentGradeElement.textContent =
-                gradeName;
-
-        }
-
-
-        if (
-            gradeLabelElement
-        ) {
-
-            gradeLabelElement.textContent =
-                gradeName;
-
-        }
-
-
-        // =============================================
-        // STUDENT NAME
-        // =============================================
-
-        const studentName =
-            getStudentName(
-                data
-            );
-
-
-        updateGreeting(
-            studentName
-        );
-
-
-        // =============================================
-        // MATERIAL CARDS
-        // =============================================
-
-        configureMaterials(
-            studentType
-        );
-
-
-        // =============================================
-        // SAVE CORRECT TYPE
-        // =============================================
-
-        if (studentType) {
-
-            sessionStorage.setItem(
-                "studentType",
-                studentType
-            );
-
-
-            if (
-                studentType === "grade10"
-            ) {
-
-                sessionStorage.setItem(
-                    "studentGrade",
-                    "10"
-                );
-
-            }
-
-            else if (
-                studentType === "grade11"
-            ) {
-
-                sessionStorage.setItem(
-                    "studentGrade",
-                    "11"
-                );
-
-            }
-
-            else if (
-                studentType === "al"
-            ) {
-
-                sessionStorage.setItem(
-                    "studentGrade",
-                    "al"
-                );
-
-            }
-
-        }
-
-
-        // =============================================
-        // DEBUG
-        // =============================================
-
-        console.log(
-            "===================================="
-        );
-
-        console.log(
-            "Student ID:",
-            studentId
-        );
-
-        console.log(
-            "Detected Student Type:",
-            studentType
-        );
-
-        console.log(
-            "Display Grade:",
-            gradeName
-        );
-
-        console.log(
-            "Firebase studentType:",
-            data.studentType
-        );
-
-        console.log(
-            "Firebase grade:",
-            data.grade
-        );
-
-        console.log(
-            "===================================="
-        );
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "Dashboard loading error:",
-            error
-        );
-
-    }
-
-}
-
-
-// =====================================================
-// HEARTBEAT
-// =====================================================
+// =========================================
+// START
+// =========================================
 
 loadDashboard();
 
 updateActiveStatus();
 
+
+// =========================================
+// HEARTBEAT
+// =========================================
 
 const heartbeat =
     setInterval(
@@ -1100,9 +1122,9 @@ const heartbeat =
     );
 
 
-// =====================================================
+// =========================================
 // USER ACTIVITY
-// =====================================================
+// =========================================
 
 let lastActivity =
     Date.now();
@@ -1137,12 +1159,9 @@ function markActivity() {
 );
 
 
-// =====================================================
+// =========================================
 // AUTO LOGOUT
-// =====================================================
-//
-// 5 minutes inactive
-//
+// =========================================
 
 const IDLE_LIMIT =
     5 * 60 * 1000;
@@ -1171,9 +1190,9 @@ const idleChecker =
                 );
 
 
-                // =====================================
+                // =========================
                 // MARK OFFLINE
-                // =====================================
+                // =========================
 
                 if (studentRef) {
 
@@ -1201,9 +1220,9 @@ const idleChecker =
                 }
 
 
-                // =====================================
+                // =========================
                 // CLEAR SESSION
-                // =====================================
+                // =========================
 
                 sessionStorage.removeItem(
                     "loggedIn"
@@ -1238,9 +1257,9 @@ const idleChecker =
     );
 
 
-// =====================================================
+// =========================================
 // TAB VISIBILITY
-// =====================================================
+// =========================================
 
 document.addEventListener(
     "visibilitychange",
@@ -1257,9 +1276,7 @@ document.addEventListener(
             updateActiveStatus();
 
 
-            if (
-                currentStudentData
-            ) {
+            if (currentStudentData) {
 
                 updateGreeting(
                     getStudentName(
@@ -1275,9 +1292,9 @@ document.addEventListener(
 );
 
 
-// =====================================================
+// =========================================
 // LOGOUT
-// =====================================================
+// =========================================
 
 if (logoutBtn) {
 
@@ -1292,15 +1309,9 @@ if (logoutBtn) {
 
 
             if (!confirmed) {
-
                 return;
-
             }
 
-
-            // =========================================
-            // STOP TIMERS
-            // =========================================
 
             clearInterval(
                 heartbeat
@@ -1311,9 +1322,9 @@ if (logoutBtn) {
             );
 
 
-            // =========================================
+            // =============================
             // MARK OFFLINE
-            // =========================================
+            // =============================
 
             if (studentRef) {
 
@@ -1341,9 +1352,9 @@ if (logoutBtn) {
             }
 
 
-            // =========================================
+            // =============================
             // CLEAR SESSION
-            // =========================================
+            // =============================
 
             sessionStorage.removeItem(
                 "loggedIn"
@@ -1362,9 +1373,9 @@ if (logoutBtn) {
             );
 
 
-            // =========================================
-            // GO LOGIN
-            // =========================================
+            // =============================
+            // REDIRECT
+            // =============================
 
             window.location.replace(
                 "index.html"
@@ -1376,9 +1387,9 @@ if (logoutBtn) {
 }
 
 
-// =====================================================
+// =========================================
 // CONSOLE
-// =====================================================
+// =========================================
 
 console.log(
     "✅ Student Dashboard Loaded"
