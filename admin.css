@@ -1,47 +1,49 @@
-/* =========================================
-   ADMIN PORTAL
-   PROFESSIONAL LOGIN DESIGN
-========================================= */
-
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+}
 
 body {
-
     min-height: 100vh;
 
     font-family:
-        Inter,
         "Segoe UI",
         Arial,
         sans-serif;
 
     background:
-        #f3f5fb;
+        linear-gradient(
+            135deg,
+            #4f46e5 0%,
+            #6d28d9 45%,
+            #9333ea 100%
+        );
 
-    color: #172033;
+    color: #111827;
 
+    padding: 24px;
 }
 
 
 /* =========================================
-   MAIN PAGE
+   MAIN ADMIN PAGE
 ========================================= */
 
 .admin-page {
 
-    width: min(
-        1180px,
-        calc(100% - 40px)
-    );
+    width: 100%;
+    max-width: 1180px;
 
-    min-height: 700px;
+    min-height: 680px;
 
-    margin: 30px auto;
+    margin: auto;
 
     display: grid;
 
@@ -55,14 +57,14 @@ body {
     overflow: hidden;
 
     box-shadow:
-        0 30px 80px
-        rgba(15, 23, 42, 0.16);
+        0 30px 70px
+        rgba(0, 0, 0, 0.22);
 
 }
 
 
 /* =========================================
-   LEFT BRAND
+   LEFT PANEL
 ========================================= */
 
 .admin-brand {
@@ -71,16 +73,16 @@ body {
 
     overflow: hidden;
 
-    padding: 55px 55px;
+    padding: 55px;
 
     color: #ffffff;
 
     background:
         linear-gradient(
             145deg,
-            #3730a3 0%,
+            #3730a3,
             #4f46e5 45%,
-            #7c3aed 100%
+            #7c3aed
         );
 
 }
@@ -90,7 +92,7 @@ body {
 
     position: relative;
 
-    z-index: 2;
+    z-index: 5;
 
     max-width: 450px;
 
@@ -98,15 +100,16 @@ body {
 
 
 /* =========================================
-   DECORATIVE CIRCLES
+   DECORATION
 ========================================= */
 
 .brand-pattern {
 
     position: absolute;
 
-    border: 1px solid
-        rgba(255,255,255,0.14);
+    border:
+        1px solid
+        rgba(255,255,255,0.15);
 
     border-radius: 50%;
 
@@ -115,34 +118,34 @@ body {
 
 .pattern-one {
 
-    width: 360px;
-    height: 360px;
+    width: 430px;
+    height: 430px;
 
+    top: -260px;
     right: -170px;
-    top: -160px;
 
 }
 
 
 .pattern-two {
 
-    width: 300px;
-    height: 300px;
+    width: 360px;
+    height: 360px;
 
-    left: -170px;
-    bottom: -170px;
+    bottom: -240px;
+    left: -200px;
 
 }
 
 
 /* =========================================
-   LOGO
+   ADMIN LOGO
 ========================================= */
 
 .admin-logo {
 
-    width: 68px;
-    height: 68px;
+    width: 72px;
+    height: 72px;
 
     display: flex;
 
@@ -152,7 +155,7 @@ body {
     border-radius: 18px;
 
     background:
-        rgba(255,255,255,0.13);
+        rgba(255,255,255,0.14);
 
     border:
         1px solid
@@ -160,11 +163,7 @@ body {
 
     font-size: 35px;
 
-    box-shadow:
-        0 10px 25px
-        rgba(0,0,0,0.12);
-
-    margin-bottom: 25px;
+    margin-bottom: 28px;
 
 }
 
@@ -190,7 +189,7 @@ body {
 
 
 /* =========================================
-   BRAND TITLE
+   TITLE
 ========================================= */
 
 .admin-brand h1 {
@@ -199,9 +198,7 @@ body {
 
     line-height: 1.04;
 
-    letter-spacing: -1.5px;
-
-    font-weight: 800;
+    letter-spacing: -1px;
 
     margin-bottom: 24px;
 
@@ -210,8 +207,7 @@ body {
 
 .admin-brand h1 span {
 
-    color:
-        #ddd6fe;
+    color: #ddd6fe;
 
 }
 
@@ -231,7 +227,7 @@ body {
 
     line-height: 1.7;
 
-    margin-bottom: 32px;
+    margin-bottom: 30px;
 
 }
 
@@ -264,19 +260,19 @@ body {
     border-radius: 13px;
 
     background:
-        rgba(255,255,255,0.09);
+        rgba(255,255,255,0.10);
 
     border:
         1px solid
-        rgba(255,255,255,0.11);
+        rgba(255,255,255,0.12);
 
 }
 
 
 .feature-icon {
 
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
 
     display: flex;
 
@@ -288,7 +284,7 @@ body {
     border-radius: 10px;
 
     background:
-        rgba(255,255,255,0.13);
+        rgba(255,255,255,0.14);
 
     font-size: 18px;
 
@@ -310,10 +306,10 @@ body {
 
     display: block;
 
-    font-size: 10px;
-
     color:
-        rgba(255,255,255,0.62);
+        rgba(255,255,255,0.65);
+
+    font-size: 10px;
 
 }
 
@@ -324,11 +320,11 @@ body {
 
 .secure-status {
 
-    display: inline-flex;
+    display: flex;
 
     align-items: center;
 
-    gap: 7px;
+    gap: 8px;
 
     margin-top: 28px;
 
@@ -342,8 +338,8 @@ body {
 
 .status-dot {
 
-    width: 7px;
-    height: 7px;
+    width: 8px;
+    height: 8px;
 
     border-radius: 50%;
 
@@ -351,13 +347,13 @@ body {
 
     box-shadow:
         0 0 0 4px
-        rgba(74,222,128,0.13);
+        rgba(74,222,128,0.12);
 
 }
 
 
 /* =========================================
-   RIGHT LOGIN
+   RIGHT LOGIN PANEL
 ========================================= */
 
 .admin-login {
@@ -381,7 +377,7 @@ body {
 
     width: 100%;
 
-    max-width: 420px;
+    max-width: 410px;
 
     margin: auto;
 
@@ -389,25 +385,24 @@ body {
 
 
 /* =========================================
-   WELCOME ICON
+   LOGIN ICON
 ========================================= */
 
 .welcome-icon {
 
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
 
     display: flex;
 
     align-items: center;
     justify-content: center;
 
-    border-radius: 13px;
+    border-radius: 14px;
 
-    background:
-        #eef2ff;
+    background: #eef2ff;
 
-    font-size: 22px;
+    font-size: 23px;
 
     margin-bottom: 18px;
 
@@ -420,26 +415,24 @@ body {
 
 .login-label {
 
-    margin-bottom: 7px;
-
     font-size: 10px;
 
     font-weight: 800;
 
-    letter-spacing: 1.8px;
+    letter-spacing: 2px;
 
     color: #6366f1;
+
+    margin-bottom: 8px;
 
 }
 
 
 /* =========================================
-   TITLE
+   LOGIN TITLE
 ========================================= */
 
 .admin-login h2 {
-
-    margin: 0;
 
     font-size: 31px;
 
@@ -477,7 +470,7 @@ body {
 
 .form-group {
 
-    margin-bottom: 19px;
+    margin-bottom: 18px;
 
 }
 
@@ -521,7 +514,7 @@ body {
 
     font-size: 15px;
 
-    opacity: 0.8;
+    z-index: 2;
 
 }
 
@@ -540,17 +533,15 @@ body {
 
     border-radius: 11px;
 
-    outline: none;
-
     background: #ffffff;
 
-    color: #1e293b;
+    color: #111827;
+
+    outline: none;
 
     font-size: 13px;
 
-    transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
+    transition: 0.2s ease;
 
 }
 
@@ -562,20 +553,13 @@ body {
 }
 
 
-.input-wrapper input:hover {
-
-    border-color: #c7d2fe;
-
-}
-
-
 .input-wrapper input:focus {
 
     border-color: #6366f1;
 
     box-shadow:
         0 0 0 4px
-        rgba(99,102,241,0.09);
+        rgba(99,102,241,0.10);
 
 }
 
@@ -588,21 +572,21 @@ body {
 
     position: absolute;
 
-    right: 9px;
+    right: 8px;
 
     top: 50%;
 
     transform:
         translateY(-50%);
 
-    width: 34px;
-    height: 34px;
+    width: 35px;
+    height: 35px;
 
-    border: 0;
-
-    border-radius: 8px;
+    border: none;
 
     background: transparent;
+
+    border-radius: 8px;
 
     cursor: pointer;
 
@@ -613,8 +597,7 @@ body {
 
 .password-toggle:hover {
 
-    background:
-        #f1f5f9;
+    background: #f1f5f9;
 
 }
 
@@ -632,14 +615,13 @@ body {
     display: flex;
 
     align-items: center;
-
     justify-content: center;
 
     gap: 8px;
 
     margin-top: 6px;
 
-    border: 0;
+    border: none;
 
     border-radius: 11px;
 
@@ -659,13 +641,10 @@ body {
     cursor: pointer;
 
     box-shadow:
-        0 10px 24px
-        rgba(79,70,229,0.22);
+        0 10px 25px
+        rgba(79,70,229,0.25);
 
-    transition:
-        transform 0.18s ease,
-        box-shadow 0.18s ease,
-        opacity 0.18s ease;
+    transition: 0.2s ease;
 
 }
 
@@ -673,19 +652,11 @@ body {
 .login-btn:hover {
 
     transform:
-        translateY(-1px);
+        translateY(-2px);
 
     box-shadow:
-        0 14px 28px
-        rgba(79,70,229,0.28);
-
-}
-
-
-.login-btn:active {
-
-    transform:
-        translateY(0);
+        0 15px 30px
+        rgba(79,70,229,0.30);
 
 }
 
@@ -695,6 +666,8 @@ body {
     opacity: 0.65;
 
     cursor: not-allowed;
+
+    transform: none;
 
 }
 
@@ -707,7 +680,7 @@ body {
 
     min-height: 18px;
 
-    margin-top: 11px;
+    margin-top: 10px;
 
     text-align: center;
 
@@ -721,7 +694,7 @@ body {
 
 
 /* =========================================
-   SECURITY BOX
+   SECURITY
 ========================================= */
 
 .security-box {
@@ -730,7 +703,7 @@ body {
 
     gap: 12px;
 
-    margin-top: 20px;
+    margin-top: 18px;
 
     padding: 14px;
 
@@ -739,16 +712,15 @@ body {
 
     border-radius: 12px;
 
-    background:
-        #f8faff;
+    background: #f8faff;
 
 }
 
 
 .security-icon {
 
-    width: 34px;
-    height: 34px;
+    width: 36px;
+    height: 36px;
 
     display: flex;
 
@@ -759,10 +731,9 @@ body {
 
     border-radius: 9px;
 
-    background:
-        #eef2ff;
+    background: #eef2ff;
 
-    font-size: 15px;
+    font-size: 16px;
 
 }
 
@@ -771,11 +742,11 @@ body {
 
     display: block;
 
-    margin-bottom: 4px;
-
     color: #3730a3;
 
     font-size: 11px;
+
+    margin-bottom: 4px;
 
 }
 
@@ -799,9 +770,9 @@ body {
 
     display: block;
 
-    margin-top: 20px;
-
     text-align: center;
+
+    margin-top: 18px;
 
     color: #6366f1;
 
@@ -829,10 +800,9 @@ body {
 
     position: absolute;
 
-    bottom: 22px;
+    bottom: 20px;
 
     left: 0;
-
     right: 0;
 
     text-align: center;
@@ -842,11 +812,11 @@ body {
 
 .admin-login footer p {
 
-    margin-bottom: 3px;
-
     color: #94a3b8;
 
     font-size: 9px;
+
+    margin-bottom: 3px;
 
 }
 
@@ -861,60 +831,72 @@ body {
 
 
 /* =========================================
-   MOBILE
+   TABLET
 ========================================= */
 
 @media (max-width: 900px) {
+
+    body {
+
+        padding: 15px;
+
+    }
+
 
     .admin-page {
 
         grid-template-columns: 1fr;
 
-        width:
-            min(
-                560px,
-                calc(100% - 30px)
-            );
+        max-width: 600px;
 
-        margin: 20px auto;
+        min-height: auto;
 
     }
 
 
     .admin-brand {
 
-        padding: 40px 35px;
+        padding: 40px;
 
     }
 
 
     .admin-brand h1 {
 
-        font-size: 38px;
+        font-size: 40px;
 
     }
 
 
     .admin-login {
 
-        padding:
-            45px 35px 75px;
+        padding: 45px 40px 80px;
+
+        min-height: 600px;
 
     }
 
 }
 
 
+/* =========================================
+   MOBILE
+========================================= */
+
 @media (max-width: 520px) {
+
+    body {
+
+        padding: 8px;
+
+    }
+
 
     .admin-page {
 
-        width:
-            calc(100% - 20px);
+        width: 100%;
 
         border-radius: 20px;
-
-        margin: 10px auto;
 
     }
 
@@ -936,13 +918,6 @@ body {
     .brand-description {
 
         font-size: 12px;
-
-    }
-
-
-    .feature-item {
-
-        padding: 11px;
 
     }
 
