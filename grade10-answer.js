@@ -2,19 +2,13 @@
 // Get URL Parameters
 // ==========================
 
-const params =
-    new URLSearchParams(
-        window.location.search
-    );
+const params = new URLSearchParams(
+    window.location.search
+);
 
-const term =
-    params.get("term");
-
-const paper =
-    params.get("paper");
-
-const type =
-    params.get("type");
+const term = params.get("term");
+const paper = params.get("paper");
+const type = params.get("type");
 
 
 // ==========================
@@ -22,74 +16,89 @@ const type =
 // ==========================
 
 const answerTitle =
-    document.getElementById(
-        "answerTitle"
-    );
+    document.getElementById("answerTitle");
 
 const answerContainer =
-    document.getElementById(
-        "answerContainer"
-    );
+    document.getElementById("answerContainer");
 
 
 // ==========================
-// Check Student Login
+// Login Check
 // ==========================
 
 if (
     sessionStorage.getItem("loggedIn") !== "true"
 ) {
-
-    window.location.href =
-        "index.html";
-
+    window.location.replace("index.html");
 }
 
 
 // ==========================
-// Get Student ID
+// Student ID
 // ==========================
 
 const studentId =
-    sessionStorage.getItem(
-        "studentId"
-    );
+    sessionStorage.getItem("studentId") || "";
 
 
 // ==========================
-// Validate
+// Validate Term
 // ==========================
 
 if (
-    !["1", "2", "3"].includes(term) ||
-    !/^\d{2}$/.test(paper) ||
-    !["mcq", "answer"].includes(type)
+    !["1", "2", "3"].includes(term)
 ) {
 
-    alert(
-        "Invalid answer request."
-    );
+    alert("Invalid term.");
 
-    window.location.href =
-        "grade10-model-papers.html";
+    window.location.replace(
+        "grade10-model-papers.html"
+    );
 
 }
 
 
 // ==========================
-// Term Name
+// Validate Paper
+// ==========================
+
+// Accept 1 or 01
+
+const paperNumber =
+    Number(paper);
+
+if (
+    !Number.isInteger(paperNumber) ||
+    paperNumber < 1 ||
+    paperNumber > 99
+) {
+
+    alert("Invalid paper.");
+
+    window.location.replace(
+        `grade10-term.html?term=${encodeURIComponent(term)}`
+    );
+
+}
+
+
+// ==========================
+// Paper Format
+// ==========================
+
+const paperFolder =
+    `paper${String(paperNumber).padStart(2, "0")}`;
+
+
+// ==========================
+// Term Names
 // ==========================
 
 const termNames = {
 
-    "1":
-        "1st Term",
-
-    "2":
-        "2nd Term",
-
-    "3":
-        "3rd Term"
+    "1": "1st Term",
+    "2": "2nd Term",
+    "3": "3rd Term"
 
 };
 
@@ -101,26 +110,30 @@ const termName =
 // Answer Type
 // ==========================
 
-let answerName = "";
-
+let answerFolder = "";
 let title = "";
 
 if (type === "mcq") {
 
-    answerName =
-        "mcq-answer";
+    answerFolder = "mcq-answer";
 
-    title =
-        "📝 MCQ Answer";
+    title = "📝 MCQ Answer";
+
+}
+else if (type === "answer") {
+
+    answerFolder = "answer";
+
+    title = "📝 Answer Scheme";
 
 }
 else {
 
-    answerName =
-        "answer";
+    alert("Invalid answer type.");
 
-    title =
-        "📝 Answer Scheme";
+    window.location.replace(
+        `grade10-term.html?term=${encodeURIComponent(term)}`
+    );
 
 }
 
@@ -129,8 +142,14 @@ else {
 // Set Title
 // ==========================
 
-answerTitle.textContent =
-    title;
+if (answerTitle) {
+
+    answerTitle.textContent =
+        `${title} - ${termName} - Paper ${String(
+            paperNumber
+        ).padStart(2, "0")}`;
+
+}
 
 
 // ==========================
@@ -138,115 +157,151 @@ answerTitle.textContent =
 // ==========================
 
 const imageFolder =
-    `papers/grade10/term${term}/paper${paper}/${answerName}/`;
+    `papers/grade10/term${term}/${paperFolder}/${answerFolder}/`;
 
 
 // ==========================
-// Number Of Pages
-// ==========================
-//
-// Change these numbers later
-// according to the actual
-// number of answer images.
+// Load Answer Images
 // ==========================
 
-const totalPages = 10;
+let pageNumber = 1;
 
 
 // ==========================
-// Load Images
+// Load Next Image
 // ==========================
 
-for (
-    let i = 1;
-    i <= totalPages;
-    i++
-) {
+function loadNextPage() {
 
-    const pageNumber =
-        String(i).padStart(
-            2,
-            "0"
-        );
+    const number =
+        String(pageNumber).padStart(2, "0");
 
+    const imagePath =
+        `${imageFolder}Page_${number}.jpg`;
 
-    const page =
-        document.createElement(
-            "div"
-        );
-
-    page.className =
-        "answer-page";
-
-
-    // ==========================
-    // Image
-    // ==========================
 
     const img =
-        document.createElement(
-            "img"
-        );
+        document.createElement("img");
 
-    img.src =
-        `${imageFolder}Page_${pageNumber}.jpg`;
+    img.src = imagePath;
 
     img.alt =
-        `${termName} Model Paper ${paper} Answer Page ${i}`;
+        `${termName} Model Paper ${paperNumber} Answer Page ${pageNumber}`;
 
-    img.draggable =
-        false;
+    img.draggable = false;
 
 
     // ==========================
-    // Watermark
+    // Image Loaded
     // ==========================
 
-    const watermark =
-        document.createElement(
-            "div"
+    img.onload = function () {
+
+        const page =
+            document.createElement("div");
+
+        page.className =
+            "answer-page";
+
+
+        // ==========================
+        // Watermark
+        // ==========================
+
+        const watermark =
+            document.createElement("div");
+
+        watermark.className =
+            "watermark";
+
+
+        for (
+            let w = 0;
+            w < 20;
+            w++
+        ) {
+
+            const mark =
+                document.createElement("span");
+
+            mark.textContent =
+                studentId;
+
+            watermark.appendChild(mark);
+
+        }
+
+
+        // ==========================
+        // Add Image
+        // ==========================
+
+        page.appendChild(img);
+
+        page.appendChild(watermark);
+
+        answerContainer.appendChild(page);
+
+
+        // ==========================
+        // Next Page
+        // ==========================
+
+        pageNumber++;
+
+        loadNextPage();
+
+    };
+
+
+    // ==========================
+    // Image Not Found
+    // ==========================
+
+    img.onerror = function () {
+
+        console.log(
+            "No more answer pages."
         );
 
-    watermark.className =
-        "watermark";
+        // Remove broken image
+        img.remove();
+
+        // If no pages loaded
+        if (
+            answerContainer.children.length === 0
+        ) {
+
+            answerContainer.innerHTML = `
+
+                <div class="no-answer">
+
+                    <h2>
+                        Answer Not Available
+                    </h2>
+
+                    <p>
+                        The answer pages are not available yet.
+                    </p>
+
+                </div>
+
+            `;
+
+        }
+
+    };
+
+}
 
 
-    for (
-        let w = 0;
-        w < 20;
-        w++
-    ) {
+// ==========================
+// Start Loading
+// ==========================
 
-        const mark =
-            document.createElement(
-                "span"
-            );
+if (answerContainer) {
 
-        mark.textContent =
-            studentId || "";
-
-        watermark.appendChild(
-            mark
-        );
-
-    }
-
-
-    // ==========================
-    // Add
-    // ==========================
-
-    page.appendChild(
-        img
-    );
-
-    page.appendChild(
-        watermark
-    );
-
-    answerContainer.appendChild(
-        page
-    );
+    loadNextPage();
 
 }
 
@@ -308,28 +363,47 @@ document.addEventListener(
 
 
 // ==========================
-// Disable Common Shortcuts
+// Disable Text Selection
+// ==========================
+
+document.addEventListener(
+    "selectstart",
+    event => {
+
+        event.preventDefault();
+
+    }
+);
+
+
+// ==========================
+// Disable Shortcuts
 // ==========================
 
 document.addEventListener(
     "keydown",
     event => {
 
+        const key =
+            event.key.toLowerCase();
+
+
+        // Ctrl / Cmd shortcuts
+
         if (
             event.ctrlKey ||
             event.metaKey
         ) {
 
-            const key =
-                event.key.toLowerCase();
-
             if (
-                key === "s" ||
-                key === "p" ||
-                key === "c" ||
-                key === "x" ||
-                key === "u" ||
-                key === "a"
+                [
+                    "s",
+                    "p",
+                    "c",
+                    "x",
+                    "u",
+                    "a"
+                ].includes(key)
             ) {
 
                 event.preventDefault();
@@ -353,15 +427,12 @@ document.addEventListener(
 );
 
 
-// ==========================
-// Disable Text Selection
-// ==========================
-
-document.addEventListener(
-    "selectstart",
-    event => {
-
-        event.preventDefault();
-
+console.log(
+    "✅ Grade 10 Answer Viewer Loaded",
+    {
+        term,
+        paper: paperFolder,
+        type,
+        imageFolder
     }
 );
