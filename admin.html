@@ -10,7 +10,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Student Assessment Portal - Admin</title>
+    <title>Admin Portal</title>
 
     <link
         rel="stylesheet"
@@ -19,208 +19,235 @@
 
 </head>
 
+
 <body>
 
-    <!-- ==========================
-         Sidebar
-    =========================== -->
 
-    <div class="sidebar">
-
-        <h2>👨🏻‍💻 Admin</h2>
-
-        <ul>
-
-            <li class="active">
-                📊 Dashboard
-            </li>
-
-            <li
-                onclick="location.href='students.html'"
-            >
-                👨‍🎓 Students
-            </li>
-
-           <li
-    class="full-admin-only"
-    onclick="location.href='paper-settings.html'"
->
-    📚 Papers
-</li>
-
-            <li
-    class="full-admin-only"
-    onclick="location.href='import-students.html'"
->
-    📥 Import Students
-</li>
-
-            <li
-    class="full-admin-only"
-    onclick="location.href='reports.html'"
->
-    📈 Reports
-</li>
-
-            <li
-    class="full-admin-only"
-    onclick="location.href='settings.html'"
->
-    ⚙️ Settings
-</li>
-
-            <li id="logoutBtn">
-                🚪 Logout
-            </li>
-
-        </ul>
-
-    </div>
+<div class="admin-page">
 
 
-    <!-- ==========================
-         Main Dashboard
-    =========================== -->
+    <!-- =================================
+         LEFT BRAND PANEL
+    ================================== -->
 
-    <div class="main">
-
-        <!-- Header -->
-
-        <header>
-
-            <div>
-
-                <h1>
-                    Student Assessment Portal
-                </h1>
-
-                <p>
-                    Administrator Dashboard
-                </p>
-
-            </div>
-
-        </header>
+    <section class="admin-brand">
 
 
-        <!-- ==========================
-             Summary Cards
-        =========================== -->
+        <div class="brand-pattern pattern-one"></div>
+        <div class="brand-pattern pattern-two"></div>
 
-        <div class="summary-grid">
 
-            <!-- Total Students -->
+        <div class="brand-content">
 
-            <div class="summary-card">
 
-                <div class="summary-icon">
-                    👨‍🎓
-                </div>
-
-                <div>
-
-                    <span>
-                        Total Students
-                    </span>
-
-                    <strong id="totalStudents">
-                        0
-                    </strong>
-
-                </div>
-
+            <div class="admin-logo">
+                🧑‍💼
             </div>
 
 
-            <!-- Total Paper Views -->
-
-            <div class="summary-card">
-
-                <div class="summary-icon">
-                    📄
-                </div>
-
-                <div>
-
-                    <span>
-                        Total Paper Views
-                    </span>
-
-                    <strong id="totalViewed">
-                        0
-                    </strong>
-
-                </div>
-
-            </div>
+            <p class="brand-label">
+                ADMINISTRATION
+            </p>
 
 
-            <!-- Active Students -->
-
-            <div class="summary-card">
-
-                <div class="summary-icon active-icon">
-                    🟢
-                </div>
-
-                <div>
-
-                    <span>
-                        Active Now
-                    </span>
-
-                    <strong id="activeStudents">
-                        0
-                    </strong>
-
-                </div>
-
-            </div>
-
-        </div>
+            <h1>
+                Student
+                <br>
+                Assessment
+                <br>
+                <span>Portal</span>
+            </h1>
 
 
-        <!-- ==========================
-             Live Student Analytics
-        =========================== -->
+            <p class="brand-description">
 
-        <div class="live-analytics">
+                Manage students, assessment papers,
+                permissions and portal resources
+                from one secure administration panel.
 
-            <!-- Analytics Header -->
-
-            <div class="analytics-top">
-
-                <div>
-
-                    <h2>
-                        Student Analytics
-                    </h2>
-
-                    <p>
-                        Live overview of students and activity
-                    </p>
-
-                </div>
+            </p>
 
 
-                <div class="analytics-actions">
+            <!-- FEATURES -->
 
-                    <div class="live-indicator">
+            <div class="admin-features">
 
-                        <span></span>
 
-                        LIVE
+                <div class="feature-item">
+
+                    <div class="feature-icon">
+                        👥
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Student Management
+                        </strong>
+
+                        <span>
+                            Manage student accounts
+                        </span>
 
                     </div>
 
+                </div>
 
-                    <button
-                        class="view-students-btn"
-                        onclick="location.href='students.html'"
+
+                <div class="feature-item">
+
+                    <div class="feature-icon">
+                        📚
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Paper Management
+                        </strong>
+
+                        <span>
+                            Control assessment resources
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="feature-item">
+
+                    <div class="feature-icon">
+                        🔐
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Secure Administration
+                        </strong>
+
+                        <span>
+                            Protected administrator access
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="secure-status">
+
+                <span class="status-dot"></span>
+
+                Secure Admin Access
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================
+         RIGHT LOGIN PANEL
+    ================================== -->
+
+    <section class="admin-login">
+
+
+        <div class="login-content">
+
+
+            <div class="welcome-icon">
+                🛡️
+            </div>
+
+
+            <p class="login-label">
+                WELCOME BACK
+            </p>
+
+
+            <h2>
+                Admin Sign In
+            </h2>
+
+
+            <p class="login-description">
+
+                Sign in to manage the
+                Student Assessment Portal.
+
+            </p>
+
+
+
+            <!-- USERNAME -->
+
+            <div class="form-group">
+
+                <label for="username">
+                    Username
+                </label>
+
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">
+                        👤
+                    </span>
+
+
+                    <input
+                        type="text"
+                        id="username"
+                        placeholder="Enter your username"
+                        autocomplete="username"
                     >
 
-                        👨‍🎓 Manage Students
+                </div>
 
+            </div>
+
+
+
+            <!-- PASSWORD -->
+
+            <div class="form-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">
+                        🔒
+                    </span>
+
+
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                    >
+
+
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        id="togglePassword"
+                        aria-label="Show password"
+                    >
+                        👁️
                     </button>
 
                 </div>
@@ -228,233 +255,163 @@
             </div>
 
 
-            <!-- ==========================
-                 Bar Chart
-            =========================== -->
 
-            <div class="bar-chart">
+            <!-- LOGIN BUTTON -->
 
-
-                <!-- Total Students -->
-
-                <div class="chart-row">
-
-                    <div class="chart-label">
-
-                        👨‍🎓 Total Students
-
-                    </div>
-
-
-                    <div class="chart-track">
-
-                        <div
-                            id="chartTotalStudents"
-                            class="chart-bar total-bar"
-                        ></div>
-
-                    </div>
-
-
-                    <div
-                        id="chartTotalStudentsValue"
-                        class="chart-value"
-                    >
-                        0
-                    </div>
-
-                </div>
-
-
-                <!-- Total Paper Views -->
-
-                <div class="chart-row">
-
-                    <div class="chart-label">
-
-                        📄 Paper Views
-
-                    </div>
-
-
-                    <div class="chart-track">
-
-                        <div
-                            id="chartPaperViews"
-                            class="chart-bar paper-bar"
-                        ></div>
-
-                    </div>
-
-
-                    <div
-                        id="chartPaperViewsValue"
-                        class="chart-value"
-                    >
-                        0
-                    </div>
-
-                </div>
-
-
-                <!-- Grade 10 -->
-
-                <div class="chart-row">
-
-                    <div class="chart-label">
-
-                        🎓 Grade 10
-
-                    </div>
-
-
-                    <div class="chart-track">
-
-                        <div
-                            id="chartGrade10"
-                            class="chart-bar grade10-bar"
-                        ></div>
-
-                    </div>
-
-
-                    <div
-                        id="chartGrade10Value"
-                        class="chart-value"
-                    >
-                        0
-                    </div>
-
-                </div>
-
-
-                <!-- Grade 11 -->
-
-                <div class="chart-row">
-
-                    <div class="chart-label">
-
-                        🎓 Grade 11
-
-                    </div>
-
-
-                    <div class="chart-track">
-
-                        <div
-                            id="chartGrade11"
-                            class="chart-bar grade11-bar"
-                        ></div>
-
-                    </div>
-
-
-                    <div
-                        id="chartGrade11Value"
-                        class="chart-value"
-                    >
-                        0
-                    </div>
-
-                </div>
-
-
-                <!-- A/L -->
-
-                <div class="chart-row">
-
-                    <div class="chart-label">
-
-                        📚 A/L Students
-
-                    </div>
-
-
-                    <div class="chart-track">
-
-                        <div
-                            id="chartAL"
-                            class="chart-bar al-bar"
-                        ></div>
-
-                    </div>
-
-
-                    <div
-                        id="chartALValue"
-                        class="chart-value"
-                    >
-                        0
-                    </div>
-
-                </div>
-
-
-                <!-- Active -->
-
-                <div class="chart-row">
-
-                    <div class="chart-label">
-
-                        🟢 Active Now
-
-                    </div>
-
-
-                    <div class="chart-track">
-
-                        <div
-                            id="chartActive"
-                            class="chart-bar active-bar"
-                        ></div>
-
-                    </div>
-
-
-                    <div
-                        id="chartActiveValue"
-                        class="chart-value"
-                    >
-                        0
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- ==========================
-                 Footer
-            =========================== -->
-
-            <div class="analytics-footer">
-
-                🔄 Live data
+            <button
+                type="button"
+                id="loginBtn"
+                class="login-btn"
+            >
 
                 <span>
-                    •
+                    Sign In
                 </span>
 
-                Automatically updated every 30 seconds
+                <span class="login-arrow">
+                    →
+                </span>
+
+            </button>
+
+
+
+            <!-- MESSAGE -->
+
+            <p
+                id="msg"
+                class="message"
+            ></p>
+
+
+
+            <!-- SECURITY BOX -->
+
+            <div class="security-box">
+
+                <div class="security-icon">
+                    🔐
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        Secure Administrator Access
+                    </strong>
+
+                    <p>
+                        This area is restricted to
+                        authorized system administrators.
+                    </p>
+
+                </div>
 
             </div>
+
+
+
+            <!-- BACK -->
+
+            <a
+                href="index.html"
+                class="back-link"
+            >
+                ← Back to Student Login
+            </a>
+
 
         </div>
 
 
-    </div>
+        <!-- FOOTER -->
+
+        <footer>
+
+            <p>
+                © 2026 Student Assessment Portal
+            </p>
+
+            <span>
+                Administrator Access
+            </span>
+
+        </footer>
 
 
-    <!-- ==========================
-         Scripts
-    =========================== -->
+    </section>
 
-    <script src="session.js"></script>
 
-    <script
-        type="module"
-        src="admin.js"
-    ></script>
+</div>
+
+
+
+<script type="module" src="admin.js"></script>
+
+
+<script>
+
+const togglePassword =
+    document.getElementById(
+        "togglePassword"
+    );
+
+const password =
+    document.getElementById(
+        "password"
+    );
+
+
+togglePassword.addEventListener(
+    "click",
+    () => {
+
+        if (
+            password.type ===
+            "password"
+        ) {
+
+            password.type =
+                "text";
+
+            togglePassword.textContent =
+                "🙈";
+
+        }
+
+        else {
+
+            password.type =
+                "password";
+
+            togglePassword.textContent =
+                "👁️";
+
+        }
+
+    }
+);
+
+
+document.addEventListener(
+    "keydown",
+    (event) => {
+
+        if (
+            event.key === "Enter"
+        ) {
+
+            document
+                .getElementById("loginBtn")
+                .click();
+
+        }
+
+    }
+);
+
+</script>
+
 
 </body>
 
