@@ -1,7 +1,3 @@
-// ==========================================
-// ADMIN LOGIN
-// ==========================================
-
 import {
     db,
     collection,
@@ -9,9 +5,9 @@ import {
 } from "./firebase.js";
 
 
-// ==========================================
-// Elements
-// ==========================================
+// =========================================
+// ELEMENTS
+// =========================================
 
 const loginBtn =
     document.getElementById("loginBtn");
@@ -25,102 +21,102 @@ const passwordInput =
 const msg =
     document.getElementById("msg");
 
-
-// ==========================================
-// Check Elements
-// ==========================================
-
-if (!loginBtn) {
-
-    console.error(
-        "❌ loginBtn not found in admin-login.html"
-    );
-
-}
-
-if (!usernameInput) {
-
-    console.error(
-        "❌ username input not found"
-    );
-
-}
-
-if (!passwordInput) {
-
-    console.error(
-        "❌ password input not found"
-    );
-
-}
+const togglePassword =
+    document.getElementById("togglePassword");
 
 
-// ==========================================
-// Show Message
-// ==========================================
+// =========================================
+// SHOW MESSAGE
+// =========================================
 
-function showMessage(message, type = "error") {
+function showMessage(text) {
 
     if (!msg) {
 
-        // If #msg doesn't exist,
-        // use alert as fallback.
-
-        alert(message);
+        alert(text);
 
         return;
 
     }
 
-    msg.textContent = message;
-
-    msg.className =
-        "login-message " + type;
+    msg.textContent = text;
 
 }
 
 
-// ==========================================
-// Clear Message
-// ==========================================
+// =========================================
+// CLEAR MESSAGE
+// =========================================
 
 function clearMessage() {
 
-    if (!msg) {
-        return;
+    if (msg) {
+
+        msg.textContent = "";
+
     }
-
-    msg.textContent = "";
-
-    msg.className =
-        "login-message";
 
 }
 
 
-// ==========================================
-// Login Function
-// ==========================================
+// =========================================
+// TOGGLE PASSWORD
+// =========================================
+
+if (togglePassword) {
+
+    togglePassword.addEventListener(
+        "click",
+        () => {
+
+            if (
+                passwordInput.type ===
+                "password"
+            ) {
+
+                passwordInput.type =
+                    "text";
+
+                togglePassword.textContent =
+                    "🙈";
+
+            }
+
+            else {
+
+                passwordInput.type =
+                    "password";
+
+                togglePassword.textContent =
+                    "👁️";
+
+            }
+
+        }
+    );
+
+}
+
+
+// =========================================
+// LOGIN
+// =========================================
 
 async function loginAdmin() {
 
     clearMessage();
 
 
-    // ======================================
-    // Get Values
-    // ======================================
-
     const username =
-        usernameInput?.value.trim() || "";
+        usernameInput.value.trim();
 
     const password =
-        passwordInput?.value.trim() || "";
+        passwordInput.value.trim();
 
 
-    // ======================================
-    // Validation
-    // ======================================
+    // =====================================
+    // VALIDATION
+    // =====================================
 
     if (!username) {
 
@@ -128,7 +124,7 @@ async function loginAdmin() {
             "Please enter your username."
         );
 
-        usernameInput?.focus();
+        usernameInput.focus();
 
         return;
 
@@ -141,36 +137,33 @@ async function loginAdmin() {
             "Please enter your password."
         );
 
-        passwordInput?.focus();
+        passwordInput.focus();
 
         return;
 
     }
 
 
-    // ======================================
-    // Loading State
-    // ======================================
-
-    const originalText =
-        loginBtn.textContent;
+    // =====================================
+    // LOADING
+    // =====================================
 
     loginBtn.disabled = true;
 
-    loginBtn.textContent =
+    loginBtn.innerHTML =
         "Signing in...";
 
 
     try {
 
         console.log(
-            "🔐 Checking admin login..."
+            "🔐 Checking admin account..."
         );
 
 
-        // ==================================
-        // Get Admin Accounts
-        // ==================================
+        // =================================
+        // GET ADMINS
+        // =================================
 
         const snapshot =
             await getDocs(
@@ -182,7 +175,7 @@ async function loginAdmin() {
 
 
         console.log(
-            "Admin accounts found:",
+            "Admin documents:",
             snapshot.size
         );
 
@@ -190,9 +183,9 @@ async function loginAdmin() {
         let account = null;
 
 
-        // ==================================
-        // Find Username
-        // ==================================
+        // =================================
+        // FIND USERNAME
+        // =================================
 
         snapshot.forEach(
             adminDoc => {
@@ -201,24 +194,20 @@ async function loginAdmin() {
                     adminDoc.data();
 
 
-                console.log(
-                    "Checking admin:",
-                    data.username
-                );
+                const savedUsername =
+                    String(
+                        data.username || ""
+                    )
+                        .trim()
+                        .toLowerCase();
 
 
                 if (
-                    String(data.username || "")
-                        .trim()
-                        .toLowerCase()
-                    ===
+                    savedUsername ===
                     username.toLowerCase()
                 ) {
 
-                    account = {
-                        id: adminDoc.id,
-                        ...data
-                    };
+                    account = data;
 
                 }
 
@@ -226,9 +215,9 @@ async function loginAdmin() {
         );
 
 
-        // ==================================
-        // Username Not Found
-        // ==================================
+        // =================================
+        // NOT FOUND
+        // =================================
 
         if (!account) {
 
@@ -236,19 +225,14 @@ async function loginAdmin() {
                 "Invalid username or password."
             );
 
-            console.warn(
-                "❌ Admin username not found:",
-                username
-            );
-
             return;
 
         }
 
 
-        // ==================================
-        // Password Check
-        // ==================================
+        // =================================
+        // PASSWORD
+        // =================================
 
         const savedPassword =
             String(
@@ -265,27 +249,23 @@ async function loginAdmin() {
                 "Invalid username or password."
             );
 
-            console.warn(
-                "❌ Wrong admin password"
-            );
-
             return;
 
         }
 
 
-        // ==================================
-        // Get Role
-        // ==================================
+        // =================================
+        // ROLE
+        // =================================
 
         const role =
             account.role ||
-            "limited";
+            "admin";
 
 
-        // ==================================
-        // Save Session
-        // ==================================
+        // =================================
+        // SAVE SESSION
+        // =================================
 
         sessionStorage.setItem(
             "adminLoggedIn",
@@ -304,17 +284,13 @@ async function loginAdmin() {
 
 
         console.log(
-            "✅ Admin login successful",
-            {
-                username,
-                role
-            }
+            "✅ Admin login successful"
         );
 
 
-        // ==================================
-        // Redirect
-        // ==================================
+        // =================================
+        // REDIRECT
+        // =================================
 
         window.location.replace(
             "admin.html"
@@ -340,17 +316,20 @@ async function loginAdmin() {
 
         loginBtn.disabled = false;
 
-        loginBtn.textContent =
-            originalText;
+        loginBtn.innerHTML =
+            `
+            <span>Sign In</span>
+            <span>→</span>
+            `;
 
     }
 
 }
 
 
-// ==========================================
-// Button Click
-// ==========================================
+// =========================================
+// BUTTON
+// =========================================
 
 if (loginBtn) {
 
@@ -362,81 +341,32 @@ if (loginBtn) {
 }
 
 
-// ==========================================
-// Enter Key Login
-// ==========================================
+// =========================================
+// ENTER KEY
+// =========================================
 
-if (passwordInput) {
+document.addEventListener(
+    "keydown",
+    event => {
 
-    passwordInput.addEventListener(
-        "keydown",
-        event => {
+        if (
+            event.key === "Enter"
+        ) {
 
-            if (
-                event.key === "Enter"
-            ) {
+            event.preventDefault();
 
-                event.preventDefault();
-
-                loginAdmin();
-
-            }
+            loginAdmin();
 
         }
-    );
 
-}
-
-
-if (usernameInput) {
-
-    usernameInput.addEventListener(
-        "keydown",
-        event => {
-
-            if (
-                event.key === "Enter"
-            ) {
-
-                event.preventDefault();
-
-                loginAdmin();
-
-            }
-
-        }
-    );
-
-}
+    }
+);
 
 
-// ==========================================
-// Already Logged In
-// ==========================================
-
-if (
-    sessionStorage.getItem(
-        "adminLoggedIn"
-    ) === "true"
-) {
-
-    console.log(
-        "Admin already logged in."
-    );
-
-    // Uncomment this if you want
-    // already logged-in admins to
-    // automatically skip the login page.
-
-    // window.location.replace("admin.html");
-
-}
-
-
-// ==========================================
-// Console
-// ==========================================
+// =========================================
+// READY
+// =========================================
 
 console.log(
-    "✅ Admin Login JS Loaded"
+    "✅ Admin Login Loaded"
 );
