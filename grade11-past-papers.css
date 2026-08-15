@@ -1,3 +1,7 @@
+/* ==========================
+   Reset
+========================== */
+
 * {
     margin: 0;
     padding: 0;
@@ -5,16 +9,31 @@
     font-family: "Segoe UI", sans-serif;
 }
 
+
+/* ==========================
+   Body
+========================== */
+
 body {
     min-height: 100vh;
+
     background: #f5f7fb;
+
     color: #111827;
+
     padding: 30px 20px;
 }
 
+
+/* ==========================
+   Container
+========================== */
+
 .container {
     width: 100%;
+
     max-width: 1100px;
+
     margin: auto;
 }
 
@@ -31,22 +50,29 @@ body {
     border-radius: 20px;
 
     display: flex;
+
     justify-content: space-between;
+
     align-items: center;
 
     gap: 20px;
 
-    margin-bottom: 30px;
+    margin-bottom: 35px;
 
     box-shadow:
         0 8px 25px
         rgba(0, 0, 0, 0.08);
 }
 
+
 .header h1 {
     font-size: 28px;
+
     font-weight: 700;
+
+    color: #111827;
 }
+
 
 .header p {
     margin-top: 7px;
@@ -55,6 +81,11 @@ body {
 
     font-size: 15px;
 }
+
+
+/* ==========================
+   Back Button
+========================== */
 
 .header button {
     border: none;
@@ -73,40 +104,43 @@ body {
 
     cursor: pointer;
 
-    transition: 0.2s ease;
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
 }
+
 
 .header button:hover {
     background: #6d28d9;
 
-    transform: translateY(-1px);
+    transform: translateY(-2px);
 }
 
 
 /* ==========================
-   Part Grid
+   Year Grid
 ========================== */
 
-.part-grid {
+.year-grid {
     display: grid;
 
     grid-template-columns:
-        repeat(2, 1fr);
+        repeat(3, minmax(0, 1fr));
 
     gap: 25px;
 }
 
 
 /* ==========================
-   Part Card
+   Year Card
 ========================== */
 
-.part-card {
+.year-card {
     background: #ffffff;
 
-    min-height: 300px;
+    min-height: 230px;
 
-    padding: 32px 28px;
+    padding: 32px 25px;
 
     border-radius: 20px;
 
@@ -114,11 +148,13 @@ body {
 
     flex-direction: column;
 
-    align-items: center;
-
     justify-content: center;
 
+    align-items: center;
+
     text-align: center;
+
+    cursor: pointer;
 
     border: 2px solid transparent;
 
@@ -132,29 +168,36 @@ body {
         box-shadow 0.25s ease;
 }
 
-.part-card:hover {
-    transform: translateY(-5px);
+
+/* ==========================
+   Hover
+========================== */
+
+.year-card:hover {
+    transform: translateY(-6px);
 
     border-color: #7c3aed;
 
     box-shadow:
-        0 15px 35px
-        rgba(124, 58, 237, 0.16);
+        0 16px 38px
+        rgba(124, 58, 237, 0.18);
 }
 
 
 /* ==========================
-   Icon
+   Year Icon
 ========================== */
 
-.part-icon {
+.year-icon {
     width: 75px;
+
     height: 75px;
 
     display: flex;
 
-    align-items: center;
     justify-content: center;
+
+    align-items: center;
 
     background: #ede9fe;
 
@@ -167,82 +210,42 @@ body {
 
 
 /* ==========================
-   Text
+   Year
 ========================== */
 
-.part-card h2 {
-    font-size: 23px;
+.year-card h2 {
+    font-size: 25px;
+
+    font-weight: 700;
+
+    color: #111827;
 
     margin-bottom: 8px;
 }
 
-.part-card p {
+
+/* ==========================
+   Description
+========================== */
+
+.year-card p {
     color: #6b7280;
 
     font-size: 15px;
-
-    margin-bottom: 22px;
 }
 
 
 /* ==========================
-   Buttons
+   Tablet
 ========================== */
 
-.option-grid {
-    width: 100%;
+@media (max-width: 900px) {
 
-    display: grid;
+    .year-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
 
-    grid-template-columns:
-        repeat(2, 1fr);
-
-    gap: 12px;
-}
-
-.option-grid button {
-    border: none;
-
-    background: #7c3aed;
-
-    color: #ffffff;
-
-    padding: 13px 12px;
-
-    border-radius: 10px;
-
-    font-size: 14px;
-
-    font-weight: 600;
-
-    cursor: pointer;
-
-    transition: 0.2s ease;
-}
-
-.option-grid button:hover {
-    background: #6d28d9;
-
-    transform: translateY(-2px);
-}
-
-
-/* ==========================
-   Answer Button
-========================== */
-
-#partAAnswerBtn,
-#partBAnswerBtn {
-    background: #eef2ff;
-
-    color: #4f46e5;
-
-    border: 1px solid #c7d2fe;
-}
-
-#partAAnswerBtn:hover,
-#partBAnswerBtn:hover {
-    background: #e0e7ff;
 }
 
 
@@ -250,24 +253,12 @@ body {
    Mobile
 ========================== */
 
-@media (max-width: 800px) {
+@media (max-width: 600px) {
 
     body {
         padding: 20px 15px;
     }
 
-    .part-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .part-card {
-        min-height: 280px;
-    }
-
-}
-
-
-@media (max-width: 500px) {
 
     .header {
         padding: 20px;
@@ -277,16 +268,26 @@ body {
         align-items: stretch;
     }
 
+
     .header h1 {
         font-size: 23px;
     }
+
 
     .header button {
         width: 100%;
     }
 
-    .option-grid {
+
+    .year-grid {
         grid-template-columns: 1fr;
+
+        gap: 18px;
+    }
+
+
+    .year-card {
+        min-height: 200px;
     }
 
 }
