@@ -1,481 +1,964 @@
-/* ==========================
-   Global
-========================== */
+/* =========================================
+   ADMIN PORTAL
+   PROFESSIONAL LOGIN DESIGN
+========================================= */
 
 * {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
+
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f5f7fb;
-    color: #1f2937;
-}
 
-
-/* ==========================
-   Sidebar
-========================== */
-
-.sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-
-    width: 240px;
-    height: 100vh;
-
-    background: #111827;
-    color: white;
-
-    padding: 25px 15px;
-}
-
-.sidebar h2 {
-    margin: 0 0 30px;
-    padding-left: 10px;
-}
-
-.sidebar ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.sidebar li {
-    padding: 13px 15px;
-    margin-bottom: 6px;
-
-    border-radius: 8px;
-
-    cursor: pointer;
-
-    transition: .2s;
-}
-
-.sidebar li:hover,
-.sidebar li.active {
-    background: #374151;
-}
-
-
-/* ==========================
-   Main
-========================== */
-
-.main {
-    margin-left: 240px;
-    padding: 30px;
     min-height: 100vh;
+
+    font-family:
+        Inter,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    background:
+        #f3f5fb;
+
+    color: #172033;
+
 }
 
 
-/* ==========================
-   Header
-========================== */
+/* =========================================
+   MAIN PAGE
+========================================= */
 
-header {
-    margin-bottom: 25px;
-}
+.admin-page {
 
-header h1 {
-    margin: 0 0 5px;
-    font-size: 28px;
-}
+    width: min(
+        1180px,
+        calc(100% - 40px)
+    );
 
-header p {
-    margin: 0;
-    color: #6b7280;
-}
+    min-height: 700px;
 
+    margin: 30px auto;
 
-/* ==========================
-   Summary Cards
-========================== */
-
-.summary-grid {
     display: grid;
 
     grid-template-columns:
-        repeat(3, 1fr);
+        1fr 1fr;
 
-    gap: 18px;
+    background: #ffffff;
 
-    margin-bottom: 25px;
-}
+    border-radius: 26px;
 
-.summary-card {
-    display: flex;
-    align-items: center;
-
-    gap: 15px;
-
-    background: white;
-
-    padding: 20px;
-
-    border-radius: 14px;
+    overflow: hidden;
 
     box-shadow:
-        0 5px 18px
-        rgba(0, 0, 0, .05);
+        0 30px 80px
+        rgba(15, 23, 42, 0.16);
+
 }
 
-.summary-icon {
-    width: 48px;
-    height: 48px;
+
+/* =========================================
+   LEFT BRAND
+========================================= */
+
+.admin-brand {
+
+    position: relative;
+
+    overflow: hidden;
+
+    padding: 55px 55px;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            145deg,
+            #3730a3 0%,
+            #4f46e5 45%,
+            #7c3aed 100%
+        );
+
+}
+
+
+.brand-content {
+
+    position: relative;
+
+    z-index: 2;
+
+    max-width: 450px;
+
+}
+
+
+/* =========================================
+   DECORATIVE CIRCLES
+========================================= */
+
+.brand-pattern {
+
+    position: absolute;
+
+    border: 1px solid
+        rgba(255,255,255,0.14);
+
+    border-radius: 50%;
+
+}
+
+
+.pattern-one {
+
+    width: 360px;
+    height: 360px;
+
+    right: -170px;
+    top: -160px;
+
+}
+
+
+.pattern-two {
+
+    width: 300px;
+    height: 300px;
+
+    left: -170px;
+    bottom: -170px;
+
+}
+
+
+/* =========================================
+   LOGO
+========================================= */
+
+.admin-logo {
+
+    width: 68px;
+    height: 68px;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
-    background: #eef2ff;
+    border-radius: 18px;
 
-    border-radius: 12px;
+    background:
+        rgba(255,255,255,0.13);
 
-    font-size: 22px;
-}
+    border:
+        1px solid
+        rgba(255,255,255,0.25);
 
-.active-icon {
-    background: #ecfdf5;
-}
-
-.summary-card span {
-    display: block;
-
-    color: #6b7280;
-
-    font-size: 13px;
-
-    margin-bottom: 5px;
-}
-
-.summary-card strong {
-    display: block;
-
-    font-size: 25px;
-
-    color: #111827;
-}
-
-
-/* ==========================
-   Live Analytics
-========================== */
-
-.live-analytics {
-    background: white;
-
-    border-radius: 16px;
-
-    padding: 28px;
+    font-size: 35px;
 
     box-shadow:
-        0 6px 22px
-        rgba(0, 0, 0, .06);
+        0 10px 25px
+        rgba(0,0,0,0.12);
+
+    margin-bottom: 25px;
+
 }
 
 
-/* ==========================
-   Analytics Header
-========================== */
+/* =========================================
+   LABEL
+========================================= */
 
-.analytics-top {
-    display: flex;
+.brand-label {
 
-    justify-content: space-between;
+    font-size: 11px;
 
-    align-items: center;
+    font-weight: 800;
 
-    margin-bottom: 30px;
+    letter-spacing: 2px;
+
+    color:
+        rgba(255,255,255,0.72);
+
+    margin-bottom: 12px;
+
 }
 
-.analytics-top h2 {
-    margin: 0 0 6px;
 
-    font-size: 23px;
+/* =========================================
+   BRAND TITLE
+========================================= */
+
+.admin-brand h1 {
+
+    font-size: 48px;
+
+    line-height: 1.04;
+
+    letter-spacing: -1.5px;
+
+    font-weight: 800;
+
+    margin-bottom: 24px;
+
 }
 
-.analytics-top p {
-    margin: 0;
 
-    color: #6b7280;
+.admin-brand h1 span {
+
+    color:
+        #ddd6fe;
+
+}
+
+
+/* =========================================
+   DESCRIPTION
+========================================= */
+
+.brand-description {
+
+    max-width: 410px;
+
+    color:
+        rgba(255,255,255,0.78);
 
     font-size: 14px;
+
+    line-height: 1.7;
+
+    margin-bottom: 32px;
+
 }
 
-.analytics-actions {
+
+/* =========================================
+   FEATURES
+========================================= */
+
+.admin-features {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+
+}
+
+
+.feature-item {
+
     display: flex;
 
     align-items: center;
 
-    gap: 12px;
+    gap: 13px;
+
+    padding: 13px 15px;
+
+    border-radius: 13px;
+
+    background:
+        rgba(255,255,255,0.09);
+
+    border:
+        1px solid
+        rgba(255,255,255,0.11);
+
 }
 
 
-/* ==========================
-   Live Indicator
-========================== */
+.feature-icon {
 
-.live-indicator {
+    width: 38px;
+    height: 38px;
+
     display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 10px;
+
+    background:
+        rgba(255,255,255,0.13);
+
+    font-size: 18px;
+
+}
+
+
+.feature-item strong {
+
+    display: block;
+
+    font-size: 12px;
+
+    margin-bottom: 3px;
+
+}
+
+
+.feature-item span {
+
+    display: block;
+
+    font-size: 10px;
+
+    color:
+        rgba(255,255,255,0.62);
+
+}
+
+
+/* =========================================
+   SECURE STATUS
+========================================= */
+
+.secure-status {
+
+    display: inline-flex;
 
     align-items: center;
 
     gap: 7px;
 
-    padding: 7px 12px;
+    margin-top: 28px;
 
-    border-radius: 20px;
+    font-size: 10px;
 
-    background: #ecfdf5;
+    color:
+        rgba(255,255,255,0.75);
 
-    color: #15803d;
-
-    font-size: 12px;
-
-    font-weight: 700;
 }
 
-.live-indicator span {
-    width: 9px;
-    height: 9px;
+
+.status-dot {
+
+    width: 7px;
+    height: 7px;
 
     border-radius: 50%;
 
-    background: #22c55e;
+    background: #4ade80;
 
-    animation:
-        livePulse 1.5s infinite;
-}
-
-@keyframes livePulse {
-
-    0% {
-        opacity: 1;
-        transform: scale(1);
-    }
-
-    50% {
-        opacity: .45;
-        transform: scale(1.25);
-    }
-
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
+    box-shadow:
+        0 0 0 4px
+        rgba(74,222,128,0.13);
 
 }
 
 
-/* ==========================
-   Manage Students Button
-========================== */
+/* =========================================
+   RIGHT LOGIN
+========================================= */
 
-.view-students-btn {
-    border: none;
+.admin-login {
 
-    background: #4f46e5;
+    position: relative;
 
-    color: white;
-
-    padding: 10px 16px;
-
-    border-radius: 8px;
-
-    cursor: pointer;
-
-    font-weight: 600;
-
-    transition: .2s;
-}
-
-.view-students-btn:hover {
-    background: #4338ca;
-}
-
-
-/* ==========================
-   Bar Chart
-========================== */
-
-.bar-chart {
     display: flex;
 
     flex-direction: column;
 
-    gap: 21px;
+    justify-content: center;
+
+    padding: 55px 70px;
+
+    background: #ffffff;
+
 }
 
-.chart-row {
-    display: grid;
 
-    grid-template-columns:
-        160px 1fr 65px;
+.login-content {
 
-    align-items: center;
-
-    gap: 15px;
-}
-
-.chart-label {
-    font-size: 14px;
-
-    font-weight: 600;
-
-    color: #374151;
-}
-
-.chart-track {
     width: 100%;
 
-    height: 25px;
+    max-width: 420px;
 
-    background: #eef2f7;
+    margin: auto;
 
-    border-radius: 20px;
-
-    overflow: hidden;
-}
-
-.chart-bar {
-    height: 100%;
-
-    width: 0%;
-
-    border-radius: 20px;
-
-    transition:
-        width .7s ease;
 }
 
 
-/* ==========================
-   Chart Bar Types
-========================== */
+/* =========================================
+   WELCOME ICON
+========================================= */
 
-.total-bar {
-    background: #4f46e5;
-}
+.welcome-icon {
 
-.paper-bar {
-    background: #7c3aed;
-}
+    width: 48px;
+    height: 48px;
 
-.grade10-bar {
-    background: #2563eb;
-}
+    display: flex;
 
-.grade11-bar {
-    background: #0891b2;
-}
+    align-items: center;
+    justify-content: center;
 
-.al-bar {
-    background: #9333ea;
-}
+    border-radius: 13px;
 
-.active-bar {
-    background: #16a34a;
+    background:
+        #eef2ff;
+
+    font-size: 22px;
+
+    margin-bottom: 18px;
+
 }
 
 
-.chart-value {
-    text-align: right;
+/* =========================================
+   LOGIN LABEL
+========================================= */
 
-    font-size: 16px;
+.login-label {
+
+    margin-bottom: 7px;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.8px;
+
+    color: #6366f1;
+
+}
+
+
+/* =========================================
+   TITLE
+========================================= */
+
+.admin-login h2 {
+
+    margin: 0;
+
+    font-size: 31px;
+
+    line-height: 1.2;
+
+    letter-spacing: -0.7px;
+
+    color: #111827;
+
+}
+
+
+/* =========================================
+   DESCRIPTION
+========================================= */
+
+.login-description {
+
+    margin-top: 9px;
+
+    margin-bottom: 30px;
+
+    color: #64748b;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+
+}
+
+
+/* =========================================
+   FORM
+========================================= */
+
+.form-group {
+
+    margin-bottom: 19px;
+
+}
+
+
+.form-group label {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #334155;
+
+    font-size: 12px;
 
     font-weight: 700;
 
-    color: #374151;
 }
 
 
-/* ==========================
-   Analytics Footer
-========================== */
+/* =========================================
+   INPUT
+========================================= */
 
-.analytics-footer {
-    margin-top: 27px;
+.input-wrapper {
 
-    padding-top: 15px;
-
-    border-top:
-        1px solid #eef0f4;
-
-    color: #9ca3af;
-
-    font-size: 12px;
-}
-
-
-/* ==========================
-   Responsive
-========================== */
-
-@media (max-width: 1000px) {
-
-    .summary-grid {
-        grid-template-columns:
-            repeat(2, 1fr);
-    }
+    position: relative;
 
 }
 
-@media (max-width: 800px) {
 
-    .sidebar {
-        width: 200px;
-    }
+.input-icon {
 
-    .main {
-        margin-left: 200px;
-    }
+    position: absolute;
 
-    .analytics-top {
-        flex-direction: column;
+    left: 14px;
 
-        align-items: flex-start;
+    top: 50%;
 
-        gap: 15px;
-    }
+    transform:
+        translateY(-50%);
+
+    font-size: 15px;
+
+    opacity: 0.8;
 
 }
 
-@media (max-width: 600px) {
 
-    .sidebar {
-        position: relative;
+.input-wrapper input {
 
-        width: 100%;
+    width: 100%;
 
-        height: auto;
-    }
+    height: 52px;
 
-    .main {
-        margin-left: 0;
+    padding:
+        0 45px 0 42px;
 
-        padding: 18px;
-    }
+    border:
+        1.5px solid #dbe2ea;
 
-    .summary-grid {
+    border-radius: 11px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #1e293b;
+
+    font-size: 13px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+
+}
+
+
+.input-wrapper input::placeholder {
+
+    color: #94a3b8;
+
+}
+
+
+.input-wrapper input:hover {
+
+    border-color: #c7d2fe;
+
+}
+
+
+.input-wrapper input:focus {
+
+    border-color: #6366f1;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(99,102,241,0.09);
+
+}
+
+
+/* =========================================
+   PASSWORD TOGGLE
+========================================= */
+
+.password-toggle {
+
+    position: absolute;
+
+    right: 9px;
+
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+
+    width: 34px;
+    height: 34px;
+
+    border: 0;
+
+    border-radius: 8px;
+
+    background: transparent;
+
+    cursor: pointer;
+
+    font-size: 15px;
+
+}
+
+
+.password-toggle:hover {
+
+    background:
+        #f1f5f9;
+
+}
+
+
+/* =========================================
+   LOGIN BUTTON
+========================================= */
+
+.login-btn {
+
+    width: 100%;
+
+    height: 52px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    margin-top: 6px;
+
+    border: 0;
+
+    border-radius: 11px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #4f46e5,
+            #7c3aed
+        );
+
+    color: #ffffff;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 10px 24px
+        rgba(79,70,229,0.22);
+
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        opacity 0.18s ease;
+
+}
+
+
+.login-btn:hover {
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 14px 28px
+        rgba(79,70,229,0.28);
+
+}
+
+
+.login-btn:active {
+
+    transform:
+        translateY(0);
+
+}
+
+
+.login-btn:disabled {
+
+    opacity: 0.65;
+
+    cursor: not-allowed;
+
+}
+
+
+/* =========================================
+   MESSAGE
+========================================= */
+
+.message {
+
+    min-height: 18px;
+
+    margin-top: 11px;
+
+    text-align: center;
+
+    color: #dc2626;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+}
+
+
+/* =========================================
+   SECURITY BOX
+========================================= */
+
+.security-box {
+
+    display: flex;
+
+    gap: 12px;
+
+    margin-top: 20px;
+
+    padding: 14px;
+
+    border:
+        1px solid #e0e7ff;
+
+    border-radius: 12px;
+
+    background:
+        #f8faff;
+
+}
+
+
+.security-icon {
+
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 9px;
+
+    background:
+        #eef2ff;
+
+    font-size: 15px;
+
+}
+
+
+.security-box strong {
+
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #3730a3;
+
+    font-size: 11px;
+
+}
+
+
+.security-box p {
+
+    color: #64748b;
+
+    font-size: 10px;
+
+    line-height: 1.5;
+
+}
+
+
+/* =========================================
+   BACK LINK
+========================================= */
+
+.back-link {
+
+    display: block;
+
+    margin-top: 20px;
+
+    text-align: center;
+
+    color: #6366f1;
+
+    text-decoration: none;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+}
+
+
+.back-link:hover {
+
+    color: #4338ca;
+
+}
+
+
+/* =========================================
+   FOOTER
+========================================= */
+
+.admin-login footer {
+
+    position: absolute;
+
+    bottom: 22px;
+
+    left: 0;
+
+    right: 0;
+
+    text-align: center;
+
+}
+
+
+.admin-login footer p {
+
+    margin-bottom: 3px;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+
+}
+
+
+.admin-login footer span {
+
+    color: #cbd5e1;
+
+    font-size: 8px;
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 900px) {
+
+    .admin-page {
+
         grid-template-columns: 1fr;
+
+        width:
+            min(
+                560px,
+                calc(100% - 30px)
+            );
+
+        margin: 20px auto;
+
     }
 
-    .chart-row {
-        grid-template-columns:
-            110px 1fr 45px;
 
-        gap: 8px;
+    .admin-brand {
+
+        padding: 40px 35px;
+
     }
 
-    .chart-label {
+
+    .admin-brand h1 {
+
+        font-size: 38px;
+
+    }
+
+
+    .admin-login {
+
+        padding:
+            45px 35px 75px;
+
+    }
+
+}
+
+
+@media (max-width: 520px) {
+
+    .admin-page {
+
+        width:
+            calc(100% - 20px);
+
+        border-radius: 20px;
+
+        margin: 10px auto;
+
+    }
+
+
+    .admin-brand {
+
+        padding: 30px 25px;
+
+    }
+
+
+    .admin-brand h1 {
+
+        font-size: 32px;
+
+    }
+
+
+    .brand-description {
+
         font-size: 12px;
+
     }
 
-    .analytics-actions {
-        flex-wrap: wrap;
+
+    .feature-item {
+
+        padding: 11px;
+
+    }
+
+
+    .admin-login {
+
+        padding:
+            35px 23px 75px;
+
+    }
+
+
+    .admin-login h2 {
+
+        font-size: 27px;
+
     }
 
 }
