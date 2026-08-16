@@ -5,29 +5,14 @@ import * as firebase from "./firebase.js";
 // FIREBASE
 // =====================================================
 
-const db =
-    firebase.db;
-
-const collection =
-    firebase.collection;
-
-const getDocs =
-    firebase.getDocs;
-
-const doc =
-    firebase.doc;
-
-const getDoc =
-    firebase.getDoc;
-
-const setDoc =
-    firebase.setDoc;
-
-const updateDoc =
-    firebase.updateDoc;
-
-const deleteDoc =
-    firebase.deleteDoc;
+const db = firebase.db;
+const collection = firebase.collection;
+const getDocs = firebase.getDocs;
+const doc = firebase.doc;
+const getDoc = firebase.getDoc;
+const setDoc = firebase.setDoc;
+const updateDoc = firebase.updateDoc;
+const deleteDoc = firebase.deleteDoc;
 
 
 // =====================================================
@@ -35,14 +20,9 @@ const deleteDoc =
 // =====================================================
 
 if (
-    sessionStorage.getItem(
-        "adminLoggedIn"
-    ) !== "true"
+    sessionStorage.getItem("adminLoggedIn") !== "true"
 ) {
-
-    window.location.href =
-        "admin-login.html";
-
+    window.location.href = "admin-login.html";
 }
 
 
@@ -51,71 +31,119 @@ if (
 // =====================================================
 
 const table =
-    document.getElementById(
-        "studentTable"
-    );
+    document.getElementById("studentTable");
 
 const totalStudents =
-    document.getElementById(
-        "totalStudents"
-    );
+    document.getElementById("totalStudents");
+
+const grade10Students =
+    document.getElementById("grade10Students");
+
+const grade11Students =
+    document.getElementById("grade11Students");
+
+const alStudents =
+    document.getElementById("alStudents");
+
+const activeStudents =
+    document.getElementById("activeStudents");
 
 const totalViewed =
-    document.getElementById(
-        "totalViewed"
-    );
+    document.getElementById("totalViewed");
 
 const onlineStudents =
-    document.getElementById(
-        "onlineStudents"
-    );
+    document.getElementById("onlineStudents");
 
-const search =
-    document.getElementById(
-        "search"
-    );
+const searchInput =
+    document.getElementById("search");
 
+const typeFilter =
+    document.getElementById("typeFilter");
+
+const statusFilter =
+    document.getElementById("statusFilter");
+
+
+// =====================================================
+// ADD MODAL
+// =====================================================
 
 const addStudentBtn =
-    document.getElementById(
-        "addStudentBtn"
-    );
+    document.getElementById("addStudentBtn");
 
-const studentModal =
-    document.getElementById(
-        "studentModal"
-    );
+const addModal =
+    document.getElementById("addModal");
 
-const closeModal =
-    document.getElementById(
-        "closeModal"
-    );
+const closeAdd =
+    document.getElementById("closeAdd");
 
-const saveStudent =
-    document.getElementById(
-        "saveStudent"
-    );
+const cancelAdd =
+    document.getElementById("cancelAdd");
 
+const saveNewStudent =
+    document.getElementById("saveNewStudent");
+
+const newStudentType =
+    document.getElementById("newStudentType");
+
+const newStudentGrade =
+    document.getElementById("newStudentGrade");
+
+const newStudentId =
+    document.getElementById("newStudentId");
+
+const newStudentPassword =
+    document.getElementById("newStudentPassword");
+
+const newMustChange =
+    document.getElementById("newMustChange");
+
+const categoryButtons =
+    document.querySelectorAll(".category-btn");
+
+
+// =====================================================
+// EDIT MODAL
+// =====================================================
 
 const editModal =
-    document.getElementById(
-        "editModal"
-    );
+    document.getElementById("editModal");
 
 const closeEdit =
-    document.getElementById(
-        "closeEdit"
-    );
+    document.getElementById("closeEdit");
+
+const closeEditBottom =
+    document.getElementById("closeEditBottom");
+
+const editStudentId =
+    document.getElementById("editStudentId");
+
+const editPassword =
+    document.getElementById("editPassword");
+
+const editMustChange =
+    document.getElementById("editMustChange");
+
+const resetPasswordBtn =
+    document.getElementById("resetPasswordBtn");
+
+const selectAllPapers =
+    document.getElementById("selectAllPapers");
+
+const removeAllPapers =
+    document.getElementById("removeAllPapers");
+
+const resetViewed =
+    document.getElementById("resetViewed");
 
 const updateStudent =
-    document.getElementById(
-        "updateStudent"
-    );
+    document.getElementById("updateStudent");
 
 const deleteStudent =
-    document.getElementById(
-        "deleteStudent"
-    );
+    document.getElementById("deleteStudent");
+
+const logoutBtn =
+    document.getElementById("logoutBtn");
 
 
 // =====================================================
@@ -128,102 +156,63 @@ let currentStudent = "";
 
 
 // =====================================================
-// LOGOUT
+// SETTINGS
 // =====================================================
 
-const logoutBtn =
-    document.getElementById(
-        "logoutBtn"
-    );
+const ACTIVE_LIMIT = 90 * 1000;
 
-
-if (logoutBtn) {
-
-    logoutBtn.addEventListener(
-        "click",
-        () => {
-
-            if (
-                confirm(
-                    "Logout from Admin Panel?"
-                )
-            ) {
-
-                sessionStorage.removeItem(
-                    "adminLoggedIn"
-                );
-
-                sessionStorage.removeItem(
-                    "adminRole"
-                );
-
-                sessionStorage.removeItem(
-                    "adminUsername"
-                );
-
-                window.location.href =
-                    "admin-login.html";
-
-            }
-
-        }
-    );
-
-}
+const PAPER_COUNT = 10;
 
 
 // =====================================================
 // STUDENT TYPE
 // =====================================================
 
-function getStudentType(
-    data
-) {
+function getStudentType(data) {
 
     if (
-        data?.studentType ===
-        "grade10"
+        data?.studentType === "grade10"
     ) {
+        return "grade10";
+    }
 
+    if (
+        data?.studentType === "grade11"
+    ) {
+        return "grade11";
+    }
+
+    if (
+        String(data?.grade || "") === "10"
+    ) {
+        return "grade10";
+    }
+
+    if (
+        String(data?.grade || "") === "11"
+    ) {
+        return "grade11";
+    }
+
+    return "al";
+}
+
+
+// =====================================================
+// STUDENT TYPE LABEL
+// =====================================================
+
+function getStudentTypeLabel(type) {
+
+    if (type === "grade10") {
         return "Grade 10";
-
     }
 
-
-    if (
-        data?.studentType ===
-        "grade11"
-    ) {
-
+    if (type === "grade11") {
         return "Grade 11";
-
     }
-
-
-    if (
-        String(
-            data?.grade || ""
-        ) === "10"
-    ) {
-
-        return "Grade 10";
-
-    }
-
-
-    if (
-        String(
-            data?.grade || ""
-        ) === "11"
-    ) {
-
-        return "Grade 11";
-
-    }
-
 
     return "A/L";
-
 }
 
 
@@ -231,30 +220,18 @@ function getStudentType(
 // ACTIVE CHECK
 // =====================================================
 
-function isStudentActive(
-    data
-) {
+function isStudentActive(data) {
 
     const lastActive =
-        Number(
-            data?.lastActiveAt || 0
-        );
-
+        Number(data?.lastActiveAt || 0);
 
     if (!lastActive) {
-
         return false;
-
     }
 
-
     return (
-        Date.now() -
-        lastActive
-        <=
-        90 * 1000
+        Date.now() - lastActive <= ACTIVE_LIMIT
     );
-
 }
 
 
@@ -262,41 +239,29 @@ function isStudentActive(
 // PAPER VIEW COUNT
 // =====================================================
 
-function getViewedCount(
-    data
-) {
+function getViewedCount(data) {
 
     let count = 0;
 
-
     for (
         let i = 1;
-        i <= 10;
+        i <= PAPER_COUNT;
         i++
     ) {
 
         const field =
             "paper" +
-            String(i).padStart(
-                2,
-                "0"
-            ) +
+            String(i).padStart(2, "0") +
             "Viewed";
 
-
         if (
-            data[field] === true
+            data?.[field] === true
         ) {
-
             count++;
-
         }
-
     }
 
-
     return count;
-
 }
 
 
@@ -304,34 +269,178 @@ function getViewedCount(
 // ESCAPE HTML
 // =====================================================
 
-function escapeHTML(
-    value
-) {
+function escapeHTML(value) {
 
-    return String(
-        value
-    )
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-        .replace(
-            /</g,
-            "&lt;"
-        )
-        .replace(
-            />/g,
-            "&gt;"
-        )
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-        .replace(
-            /'/g,
-            "&#039;"
-        );
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
 
+
+// =====================================================
+// SET TEXT
+// =====================================================
+
+function setText(element, value) {
+
+    if (element) {
+        element.textContent = value;
+    }
+}
+
+
+// =====================================================
+// LOGOUT
+// =====================================================
+
+if (logoutBtn) {
+
+    logoutBtn.addEventListener(
+        "click",
+        () => {
+
+            const confirmLogout =
+                confirm(
+                    "Logout from Admin Panel?"
+                );
+
+            if (!confirmLogout) {
+                return;
+            }
+
+            sessionStorage.removeItem(
+                "adminLoggedIn"
+            );
+
+            sessionStorage.removeItem(
+                "adminRole"
+            );
+
+            sessionStorage.removeItem(
+                "adminUsername"
+            );
+
+            window.location.href =
+                "admin-login.html";
+        }
+    );
+}
+
+
+// =====================================================
+// RENDER SUMMARY
+// =====================================================
+
+function renderSummary() {
+
+    let total = allStudents.length;
+
+    let grade10 = 0;
+
+    let grade11 = 0;
+
+    let al = 0;
+
+    let active = 0;
+
+    let views = 0;
+
+
+    allStudents.forEach(student => {
+
+        const type =
+            getStudentType(
+                student.data
+            );
+
+        if (type === "grade10") {
+            grade10++;
+        }
+        else if (type === "grade11") {
+            grade11++;
+        }
+        else {
+            al++;
+        }
+
+
+        if (
+            isStudentActive(
+                student.data
+            )
+        ) {
+            active++;
+        }
+
+
+        views +=
+            getViewedCount(
+                student.data
+            );
+
+    });
+
+
+    setText(
+        totalStudents,
+        total
+    );
+
+    setText(
+        grade10Students,
+        grade10
+    );
+
+    setText(
+        grade11Students,
+        grade11
+    );
+
+    setText(
+        alStudents,
+        al
+    );
+
+    setText(
+        activeStudents,
+        active
+    );
+
+    setText(
+        totalViewed,
+        views
+    );
+
+    setText(
+        onlineStudents,
+        active
+    );
+
+
+    // Support old IDs too
+
+    setText(
+        document.getElementById("grade10Count"),
+        grade10
+    );
+
+    setText(
+        document.getElementById("grade11Count"),
+        grade11
+    );
+
+    setText(
+        document.getElementById("alCount"),
+        al
+    );
+
+    setText(
+        document.getElementById("activeCount"),
+        active
+    );
 }
 
 
@@ -339,33 +448,27 @@ function escapeHTML(
 // RENDER TABLE
 // =====================================================
 
-function renderTable(
-    list
-) {
+function renderTable(list) {
 
     if (!table) {
-
         return;
-
     }
 
 
     table.innerHTML = "";
 
 
-    if (
-        !list.length
-    ) {
+    if (!list.length) {
 
         table.innerHTML = `
 
             <tr>
 
                 <td
-                    colspan="5"
+                    colspan="6"
                     style="
                         text-align:center;
-                        padding:40px;
+                        padding:45px;
                         color:#64748b;
                     "
                 >
@@ -379,12 +482,175 @@ function renderTable(
         `;
 
         return;
-
     }
 
 
-    list.forEach(
-        student => {
+    list.forEach(student => {
+
+        const type =
+            getStudentType(
+                student.data
+            );
+
+
+        const typeLabel =
+            getStudentTypeLabel(
+                type
+            );
+
+
+        const active =
+            isStudentActive(
+                student.data
+            );
+
+
+        const viewed =
+            getViewedCount(
+                student.data
+            );
+
+
+        const statusClass =
+            active
+                ? "active"
+                : "offline";
+
+
+        const statusText =
+            active
+                ? "🟢 Active"
+                : "⚪ Offline";
+
+
+        const password =
+            student.data?.password || "";
+
+
+        table.innerHTML += `
+
+            <tr>
+
+                <!-- STUDENT ID -->
+
+                <td>
+
+                    <strong>
+                        ${escapeHTML(
+                            student.id
+                        )}
+                    </strong>
+
+                </td>
+
+
+                <!-- TYPE -->
+
+                <td>
+
+                    ${escapeHTML(
+                        typeLabel
+                    )}
+
+                </td>
+
+
+                <!-- VIEWED -->
+
+                <td>
+
+                    ${viewed}/10
+
+                </td>
+
+
+                <!-- STATUS -->
+
+                <td>
+
+                    <span
+                        class="status ${statusClass}"
+                    >
+
+                        ${statusText}
+
+                    </span>
+
+                </td>
+
+
+                <!-- PASSWORD -->
+
+                <td>
+
+                    <button
+                        type="button"
+                        class="action-btn edit-btn"
+                        data-id="${escapeHTML(
+                            student.id
+                        )}"
+                    >
+
+                        ✏️ Edit
+
+                    </button>
+
+                </td>
+
+
+                <!-- ACTION -->
+
+                <td>
+
+                    <button
+                        type="button"
+                        class="action-btn edit-btn"
+                        data-id="${escapeHTML(
+                            student.id
+                        )}"
+                    >
+
+                        Manage
+
+                    </button>
+
+                </td>
+
+            </tr>
+
+        `;
+    });
+}
+
+
+// =====================================================
+// FILTER TABLE
+// =====================================================
+
+function applyFilters() {
+
+    const keyword =
+        searchInput?.value
+            .trim()
+            .toLowerCase() || "";
+
+
+    const selectedType =
+        typeFilter?.value || "all";
+
+
+    const selectedStatus =
+        statusFilter?.value || "all";
+
+
+    const filtered =
+        allStudents.filter(student => {
+
+            const id =
+                String(
+                    student.id
+                ).toLowerCase();
+
 
             const type =
                 getStudentType(
@@ -398,83 +664,52 @@ function renderTable(
                 );
 
 
-            const statusClass =
+            // Search
+
+            if (
+                keyword &&
+                !id.includes(keyword)
+            ) {
+                return false;
+            }
+
+
+            // Grade
+
+            if (
+                selectedType !== "all" &&
+                type !== selectedType
+            ) {
+                return false;
+            }
+
+
+            // Status
+
+            if (
+                selectedStatus === "active" &&
+                !active
+            ) {
+                return false;
+            }
+
+
+            if (
+                selectedStatus === "offline" &&
                 active
-                    ? "active"
-                    : "offline";
+            ) {
+                return false;
+            }
 
 
-            const statusText =
-                active
-                    ? "🟢 Active"
-                    : "⚪ Offline";
+            return true;
+
+        });
 
 
-            table.innerHTML += `
-
-                <tr>
-
-                    <td>
-
-                        <strong>
-                            ${escapeHTML(
-                                student.id
-                            )}
-                        </strong>
-
-                    </td>
-
-
-                    <td>
-
-                        ${type}
-
-                    </td>
-
-
-                    <td>
-
-                        ${student.viewed}/10
-
-                    </td>
-
-
-                    <td>
-
-                        <span
-                            class="status ${statusClass}"
-                        >
-
-                            ${statusText}
-
-                        </span>
-
-                    </td>
-
-
-                    <td>
-
-                        <button
-                            type="button"
-                            class="action-btn edit-btn"
-                            data-id="${escapeHTML(
-                                student.id
-                            )}"
-                        >
-
-                            ✏️ Edit
-
-                        </button>
-
-                    </td>
-
-                </tr>
-
-            `;
-
-        }
+    renderTable(
+        filtered
     );
-
 }
 
 
@@ -493,10 +728,10 @@ async function loadStudents() {
                 <tr>
 
                     <td
-                        colspan="5"
+                        colspan="6"
                         style="
                             text-align:center;
-                            padding:40px;
+                            padding:45px;
                             color:#64748b;
                         "
                     >
@@ -508,7 +743,6 @@ async function loadStudents() {
                 </tr>
 
             `;
-
         }
 
 
@@ -524,153 +758,51 @@ async function loadStudents() {
         allStudents = [];
 
 
-        let studentsCount = 0;
+        snapshot.forEach(docSnap => {
 
-        let viewedCount = 0;
-
-        let activeCount = 0;
-
-        let grade10Count = 0;
-
-        let grade11Count = 0;
-
-        let alCount = 0;
+            const data =
+                docSnap.data();
 
 
-        snapshot.forEach(
-            docSnap => {
+            allStudents.push({
 
-                studentsCount++;
+                id:
+                    docSnap.id,
 
+                data:
+                    data,
 
-                const data =
-                    docSnap.data();
-
-
-                const viewed =
+                viewed:
                     getViewedCount(
                         data
-                    );
+                    )
+
+            });
+
+        });
 
 
-                const type =
-                    getStudentType(
-                        data
-                    );
+        // Sort by student ID
 
-
-                const active =
-                    isStudentActive(
-                        data
-                    );
-
-
-                viewedCount +=
-                    viewed;
-
-
-                if (active) {
-
-                    activeCount++;
-
-                }
-
-
-                if (
-                    type ===
-                    "Grade 10"
-                ) {
-
-                    grade10Count++;
-
-                }
-                else if (
-                    type ===
-                    "Grade 11"
-                ) {
-
-                    grade11Count++;
-
-                }
-                else {
-
-                    alCount++;
-
-                }
-
-
-                allStudents.push({
-
-                    id:
-                        docSnap.id,
-
-                    viewed:
-                        viewed,
-
-                    data:
-                        data
-
-                });
-
-            }
+        allStudents.sort(
+            (a, b) =>
+                String(a.id)
+                    .localeCompare(
+                        String(b.id),
+                        undefined,
+                        {
+                            numeric: true
+                        }
+                    )
         );
 
 
-        renderTable(
-            allStudents
-        );
+        renderSummary();
 
-
-        // =================================================
-        // SUMMARY CARDS
-        // =================================================
-
-        setElementText(
-            "totalStudents",
-            studentsCount
-        );
-
-
-        setElementText(
-            "totalViewed",
-            viewedCount
-        );
-
-
-        setElementText(
-            "onlineStudents",
-            activeCount
-        );
-
-
-        // Optional counters if HTML has them
-
-        setElementText(
-            "grade10Count",
-            grade10Count
-        );
-
-
-        setElementText(
-            "grade11Count",
-            grade11Count
-        );
-
-
-        setElementText(
-            "alCount",
-            alCount
-        );
-
-
-        setElementText(
-            "activeCount",
-            activeCount
-        );
+        applyFilters();
 
 
     }
-
     catch (error) {
 
         console.error(
@@ -686,10 +818,10 @@ async function loadStudents() {
                 <tr>
 
                     <td
-                        colspan="5"
+                        colspan="6"
                         style="
                             text-align:center;
-                            padding:40px;
+                            padding:45px;
                             color:#dc2626;
                         "
                     >
@@ -701,159 +833,289 @@ async function loadStudents() {
                 </tr>
 
             `;
-
         }
-
     }
-
 }
 
 
 // =====================================================
-// SET ELEMENT TEXT
+// SEARCH EVENT
 // =====================================================
 
-function setElementText(
-    id,
-    value
-) {
+if (searchInput) {
 
-    const element =
-        document.getElementById(
-            id
+    searchInput.addEventListener(
+        "input",
+        applyFilters
+    );
+}
+
+
+// =====================================================
+// TYPE FILTER
+// =====================================================
+
+if (typeFilter) {
+
+    typeFilter.addEventListener(
+        "change",
+        applyFilters
+    );
+}
+
+
+// =====================================================
+// STATUS FILTER
+// =====================================================
+
+if (statusFilter) {
+
+    statusFilter.addEventListener(
+        "change",
+        applyFilters
+    );
+}
+
+
+// =====================================================
+// OPEN ADD MODAL
+// =====================================================
+
+function openAddModal() {
+
+    clearAddStudentForm();
+
+
+    if (addModal) {
+
+        addModal.style.display =
+            "flex";
+
+    }
+}
+
+
+if (addStudentBtn) {
+
+    addStudentBtn.addEventListener(
+        "click",
+        openAddModal
+    );
+}
+
+
+// =====================================================
+// CLEAR ADD FORM
+// =====================================================
+
+function clearAddStudentForm() {
+
+    if (newStudentId) {
+        newStudentId.value = "";
+    }
+
+
+    if (newStudentPassword) {
+        newStudentPassword.value = "";
+    }
+
+
+    if (newMustChange) {
+        newMustChange.checked = false;
+    }
+
+
+    if (newStudentType) {
+        newStudentType.value = "";
+    }
+
+
+    if (newStudentGrade) {
+
+        newStudentGrade.textContent =
+            "Select a student category.";
+
+        newStudentGrade.className =
+            "grade-status";
+
+    }
+
+
+    categoryButtons.forEach(button => {
+
+        button.classList.remove(
+            "selected",
+            "active"
         );
 
-
-    if (element) {
-
-        element.textContent =
-            value;
-
-    }
-
+    });
 }
 
 
 // =====================================================
-// INITIAL LOAD
+// CATEGORY BUTTONS
 // =====================================================
 
-loadStudents();
+categoryButtons.forEach(button => {
 
-
-// =====================================================
-// SEARCH
-// =====================================================
-
-if (search) {
-
-    search.addEventListener(
-        "input",
+    button.addEventListener(
+        "click",
         () => {
 
-            const keyword =
-                search.value
-                    .trim()
-                    .toLowerCase();
+            const type =
+                button.dataset.type;
 
 
-            const filtered =
-                allStudents.filter(
-                    student => {
+            if (newStudentType) {
 
-                        const id =
-                            String(
-                                student.id
-                            )
-                            .toLowerCase();
-
-
-                        const type =
-                            getStudentType(
-                                student.data
-                            )
-                            .toLowerCase();
-
-
-                        return (
-                            id.includes(
-                                keyword
-                            ) ||
-                            type.includes(
-                                keyword
-                            )
-                        );
-
-                    }
-                );
-
-
-            renderTable(
-                filtered
-            );
-
-        }
-    );
-
-}
-
-
-// =====================================================
-// ADD STUDENT
-// =====================================================
-
-if (saveStudent) {
-
-    saveStudent.addEventListener(
-        "click",
-        async () => {
-
-            const id =
-                document
-                    .getElementById(
-                        "studentId"
-                    )
-                    ?.value
-                    .trim();
-
-
-            const password =
-                document
-                    .getElementById(
-                        "studentPassword"
-                    )
-                    ?.value
-                    .trim();
-
-
-            const mustChange =
-                document
-                    .getElementById(
-                        "mustChange"
-                    )
-                    ?.checked ||
-                false;
-
-
-            if (
-                !id ||
-                !password
-            ) {
-
-                alert(
-                    "Please enter Student ID and Password."
-                );
-
-                return;
+                newStudentType.value =
+                    type;
 
             }
 
 
-            // =================================================
-            // CHECK DUPLICATE
-            // =================================================
+            categoryButtons.forEach(
+                item => {
+
+                    item.classList.remove(
+                        "selected",
+                        "active"
+                    );
+
+                }
+            );
+
+
+            button.classList.add(
+                "selected"
+            );
+
+            button.classList.add(
+                "active"
+            );
+
+
+            if (newStudentGrade) {
+
+                if (
+                    type === "grade10"
+                ) {
+
+                    newStudentGrade.textContent =
+                        "Selected: Grade 10";
+
+                }
+                else if (
+                    type === "grade11"
+                ) {
+
+                    newStudentGrade.textContent =
+                        "Selected: Grade 11";
+
+                }
+                else {
+
+                    newStudentGrade.textContent =
+                        "Selected: A/L";
+
+                }
+
+            }
+
+        }
+    );
+
+});
+
+
+// =====================================================
+// SAVE NEW STUDENT
+// =====================================================
+
+if (saveNewStudent) {
+
+    saveNewStudent.addEventListener(
+        "click",
+        async () => {
+
+            const id =
+                newStudentId?.value
+                    .trim() || "";
+
+
+            const password =
+                newStudentPassword?.value
+                    .trim() || "";
+
+
+            const type =
+                newStudentType?.value || "";
+
+
+            const mustChange =
+                newMustChange?.checked ||
+                false;
+
+
+            // Validation
+
+            if (!type) {
+
+                alert(
+                    "Please select Student Category."
+                );
+
+                return;
+            }
+
+
+            if (!id) {
+
+                alert(
+                    "Please enter Student ID."
+                );
+
+                newStudentId?.focus();
+
+                return;
+            }
+
+
+            if (!password) {
+
+                alert(
+                    "Please enter Password."
+                );
+
+                newStudentPassword?.focus();
+
+                return;
+            }
+
+
+            if (
+                id.includes("/") ||
+                id.includes("\\")
+            ) {
+
+                alert(
+                    "Student ID cannot contain / or \\."
+                );
+
+                return;
+            }
+
+
+            saveNewStudent.disabled =
+                true;
+
+            saveNewStudent.textContent =
+                "Saving...";
+
 
             try {
+
+                // Check duplicate
 
                 const existing =
                     await getDoc(
@@ -874,32 +1136,59 @@ if (saveStudent) {
                     );
 
                     return;
-
                 }
 
 
-                // =================================================
-                // CREATE STUDENT
-                // =================================================
+                // Student data
 
                 const studentData = {
+
+                    studentType:
+                        type,
 
                     password:
                         password,
 
                     mustChangePassword:
-                        mustChange
+                        mustChange,
+
+                    lastActiveAt:
+                        0
 
                 };
 
 
-                // =================================================
-                // DEFAULT PAPER DATA
-                // =================================================
+                // Grade field
+
+                if (
+                    type === "grade10"
+                ) {
+
+                    studentData.grade =
+                        "10";
+
+                }
+                else if (
+                    type === "grade11"
+                ) {
+
+                    studentData.grade =
+                        "11";
+
+                }
+                else {
+
+                    studentData.grade =
+                        "AL";
+
+                }
+
+
+                // Default paper data
 
                 for (
                     let i = 1;
-                    i <= 10;
+                    i <= PAPER_COUNT;
                     i++
                 ) {
 
@@ -912,28 +1201,21 @@ if (saveStudent) {
                             );
 
 
+                    studentData[paper] =
+                        false;
+
+
                     studentData[
-                        paper
+                        paper + "Viewed"
                     ] = false;
 
 
                     studentData[
-                        paper +
-                        "Viewed"
-                    ] = false;
-
-
-                    studentData[
-                        paper +
-                        "Pages"
+                        paper + "Pages"
                     ] = 10;
 
                 }
 
-
-                // =================================================
-                // SAVE
-                // =================================================
 
                 await setDoc(
                     doc(
@@ -950,23 +1232,20 @@ if (saveStudent) {
                 );
 
 
-                clearAddStudentForm();
+                if (addModal) {
 
-
-                if (
-                    studentModal
-                ) {
-
-                    studentModal.style.display =
+                    addModal.style.display =
                         "none";
 
                 }
 
 
+                clearAddStudentForm();
+
+
                 await loadStudents();
 
             }
-
             catch (error) {
 
                 console.error(
@@ -976,26 +1255,196 @@ if (saveStudent) {
 
 
                 alert(
-                    "Failed to add student."
+                    "Failed to add student.\n\n" +
+                    error.message
                 );
+
+            }
+            finally {
+
+                saveNewStudent.disabled =
+                    false;
+
+                saveNewStudent.textContent =
+                    "💾 Save Student";
 
             }
 
         }
     );
-
 }
 
 
 // =====================================================
-// EDIT STUDENT
+// CLOSE ADD MODAL
+// =====================================================
+
+function closeAddModal() {
+
+    clearAddStudentForm();
+
+
+    if (addModal) {
+
+        addModal.style.display =
+            "none";
+
+    }
+}
+
+
+if (closeAdd) {
+
+    closeAdd.addEventListener(
+        "click",
+        closeAddModal
+    );
+}
+
+
+if (cancelAdd) {
+
+    cancelAdd.addEventListener(
+        "click",
+        closeAddModal
+    );
+}
+
+
+// =====================================================
+// OPEN EDIT MODAL
+// =====================================================
+
+async function openEditStudent(studentId) {
+
+    currentStudent =
+        studentId;
+
+
+    try {
+
+        const snap =
+            await getDoc(
+                doc(
+                    db,
+                    "students",
+                    studentId
+                )
+            );
+
+
+        if (!snap.exists()) {
+
+            alert(
+                "Student not found."
+            );
+
+            currentStudent = "";
+
+            return;
+        }
+
+
+        const data =
+            snap.data();
+
+
+        // Student ID
+
+        if (editStudentId) {
+
+            editStudentId.value =
+                studentId;
+
+        }
+
+
+        // Password
+
+        if (editPassword) {
+
+            editPassword.value =
+                data.password || "";
+
+        }
+
+
+        // Must change
+
+        if (editMustChange) {
+
+            editMustChange.checked =
+                data.mustChangePassword === true;
+
+        }
+
+
+        // Paper permissions
+
+        for (
+            let i = 1;
+            i <= PAPER_COUNT;
+            i++
+        ) {
+
+            const field =
+                "paper" +
+                String(i)
+                    .padStart(
+                        2,
+                        "0"
+                    );
+
+
+            const checkbox =
+                document.getElementById(
+                    field
+                );
+
+
+            if (checkbox) {
+
+                checkbox.checked =
+                    data[field] === true;
+
+            }
+
+        }
+
+
+        if (editModal) {
+
+            editModal.style.display =
+                "flex";
+
+        }
+
+    }
+    catch (error) {
+
+        console.error(
+            "Open Edit Error:",
+            error
+        );
+
+
+        alert(
+            "Failed to load student."
+        );
+
+    }
+}
+
+
+// =====================================================
+// EDIT BUTTON EVENT
 // =====================================================
 
 if (table) {
 
     table.addEventListener(
         "click",
-        async event => {
+        event => {
 
             const button =
                 event.target.closest(
@@ -1004,117 +1453,125 @@ if (table) {
 
 
             if (!button) {
-
                 return;
-
             }
 
 
-            currentStudent =
+            const id =
                 button.dataset.id;
 
 
-            if (
-                !currentStudent
-            ) {
+            if (!id) {
+                return;
+            }
+
+
+            openEditStudent(
+                id
+            );
+
+        }
+    );
+}
+
+
+// =====================================================
+// CLOSE EDIT
+// =====================================================
+
+function closeEditModal() {
+
+    if (editModal) {
+
+        editModal.style.display =
+            "none";
+
+    }
+
+
+    currentStudent = "";
+}
+
+
+if (closeEdit) {
+
+    closeEdit.addEventListener(
+        "click",
+        closeEditModal
+    );
+}
+
+
+if (closeEditBottom) {
+
+    closeEditBottom.addEventListener(
+        "click",
+        closeEditModal
+    );
+}
+
+
+// =====================================================
+// UPDATE STUDENT
+// =====================================================
+
+if (updateStudent) {
+
+    updateStudent.addEventListener(
+        "click",
+        async () => {
+
+            if (!currentStudent) {
+
+                alert(
+                    "No student selected."
+                );
 
                 return;
-
             }
+
+
+            const password =
+                editPassword?.value.trim() ||
+                "";
+
+
+            if (!password) {
+
+                alert(
+                    "Password cannot be empty."
+                );
+
+                return;
+            }
+
+
+            updateStudent.disabled =
+                true;
+
+            updateStudent.textContent =
+                "Saving...";
 
 
             try {
 
-                const snap =
-                    await getDoc(
-                        doc(
-                            db,
-                            "students",
-                            currentStudent
-                        )
-                    );
+                const updateData = {
+
+                    password:
+                        password,
+
+                    mustChangePassword:
+                        editMustChange?.checked ||
+                        false
+
+                };
 
 
-                if (
-                    !snap.exists()
-                ) {
-
-                    alert(
-                        "Student not found."
-                    );
-
-                    return;
-
-                }
-
-
-                const data =
-                    snap.data();
-
-
-                // =================================================
-                // ID
-                // =================================================
-
-                const editId =
-                    document.getElementById(
-                        "editStudentId"
-                    );
-
-
-                if (editId) {
-
-                    editId.value =
-                        currentStudent;
-
-                }
-
-
-                // =================================================
-                // PASSWORD
-                // =================================================
-
-                const editPassword =
-                    document.getElementById(
-                        "editPassword"
-                    );
-
-
-                if (editPassword) {
-
-                    editPassword.value =
-                        data.password ||
-                        "";
-
-                }
-
-
-                // =================================================
-                // MUST CHANGE
-                // =================================================
-
-                const editMustChange =
-                    document.getElementById(
-                        "editMustChange"
-                    );
-
-
-                if (editMustChange) {
-
-                    editMustChange.checked =
-                        data.mustChangePassword ||
-                        false;
-
-                }
-
-
-                // =================================================
-                // PAPER PERMISSIONS
-                // =================================================
+                // Paper permissions
 
                 for (
                     let i = 1;
-                    i <= 10;
+                    i <= PAPER_COUNT;
                     i++
                 ) {
 
@@ -1135,194 +1592,13 @@ if (table) {
 
                     if (checkbox) {
 
-                        checkbox.checked =
-                            data[field] ===
-                            true;
+                        updateData[field] =
+                            checkbox.checked;
 
                     }
 
                 }
 
-
-                // =================================================
-                // VIEWED STATUS
-                // =================================================
-
-                for (
-                    let i = 1;
-                    i <= 10;
-                    i++
-                ) {
-
-                    const field =
-                        "paper" +
-                        String(i)
-                            .padStart(
-                                2,
-                                "0"
-                            ) +
-                        "Viewed";
-
-
-                    const viewed =
-                        document.getElementById(
-                            field
-                        );
-
-
-                    if (viewed) {
-
-                        viewed.checked =
-                            data[field] ===
-                            true;
-
-                    }
-
-                }
-
-
-                if (
-                    editModal
-                ) {
-
-                    editModal.style.display =
-                        "flex";
-
-                }
-
-            }
-
-            catch (error) {
-
-                console.error(
-                    "Edit Student Error:",
-                    error
-                );
-
-
-                alert(
-                    "Failed to load student."
-                );
-
-            }
-
-        }
-    );
-
-}
-
-
-// =====================================================
-// CLOSE EDIT
-// =====================================================
-
-if (closeEdit) {
-
-    closeEdit.addEventListener(
-        "click",
-        () => {
-
-            if (
-                editModal
-            ) {
-
-                editModal.style.display =
-                    "none";
-
-            }
-
-        }
-    );
-
-}
-
-
-// =====================================================
-// UPDATE STUDENT
-// =====================================================
-
-if (updateStudent) {
-
-    updateStudent.addEventListener(
-        "click",
-        async () => {
-
-            if (
-                !currentStudent
-            ) {
-
-                alert(
-                    "No student selected."
-                );
-
-                return;
-
-            }
-
-
-            const editPassword =
-                document.getElementById(
-                    "editPassword"
-                );
-
-
-            const editMustChange =
-                document.getElementById(
-                    "editMustChange"
-                );
-
-
-            const updateData = {
-
-                password:
-                    editPassword
-                        ? editPassword.value
-                        : "",
-
-                mustChangePassword:
-                    editMustChange
-                        ? editMustChange.checked
-                        : false
-
-            };
-
-
-            // =================================================
-            // PAPER PERMISSIONS
-            // =================================================
-
-            for (
-                let i = 1;
-                i <= 10;
-                i++
-            ) {
-
-                const field =
-                    "paper" +
-                    String(i)
-                        .padStart(
-                            2,
-                            "0"
-                        );
-
-
-                const checkbox =
-                    document.getElementById(
-                        field
-                    );
-
-
-                if (checkbox) {
-
-                    updateData[field] =
-                        checkbox.checked;
-
-                }
-
-            }
-
-
-            try {
 
                 await updateDoc(
                     doc(
@@ -1339,24 +1615,12 @@ if (updateStudent) {
                 );
 
 
-                if (
-                    editModal
-                ) {
-
-                    editModal.style.display =
-                        "none";
-
-                }
-
-
-                currentStudent =
-                    "";
+                closeEditModal();
 
 
                 await loadStudents();
 
             }
-
             catch (error) {
 
                 console.error(
@@ -1366,14 +1630,23 @@ if (updateStudent) {
 
 
                 alert(
-                    "Update failed."
+                    "Update failed.\n\n" +
+                    error.message
                 );
+
+            }
+            finally {
+
+                updateStudent.disabled =
+                    false;
+
+                updateStudent.textContent =
+                    "💾 Save Changes";
 
             }
 
         }
     );
-
 }
 
 
@@ -1387,28 +1660,34 @@ if (deleteStudent) {
         "click",
         async () => {
 
-            if (
-                !currentStudent
-            ) {
+            if (!currentStudent) {
+
+                alert(
+                    "No student selected."
+                );
 
                 return;
-
             }
 
 
-            const ok =
+            const confirmDelete =
                 confirm(
-                    "Are you sure you want to delete " +
+                    "Are you sure you want to delete student " +
                     currentStudent +
-                    " ?"
+                    "?"
                 );
 
 
-            if (!ok) {
-
+            if (!confirmDelete) {
                 return;
-
             }
+
+
+            deleteStudent.disabled =
+                true;
+
+            deleteStudent.textContent =
+                "Deleting...";
 
 
             try {
@@ -1427,24 +1706,12 @@ if (deleteStudent) {
                 );
 
 
-                if (
-                    editModal
-                ) {
-
-                    editModal.style.display =
-                        "none";
-
-                }
-
-
-                currentStudent =
-                    "";
+                closeEditModal();
 
 
                 await loadStudents();
 
             }
-
             catch (error) {
 
                 console.error(
@@ -1454,203 +1721,29 @@ if (deleteStudent) {
 
 
                 alert(
-                    "Delete failed."
+                    "Delete failed.\n\n" +
+                    error.message
                 );
 
             }
+            finally {
 
-        }
-    );
+                deleteStudent.disabled =
+                    false;
 
-}
-
-
-// =====================================================
-// ESC KEY
-// =====================================================
-
-document.addEventListener(
-    "keydown",
-    event => {
-
-        if (
-            event.key ===
-            "Escape"
-        ) {
-
-            if (
-                studentModal
-            ) {
-
-                studentModal.style.display =
-                    "none";
-
-            }
-
-
-            if (
-                editModal
-            ) {
-
-                editModal.style.display =
-                    "none";
-
-            }
-
-        }
-
-    }
-);
-
-
-// =====================================================
-// CLEAR ADD FORM
-// =====================================================
-
-function clearAddStudentForm() {
-
-    const studentId =
-        document.getElementById(
-            "studentId"
-        );
-
-
-    const password =
-        document.getElementById(
-            "studentPassword"
-        );
-
-
-    const mustChange =
-        document.getElementById(
-            "mustChange"
-        );
-
-
-    if (studentId) {
-
-        studentId.value = "";
-
-    }
-
-
-    if (password) {
-
-        password.value = "";
-
-    }
-
-
-    if (mustChange) {
-
-        mustChange.checked =
-            false;
-
-    }
-
-}
-
-
-// =====================================================
-// OPEN ADD STUDENT MODAL
-// =====================================================
-
-if (addStudentBtn) {
-
-    addStudentBtn.addEventListener(
-        "click",
-        () => {
-
-            clearAddStudentForm();
-
-
-            if (
-                studentModal
-            ) {
-
-                studentModal.style.display =
-                    "flex";
+                deleteStudent.textContent =
+                    "🗑 Delete";
 
             }
 
         }
     );
-
 }
-
-
-// =====================================================
-// CLOSE ADD MODAL
-// =====================================================
-
-if (closeModal) {
-
-    closeModal.addEventListener(
-        "click",
-        () => {
-
-            clearAddStudentForm();
-
-
-            if (
-                studentModal
-            ) {
-
-                studentModal.style.display =
-                    "none";
-
-            }
-
-        }
-    );
-
-}
-
-
-// =====================================================
-// CLICK OUTSIDE MODAL
-// =====================================================
-
-window.addEventListener(
-    "click",
-    event => {
-
-        if (
-            studentModal &&
-            event.target ===
-            studentModal
-        ) {
-
-            studentModal.style.display =
-                "none";
-
-        }
-
-
-        if (
-            editModal &&
-            event.target ===
-            editModal
-        ) {
-
-            editModal.style.display =
-                "none";
-
-        }
-
-    }
-);
 
 
 // =====================================================
 // SELECT ALL PAPERS
 // =====================================================
-
-const selectAllPapers =
-    document.getElementById(
-        "selectAllPapers"
-    );
-
 
 if (selectAllPapers) {
 
@@ -1660,7 +1753,7 @@ if (selectAllPapers) {
 
             for (
                 let i = 1;
-                i <= 10;
+                i <= PAPER_COUNT;
                 i++
             ) {
 
@@ -1690,19 +1783,12 @@ if (selectAllPapers) {
 
         }
     );
-
 }
 
 
 // =====================================================
 // REMOVE ALL PAPERS
 // =====================================================
-
-const removeAllPapers =
-    document.getElementById(
-        "removeAllPapers"
-    );
-
 
 if (removeAllPapers) {
 
@@ -1712,7 +1798,7 @@ if (removeAllPapers) {
 
             for (
                 let i = 1;
-                i <= 10;
+                i <= PAPER_COUNT;
                 i++
             ) {
 
@@ -1742,7 +1828,6 @@ if (removeAllPapers) {
 
         }
     );
-
 }
 
 
@@ -1750,66 +1835,63 @@ if (removeAllPapers) {
 // RESET VIEWED
 // =====================================================
 
-const resetViewed =
-    document.getElementById(
-        "resetViewed"
-    );
-
-
 if (resetViewed) {
 
     resetViewed.addEventListener(
         "click",
         async () => {
 
-            if (
-                !currentStudent
-            ) {
+            if (!currentStudent) {
+
+                alert(
+                    "No student selected."
+                );
 
                 return;
-
             }
 
 
-            const ok =
+            const confirmReset =
                 confirm(
                     "Reset all viewed paper status for this student?"
                 );
 
 
-            if (!ok) {
-
+            if (!confirmReset) {
                 return;
-
             }
 
 
-            const updateData = {};
-
-
-            for (
-                let i = 1;
-                i <= 10;
-                i++
-            ) {
-
-                const field =
-                    "paper" +
-                    String(i)
-                        .padStart(
-                            2,
-                            "0"
-                        ) +
-                    "Viewed";
-
-
-                updateData[field] =
-                    false;
-
-            }
+            resetViewed.disabled =
+                true;
 
 
             try {
+
+                const updateData = {};
+
+
+                for (
+                    let i = 1;
+                    i <= PAPER_COUNT;
+                    i++
+                ) {
+
+                    const field =
+                        "paper" +
+                        String(i)
+                            .padStart(
+                                2,
+                                "0"
+                            ) +
+                        "Viewed";
+
+
+                    updateData[field] =
+                        false;
+
+                }
+
 
                 await updateDoc(
                     doc(
@@ -1821,6 +1903,40 @@ if (resetViewed) {
                 );
 
 
+                // Update modal checkboxes if they exist
+
+                for (
+                    let i = 1;
+                    i <= PAPER_COUNT;
+                    i++
+                ) {
+
+                    const field =
+                        "paper" +
+                        String(i)
+                            .padStart(
+                                2,
+                                "0"
+                            ) +
+                        "Viewed";
+
+
+                    const checkbox =
+                        document.getElementById(
+                            field
+                        );
+
+
+                    if (checkbox) {
+
+                        checkbox.checked =
+                            false;
+
+                    }
+
+                }
+
+
                 alert(
                     "Viewed status reset successfully."
                 );
@@ -1829,7 +1945,6 @@ if (resetViewed) {
                 await loadStudents();
 
             }
-
             catch (error) {
 
                 console.error(
@@ -1839,14 +1954,20 @@ if (resetViewed) {
 
 
                 alert(
-                    "Failed to reset viewed status."
+                    "Failed to reset viewed status.\n\n" +
+                    error.message
                 );
+
+            }
+            finally {
+
+                resetViewed.disabled =
+                    false;
 
             }
 
         }
     );
-
 }
 
 
@@ -1854,51 +1975,131 @@ if (resetViewed) {
 // RESET PASSWORD
 // =====================================================
 
-const resetPasswordBtn =
-    document.getElementById(
-        "resetPasswordBtn"
-    );
-
-
 if (resetPasswordBtn) {
 
     resetPasswordBtn.addEventListener(
         "click",
         () => {
 
-            const password =
-                document.getElementById(
-                    "editPassword"
-                );
-
-
-            if (!password) {
-
+            if (!editPassword) {
                 return;
-
             }
 
 
             const generated =
                 Math.random()
-                    .toString(
-                        36
-                    )
-                    .slice(
-                        2,
-                        10
-                    );
+                    .toString(36)
+                    .slice(2, 10);
 
 
-            password.value =
+            editPassword.value =
                 generated;
 
 
-            password.focus();
+            if (editMustChange) {
+
+                editMustChange.checked =
+                    true;
+
+            }
+
+
+            editPassword.focus();
 
         }
     );
+}
 
+
+// =====================================================
+// CLICK OUTSIDE MODALS
+// =====================================================
+
+window.addEventListener(
+    "click",
+    event => {
+
+        if (
+            addModal &&
+            event.target === addModal
+        ) {
+
+            closeAddModal();
+
+        }
+
+
+        if (
+            editModal &&
+            event.target === editModal
+        ) {
+
+            closeEditModal();
+
+        }
+
+    }
+);
+
+
+// =====================================================
+// ESC KEY
+// =====================================================
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key !== "Escape"
+        ) {
+            return;
+        }
+
+
+        if (
+            addModal &&
+            addModal.style.display === "flex"
+        ) {
+
+            closeAddModal();
+
+        }
+
+
+        if (
+            editModal &&
+            editModal.style.display === "flex"
+        ) {
+
+            closeEditModal();
+
+        }
+
+    }
+);
+
+
+// =====================================================
+// ENTER KEY - ADD STUDENT
+// =====================================================
+
+if (newStudentPassword) {
+
+    newStudentPassword.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key === "Enter"
+            ) {
+
+                saveNewStudent?.click();
+
+            }
+
+        }
+    );
 }
 
 
@@ -1906,22 +2107,22 @@ if (resetPasswordBtn) {
 // AUTO REFRESH
 // =====================================================
 
-async function refreshDashboard() {
-
-    await loadStudents();
-
-}
-
-
 setInterval(
-    refreshDashboard,
+    async () => {
+
+        await loadStudents();
+
+    },
     30000
 );
 
 
 // =====================================================
-// CONSOLE
+// INITIAL LOAD
 // =====================================================
+
+loadStudents();
+
 
 console.log(
     "✅ Students Admin Panel Loaded"
