@@ -13,8 +13,14 @@ import {
 // 1. LOGIN CHECK
 // =====================================================
 
+const adminLoggedIn =
+    sessionStorage.getItem(
+        "adminLoggedIn"
+    );
+
+
 if (
-    sessionStorage.getItem("adminLoggedIn") !== "true"
+    adminLoggedIn !== "true"
 ) {
 
     window.location.replace(
@@ -25,39 +31,69 @@ if (
 
 
 // =====================================================
-// 2. GET ADMIN INFORMATION
+// 2. GET SESSION ROLE
 // =====================================================
 
-const adminUsername =
-    sessionStorage.getItem("adminUsername") ||
-    sessionStorage.getItem("username") ||
-    "Admin";
+const rawRole =
+    sessionStorage.getItem(
+        "adminRole"
+    ) ||
+    sessionStorage.getItem(
+        "role"
+    ) ||
+    sessionStorage.getItem(
+        "userRole"
+    ) ||
+    "";
 
 
 const adminRole =
-    (
-        sessionStorage.getItem("adminRole") ||
-        sessionStorage.getItem("role") ||
-        "admin"
+    String(
+        rawRole
     )
     .toLowerCase()
     .trim();
 
 
 // =====================================================
-// 3. CHECK SUPERADMIN
+// 3. SUPERADMIN DETECTION
 // =====================================================
+//
+// Supports:
+//
+// superadmin
+// super_admin
+// super admin
+// Super Administrator
+// SUPERADMIN
+//
 
 const isSuperAdmin =
     adminRole === "superadmin" ||
     adminRole === "super_admin" ||
     adminRole === "super admin" ||
     adminRole === "superadministrator" ||
-    adminRole === "super administrator";
+    adminRole === "super administrator" ||
+    adminRole.includes("superadmin") ||
+    adminRole.includes("super administrator");
 
 
 // =====================================================
-// 4. ADMIN USER DISPLAY
+// 4. ADMIN USERNAME
+// =====================================================
+
+const adminUsername =
+    sessionStorage.getItem(
+        "adminUsername"
+    ) ||
+    sessionStorage.getItem(
+        "username"
+    ) ||
+    "Admin";
+
+
+// =====================================================
+// 5. DISPLAY ADMIN USER
 // =====================================================
 
 const usernameElement =
@@ -72,7 +108,9 @@ const roleElement =
     );
 
 
-if (usernameElement) {
+if (
+    usernameElement
+) {
 
     usernameElement.textContent =
         adminUsername;
@@ -80,7 +118,9 @@ if (usernameElement) {
 }
 
 
-if (roleElement) {
+if (
+    roleElement
+) {
 
     roleElement.textContent =
         isSuperAdmin
@@ -91,8 +131,10 @@ if (roleElement) {
 
 
 // =====================================================
-// 5. SUPERADMIN MENU
+// 6. ROLE ACCESS
 // =====================================================
+//
+// IMPORTANT
 //
 // Superadmin:
 // Dashboard
@@ -101,58 +143,99 @@ if (roleElement) {
 // Import Students
 // Statistics
 //
-// Normal Admin:
+// Admin:
 // Dashboard
 // Students
 //
 
-function setupAccess() {
+function applyRoleAccess() {
 
-    const superAdminItems =
+    const superAdminElements =
         document.querySelectorAll(
-            ".superadmin-only"
+            ".superadmin-only, .superadmin-card"
         );
 
 
-    const superAdminCards =
-        document.querySelectorAll(
-            ".superadmin-card"
-        );
-
-
-    const allSuperAdminElements = [
-        ...superAdminItems,
-        ...superAdminCards
-    ];
-
-
-    allSuperAdminElements.forEach(
+    superAdminElements.forEach(
         element => {
 
-            if (isSuperAdmin) {
+            if (
+                isSuperAdmin
+            ) {
 
-                element.style.display = "";
+                // SHOW
+
+                element.hidden =
+                    false;
+
+                element.style.removeProperty(
+                    "display"
+                );
+
+                element.classList.remove(
+                    "role-hidden"
+                );
 
             }
             else {
 
-                element.style.display =
-                    "none";
+                // HIDE
+
+                element.hidden =
+                    true;
+
+                element.classList.add(
+                    "role-hidden"
+                );
 
             }
 
         }
     );
 
+
+    console.log(
+        "Admin role:",
+        adminRole
+    );
+
+
+    console.log(
+        "Is Superadmin:",
+        isSuperAdmin
+    );
+
+
+    console.log(
+        "Superadmin elements:",
+        superAdminElements.length
+    );
+
 }
 
 
-// Run menu access
-setupAccess();
+// Apply after DOM is ready
+
+if (
+    document.readyState ===
+    "loading"
+) {
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        applyRoleAccess
+    );
+
+}
+else {
+
+    applyRoleAccess();
+
+}
 
 
 // =====================================================
-// 6. ELEMENTS
+// 7. ELEMENTS
 // =====================================================
 
 const totalStudentsElement =
@@ -245,15 +328,40 @@ const chartActiveValue =
     );
 
 
+const logoutBtn =
+    document.getElementById(
+        "logoutBtn"
+    );
+
+
 // =====================================================
-// 7. STUDENT TYPE
+// 8. ACTIVE LIMIT
 // =====================================================
 
-function getStudentType(data) {
+const ACTIVE_LIMIT =
+    90 * 1000;
+
+
+// =====================================================
+// 9. STUDENT TYPE
+// =====================================================
+
+function getStudentType(
+    data
+) {
 
     const studentType =
         String(
             data?.studentType ||
+            ""
+        )
+        .toLowerCase()
+        .trim();
+
+
+    const grade =
+        String(
+            data?.grade ||
             ""
         )
         .toLowerCase()
@@ -265,7 +373,9 @@ function getStudentType(data) {
     if (
         studentType === "grade10" ||
         studentType === "grade 10" ||
-        String(data?.grade) === "10"
+        grade === "10" ||
+        grade === "grade10" ||
+        grade === "grade 10"
     ) {
 
         return "grade10";
@@ -278,7 +388,9 @@ function getStudentType(data) {
     if (
         studentType === "grade11" ||
         studentType === "grade 11" ||
-        String(data?.grade) === "11"
+        grade === "11" ||
+        grade === "grade11" ||
+        grade === "grade 11"
     ) {
 
         return "grade11";
@@ -286,7 +398,7 @@ function getStudentType(data) {
     }
 
 
-    // Everything else = A/L
+    // A/L
 
     return "al";
 
@@ -294,22 +406,23 @@ function getStudentType(data) {
 
 
 // =====================================================
-// 8. ACTIVE STUDENT
+// 10. ACTIVE CHECK
 // =====================================================
 
-const ACTIVE_LIMIT =
-    90 * 1000;
-
-
-function isStudentActive(data) {
+function isActive(
+    data
+) {
 
     const lastActive =
         Number(
-            data?.lastActiveAt || 0
+            data?.lastActiveAt ||
+            0
         );
 
 
-    if (!lastActive) {
+    if (
+        !lastActive
+    ) {
 
         return false;
 
@@ -318,25 +431,20 @@ function isStudentActive(data) {
 
     return (
         Date.now() -
-        lastActive
-        <= ACTIVE_LIMIT
+        lastActive <=
+        ACTIVE_LIMIT
     );
 
 }
 
 
 // =====================================================
-// 9. PAPER VIEWS
+// 11. PAPER VIEWS
 // =====================================================
-//
-// Counts:
-// paper01Viewed
-// paper02Viewed
-// ...
-// paper50Viewed
-//
 
-function getPaperViews(data) {
+function getPaperViews(
+    data
+) {
 
     let total = 0;
 
@@ -347,8 +455,11 @@ function getPaperViews(data) {
         i++
     ) {
 
-        const paperNumber =
-            String(i).padStart(
+        const number =
+            String(
+                i
+            )
+            .padStart(
                 2,
                 "0"
             );
@@ -356,7 +467,7 @@ function getPaperViews(data) {
 
         const field =
             "paper" +
-            paperNumber +
+            number +
             "Viewed";
 
 
@@ -377,7 +488,7 @@ function getPaperViews(data) {
 
 
 // =====================================================
-// 10. LOAD DASHBOARD DATA
+// 12. LOAD DASHBOARD
 // =====================================================
 
 async function loadDashboard() {
@@ -406,9 +517,9 @@ async function loadDashboard() {
         let al = 0;
 
 
-        // =============================================
+        // =================================================
         // LOOP STUDENTS
-        // =============================================
+        // =================================================
 
         snapshot.forEach(
             studentDoc => {
@@ -419,10 +530,6 @@ async function loadDashboard() {
 
                 totalStudents++;
 
-
-                // -------------------------------------
-                // STUDENT TYPE
-                // -------------------------------------
 
                 const type =
                     getStudentType(
@@ -437,8 +544,6 @@ async function loadDashboard() {
                     grade10++;
 
                 }
-
-
                 else if (
                     type === "grade11"
                 ) {
@@ -446,8 +551,6 @@ async function loadDashboard() {
                     grade11++;
 
                 }
-
-
                 else {
 
                     al++;
@@ -455,22 +558,14 @@ async function loadDashboard() {
                 }
 
 
-                // -------------------------------------
-                // PAPER VIEWS
-                // -------------------------------------
-
                 totalViewed +=
                     getPaperViews(
                         data
                     );
 
 
-                // -------------------------------------
-                // ACTIVE
-                // -------------------------------------
-
                 if (
-                    isStudentActive(
+                    isActive(
                         data
                     )
                 ) {
@@ -484,7 +579,7 @@ async function loadDashboard() {
 
 
         // =================================================
-        // UPDATE SUMMARY CARDS
+        // SUMMARY
         // =================================================
 
         setText(
@@ -506,7 +601,7 @@ async function loadDashboard() {
 
 
         // =================================================
-        // UPDATE CHART VALUES
+        // CHART VALUES
         // =================================================
 
         setText(
@@ -546,32 +641,24 @@ async function loadDashboard() {
 
 
         // =================================================
-        // UPDATE BARS
+        // CHART BARS
         // =================================================
-
-        const maxValue =
-            Math.max(
-                totalStudents,
-                totalViewed,
-                grade10,
-                grade11,
-                al,
-                activeStudents,
-                1
-            );
-
 
         setBar(
             chartTotalStudents,
             totalStudents,
-            maxValue
+            totalStudents
         );
 
 
         setBar(
             chartPaperViews,
             totalViewed,
-            maxValue
+            Math.max(
+                totalStudents,
+                totalViewed,
+                1
+            )
         );
 
 
@@ -604,79 +691,26 @@ async function loadDashboard() {
 
 
         console.log(
-            "================================"
-        );
-
-        console.log(
-            "ADMIN DASHBOARD"
-        );
-
-        console.log(
-            "Role:",
-            isSuperAdmin
-                ? "SUPERADMIN"
-                : "ADMIN"
-        );
-
-        console.log(
-            "Students:",
-            totalStudents
-        );
-
-        console.log(
-            "Grade 10:",
-            grade10
-        );
-
-        console.log(
-            "Grade 11:",
-            grade11
-        );
-
-        console.log(
-            "A/L:",
-            al
-        );
-
-        console.log(
-            "Paper Views:",
-            totalViewed
-        );
-
-        console.log(
-            "Active:",
-            activeStudents
-        );
-
-        console.log(
-            "================================"
+            "Dashboard data loaded:",
+            {
+                totalStudents,
+                grade10,
+                grade11,
+                al,
+                totalViewed,
+                activeStudents
+            }
         );
 
     }
 
-    catch (error) {
+    catch (
+        error
+    ) {
 
         console.error(
-            "Dashboard loading error:",
+            "Dashboard error:",
             error
-        );
-
-
-        setText(
-            totalStudentsElement,
-            "0"
-        );
-
-
-        setText(
-            totalViewedElement,
-            "0"
-        );
-
-
-        setText(
-            activeStudentsElement,
-            "0"
         );
 
     }
@@ -685,7 +719,7 @@ async function loadDashboard() {
 
 
 // =====================================================
-// 11. SET TEXT
+// 13. SET TEXT
 // =====================================================
 
 function setText(
@@ -693,21 +727,20 @@ function setText(
     value
 ) {
 
-    if (!element) {
+    if (
+        element
+    ) {
 
-        return;
+        element.textContent =
+            value;
 
     }
-
-
-    element.textContent =
-        value;
 
 }
 
 
 // =====================================================
-// 12. SET BAR WIDTH
+// 14. SET BAR
 // =====================================================
 
 function setBar(
@@ -716,7 +749,9 @@ function setBar(
     max
 ) {
 
-    if (!element) {
+    if (
+        !element
+    ) {
 
         return;
 
@@ -744,16 +779,12 @@ function setBar(
         100;
 
 
-    // Don't exceed 100%
-
     percentage =
         Math.min(
             percentage,
             100
         );
 
-
-    // Small values remain visible
 
     if (
         value > 0 &&
@@ -772,49 +803,41 @@ function setBar(
 
 
 // =====================================================
-// 13. LOGOUT
+// 15. LOGOUT
 // =====================================================
 
-const logoutBtn =
-    document.getElementById(
-        "logoutBtn"
-    );
-
-
-if (logoutBtn) {
+if (
+    logoutBtn
+) {
 
     logoutBtn.addEventListener(
         "click",
         () => {
 
-            // Remove admin session
-
             sessionStorage.removeItem(
                 "adminLoggedIn"
             );
-
 
             sessionStorage.removeItem(
                 "adminUsername"
             );
 
-
             sessionStorage.removeItem(
                 "adminRole"
             );
-
 
             sessionStorage.removeItem(
                 "username"
             );
 
-
             sessionStorage.removeItem(
                 "role"
             );
 
+            sessionStorage.removeItem(
+                "userRole"
+            );
 
-            // Go login
 
             window.location.replace(
                 "admin-login.html"
@@ -827,68 +850,14 @@ if (logoutBtn) {
 
 
 // =====================================================
-// 14. PAGE ACCESS PROTECTION
-// =====================================================
-//
-// Prevent normal Admin from opening
-// Superadmin pages manually.
-// =====================================================
-
-const currentPage =
-    window.location.pathname
-        .split("/")
-        .pop()
-        .toLowerCase();
-
-
-const superAdminPages = [
-
-    "paper-management.html",
-
-    "paper-settings.html",
-
-    "import-students.html",
-
-    "statistics.html",
-
-    "reports.html",
-
-    "settings.html"
-
-];
-
-
-if (
-    superAdminPages.includes(
-        currentPage
-    ) &&
-    !isSuperAdmin
-) {
-
-    alert(
-        "Access denied. Super Administrator permission required."
-    );
-
-
-    window.location.replace(
-        "admin.html"
-    );
-
-}
-
-
-// =====================================================
-// 15. INITIAL LOAD
+// 16. INITIAL LOAD
 // =====================================================
 
 loadDashboard();
 
 
 // =====================================================
-// 16. AUTO REFRESH
-// =====================================================
-//
-// Refresh dashboard every 30 seconds.
+// 17. AUTO REFRESH
 // =====================================================
 
 setInterval(
@@ -898,16 +867,15 @@ setInterval(
 
 
 // =====================================================
-// 17. DEBUG
+// 18. DEBUG
 // =====================================================
 
 console.log(
-    "✅ admin.js loaded"
+    "================================="
 );
 
 console.log(
-    "Logged in:",
-    adminLoggedIn
+    "ADMIN DASHBOARD READY"
 );
 
 console.log(
@@ -916,11 +884,20 @@ console.log(
 );
 
 console.log(
-    "Role:",
+    "Raw role:",
+    rawRole
+);
+
+console.log(
+    "Normalized role:",
     adminRole
 );
 
 console.log(
     "Superadmin:",
     isSuperAdmin
+);
+
+console.log(
+    "================================="
 );
