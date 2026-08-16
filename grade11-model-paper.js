@@ -1,6 +1,6 @@
-// ==========================
-// Get URL Parameters
-// ==========================
+// =========================================
+// GET URL PARAMETERS
+// =========================================
 
 const params =
     new URLSearchParams(
@@ -14,9 +14,9 @@ const paper =
     params.get("paper");
 
 
-// ==========================
-// Elements
-// ==========================
+// =========================================
+// ELEMENTS
+// =========================================
 
 const paperTitle =
     document.getElementById(
@@ -49,9 +49,9 @@ const answerBtn =
     );
 
 
-// ==========================
-// Term Names
-// ==========================
+// =========================================
+// TERM NAMES
+// =========================================
 
 const termNames = {
 
@@ -67,12 +67,15 @@ const termNames = {
 };
 
 
-// ==========================
-// Validate
-// ==========================
+// =========================================
+// VALIDATION
+// =========================================
 
 const validTerm =
-    ["1", "2", "3"].includes(term);
+    ["1", "2", "3"].includes(
+        term
+    );
+
 
 const validPaper =
     /^\d{2}$/.test(
@@ -85,109 +88,157 @@ if (
     !validPaper
 ) {
 
-    window.location.href =
-        "grade11-model-papers.html";
+    window.location.replace(
+        "grade11-model-papers.html"
+    );
 
 }
 else {
 
-    // ==========================
-    // Term Name
-    // ==========================
+    // =====================================
+    // TERM NAME
+    // =====================================
 
     const termName =
         termNames[term];
 
 
-    // ==========================
-    // Set Title
-    // ==========================
+    // =====================================
+    // PAGE TITLE
+    // =====================================
 
-    paperTitle.textContent =
-        "📘 Model Paper - " +
-        paper;
+    if (
+        paperTitle
+    ) {
+
+        paperTitle.textContent =
+            "📘 Model Paper - " +
+            paper;
+
+    }
 
 
-    paperSubtitle.textContent =
-        "Grade 11 • " +
-        termName;
+    if (
+        paperSubtitle
+    ) {
+
+        paperSubtitle.textContent =
+            "Grade 11 • " +
+            termName;
+
+    }
 
 
-    // ==========================
-    // PDF Folder
-    // ==========================
+    // =====================================
+    // PDF BASE PATH
+    // =====================================
 
     const basePath =
         `papers/grade11/term${term}/paper${paper}`;
 
 
-    // ==========================
+    // =====================================
     // MCQ PDF
-    // ==========================
+    // =====================================
 
-    mcqBtn.addEventListener(
-        "click",
-        () => {
+    if (
+        mcqBtn
+    ) {
 
-            window.open(
-                `${basePath}/mcq.pdf`,
-                "_blank"
-            );
+        mcqBtn.addEventListener(
+            "click",
+            () => {
 
-        }
-    );
+                window.open(
+                    `${basePath}/mcq.pdf`,
+                    "_blank"
+                );
 
+            }
+        );
 
-    // ==========================
-    // MCQ Answer
-    // ==========================
-
-    mcqAnswerBtn.addEventListener(
-        "click",
-        () => {
-
-            window.location.href =
-                `grade11-answer.html?` +
-                `term=${encodeURIComponent(term)}` +
-                `&paper=${encodeURIComponent(paper)}` +
-                `&type=mcq`;
-
-        }
-    );
+    }
 
 
-    // ==========================
-    // Question Paper
-    // ==========================
+    // =====================================
+    // MCQ ANSWER
+    // =====================================
 
-    questionBtn.addEventListener(
-        "click",
-        () => {
+    if (
+        mcqAnswerBtn
+    ) {
 
-            window.open(
-                `${basePath}/question.pdf`,
-                "_blank"
-            );
+        mcqAnswerBtn.addEventListener(
+            "click",
+            () => {
 
-        }
-    );
+                window.location.href =
+                    `grade11-answer.html?` +
+                    `term=${encodeURIComponent(term)}` +
+                    `&paper=${encodeURIComponent(paper)}` +
+                    `&type=mcq`;
+
+            }
+        );
+
+    }
 
 
-    // ==========================
-    // Answer Scheme
-    // ==========================
+    // =====================================
+    // QUESTION PAPER
+    // =====================================
 
-    answerBtn.addEventListener(
-        "click",
-        () => {
+    if (
+        questionBtn
+    ) {
 
-            window.location.href =
-                `grade11-answer.html?` +
-                `term=${encodeURIComponent(term)}` +
-                `&paper=${encodeURIComponent(paper)}` +
-                `&type=answer`;
+        questionBtn.addEventListener(
+            "click",
+            () => {
 
-        }
-    );
+                window.open(
+                    `${basePath}/question.pdf`,
+                    "_blank"
+                );
+
+            }
+        );
+
+    }
+
+
+    // =====================================
+    // ANSWER SCHEME
+    // =====================================
+
+    if (
+        answerBtn
+    ) {
+
+        answerBtn.addEventListener(
+            "click",
+            () => {
+
+                window.location.href =
+                    `grade11-answer.html?` +
+                    `term=${encodeURIComponent(term)}` +
+                    `&paper=${encodeURIComponent(paper)}` +
+                    `&type=answer`;
+
+            }
+        );
+
+    }
 
 }
+
+
+console.log(
+    "✅ Grade 11 Model Paper Loaded",
+    {
+        grade: "grade11",
+        type: "model",
+        term,
+        paper
+    }
+);
