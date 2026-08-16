@@ -1,52 +1,188 @@
+import {
+    db,
+    collection,
+    getDocs
+} from "./firebase.js";
+
+
 // =====================================================
-// SUPERADMIN / ADMIN PERMISSION SYSTEM
+// ADMIN DASHBOARD START
 // =====================================================
 
-const currentRole =
-    String(
-        sessionStorage.getItem("adminRole") || ""
-    )
-    .trim()
-    .toLowerCase();
-
-const currentUsername =
-    String(
-        sessionStorage.getItem("adminUsername") || ""
-    )
-    .trim()
-    .toLowerCase();
+console.log("=================================");
+console.log("ADMIN DASHBOARD JS STARTED");
+console.log("=================================");
 
 
-// -----------------------------------------------------
-// SUPERADMIN CHECK
-// -----------------------------------------------------
+// =====================================================
+// SESSION CHECK
+// =====================================================
+
+const adminLoggedIn =
+    sessionStorage.getItem(
+        "adminLoggedIn"
+    );
+
+
+if (
+    adminLoggedIn !== "true"
+) {
+
+    window.location.replace(
+        "admin-login.html"
+    );
+
+}
+
+
+// =====================================================
+// GET ADMIN DETAILS
+// =====================================================
+
+const rawRole =
+    sessionStorage.getItem(
+        "adminRole"
+    ) || "";
+
+
+const rawUsername =
+    sessionStorage.getItem(
+        "adminUsername"
+    ) || "";
+
+
+// Normalize
+const adminRole =
+    String(rawRole)
+        .trim()
+        .toLowerCase()
+        .replace(
+            /[\s_-]+/g,
+            ""
+        );
+
+
+const adminUsername =
+    String(rawUsername)
+        .trim()
+        .toLowerCase();
+
+
+// =====================================================
+// SUPER ADMIN CHECK
+// =====================================================
+//
+// Accept:
+// superadmin
+// super_admin
+// super admin
+// SuperAdmin
+// username = superadmin
+//
 
 const isSuperAdmin =
-    currentRole === "superadmin" ||
-    currentRole === "super_admin" ||
-    currentRole === "super admin" ||
-    currentUsername === "superadmin";
-
-
-console.log("=================================");
-console.log("ADMIN PERMISSION CHECK");
-console.log("Username:", currentUsername);
-console.log("Role:", currentRole);
-console.log("Is Superadmin:", isSuperAdmin);
-console.log("=================================");
+    adminRole === "superadmin" ||
+    adminUsername === "superadmin";
 
 
 // =====================================================
-// APPLY PERMISSIONS
+// DEBUG
 // =====================================================
 
-function applyPermissions() {
+console.log(
+    "Admin Username:",
+    adminUsername
+);
 
-    const protectedItems =
+console.log(
+    "Admin Role:",
+    adminRole
+);
+
+console.log(
+    "Is Super Admin:",
+    isSuperAdmin
+);
+
+
+// =====================================================
+// ELEMENTS
+// =====================================================
+
+const adminUsernameElement =
+    document.getElementById(
+        "adminUsername"
+    );
+
+
+const adminRoleElement =
+    document.getElementById(
+        "adminRole"
+    );
+
+
+const logoutBtn =
+    document.getElementById(
+        "logoutBtn"
+    );
+
+
+// =====================================================
+// SHOW ADMIN USER
+// =====================================================
+
+if (
+    adminUsernameElement
+) {
+
+    adminUsernameElement.textContent =
+        rawUsername ||
+        "Admin";
+
+}
+
+
+if (
+    adminRoleElement
+) {
+
+    if (
+        isSuperAdmin
+    ) {
+
+        adminRoleElement.textContent =
+            "Super Administrator";
+
+    }
+    else {
+
+        adminRoleElement.textContent =
+            "Administrator";
+
+    }
+
+}
+
+
+// =====================================================
+// PERMISSION SYSTEM
+// =====================================================
+
+function setupPermissions() {
+
+    // -------------------------------------------------
+    // NAVIGATION ITEMS
+    // -------------------------------------------------
+
+    const protectedNavItems =
         document.querySelectorAll(
             ".superadmin-only"
         );
 
+
+    // -------------------------------------------------
+    // MANAGEMENT CARDS
+    // -------------------------------------------------
 
     const protectedCards =
         document.querySelectorAll(
@@ -54,21 +190,38 @@ function applyPermissions() {
         );
 
 
+    console.log(
+        "Protected navigation items:",
+        protectedNavItems.length
+    );
+
+    console.log(
+        "Protected cards:",
+        protectedCards.length
+    );
+
+
     // =================================================
-    // SUPERADMIN
+    // SUPER ADMIN
     // =================================================
 
-    if (isSuperAdmin) {
+    if (
+        isSuperAdmin
+    ) {
 
         console.log(
-            "✅ SUPERADMIN ACCESS ENABLED"
+            "✅ SUPERADMIN - FULL ACCESS"
         );
 
 
-        protectedItems.forEach(
+        // ---------------------------------------------
+        // NAV ITEMS
+        // ---------------------------------------------
+
+        protectedNavItems.forEach(
             item => {
 
-                // Remove locked classes
+                // Remove any previous lock
                 item.classList.remove(
                     "locked"
                 );
@@ -82,17 +235,17 @@ function applyPermissions() {
                 );
 
 
-                // Remove disabled attributes
-                item.removeAttribute(
-                    "aria-disabled"
-                );
-
+                // Remove attributes
                 item.removeAttribute(
                     "disabled"
                 );
 
+                item.removeAttribute(
+                    "aria-disabled"
+                );
 
-                // Enable pointer
+
+                // Enable
                 item.style.pointerEvents =
                     "auto";
 
@@ -103,35 +256,34 @@ function applyPermissions() {
                     "1";
 
 
-                // Remove ANY JS lock
+                // Remove JS generated locks
                 item
                     .querySelectorAll(
                         ".js-lock-icon"
                     )
                     .forEach(
-                        lock =>
-                            lock.remove()
+                        element => {
+                            element.remove();
+                        }
                     );
 
-
-                // Remove lock text generated by JS
                 item
                     .querySelectorAll(
                         ".lock-icon"
                     )
                     .forEach(
-                        lock =>
-                            lock.remove()
+                        element => {
+                            element.remove();
+                        }
                     );
-
-
-                // Remove old click blockers
-                item.onclick =
-                    null;
 
             }
         );
 
+
+        // ---------------------------------------------
+        // MANAGEMENT CARDS
+        // ---------------------------------------------
 
         protectedCards.forEach(
             card => {
@@ -152,17 +304,32 @@ function applyPermissions() {
                 card.style.pointerEvents =
                     "auto";
 
+                card.style.cursor =
+                    "default";
+
                 card.style.opacity =
                     "1";
 
 
+                // Remove generated lock
                 card
                     .querySelectorAll(
                         ".js-lock-icon"
                     )
                     .forEach(
-                        lock =>
-                            lock.remove()
+                        element => {
+                            element.remove();
+                        }
+                    );
+
+                card
+                    .querySelectorAll(
+                        ".lock-icon"
+                    )
+                    .forEach(
+                        element => {
+                            element.remove();
+                        }
                     );
 
             }
@@ -179,11 +346,15 @@ function applyPermissions() {
     // =================================================
 
     console.log(
-        "🔒 NORMAL ADMIN RESTRICTIONS ENABLED"
+        "🔒 NORMAL ADMIN - LIMITED ACCESS"
     );
 
 
-    protectedItems.forEach(
+    // -----------------------------------------------
+    // NAV ITEMS
+    // -----------------------------------------------
+
+    protectedNavItems.forEach(
         item => {
 
             item.classList.add(
@@ -202,18 +373,13 @@ function applyPermissions() {
 
 
             item.style.opacity =
-                "0.65";
+                "0.55";
 
 
-            // Don't allow normal navigation
-            item.addEventListener(
-                "click",
-                blockRestrictedClick,
-                true
-            );
+            // -----------------------------------------
+            // Add ONE lock icon
+            // -----------------------------------------
 
-
-            // Add ONE lock
             if (
                 !item.querySelector(
                     ".js-lock-icon"
@@ -238,15 +404,42 @@ function applyPermissions() {
                     "auto";
 
 
+                lock.style.fontSize =
+                    "13px";
+
+
                 item.appendChild(
                     lock
                 );
 
             }
 
+
+            // -----------------------------------------
+            // Block click
+            // -----------------------------------------
+
+            item.addEventListener(
+                "click",
+                function(event) {
+
+                    event.preventDefault();
+
+                    event.stopPropagation();
+
+                    showRestrictedMessage();
+
+                },
+                true
+            );
+
         }
     );
 
+
+    // -----------------------------------------------
+    // MANAGEMENT CARDS
+    // -----------------------------------------------
 
     protectedCards.forEach(
         card => {
@@ -256,13 +449,13 @@ function applyPermissions() {
             );
 
 
-            card.style.cursor =
-                "not-allowed";
-
-
             card.style.opacity =
-                "0.65";
+                "0.55";
 
+
+            // -----------------------------------------
+            // Find link
+            // -----------------------------------------
 
             const link =
                 card.querySelector(
@@ -276,7 +469,15 @@ function applyPermissions() {
 
                 link.addEventListener(
                     "click",
-                    blockRestrictedClick,
+                    function(event) {
+
+                        event.preventDefault();
+
+                        event.stopPropagation();
+
+                        showRestrictedMessage();
+
+                    },
                     true
                 );
 
@@ -289,75 +490,53 @@ function applyPermissions() {
 
 
 // =====================================================
-// BLOCK RESTRICTED CLICK
+// RESTRICTED MESSAGE
 // =====================================================
 
-function blockRestrictedClick(
-    event
-) {
+function showRestrictedMessage() {
 
-    event.preventDefault();
-
-    event.stopPropagation();
-
-    event.stopImmediatePropagation();
-
-
-    showAccessRestricted();
-
-    return false;
-
-}
-
-
-// =====================================================
-// ACCESS MESSAGE
-// =====================================================
-
-function showAccessRestricted() {
-
-    const existing =
+    const oldMessage =
         document.getElementById(
             "accessRestrictedMessage"
         );
 
 
     if (
-        existing
+        oldMessage
     ) {
 
-        existing.remove();
+        oldMessage.remove();
 
     }
 
 
-    const box =
+    const message =
         document.createElement(
             "div"
         );
 
 
-    box.id =
+    message.id =
         "accessRestrictedMessage";
 
 
-    box.innerHTML = `
+    message.innerHTML = `
 
-        <div class="access-message-inner">
+        <div class="access-message-box">
 
             <div class="access-message-icon">
                 🔒
             </div>
 
-            <div class="access-message-content">
+            <div class="access-message-text">
 
                 <strong>
                     Access Restricted
                 </strong>
 
                 <span>
-                    This section is available
-                    only to Super Administrators.
+                    This section is available only
+                    to Super Administrators.
                 </span>
 
             </div>
@@ -375,25 +554,25 @@ function showAccessRestricted() {
 
 
     document.body.appendChild(
-        box
+        message
     );
 
 
-    const close =
+    const closeBtn =
         document.getElementById(
             "closeAccessMessage"
         );
 
 
     if (
-        close
+        closeBtn
     ) {
 
-        close.addEventListener(
+        closeBtn.addEventListener(
             "click",
             () => {
 
-                box.remove();
+                message.remove();
 
             }
         );
@@ -405,23 +584,625 @@ function showAccessRestricted() {
         () => {
 
             if (
-                box &&
-                box.parentNode
+                message &&
+                message.parentNode
             ) {
 
-                box.remove();
+                message.remove();
 
             }
 
         },
-        4000
+        3500
     );
 
 }
 
 
 // =====================================================
-// RUN AFTER PAGE LOAD
+// LOGOUT
+// =====================================================
+
+if (
+    logoutBtn
+) {
+
+    logoutBtn.addEventListener(
+        "click",
+        () => {
+
+            sessionStorage.removeItem(
+                "adminLoggedIn"
+            );
+
+            sessionStorage.removeItem(
+                "adminRole"
+            );
+
+            sessionStorage.removeItem(
+                "adminUsername"
+            );
+
+
+            window.location.replace(
+                "admin-login.html"
+            );
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// ACTIVE NAVIGATION
+// =====================================================
+
+function setActiveNavigation() {
+
+    const currentPage =
+        window.location.pathname
+            .split("/")
+            .pop()
+            .toLowerCase();
+
+
+    const navItems =
+        document.querySelectorAll(
+            ".nav-item"
+        );
+
+
+    navItems.forEach(
+        item => {
+
+            const href =
+                item
+                    .getAttribute(
+                        "href"
+                    );
+
+
+            if (
+                !href
+            ) {
+
+                return;
+
+            }
+
+
+            const target =
+                href
+                    .split("?")[0]
+                    .toLowerCase();
+
+
+            if (
+                target ===
+                currentPage
+            ) {
+
+                item.classList.add(
+                    "active"
+                );
+
+            }
+            else {
+
+                item.classList.remove(
+                    "active"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// LOAD STUDENT DATA
+// =====================================================
+
+let students = [];
+
+
+// =====================================================
+// ACTIVE LIMIT
+// =====================================================
+
+const ACTIVE_LIMIT =
+    90 * 1000;
+
+
+// =====================================================
+// GET STUDENT TYPE
+// =====================================================
+
+function getStudentType(
+    data
+) {
+
+    if (
+        data?.studentType ===
+        "grade10"
+    ) {
+
+        return "grade10";
+
+    }
+
+
+    if (
+        data?.studentType ===
+        "grade11"
+    ) {
+
+        return "grade11";
+
+    }
+
+
+    if (
+        String(
+            data?.grade
+        ) === "10"
+    ) {
+
+        return "grade10";
+
+    }
+
+
+    if (
+        String(
+            data?.grade
+        ) === "11"
+    ) {
+
+        return "grade11";
+
+    }
+
+
+    return "al";
+
+}
+
+
+// =====================================================
+// ACTIVE CHECK
+// =====================================================
+
+function isActive(
+    data
+) {
+
+    const lastActive =
+        Number(
+            data?.lastActiveAt || 0
+        );
+
+
+    if (
+        !lastActive
+    ) {
+
+        return false;
+
+    }
+
+
+    return (
+        Date.now() -
+        lastActive
+        <=
+        ACTIVE_LIMIT
+    );
+
+}
+
+
+// =====================================================
+// PAPER VIEW COUNT
+// =====================================================
+
+function getPaperViews(
+    data
+) {
+
+    let count = 0;
+
+
+    for (
+        let i = 1;
+        i <= 50;
+        i++
+    ) {
+
+        const number =
+            String(
+                i
+            ).padStart(
+                2,
+                "0"
+            );
+
+
+        const field =
+            "paper" +
+            number +
+            "Viewed";
+
+
+        if (
+            data?.[field] ===
+            true
+        ) {
+
+            count++;
+
+        }
+
+    }
+
+
+    return count;
+
+}
+
+
+// =====================================================
+// LOAD STUDENTS
+// =====================================================
+
+async function loadStudents() {
+
+    try {
+
+        console.log(
+            "Loading students..."
+        );
+
+
+        const snapshot =
+            await getDocs(
+                collection(
+                    db,
+                    "students"
+                )
+            );
+
+
+        students = [];
+
+
+        snapshot.forEach(
+            documentSnapshot => {
+
+                const data =
+                    documentSnapshot.data();
+
+
+                students.push({
+
+                    id:
+                        documentSnapshot.id,
+
+                    data:
+                        data,
+
+                    type:
+                        getStudentType(
+                            data
+                        ),
+
+                    active:
+                        isActive(
+                            data
+                        ),
+
+                    views:
+                        getPaperViews(
+                            data
+                        )
+
+                });
+
+            }
+        );
+
+
+        console.log(
+            "Students loaded:",
+            students.length
+        );
+
+
+        updateDashboard();
+
+
+    }
+    catch (
+        error
+    ) {
+
+        console.error(
+            "Student loading error:",
+            error
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// UPDATE DASHBOARD
+// =====================================================
+
+function updateDashboard() {
+
+    const total =
+        students.length;
+
+
+    const grade10 =
+        students.filter(
+            student =>
+                student.type ===
+                "grade10"
+        );
+
+
+    const grade11 =
+        students.filter(
+            student =>
+                student.type ===
+                "grade11"
+        );
+
+
+    const al =
+        students.filter(
+            student =>
+                student.type ===
+                "al"
+        );
+
+
+    const active =
+        students.filter(
+            student =>
+                student.active
+        );
+
+
+    const totalViews =
+        students.reduce(
+            (
+                total,
+                student
+            ) => {
+
+                return (
+                    total +
+                    student.views
+                );
+
+            },
+            0
+        );
+
+
+    // =================================================
+    // SUMMARY CARDS
+    // =================================================
+
+    setText(
+        "totalStudents",
+        total
+    );
+
+
+    setText(
+        "totalViewed",
+        totalViews
+    );
+
+
+    setText(
+        "activeStudents",
+        active.length
+    );
+
+
+    // =================================================
+    // ALL STUDENTS
+    // =================================================
+
+    setText(
+        "reportAllTotal",
+        total
+    );
+
+
+    setText(
+        "reportAllOnline",
+        active.length
+    );
+
+
+    setText(
+        "reportAllOffline",
+        total - active.length
+    );
+
+
+    setText(
+        "reportAllViews",
+        totalViews
+    );
+
+
+    // =================================================
+    // GRADE 10
+    // =================================================
+
+    updateCategoryReport(
+        grade10,
+        "reportGrade10Total",
+        "reportGrade10Online",
+        "reportGrade10Offline",
+        "reportGrade10Views"
+    );
+
+
+    // =================================================
+    // GRADE 11
+    // =================================================
+
+    updateCategoryReport(
+        grade11,
+        "reportGrade11Total",
+        "reportGrade11Online",
+        "reportGrade11Offline",
+        "reportGrade11Views"
+    );
+
+
+    // =================================================
+    // A/L
+    // =================================================
+
+    updateCategoryReport(
+        al,
+        "reportALTotal",
+        "reportALOnline",
+        "reportALOffline",
+        "reportALViews"
+    );
+
+}
+
+
+// =====================================================
+// CATEGORY REPORT
+// =====================================================
+
+function updateCategoryReport(
+    list,
+    totalId,
+    onlineId,
+    offlineId,
+    viewsId
+) {
+
+    const total =
+        list.length;
+
+
+    const online =
+        list.filter(
+            student =>
+                student.active
+        ).length;
+
+
+    const offline =
+        total -
+        online;
+
+
+    const views =
+        list.reduce(
+            (
+                sum,
+                student
+            ) => {
+
+                return (
+                    sum +
+                    student.views
+                );
+
+            },
+            0
+        );
+
+
+    setText(
+        totalId,
+        total
+    );
+
+
+    setText(
+        onlineId,
+        online
+    );
+
+
+    setText(
+        offlineId,
+        offline
+    );
+
+
+    setText(
+        viewsId,
+        views
+    );
+
+}
+
+
+// =====================================================
+// SET TEXT
+// =====================================================
+
+function setText(
+    id,
+    value
+) {
+
+    const element =
+        document.getElementById(
+            id
+        );
+
+
+    if (
+        element
+    ) {
+
+        element.textContent =
+            value;
+
+    }
+
+}
+
+
+// =====================================================
+// INITIALIZE
+// =====================================================
+
+function initialize() {
+
+    setupPermissions();
+
+    setActiveNavigation();
+
+    loadStudents();
+
+}
+
+
+// =====================================================
+// DOM READY
 // =====================================================
 
 if (
@@ -431,12 +1212,35 @@ if (
 
     document.addEventListener(
         "DOMContentLoaded",
-        applyPermissions
+        initialize
     );
 
 }
 else {
 
-    applyPermissions();
+    initialize();
 
 }
+
+
+// =====================================================
+// AUTO REFRESH
+// =====================================================
+
+setInterval(
+    () => {
+
+        loadStudents();
+
+    },
+    30000
+);
+
+
+// =====================================================
+// FINISHED
+// =====================================================
+
+console.log(
+    "✅ Admin dashboard loaded"
+);
