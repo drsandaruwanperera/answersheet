@@ -71,6 +71,21 @@ const distributionAL =
         "distributionAL"
     );
 
+const distributionBar10 =
+    document.getElementById(
+        "distributionBar10"
+    );
+
+const distributionBar11 =
+    document.getElementById(
+        "distributionBar11"
+    );
+
+const distributionBarAL =
+    document.getElementById(
+        "distributionBarAL"
+    );
+
 const activityActive =
     document.getElementById(
         "activityActive"
@@ -118,7 +133,7 @@ const lastUpdated =
 
 
 // =========================================
-// REPORT ELEMENTS
+// PAPER REPORT ELEMENTS
 // =========================================
 
 const grade10Reports =
@@ -223,7 +238,7 @@ function getStudentType(
 
 
 // =========================================
-// ACTIVE
+// ACTIVE CHECK
 // =========================================
 
 function isActive(
@@ -256,14 +271,8 @@ function isActive(
 
 
 // =========================================
-// OLD PAPER VIEW COUNT
+// LEGACY PAPER VIEW COUNT
 // =========================================
-//
-// Supports existing fields:
-// paper01Viewed
-// paper02Viewed
-// etc.
-//
 
 function getLegacyPaperViews(
     data
@@ -280,9 +289,7 @@ function getLegacyPaperViews(
 
         const field =
             "paper" +
-            String(
-                i
-            ).padStart(
+            String(i).padStart(
                 2,
                 "0"
             ) +
@@ -307,10 +314,10 @@ function getLegacyPaperViews(
 
 
 // =========================================
-// NESTED VIEW COUNT
+// NESTED TRUE COUNTER
 // =========================================
 
-function getNestedViewCount(
+function countNestedTrue(
     value
 ) {
 
@@ -334,7 +341,7 @@ function getNestedViewCount(
     }
 
 
-    let total = 0;
+    let count = 0;
 
 
     Object.values(
@@ -342,8 +349,8 @@ function getNestedViewCount(
     ).forEach(
         child => {
 
-            total +=
-                getNestedViewCount(
+            count +=
+                countNestedTrue(
                     child
                 );
 
@@ -351,13 +358,13 @@ function getNestedViewCount(
     );
 
 
-    return total;
+    return count;
 
 }
 
 
 // =========================================
-// TOTAL PAPER VIEWS
+// TOTAL VIEWS
 // =========================================
 
 function getTotalPaperViews(
@@ -371,7 +378,7 @@ function getTotalPaperViews(
 
 
     const nested =
-        getNestedViewCount(
+        countNestedTrue(
             data?.paperViews
         );
 
@@ -385,7 +392,7 @@ function getTotalPaperViews(
 
 
 // =========================================
-// SAFE GET
+// NESTED VALUE
 // =========================================
 
 function getNested(
@@ -439,51 +446,7 @@ function getNested(
 
 
 // =========================================
-// COUNT BOOLEAN PAPERS
-// =========================================
-
-function countPaperObject(
-    object
-) {
-
-    if (
-        !object ||
-        typeof object !==
-            "object"
-    ) {
-
-        return 0;
-
-    }
-
-
-    let count = 0;
-
-
-    Object.values(
-        object
-    ).forEach(
-        value => {
-
-            if (
-                value === true
-            ) {
-
-                count++;
-
-            }
-
-        }
-    );
-
-
-    return count;
-
-}
-
-
-// =========================================
-// LOAD DATA
+// LOAD FIREBASE DATA
 // =========================================
 
 async function loadData() {
@@ -548,14 +511,14 @@ async function loadData() {
         );
 
 
-        renderReports();
+        renderAll();
 
         updateTime();
 
 
         console.log(
-            "✅ Reports updated:",
-            studentsData.length
+            "Reports loaded:",
+            studentsData
         );
 
     }
@@ -565,12 +528,12 @@ async function loadData() {
     ) {
 
         console.error(
-            "Reports error:",
+            "Reports loading error:",
             error
         );
 
 
-        showReportError();
+        showError();
 
     }
 
@@ -578,7 +541,7 @@ async function loadData() {
 
 
 // =========================================
-// FILTER DATA
+// FILTER
 // =========================================
 
 function getFilteredStudents() {
@@ -597,10 +560,8 @@ function getFilteredStudents() {
         student => {
 
             if (
-                grade !==
-                    "all" &&
-                student.type !==
-                    grade
+                grade !== "all" &&
+                student.type !== grade
             ) {
 
                 return false;
@@ -609,8 +570,7 @@ function getFilteredStudents() {
 
 
             if (
-                activity ===
-                    "active" &&
+                activity === "active" &&
                 !student.active
             ) {
 
@@ -620,8 +580,7 @@ function getFilteredStudents() {
 
 
             if (
-                activity ===
-                    "inactive" &&
+                activity === "inactive" &&
                 student.active
             ) {
 
@@ -642,61 +601,54 @@ function getFilteredStudents() {
 // RENDER ALL
 // =========================================
 
-function renderReports() {
+function renderAll() {
 
-    const filtered =
+    const students =
         getFilteredStudents();
 
 
-    // =====================================
-    // OVERVIEW
-    // =====================================
-
     renderOverview(
-        filtered
+        students
     );
 
 
-    // =====================================
-    // PAPER REPORTS
-    // =====================================
+    renderDistribution(
+        students
+    );
+
 
     renderGrade10(
-        filtered
+        students
     );
 
 
     renderGrade11Model(
-        filtered
+        students
     );
 
 
     renderGrade11Past(
-        filtered
+        students
     );
 
 
     renderALModel(
-        filtered
+        students
     );
 
 
     renderALProvince1(
-        filtered
+        students
     );
 
 
     renderALProvince2(
-        filtered
+        students
     );
 
 
-    // =====================================
-    // STUDENTS
-    // =====================================
-
-    renderStudents(
-        filtered
+    renderStudentTable(
+        students
     );
 
 }
@@ -716,32 +668,32 @@ function renderOverview(
 
     const g10 =
         students.filter(
-            x =>
-                x.type ===
+            student =>
+                student.type ===
                 "grade10"
         ).length;
 
 
     const g11 =
         students.filter(
-            x =>
-                x.type ===
+            student =>
+                student.type ===
                 "grade11"
         ).length;
 
 
     const al =
         students.filter(
-            x =>
-                x.type ===
+            student =>
+                student.type ===
                 "al"
         ).length;
 
 
     const active =
         students.filter(
-            x =>
-                x.active
+            student =>
+                student.active
         ).length;
 
 
@@ -799,6 +751,61 @@ function renderOverview(
 
 
     setText(
+        activityActive,
+        active
+    );
+
+
+    setText(
+        activityInactive,
+        inactive
+    );
+
+}
+
+
+// =========================================
+// DISTRIBUTION
+// =========================================
+
+function renderDistribution(
+    students
+) {
+
+    const g10 =
+        students.filter(
+            x =>
+                x.type ===
+                "grade10"
+        ).length;
+
+
+    const g11 =
+        students.filter(
+            x =>
+                x.type ===
+                "grade11"
+        ).length;
+
+
+    const al =
+        students.filter(
+            x =>
+                x.type ===
+                "al"
+        ).length;
+
+
+    const max =
+        Math.max(
+            g10,
+            g11,
+            al,
+            1
+        );
+
+
+    setText(
         distribution10,
         g10
     );
@@ -816,16 +823,46 @@ function renderOverview(
     );
 
 
-    setText(
-        activityActive,
-        active
-    );
+    if (
+        distributionBar10
+    ) {
+
+        distributionBar10.style.width =
+            (
+                g10 /
+                max *
+                100
+            ) + "%";
+
+    }
 
 
-    setText(
-        activityInactive,
-        inactive
-    );
+    if (
+        distributionBar11
+    ) {
+
+        distributionBar11.style.width =
+            (
+                g11 /
+                max *
+                100
+            ) + "%";
+
+    }
+
+
+    if (
+        distributionBarAL
+    ) {
+
+        distributionBarAL.style.width =
+            (
+                al /
+                max *
+                100
+            ) + "%";
+
+    }
 
 }
 
@@ -847,7 +884,7 @@ function renderGrade10(
     }
 
 
-    const grade10 =
+    const list =
         students.filter(
             student =>
                 student.type ===
@@ -856,7 +893,7 @@ function renderGrade10(
 
 
     if (
-        !grade10.length
+        !list.length
     ) {
 
         grade10Reports.innerHTML =
@@ -878,8 +915,7 @@ function renderGrade10(
         term++
     ) {
 
-        const counts =
-            [];
+        const papers = [];
 
 
         for (
@@ -898,35 +934,20 @@ function renderGrade10(
                 );
 
 
-            let count = 0;
+            const count =
+                countPath(
+                    list,
+                    `paperViews.grade10.model.term${term}.${paper}`
+                );
 
 
-            grade10.forEach(
-                student => {
+            papers.push({
 
-                    const value =
-                        getNested(
-                            student.data,
-                            `paperViews.grade10.model.term${term}.${paper}`
-                        );
+                name:
+                    paper,
 
-
-                    if (
-                        value === true
-                    ) {
-
-                        count++;
-
-                    }
-
-                }
-            );
-
-
-            counts.push({
-
-                paper,
-                count
+                count:
+                    count
 
             });
 
@@ -934,9 +955,9 @@ function renderGrade10(
 
 
         html +=
-            renderTermGrid(
-                `Grade 10 • Term ${term}`,
-                counts
+            renderPaperGroup(
+                "Term " + term,
+                papers
             );
 
     }
@@ -965,7 +986,7 @@ function renderGrade11Model(
     }
 
 
-    const grade11 =
+    const list =
         students.filter(
             student =>
                 student.type ===
@@ -974,7 +995,7 @@ function renderGrade11Model(
 
 
     if (
-        !grade11.length
+        !list.length
     ) {
 
         grade11ModelReports.innerHTML =
@@ -996,8 +1017,7 @@ function renderGrade11Model(
         term++
     ) {
 
-        const counts =
-            [];
+        const papers = [];
 
 
         for (
@@ -1016,35 +1036,16 @@ function renderGrade11Model(
                 );
 
 
-            let count = 0;
+            papers.push({
 
+                name:
+                    paper,
 
-            grade11.forEach(
-                student => {
-
-                    const value =
-                        getNested(
-                            student.data,
-                            `paperViews.grade11.model.term${term}.${paper}`
-                        );
-
-
-                    if (
-                        value === true
-                    ) {
-
-                        count++;
-
-                    }
-
-                }
-            );
-
-
-            counts.push({
-
-                paper,
-                count
+                count:
+                    countPath(
+                        list,
+                        `paperViews.grade11.model.term${term}.${paper}`
+                    )
 
             });
 
@@ -1052,9 +1053,9 @@ function renderGrade11Model(
 
 
         html +=
-            renderTermGrid(
-                `Grade 11 • Term ${term}`,
-                counts
+            renderPaperGroup(
+                "Term " + term,
+                papers
             );
 
     }
@@ -1067,7 +1068,7 @@ function renderGrade11Model(
 
 
 // =========================================
-// GRADE 11 PAST PAPERS
+// GRADE 11 PAST
 // =========================================
 
 function renderGrade11Past(
@@ -1083,7 +1084,7 @@ function renderGrade11Past(
     }
 
 
-    const grade11 =
+    const list =
         students.filter(
             student =>
                 student.type ===
@@ -1092,7 +1093,7 @@ function renderGrade11Past(
 
 
     if (
-        !grade11.length
+        !list.length
     ) {
 
         grade11PastReports.innerHTML =
@@ -1114,49 +1115,20 @@ function renderGrade11Past(
         year++
     ) {
 
-        let count = 0;
-
-
-        grade11.forEach(
-            student => {
-
-                const value =
-                    getNested(
-                        student.data,
-                        `paperViews.grade11.past.${year}`
-                    );
-
-
-                if (
-                    value === true
-                ) {
-
-                    count++;
-
-                }
-
-            }
-        );
-
-
         years.push({
 
-            year,
-            count
+            name:
+                String(year),
+
+            count:
+                countPath(
+                    list,
+                    `paperViews.grade11.past.${year}`
+                )
 
         });
 
     }
-
-
-    const max =
-        Math.max(
-            ...years.map(
-                item =>
-                    item.count
-            ),
-            1
-        );
 
 
     grade11PastReports.innerHTML = `
@@ -1164,50 +1136,9 @@ function renderGrade11Past(
         <div class="year-report-grid">
 
             ${
-                years.map(
-                    item => {
-
-                        const width =
-                            (
-                                item.count /
-                                max
-                            ) *
-                            100;
-
-
-                        return `
-
-                            <div
-                                class="year-report-item"
-                            >
-
-                                <strong>
-                                    ${item.year}
-                                </strong>
-
-                                <div
-                                    class="year-report-count"
-                                >
-                                    ${item.count}
-                                </div>
-
-                                <div
-                                    class="year-report-track"
-                                >
-
-                                    <div
-                                        class="year-report-bar"
-                                        style="width:${width}%"
-                                    ></div>
-
-                                </div>
-
-                            </div>
-
-                        `;
-
-                    }
-                ).join("")
+                renderYears(
+                    years
+                )
             }
 
         </div>
@@ -1234,7 +1165,7 @@ function renderALModel(
     }
 
 
-    const alStudents =
+    const list =
         students.filter(
             student =>
                 student.type ===
@@ -1243,7 +1174,7 @@ function renderALModel(
 
 
     if (
-        !alStudents.length
+        !list.length
     ) {
 
         alModelReports.innerHTML =
@@ -1256,7 +1187,7 @@ function renderALModel(
     }
 
 
-    const counts = [];
+    const papers = [];
 
 
     for (
@@ -1275,45 +1206,31 @@ function renderALModel(
             );
 
 
-        let count = 0;
+        papers.push({
 
+            name:
+                paper,
 
-        alStudents.forEach(
-            student => {
-
-                const value =
-                    getNested(
-                        student.data,
-                        `paperViews.al.model.${paper}`
-                    );
-
-
-                if (
-                    value === true
-                ) {
-
-                    count++;
-
-                }
-
-            }
-        );
-
-
-        counts.push({
-
-            paper,
-            count
+            count:
+                countPath(
+                    list,
+                    `paperViews.al.model.${paper}`
+                )
 
         });
 
     }
 
 
-    alModelReports.innerHTML =
-        renderSimplePaperGrid(
-            counts
-        );
+    alModelReports.innerHTML = `
+
+        <div class="paper-report-grid">
+
+            ${renderPapers(papers)}
+
+        </div>
+
+    `;
 
 }
 
@@ -1335,7 +1252,7 @@ function renderALProvince1(
     }
 
 
-    const alStudents =
+    const list =
         students.filter(
             student =>
                 student.type ===
@@ -1344,7 +1261,7 @@ function renderALProvince1(
 
 
     if (
-        !alStudents.length
+        !list.length
     ) {
 
         alProvince1Reports.innerHTML =
@@ -1357,101 +1274,36 @@ function renderALProvince1(
     }
 
 
-    const provinces = [
-
-        {
-            key:
-                "central",
-
-            name:
-                "Central Province"
-
-        },
-
-        {
-            key:
-                "western",
-
-            name:
-                "Western Province"
-
-        },
-
-        {
-            key:
-                "north-western",
-
-            name:
-                "North Western Province"
-
-        },
-
-        {
-            key:
-                "southern",
-
-            name:
-                "Southern Province"
-
-        },
-
-        {
-            key:
-                "sabaragamuwa",
-
-            name:
-                "Sabaragamuwa Province"
-
-        }
-
-    ];
+    const provinces =
+        getProvinces();
 
 
-    const counts =
+    const data =
         provinces.map(
-            province => {
+            province => ({
 
-                let count = 0;
+                name:
+                    province.name,
 
+                count:
+                    countPath(
+                        list,
+                        `paperViews.al.province.paper1.${province.key}`
+                    )
 
-                alStudents.forEach(
-                    student => {
-
-                        const value =
-                            getNested(
-                                student.data,
-                                `paperViews.al.province.paper1.${province.key}`
-                            );
-
-
-                        if (
-                            value === true
-                        ) {
-
-                            count++;
-
-                        }
-
-                    }
-                );
-
-
-                return {
-
-                    ...province,
-
-                    count
-
-                };
-
-            }
+            })
         );
 
 
-    alProvince1Reports.innerHTML =
-        renderProvinceGrid(
-            counts
-        );
+    alProvince1Reports.innerHTML = `
+
+        <div class="province-report-grid">
+
+            ${renderProvinces(data)}
+
+        </div>
+
+    `;
 
 }
 
@@ -1473,7 +1325,7 @@ function renderALProvince2(
     }
 
 
-    const alStudents =
+    const list =
         students.filter(
             student =>
                 student.type ===
@@ -1482,7 +1334,7 @@ function renderALProvince2(
 
 
     if (
-        !alStudents.length
+        !list.length
     ) {
 
         alProvince2Reports.innerHTML =
@@ -1495,7 +1347,47 @@ function renderALProvince2(
     }
 
 
-    const provinces = [
+    const provinces =
+        getProvinces();
+
+
+    const data =
+        provinces.map(
+            province => ({
+
+                name:
+                    province.name,
+
+                count:
+                    countPath(
+                        list,
+                        `paperViews.al.province.paper2.${province.key}`
+                    )
+
+            })
+        );
+
+
+    alProvince2Reports.innerHTML = `
+
+        <div class="province-report-grid">
+
+            ${renderProvinces(data)}
+
+        </div>
+
+    `;
+
+}
+
+
+// =========================================
+// PROVINCES
+// =========================================
+
+function getProvinces() {
+
+    return [
 
         {
             key:
@@ -1544,74 +1436,56 @@ function renderALProvince2(
 
     ];
 
-
-    const counts =
-        provinces.map(
-            province => {
-
-                let count = 0;
+}
 
 
-                alStudents.forEach(
-                    student => {
+// =========================================
+// COUNT PATH
+// =========================================
 
-                        const value =
-                            getNested(
-                                student.data,
-                                `paperViews.al.province.paper2.${province.key}`
-                            );
+function countPath(
+    students,
+    path
+) {
+
+    let count = 0;
 
 
-                        if (
-                            value === true
-                        ) {
+    students.forEach(
+        student => {
 
-                            count++;
-
-                        }
-
-                    }
+            const value =
+                getNested(
+                    student.data,
+                    path
                 );
 
 
-                return {
+            if (
+                value === true
+            ) {
 
-                    ...province,
-
-                    count
-
-                };
+                count++;
 
             }
-        );
+
+        }
+    );
 
 
-    alProvince2Reports.innerHTML =
-        renderProvinceGrid(
-            counts
-        );
+    return count;
 
 }
 
 
 // =========================================
-// TERM GRID
+// PAPER GROUP
 // =========================================
 
-function renderTermGrid(
+function renderPaperGroup(
     title,
-    counts
+    papers
 ) {
-
-    const max =
-        Math.max(
-            ...counts.map(
-                item =>
-                    item.count
-            ),
-            1
-        );
-
 
     return `
 
@@ -1630,80 +1504,9 @@ function renderTermGrid(
             </div>
 
 
-            <div
-                class="paper-report-grid"
-            >
+            <div class="paper-report-grid">
 
-                ${
-                    counts.map(
-                        item => {
-
-                            const width =
-                                (
-                                    item.count /
-                                    max
-                                ) *
-                                100;
-
-
-                            return `
-
-                                <div
-                                    class="paper-report-item"
-                                >
-
-                                    <div
-                                        class="paper-report-top"
-                                    >
-
-                                        <span
-                                            class="paper-report-name"
-                                        >
-                                            ${item.paper}
-                                        </span>
-
-                                        <strong
-                                            class="paper-report-count"
-                                        >
-                                            ${item.count}
-                                        </strong>
-
-                                    </div>
-
-
-                                    <div
-                                        class="paper-report-track"
-                                    >
-
-                                        <div
-                                            class="paper-report-bar"
-                                            style="width:${width}%"
-                                        ></div>
-
-                                    </div>
-
-
-                                    <div
-                                        class="paper-report-meta"
-                                    >
-
-                                        <span>
-                                            Views
-                                        </span>
-
-                                        <span>
-                                            ${item.count}
-                                        </span>
-
-                                    </div>
-
-                                </div>
-
-                            `;
-
-                        }
-                    ).join("")
-                }
+                ${renderPapers(papers)}
 
             </div>
 
@@ -1715,16 +1518,16 @@ function renderTermGrid(
 
 
 // =========================================
-// SIMPLE PAPER GRID
+// PAPERS
 // =========================================
 
-function renderSimplePaperGrid(
-    counts
+function renderPapers(
+    papers
 ) {
 
     const max =
         Math.max(
-            ...counts.map(
+            ...papers.map(
                 item =>
                     item.count
             ),
@@ -1732,155 +1535,211 @@ function renderSimplePaperGrid(
         );
 
 
-    return `
+    return papers
+        .map(
+            paper => {
 
-        <div
-            class="paper-report-grid"
-        >
-
-            ${
-                counts.map(
-                    item => {
-
-                        const width =
-                            (
-                                item.count /
-                                max
-                            ) *
-                            100;
+                const width =
+                    (
+                        paper.count /
+                        max *
+                        100
+                    );
 
 
-                        return `
+                return `
 
-                            <div
-                                class="paper-report-item"
-                            >
-
-                                <div
-                                    class="paper-report-top"
-                                >
-
-                                    <span
-                                        class="paper-report-name"
-                                    >
-                                        ${item.paper}
-                                    </span>
-
-                                    <strong
-                                        class="paper-report-count"
-                                    >
-                                        ${item.count}
-                                    </strong>
-
-                                </div>
-
-
-                                <div
-                                    class="paper-report-track"
-                                >
-
-                                    <div
-                                        class="paper-report-bar"
-                                        style="width:${width}%"
-                                    ></div>
-
-                                </div>
-
-
-                                <div
-                                    class="paper-report-meta"
-                                >
-
-                                    <span>
-                                        Student Views
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-                        `;
-
-                    }
-                ).join("")
-            }
-
-        </div>
-
-    `;
-
-}
-
-
-// =========================================
-// PROVINCE GRID
-// =========================================
-
-function renderProvinceGrid(
-    provinces
-) {
-
-    return `
-
-        <div
-            class="province-report-grid"
-        >
-
-            ${
-                provinces.map(
-                    province => `
+                    <div
+                        class="paper-report-item"
+                    >
 
                         <div
-                            class="province-report-item"
+                            class="paper-report-top"
                         >
 
-                            <div
-                                class="province-report-info"
+                            <span
+                                class="paper-report-name"
                             >
-
-                                <div
-                                    class="province-report-icon"
-                                >
-                                    📍
-                                </div>
-
-
-                                <div>
-
-                                    <strong>
-                                        ${province.name}
-                                    </strong>
-
-                                    <span>
-                                        Student Views
-                                    </span>
-
-                                </div>
-
-                            </div>
-
+                                📄 ${escapeHTML(
+                                    paper.name
+                                )}
+                            </span>
 
                             <strong
-                                class="province-count"
+                                class="paper-report-count"
                             >
-                                ${province.count}
+                                ${paper.count}
                             </strong>
 
                         </div>
 
-                    `
-                ).join("")
+
+                        <div
+                            class="paper-report-track"
+                        >
+
+                            <div
+                                class="paper-report-bar"
+                                style="width:${width}%"
+                            ></div>
+
+                        </div>
+
+
+                        <div
+                            class="paper-report-meta"
+                        >
+
+                            <span>
+                                Views
+                            </span>
+
+                            <span>
+                                ${paper.count}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                `;
+
             }
-
-        </div>
-
-    `;
+        )
+        .join("");
 
 }
 
 
 // =========================================
-// EMPTY REPORT
+// YEARS
+// =========================================
+
+function renderYears(
+    years
+) {
+
+    const max =
+        Math.max(
+            ...years.map(
+                item =>
+                    item.count
+            ),
+            1
+        );
+
+
+    return years
+        .map(
+            year => {
+
+                const width =
+                    (
+                        year.count /
+                        max *
+                        100
+                    );
+
+
+                return `
+
+                    <div
+                        class="year-report-item"
+                    >
+
+                        <strong>
+                            ${year.name}
+                        </strong>
+
+                        <div
+                            class="year-report-count"
+                        >
+                            ${year.count}
+                        </div>
+
+
+                        <div
+                            class="year-report-track"
+                        >
+
+                            <div
+                                class="year-report-bar"
+                                style="width:${width}%"
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+        )
+        .join("");
+
+}
+
+
+// =========================================
+// PROVINCES
+// =========================================
+
+function renderProvinces(
+    provinces
+) {
+
+    return provinces
+        .map(
+            province => `
+
+                <div
+                    class="province-report-item"
+                >
+
+                    <div
+                        class="province-report-info"
+                    >
+
+                        <div
+                            class="province-report-icon"
+                        >
+                            📍
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                ${escapeHTML(
+                                    province.name
+                                )}
+                            </strong>
+
+                            <span>
+                                Student views
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <strong
+                        class="province-count"
+                    >
+                        ${province.count}
+                    </strong>
+
+                </div>
+
+            `
+        )
+        .join("");
+
+}
+
+
+// =========================================
+// EMPTY
 // =========================================
 
 function emptyReport(
@@ -1892,7 +1751,9 @@ function emptyReport(
         <div
             class="report-empty"
         >
-            ${message}
+            ${escapeHTML(
+                message
+            )}
         </div>
 
     `;
@@ -1904,7 +1765,7 @@ function emptyReport(
 // STUDENT TABLE
 // =========================================
 
-function renderStudents(
+function renderStudentTable(
     students
 ) {
 
@@ -1969,91 +1830,93 @@ function renderStudents(
 
 
     studentTableBody.innerHTML =
-        sorted.map(
-            student => {
+        sorted
+            .map(
+                student => {
 
-                const lastActive =
-                    Number(
-                        student.data
-                            ?.lastActiveAt ||
-                        0
-                    );
-
-
-                const lastActiveText =
-                    lastActive
-                        ? new Date(
-                            lastActive
-                        ).toLocaleString()
-                        : "Never";
+                    const lastActive =
+                        Number(
+                            student.data
+                                ?.lastActiveAt ||
+                            0
+                        );
 
 
-                const grade =
-                    student.type ===
-                    "grade10"
-                        ? "Grade 10"
-                        : student.type ===
-                          "grade11"
-                            ? "Grade 11"
-                            : "A/L";
+                    const lastActiveText =
+                        lastActive
+                            ? new Date(
+                                lastActive
+                            ).toLocaleString()
+                            : "Never";
 
 
-                return `
-
-                    <tr>
-
-                        <td>
-
-                            <strong>
-                                ${escapeHTML(
-                                    student.id
-                                )}
-                            </strong>
-
-                        </td>
+                    const grade =
+                        student.type ===
+                        "grade10"
+                            ? "Grade 10"
+                            : student.type ===
+                              "grade11"
+                                ? "Grade 11"
+                                : "A/L";
 
 
-                        <td>
-                            ${grade}
-                        </td>
+                    return `
+
+                        <tr>
+
+                            <td>
+
+                                <strong>
+                                    ${escapeHTML(
+                                        student.id
+                                    )}
+                                </strong>
+
+                            </td>
 
 
-                        <td>
-
-                            <span
-                                class="status ${
-                                    student.active
-                                        ? "active"
-                                        : "inactive"
-                                }"
-                            >
-
-                                ${
-                                    student.active
-                                        ? "🟢 Active"
-                                        : "Offline"
-                                }
-
-                            </span>
-
-                        </td>
+                            <td>
+                                ${grade}
+                            </td>
 
 
-                        <td>
-                            ${student.views}
-                        </td>
+                            <td>
+
+                                <span
+                                    class="status ${
+                                        student.active
+                                            ? "active"
+                                            : "inactive"
+                                    }"
+                                >
+
+                                    ${
+                                        student.active
+                                            ? "🟢 Active"
+                                            : "Offline"
+                                    }
+
+                                </span>
+
+                            </td>
 
 
-                        <td>
-                            ${lastActiveText}
-                        </td>
+                            <td>
+                                ${student.views}
+                            </td>
 
-                    </tr>
 
-                `;
+                            <td>
+                                ${lastActiveText}
+                            </td>
 
-            }
-        ).join("");
+                        </tr>
+
+                    `;
+
+                }
+            )
+            .join("");
 
 }
 
@@ -2141,9 +2004,9 @@ function updateTime() {
 // ERROR
 // =========================================
 
-function showReportError() {
+function showError() {
 
-    const message =
+    const errorHTML =
         emptyReport(
             "Unable to load live report data."
         );
@@ -2154,7 +2017,7 @@ function showReportError() {
     ) {
 
         grade10Reports.innerHTML =
-            message;
+            errorHTML;
 
     }
 
@@ -2164,7 +2027,7 @@ function showReportError() {
     ) {
 
         grade11ModelReports.innerHTML =
-            message;
+            errorHTML;
 
     }
 
@@ -2174,7 +2037,7 @@ function showReportError() {
     ) {
 
         grade11PastReports.innerHTML =
-            message;
+            errorHTML;
 
     }
 
@@ -2184,7 +2047,7 @@ function showReportError() {
     ) {
 
         alModelReports.innerHTML =
-            message;
+            errorHTML;
 
     }
 
@@ -2194,7 +2057,7 @@ function showReportError() {
     ) {
 
         alProvince1Reports.innerHTML =
-            message;
+            errorHTML;
 
     }
 
@@ -2204,7 +2067,7 @@ function showReportError() {
     ) {
 
         alProvince2Reports.innerHTML =
-            message;
+            errorHTML;
 
     }
 
@@ -2343,7 +2206,7 @@ function exportCSV() {
 
 
 // =========================================
-// EVENTS
+// FILTER EVENTS
 // =========================================
 
 if (
@@ -2352,7 +2215,7 @@ if (
 
     gradeFilter.addEventListener(
         "change",
-        renderReports
+        renderAll
     );
 
 }
@@ -2364,11 +2227,15 @@ if (
 
     activityFilter.addEventListener(
         "change",
-        renderReports
+        renderAll
     );
 
 }
 
+
+// =========================================
+// REFRESH
+// =========================================
 
 if (
     refreshBtn
@@ -2382,6 +2249,10 @@ if (
 }
 
 
+// =========================================
+// EXPORT
+// =========================================
+
 if (
     exportBtn
 ) {
@@ -2393,6 +2264,10 @@ if (
 
 }
 
+
+// =========================================
+// LOGOUT
+// =========================================
 
 if (
     logoutBtn
@@ -2418,7 +2293,7 @@ if (
 
 
 // =========================================
-// INITIAL LOAD
+// START
 // =========================================
 
 loadData();
@@ -2435,5 +2310,5 @@ setInterval(
 
 
 console.log(
-    "✅ Advanced Reports Loaded"
+    "✅ Reports system loaded"
 );
