@@ -1,7 +1,3 @@
-// =====================================================
-// ADMIN DASHBOARD JS
-// =====================================================
-
 import {
     db,
     collection,
@@ -10,31 +6,14 @@ import {
 
 
 // =====================================================
-// START
+// ADMIN ACCESS PROTECTION
 // =====================================================
-
-console.log("=================================");
-console.log("ADMIN DASHBOARD JS STARTED");
-console.log("=================================");
-
-
-// =====================================================
-// SESSION
-// =====================================================
-
-const adminLoggedIn =
-    sessionStorage.getItem(
-        "adminLoggedIn"
-    );
-
 
 if (
-    adminLoggedIn !== "true"
+    sessionStorage.getItem(
+        "adminLoggedIn"
+    ) !== "true"
 ) {
-
-    console.warn(
-        "Admin is not logged in."
-    );
 
     window.location.replace(
         "admin-login.html"
@@ -44,21 +23,24 @@ if (
 
 
 // =====================================================
-// GET ROLE
+// ROLE
 // =====================================================
 
-const adminRole =
-    String(
-        sessionStorage.getItem(
-            "adminRole"
-        ) ||
-        sessionStorage.getItem(
-            "role"
-        ) ||
-        "admin"
+function normalizeRole(
+    role
+) {
+
+    return String(
+        role || ""
     )
     .trim()
-    .toLowerCase();
+    .toLowerCase()
+    .replace(
+        /[\s_-]+/g,
+        ""
+    );
+
+}
 
 
 const adminUsername =
@@ -68,38 +50,169 @@ const adminUsername =
     "Admin";
 
 
-// =====================================================
-// SUPER ADMIN CHECK
-// =====================================================
+const adminRole =
+    normalizeRole(
+        sessionStorage.getItem(
+            "adminRole"
+        )
+    );
+
 
 const isSuperAdmin =
-    adminRole === "superadmin" ||
-    adminRole === "super_admin" ||
-    adminRole === "super admin";
+    adminRole ===
+    "superadmin";
 
 
 console.log(
-    "Admin Username:",
+    "================================="
+);
+
+console.log(
+    "ADMIN DASHBOARD"
+);
+
+console.log(
+    "Username:",
     adminUsername
 );
 
 console.log(
-    "Admin Role:",
+    "Role:",
     adminRole
 );
 
 console.log(
-    "Is Super Admin:",
+    "Superadmin:",
     isSuperAdmin
+);
+
+console.log(
+    "================================="
 );
 
 
 // =====================================================
-// ACTIVE LIMIT
+// ELEMENTS
 // =====================================================
-//
-// Student is considered online if the last activity
-// was within the last 90 seconds.
+
+const adminUsernameElement =
+    document.getElementById(
+        "adminUsername"
+    );
+
+
+const adminRoleElement =
+    document.getElementById(
+        "adminRole"
+    );
+
+
+const logoutBtn =
+    document.getElementById(
+        "logoutBtn"
+    );
+
+
+// =====================================================
+// DASHBOARD ELEMENTS
+// =====================================================
+
+const totalStudentsElement =
+    document.getElementById(
+        "totalStudents"
+    );
+
+
+const totalViewedElement =
+    document.getElementById(
+        "totalViewed"
+    );
+
+
+const activeStudentsElement =
+    document.getElementById(
+        "activeStudents"
+    );
+
+
+// =====================================================
+// CHART ELEMENTS
+// =====================================================
+
+const chartTotalStudents =
+    document.getElementById(
+        "chartTotalStudents"
+    );
+
+
+const chartTotalStudentsValue =
+    document.getElementById(
+        "chartTotalStudentsValue"
+    );
+
+
+const chartPaperViews =
+    document.getElementById(
+        "chartPaperViews"
+    );
+
+
+const chartPaperViewsValue =
+    document.getElementById(
+        "chartPaperViewsValue"
+    );
+
+
+const chartGrade10 =
+    document.getElementById(
+        "chartGrade10"
+    );
+
+
+const chartGrade10Value =
+    document.getElementById(
+        "chartGrade10Value"
+    );
+
+
+const chartGrade11 =
+    document.getElementById(
+        "chartGrade11"
+    );
+
+
+const chartGrade11Value =
+    document.getElementById(
+        "chartGrade11Value"
+    );
+
+
+const chartAL =
+    document.getElementById(
+        "chartAL"
+    );
+
+
+const chartALValue =
+    document.getElementById(
+        "chartALValue"
+    );
+
+
+const chartActive =
+    document.getElementById(
+        "chartActive"
+    );
+
+
+const chartActiveValue =
+    document.getElementById(
+        "chartActiveValue"
+    );
+
+
+// =====================================================
+// SETTINGS
 // =====================================================
 
 const ACTIVE_LIMIT =
@@ -121,241 +234,106 @@ document.addEventListener(
     "DOMContentLoaded",
     () => {
 
-        initializeAdmin();
+        setupAdminUI();
+
+        setupPermissions();
+
+        setupLogout();
+
+        loadDashboard();
 
     }
 );
 
 
 // =====================================================
-// INITIALIZE
+// ADMIN UI
 // =====================================================
 
-function initializeAdmin() {
-
-    console.log(
-        "Initializing Admin Dashboard..."
-    );
-
-
-    setupAdminInfo();
-
-    setupRoleProtection();
-
-    setupNavigation();
-
-    setupLogout();
-
-    setupRefresh();
-
-    loadDashboardData();
-
-}
-
-
-// =====================================================
-// ADMIN INFO
-// =====================================================
-
-function setupAdminInfo() {
-
-    const usernameElements =
-        document.querySelectorAll(
-            "#adminUsername"
-        );
-
-
-    usernameElements.forEach(
-        element => {
-
-            element.textContent =
-                adminUsername;
-
-        }
-    );
-
-
-    const roleText =
-        isSuperAdmin
-            ? "Super Administrator"
-            : "Administrator";
-
-
-    const roleElements =
-        document.querySelectorAll(
-            "#adminRole"
-        );
-
-
-    roleElements.forEach(
-        element => {
-
-            element.textContent =
-                roleText;
-
-        }
-    );
-
-
-    // Optional page role labels
-
-    const roleLabels =
-        document.querySelectorAll(
-            ".admin-role"
-        );
-
-
-    roleLabels.forEach(
-        element => {
-
-            element.textContent =
-                roleText;
-
-        }
-    );
-
-}
-
-
-// =====================================================
-// ROLE PROTECTION
-// =====================================================
-
-function setupRoleProtection() {
-
-    console.log(
-        "Setting role protection..."
-    );
-
-
-    // =================================================
-    // ITEMS THAT REQUIRE SUPERADMIN
-    // =================================================
-
-    const protectedItems =
-        document.querySelectorAll(
-            ".superadmin-only, " +
-            ".full-admin-only, " +
-            "[data-superadmin-only]"
-        );
-
-
-    console.log(
-        "Protected menu items:",
-        protectedItems.length
-    );
-
-
-    // =================================================
-    // SUPERADMIN
-    // =================================================
+function setupAdminUI() {
 
     if (
-        isSuperAdmin
+        adminUsernameElement
     ) {
 
-        console.log(
-            "SUPERADMIN ACCESS ENABLED"
-        );
-
-
-        protectedItems.forEach(
-            item => {
-
-                // Remove all lock classes
-                item.classList.remove(
-                    "locked-menu"
-                );
-
-                item.classList.remove(
-                    "locked"
-                );
-
-                item.classList.remove(
-                    "disabled-menu"
-                );
-
-
-                // Remove lock indicators
-                item
-                    .querySelectorAll(
-                        ".lock-icon, " +
-                        ".menu-lock, " +
-                        ".access-lock"
-                    )
-                    .forEach(
-                        lock => {
-
-                            lock.remove();
-
-                        }
-                    );
-
-
-                // Remove aria disabled
-                item.removeAttribute(
-                    "aria-disabled"
-                );
-
-
-                // Remove title
-                item.removeAttribute(
-                    "title"
-                );
-
-
-                // Restore normal appearance
-                item.style.pointerEvents =
-                    "";
-
-                item.style.cursor =
-                    "";
-
-                item.style.opacity =
-                    "";
-
-                item.style.filter =
-                    "";
-
-
-                // =================================================
-                // If it is an anchor, restore normal navigation
-                // =================================================
-
-                if (
-                    item.tagName === "A"
-                ) {
-
-                    item.style.pointerEvents =
-                        "";
-
-                }
-
-            }
-        );
-
-
-        return;
+        adminUsernameElement.textContent =
+            adminUsername;
 
     }
 
 
-    // =================================================
-    // NORMAL ADMIN
-    // =================================================
+    if (
+        adminRoleElement
+    ) {
 
-    console.log(
-        "NORMAL ADMIN ACCESS MODE"
-    );
+        adminRoleElement.textContent =
+            isSuperAdmin
+                ? "Super Administrator"
+                : "Administrator";
+
+    }
+
+}
+
+
+// =====================================================
+// PERMISSION SYSTEM
+// =====================================================
+
+function setupPermissions() {
+
+    const protectedItems =
+        document.querySelectorAll(
+            ".superadmin-only"
+        );
 
 
     protectedItems.forEach(
         item => {
 
-            item.classList.add(
-                "locked-menu"
-            );
+            // ---------------------------------------------
+            // SUPERADMIN
+            // ---------------------------------------------
 
+            if (
+                isSuperAdmin
+            ) {
+
+                item.classList.remove(
+                    "locked"
+                );
+
+                item.removeAttribute(
+                    "aria-disabled"
+                );
+
+                item.style.pointerEvents =
+                    "";
+
+                item.style.opacity =
+                    "";
+
+                // Remove JS-created locks
+                item
+                    .querySelectorAll(
+                        ".js-lock-icon"
+                    )
+                    .forEach(
+                        lock => lock.remove()
+                    );
+
+                return;
+
+            }
+
+
+            // ---------------------------------------------
+            // NORMAL ADMIN
+            // ---------------------------------------------
+
+            item.classList.add(
+                "locked"
+            );
 
             item.setAttribute(
                 "aria-disabled",
@@ -363,62 +341,9 @@ function setupRoleProtection() {
             );
 
 
-            item.setAttribute(
-                "title",
-                "Super Administrator access required"
-            );
-
-
-            item.style.cursor =
-                "not-allowed";
-
-
-            // =================================================
-            // Add lock icon if not already there
-            // =================================================
-
-            const existingLock =
-                item.querySelector(
-                    ".lock-icon"
-                );
-
-
-            if (
-                !existingLock
-            ) {
-
-                const lock =
-                    document.createElement(
-                        "span"
-                    );
-
-
-                lock.className =
-                    "lock-icon";
-
-
-                lock.textContent =
-                    " 🔒";
-
-
-                lock.style.marginLeft =
-                    "auto";
-
-
-                lock.style.fontSize =
-                    "12px";
-
-
-                item.appendChild(
-                    lock
-                );
-
-            }
-
-
-            // =================================================
-            // Capture click
-            // =================================================
+            // ---------------------------------------------
+            // DON'T FOLLOW LINK
+            // ---------------------------------------------
 
             item.addEventListener(
                 "click",
@@ -430,9 +355,115 @@ function setupRoleProtection() {
 
                     showAccessDenied();
 
-                },
-                true
+                }
             );
+
+
+            // ---------------------------------------------
+            // ADD LOCK ONLY ONCE
+            // ---------------------------------------------
+
+            if (
+                !item.querySelector(
+                    ".js-lock-icon"
+                )
+            ) {
+
+                const lock =
+                    document.createElement(
+                        "span"
+                    );
+
+
+                lock.className =
+                    "js-lock-icon";
+
+
+                lock.textContent =
+                    " 🔒";
+
+
+                lock.style.marginLeft =
+                    "auto";
+
+
+                lock.style.fontSize =
+                    "13px";
+
+
+                item.appendChild(
+                    lock
+                );
+
+            }
+
+        }
+    );
+
+
+    // =================================================
+    // MANAGEMENT CARDS
+    // =================================================
+
+    const managementCards =
+        document.querySelectorAll(
+            ".superadmin-card"
+        );
+
+
+    managementCards.forEach(
+        card => {
+
+            if (
+                isSuperAdmin
+            ) {
+
+                card.classList.remove(
+                    "locked"
+                );
+
+                card
+                    .querySelectorAll(
+                        ".js-lock-icon"
+                    )
+                    .forEach(
+                        lock => lock.remove()
+                    );
+
+                return;
+
+            }
+
+
+            card.classList.add(
+                "locked"
+            );
+
+
+            const link =
+                card.querySelector(
+                    "a"
+                );
+
+
+            if (
+                link
+            ) {
+
+                link.addEventListener(
+                    "click",
+                    event => {
+
+                        event.preventDefault();
+
+                        event.stopPropagation();
+
+                        showAccessDenied();
+
+                    }
+                );
+
+            }
 
         }
     );
@@ -446,18 +477,18 @@ function setupRoleProtection() {
 
 function showAccessDenied() {
 
-    // Remove existing message
-    const oldMessage =
+    // Remove old message
+    const old =
         document.getElementById(
             "accessDeniedMessage"
         );
 
 
     if (
-        oldMessage
+        old
     ) {
 
-        oldMessage.remove();
+        old.remove();
 
     }
 
@@ -487,8 +518,8 @@ function showAccessDenied() {
                 </strong>
 
                 <p>
-                    This section is available
-                    only to Super Administrators.
+                    This section is available only
+                    to Super Administrators.
                 </p>
 
             </div>
@@ -497,7 +528,7 @@ function showAccessDenied() {
                 type="button"
                 id="closeAccessDenied"
             >
-                OK
+                ✕
             </button>
 
         </div>
@@ -532,12 +563,30 @@ function showAccessDenied() {
     }
 
 
-    // Auto close
     setTimeout(
         () => {
 
             if (
                 message
+            ) {
+
+                message.classList.add(
+                    "show"
+                );
+
+            }
+
+        },
+        10
+    );
+
+
+    setTimeout(
+        () => {
+
+            if (
+                message &&
+                message.parentNode
             ) {
 
                 message.remove();
@@ -552,120 +601,39 @@ function showAccessDenied() {
 
 
 // =====================================================
-// NAVIGATION
-// =====================================================
-
-function setupNavigation() {
-
-    const navigationItems =
-        document.querySelectorAll(
-            ".nav-item"
-        );
-
-
-    navigationItems.forEach(
-        item => {
-
-            item.addEventListener(
-                "click",
-                event => {
-
-                    const href =
-                        item.getAttribute(
-                            "href"
-                        );
-
-
-                    if (
-                        !href ||
-                        href === "#"
-                    ) {
-
-                        return;
-
-                    }
-
-
-                    // =================================================
-                    // Protected page check
-                    // =================================================
-
-                    const isProtected =
-                        item.classList.contains(
-                            "superadmin-only"
-                        ) ||
-                        item.classList.contains(
-                            "full-admin-only"
-                        ) ||
-                        item.hasAttribute(
-                            "data-superadmin-only"
-                        );
-
-
-                    if (
-                        isProtected &&
-                        !isSuperAdmin
-                    ) {
-
-                        event.preventDefault();
-
-                        event.stopPropagation();
-
-                        showAccessDenied();
-
-                    }
-
-                }
-            );
-
-        }
-    );
-
-}
-
-
-// =====================================================
 // LOGOUT
 // =====================================================
 
 function setupLogout() {
 
-    const logoutButtons =
-        document.querySelectorAll(
-            "#logoutBtn, .logout-btn"
-        );
+    if (
+        !logoutBtn
+    ) {
+
+        return;
+
+    }
 
 
-    logoutButtons.forEach(
-        button => {
+    logoutBtn.addEventListener(
+        "click",
+        () => {
 
-            button.addEventListener(
-                "click",
-                () => {
+            sessionStorage.removeItem(
+                "adminLoggedIn"
+            );
 
-                    console.log(
-                        "Logging out..."
-                    );
+            sessionStorage.removeItem(
+                "adminRole"
+            );
 
-
-                    sessionStorage.removeItem(
-                        "adminLoggedIn"
-                    );
-
-                    sessionStorage.removeItem(
-                        "adminRole"
-                    );
-
-                    sessionStorage.removeItem(
-                        "adminUsername"
-                    );
+            sessionStorage.removeItem(
+                "adminUsername"
+            );
 
 
-                    window.location.replace(
-                        "admin-login.html"
-                    );
-
-                }
+            window.location.replace(
+                "admin-login.html"
             );
 
         }
@@ -675,47 +643,196 @@ function setupLogout() {
 
 
 // =====================================================
-// REFRESH
+// STUDENT TYPE
 // =====================================================
 
-function setupRefresh() {
+function getStudentType(
+    data
+) {
 
-    const refreshButtons =
-        document.querySelectorAll(
-            "#refreshBtn, .refresh-btn"
+    // ---------------------------------------------
+    // studentType
+    // ---------------------------------------------
+
+    const studentType =
+        String(
+            data?.studentType ||
+            ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+    if (
+        studentType ===
+        "grade10"
+    ) {
+
+        return "grade10";
+
+    }
+
+
+    if (
+        studentType ===
+        "grade11"
+    ) {
+
+        return "grade11";
+
+    }
+
+
+    if (
+        studentType ===
+        "al" ||
+        studentType ===
+        "a/l" ||
+        studentType ===
+        "advancedlevel"
+    ) {
+
+        return "al";
+
+    }
+
+
+    // ---------------------------------------------
+    // grade fallback
+    // ---------------------------------------------
+
+    const grade =
+        String(
+            data?.grade ||
+            ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+    if (
+        grade === "10"
+    ) {
+
+        return "grade10";
+
+    }
+
+
+    if (
+        grade === "11"
+    ) {
+
+        return "grade11";
+
+    }
+
+
+    // ---------------------------------------------
+    // DEFAULT
+    // ---------------------------------------------
+
+    return "al";
+
+}
+
+
+// =====================================================
+// ACTIVE CHECK
+// =====================================================
+
+function isActive(
+    data
+) {
+
+    const lastActive =
+        Number(
+            data?.lastActiveAt ||
+            0
         );
 
 
-    refreshButtons.forEach(
-        button => {
+    if (
+        !lastActive
+    ) {
 
-            button.addEventListener(
-                "click",
-                async () => {
+        return false;
 
-                    await loadDashboardData();
+    }
 
-                }
-            );
 
-        }
+    return (
+        Date.now() -
+        lastActive
+        <=
+        ACTIVE_LIMIT
     );
 
 }
 
 
 // =====================================================
-// LOAD DASHBOARD DATA
+// PAPER VIEW COUNT
 // =====================================================
 
-async function loadDashboardData() {
+function getPaperViews(
+    data
+) {
 
-    console.log(
-        "Loading dashboard data..."
-    );
+    let total =
+        0;
 
+
+    for (
+        let i = 1;
+        i <= 50;
+        i++
+    ) {
+
+        const number =
+            String(
+                i
+            ).padStart(
+                2,
+                "0"
+            );
+
+
+        const field =
+            "paper" +
+            number +
+            "Viewed";
+
+
+        if (
+            data?.[field] ===
+            true
+        ) {
+
+            total++;
+
+        }
+
+    }
+
+
+    return total;
+
+}
+
+
+// =====================================================
+// LOAD DASHBOARD
+// =====================================================
+
+async function loadDashboard() {
 
     try {
+
+        console.log(
+            "📊 Loading dashboard..."
+        );
+
 
         const snapshot =
             await getDocs(
@@ -750,7 +867,7 @@ async function loadDashboardData() {
                         ),
 
                     active:
-                        isStudentActive(
+                        isActive(
                             data
                         ),
 
@@ -765,243 +882,27 @@ async function loadDashboardData() {
         );
 
 
-        console.log(
-            "Students loaded:",
-            studentsData.length
-        );
-
-
         renderDashboard();
 
 
-        updateSystemStatus(
-            true
+        console.log(
+            "✅ Dashboard loaded:",
+            studentsData.length,
+            "students"
         );
 
-
     }
+
     catch (
         error
     ) {
 
         console.error(
-            "Dashboard data error:",
+            "❌ Dashboard error:",
             error
         );
 
-
-        updateSystemStatus(
-            false
-        );
-
     }
-
-}
-
-
-// =====================================================
-// GET STUDENT TYPE
-// =====================================================
-
-function getStudentType(
-    data
-) {
-
-    // =================================================
-    // Explicit studentType
-    // =================================================
-
-    const studentType =
-        String(
-            data?.studentType ||
-            ""
-        )
-        .trim()
-        .toLowerCase();
-
-
-    if (
-        studentType === "grade10" ||
-        studentType === "grade 10"
-    ) {
-
-        return "grade10";
-
-    }
-
-
-    if (
-        studentType === "grade11" ||
-        studentType === "grade 11"
-    ) {
-
-        return "grade11";
-
-    }
-
-
-    if (
-        studentType === "al" ||
-        studentType === "a/l" ||
-        studentType === "advanced" ||
-        studentType === "advanced level"
-    ) {
-
-        return "al";
-
-    }
-
-
-    // =================================================
-    // Grade field
-    // =================================================
-
-    const grade =
-        String(
-            data?.grade ||
-            ""
-        )
-        .trim()
-        .toLowerCase();
-
-
-    if (
-        grade === "10" ||
-        grade === "grade10" ||
-        grade === "grade 10"
-    ) {
-
-        return "grade10";
-
-    }
-
-
-    if (
-        grade === "11" ||
-        grade === "grade11" ||
-        grade === "grade 11"
-    ) {
-
-        return "grade11";
-
-    }
-
-
-    // =================================================
-    // Everything else = A/L
-    // =================================================
-
-    return "al";
-
-}
-
-
-// =====================================================
-// ACTIVE CHECK
-// =====================================================
-
-function isStudentActive(
-    data
-) {
-
-    const lastActive =
-        Number(
-            data?.lastActiveAt ||
-            0
-        );
-
-
-    if (
-        !lastActive
-    ) {
-
-        return false;
-
-    }
-
-
-    return (
-        Date.now() -
-        lastActive
-        <=
-        ACTIVE_LIMIT
-    );
-
-}
-
-
-// =====================================================
-// PAPER VIEWS
-// =====================================================
-
-function getPaperViews(
-    data
-) {
-
-    let total =
-        0;
-
-
-    // =================================================
-    // Standard paper fields
-    // paper01Viewed
-    // paper02Viewed
-    // ...
-    // =================================================
-
-    for (
-        let i = 1;
-        i <= 50;
-        i++
-    ) {
-
-        const number =
-            String(
-                i
-            )
-            .padStart(
-                2,
-                "0"
-            );
-
-
-        const field =
-            "paper" +
-            number +
-            "Viewed";
-
-
-        if (
-            data?.[field] === true
-        ) {
-
-            total++;
-
-        }
-
-    }
-
-
-    // =================================================
-    // Also support totalPaperViews if you use it
-    // =================================================
-
-    if (
-        total === 0 &&
-        Number(
-            data?.totalPaperViews
-        ) > 0
-    ) {
-
-        total =
-            Number(
-                data.totalPaperViews
-            );
-
-    }
-
-
-    return total;
 
 }
 
@@ -1060,63 +961,63 @@ function renderDashboard() {
 
 
     // =================================================
-    // SUMMARY
+    // SUMMARY CARDS
     // =================================================
 
     setText(
-        "totalStudents",
+        totalStudentsElement,
         total
     );
 
 
     setText(
-        "totalViewed",
+        totalViewedElement,
         totalViews
     );
 
 
     setText(
-        "activeStudents",
+        activeStudentsElement,
         active
     );
 
 
     // =================================================
-    // DASHBOARD CHART VALUES
+    // CHART VALUES
     // =================================================
 
     setText(
-        "chartTotalStudentsValue",
+        chartTotalStudentsValue,
         total
     );
 
 
     setText(
-        "chartPaperViewsValue",
+        chartPaperViewsValue,
         totalViews
     );
 
 
     setText(
-        "chartGrade10Value",
+        chartGrade10Value,
         grade10
     );
 
 
     setText(
-        "chartGrade11Value",
+        chartGrade11Value,
         grade11
     );
 
 
     setText(
-        "chartALValue",
+        chartALValue,
         al
     );
 
 
     setText(
-        "chartActiveValue",
+        chartActiveValue,
         active
     );
 
@@ -1125,282 +1026,100 @@ function renderDashboard() {
     // CHART BARS
     // =================================================
 
-    updateBar(
-        "chartTotalStudents",
-        total,
-        total
-    );
+    const maxStudents =
+        Math.max(
+            total,
+            1
+        );
 
 
-    updateBar(
-        "chartPaperViews",
-        totalViews,
+    const maxViews =
         Math.max(
             totalViews,
             1
-        )
-    );
-
-
-    updateBar(
-        "chartGrade10",
-        grade10,
-        total
-    );
-
-
-    updateBar(
-        "chartGrade11",
-        grade11,
-        total
-    );
-
-
-    updateBar(
-        "chartAL",
-        al,
-        total
-    );
-
-
-    updateBar(
-        "chartActive",
-        active,
-        total
-    );
-
-
-    // =================================================
-    // LIVE REPORT CARDS
-    // =================================================
-
-    renderLiveReports(
-        total,
-        grade10,
-        grade11,
-        al,
-        active,
-        totalViews
-    );
-
-
-    // =================================================
-    // Last updated
-    // =================================================
-
-    setText(
-        "lastUpdated",
-        "Last updated: " +
-        new Date().toLocaleTimeString()
-    );
-
-}
-
-
-// =====================================================
-// LIVE REPORT CARDS
-// =====================================================
-
-function renderLiveReports(
-    total,
-    grade10,
-    grade11,
-    al,
-    active,
-    totalViews
-) {
-
-    const reports =
-        document.querySelectorAll(
-            ".student-report-card, " +
-            ".live-report-card, " +
-            "[data-report-type]"
         );
 
 
-    reports.forEach(
-        card => {
-
-            const type =
-                card.getAttribute(
-                    "data-report-type"
-                );
-
-
-            let count =
-                0;
+    const maxGrade =
+        Math.max(
+            grade10,
+            grade11,
+            al,
+            1
+        );
 
 
-            if (
-                type === "all"
-            ) {
-
-                count =
-                    total;
-
-            }
-            else if (
-                type === "grade10"
-            ) {
-
-                count =
-                    grade10;
-
-            }
-            else if (
-                type === "grade11"
-            ) {
-
-                count =
-                    grade11;
-
-            }
-            else if (
-                type === "al"
-            ) {
-
-                count =
-                    al;
-
-            }
+    const maxActive =
+        Math.max(
+            total,
+            1
+        );
 
 
-            const totalElement =
-                card.querySelector(
-                    "[data-total]"
-                );
+    setWidth(
+        chartTotalStudents,
+        (
+            total /
+            maxStudents
+        ) * 100
+    );
 
 
-            if (
-                totalElement
-            ) {
-
-                totalElement.textContent =
-                    count;
-
-            }
-
-
-            const onlineElement =
-                card.querySelector(
-                    "[data-online]"
-                );
+    setWidth(
+        chartPaperViews,
+        (
+            totalViews /
+            maxViews
+        ) * 100
+    );
 
 
-            if (
-                onlineElement
-            ) {
-
-                if (
-                    type === "all"
-                ) {
-
-                    onlineElement.textContent =
-                        active;
-
-                }
-                else {
-
-                    const typeActive =
-                        studentsData.filter(
-                            student =>
-                                student.type ===
-                                    type &&
-                                student.active
-                        ).length;
+    setWidth(
+        chartGrade10,
+        (
+            grade10 /
+            maxGrade
+        ) * 100
+    );
 
 
-                    onlineElement.textContent =
-                        typeActive;
-
-                }
-
-            }
-
-
-            const offlineElement =
-                card.querySelector(
-                    "[data-offline]"
-                );
+    setWidth(
+        chartGrade11,
+        (
+            grade11 /
+            maxGrade
+        ) * 100
+    );
 
 
-            if (
-                offlineElement
-            ) {
-
-                const online =
-                    type === "all"
-                        ? active
-                        : studentsData.filter(
-                            student =>
-                                student.type ===
-                                    type &&
-                                student.active
-                        ).length;
+    setWidth(
+        chartAL,
+        (
+            al /
+            maxGrade
+        ) * 100
+    );
 
 
-                offlineElement.textContent =
-                    count -
-                    online;
-
-            }
-
-
-            const viewsElement =
-                card.querySelector(
-                    "[data-views]"
-                );
-
-
-            if (
-                viewsElement
-            ) {
-
-                const views =
-                    type === "all"
-                        ? totalViews
-                        : studentsData
-                            .filter(
-                                student =>
-                                    student.type ===
-                                    type
-                            )
-                            .reduce(
-                                (
-                                    sum,
-                                    student
-                                ) =>
-                                    sum +
-                                    student.views,
-                                0
-                            );
-
-
-                viewsElement.textContent =
-                    views;
-
-            }
-
-        }
+    setWidth(
+        chartActive,
+        (
+            active /
+            maxActive
+        ) * 100
     );
 
 }
 
 
 // =====================================================
-// SET TEXT BY ID
+// SET TEXT
 // =====================================================
 
 function setText(
-    id,
+    element,
     value
 ) {
-
-    const element =
-        document.getElementById(
-            id
-        );
-
 
     if (
         element
@@ -1415,20 +1134,13 @@ function setText(
 
 
 // =====================================================
-// UPDATE BAR
+// SET WIDTH
 // =====================================================
 
-function updateBar(
-    id,
-    value,
-    max
+function setWidth(
+    element,
+    value
 ) {
-
-    const element =
-        document.getElementById(
-            id
-        );
-
 
     if (
         !element
@@ -1439,79 +1151,21 @@ function updateBar(
     }
 
 
-    let percentage =
-        0;
-
-
-    if (
-        max > 0
-    ) {
-
-        percentage =
-            (
-                value /
-                max
-            ) *
-            100;
-
-    }
-
-
-    percentage =
+    const safeValue =
         Math.max(
             0,
             Math.min(
-                percentage,
-                100
+                100,
+                Number(
+                    value
+                ) || 0
             )
         );
 
 
     element.style.width =
-        percentage +
+        safeValue +
         "%";
-
-}
-
-
-// =====================================================
-// SYSTEM STATUS
-// =====================================================
-
-function updateSystemStatus(
-    online
-) {
-
-    const statusElements =
-        document.querySelectorAll(
-            "#onlineStatus, " +
-            ".system-status"
-        );
-
-
-    statusElements.forEach(
-        element => {
-
-            if (
-                element.classList.contains(
-                    "system-status"
-                )
-            ) {
-
-                element.innerHTML = online
-                    ? `
-                        <span class="status-dot"></span>
-                        System Online
-                    `
-                    : `
-                        <span class="status-dot offline"></span>
-                        System Offline
-                    `;
-
-            }
-
-        }
-    );
 
 }
 
@@ -1519,22 +1173,11 @@ function updateSystemStatus(
 // =====================================================
 // AUTO REFRESH
 // =====================================================
-//
-// Refresh every 30 seconds.
-// =====================================================
 
 setInterval(
     () => {
 
-        if (
-            sessionStorage.getItem(
-                "adminLoggedIn"
-            ) === "true"
-        ) {
-
-            loadDashboardData();
-
-        }
+        loadDashboard();
 
     },
     30000
@@ -1546,19 +1189,5 @@ setInterval(
 // =====================================================
 
 console.log(
-    "================================="
-);
-
-console.log(
-    "ADMIN ROLE:",
-    adminRole
-);
-
-console.log(
-    "SUPERADMIN:",
-    isSuperAdmin
-);
-
-console.log(
-    "================================="
+    "✅ Admin Dashboard JS loaded"
 );
