@@ -1,578 +1,1137 @@
-/* =========================================
-   PAPER REPORT SECTIONS
-========================================= */
+<!DOCTYPE html>
+<html lang="en">
 
-.paper-report-section {
+<head>
 
-    margin-top: 28px;
+    <meta charset="UTF-8">
 
-    padding-top: 25px;
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    border-top:
-        1px solid #e5e7eb;
+    <meta
+        name="description"
+        content="Student Assessment Portal Reports"
+    >
 
-}
+    <title>
+        Student Assessment Portal - Reports
+    </title>
 
+    <!-- IMPORTANT -->
+    <link
+        rel="stylesheet"
+        href="./reports.css"
+    >
 
-.paper-report-section:first-child {
+</head>
 
-    margin-top: 0;
 
-    padding-top: 0;
+<body>
 
-    border-top: none;
 
-}
+<div class="app">
 
 
-/* =========================================
-   SECTION TITLE
-========================================= */
+    <!-- =========================================
+         SIDEBAR
+    ========================================== -->
 
-.report-section-title {
+    <aside class="sidebar">
 
-    display: flex;
 
-    align-items: center;
+        <!-- BRAND -->
 
-    gap: 14px;
+        <div class="sidebar-brand">
 
-    margin-bottom: 18px;
+            <div class="brand-logo">
+                🎓
+            </div>
 
-}
+            <div>
 
+                <h2>
+                    Student
+                </h2>
 
-.report-section-icon {
+                <span>
+                    Assessment Portal
+                </span>
 
-    width: 48px;
+            </div>
 
-    height: 48px;
+        </div>
 
-    display: flex;
 
-    align-items: center;
+        <!-- LABEL -->
 
-    justify-content: center;
+        <div class="sidebar-label">
+            ADMINISTRATION
+        </div>
 
-    border-radius: 13px;
 
-    font-size: 22px;
+        <!-- NAVIGATION -->
 
-}
+        <nav class="sidebar-nav">
 
 
-.grade10-icon {
+            <a
+                href="admin.html"
+                class="nav-item"
+            >
 
-    background: #fff7ed;
+                <span class="nav-icon">
+                    🏠
+                </span>
 
-}
+                <span>
+                    Dashboard
+                </span>
 
+            </a>
 
-.grade11-icon {
 
-    background: #ecfdf5;
+            <a
+                href="students.html"
+                class="nav-item"
+            >
 
-}
+                <span class="nav-icon">
+                    👥
+                </span>
 
+                <span>
+                    Students
+                </span>
 
-.past-icon {
+            </a>
 
-    background: #eff6ff;
 
-}
+            <a
+                href="paper-management.html"
+                class="nav-item"
+            >
 
+                <span class="nav-icon">
+                    📚
+                </span>
 
-.al-icon {
+                <span>
+                    Paper Management
+                </span>
 
-    background: #f5f3ff;
+            </a>
 
-}
 
+            <a
+                href="import-students.html"
+                class="nav-item"
+            >
 
-.province-icon {
+                <span class="nav-icon">
+                    📥
+                </span>
 
-    background: #fef2f2;
+                <span>
+                    Import Students
+                </span>
 
-}
+            </a>
 
 
-.province2-icon {
+            <a
+                href="reports.html"
+                class="nav-item active"
+            >
 
-    background: #fdf4ff;
+                <span class="nav-icon">
+                    📊
+                </span>
 
-}
+                <span>
+                    Reports
+                </span>
 
+            </a>
 
-.report-section-title h3 {
 
-    font-size: 17px;
+        </nav>
 
-    color: #111827;
 
-    margin-bottom: 3px;
+        <!-- SIDEBAR BOTTOM -->
 
-}
+        <div class="sidebar-bottom">
 
 
-.report-section-title p {
+            <div class="admin-user">
 
-    color: #6b7280;
+                <div class="admin-user-icon">
+                    👨‍💼
+                </div>
 
-    font-size: 12px;
+                <div>
 
-}
+                    <strong id="adminUsername">
+                        Admin
+                    </strong>
 
+                    <span id="adminRole">
+                        Administrator
+                    </span>
 
-/* =========================================
-   TERM GROUP
-========================================= */
+                </div>
 
-.term-report {
+            </div>
 
-    margin-bottom: 20px;
 
-}
+            <button
+                type="button"
+                id="logoutBtn"
+                class="logout-btn"
+            >
 
+                🚪
 
-.term-report:last-child {
+                <span>
+                    Sign Out
+                </span>
 
-    margin-bottom: 0;
+            </button>
 
-}
 
+        </div>
 
-.term-title {
 
-    display: flex;
+    </aside>
 
-    align-items: center;
 
-    justify-content: space-between;
 
-    margin-bottom: 10px;
+    <!-- =========================================
+         MAIN
+    ========================================== -->
 
-}
+    <main class="main-content">
 
 
-.term-title strong {
+        <!-- =====================================
+             HEADER
+        ====================================== -->
 
-    font-size: 13px;
+        <header class="page-header">
 
-    color: #374151;
 
-}
+            <div>
 
+                <p class="page-label">
+                    ADMINISTRATION
+                </p>
 
-.term-title span {
+                <h1>
+                    Reports & Analytics
+                </h1>
 
-    font-size: 11px;
+                <p class="page-description">
+                    Student activity, paper usage and
+                    academic-level reports.
+                </p>
 
-    color: #9ca3af;
+            </div>
 
-}
 
+            <div class="header-actions">
 
-/* =========================================
-   PAPER GRID
-========================================= */
+                <button
+                    type="button"
+                    id="refreshBtn"
+                    class="secondary-btn"
+                >
 
-.paper-report-grid {
+                    🔄 Refresh
 
-    display: grid;
+                </button>
 
-    grid-template-columns:
-        repeat(
-            auto-fit,
-            minmax(180px, 1fr)
-        );
 
-    gap: 10px;
+                <button
+                    type="button"
+                    id="exportBtn"
+                    class="primary-btn"
+                >
 
-}
+                    📥 Export CSV
 
+                </button>
 
-/* =========================================
-   PAPER ITEM
-========================================= */
+            </div>
 
-.paper-report-item {
 
-    position: relative;
+        </header>
 
-    padding: 14px;
 
-    border:
-        1px solid #e5e7eb;
 
-    border-radius: 12px;
+        <!-- =====================================
+             FILTERS
+        ====================================== -->
 
-    background: #fafafa;
+        <section class="filter-card">
 
-    transition: 0.2s ease;
 
-}
+            <div class="filter-heading">
 
+                <div>
 
-.paper-report-item:hover {
+                    <span class="section-label">
+                        FILTERS
+                    </span>
 
-    border-color: #c4b5fd;
+                    <h2>
+                        Report Filters
+                    </h2>
 
-    background: #ffffff;
+                    <p>
+                        Filter the live report data.
+                    </p>
 
-    transform:
-        translateY(-1px);
+                </div>
 
-}
+            </div>
 
 
-.paper-report-top {
+            <div class="filters">
 
-    display: flex;
 
-    align-items: center;
+                <div class="filter-group">
 
-    justify-content: space-between;
+                    <label for="gradeFilter">
+                        Student Category
+                    </label>
 
-    gap: 10px;
 
-    margin-bottom: 10px;
+                    <select id="gradeFilter">
 
-}
+                        <option value="all">
+                            All Students
+                        </option>
 
+                        <option value="grade10">
+                            Grade 10
+                        </option>
 
-.paper-report-name {
+                        <option value="grade11">
+                            Grade 11
+                        </option>
 
-    font-size: 12px;
+                        <option value="al">
+                            Advanced Level
+                        </option>
 
-    font-weight: 700;
+                    </select>
 
-    color: #374151;
+                </div>
 
-}
 
 
-.paper-report-count {
+                <div class="filter-group">
 
-    font-size: 18px;
+                    <label for="activityFilter">
+                        Activity
+                    </label>
 
-    font-weight: 800;
 
-    color: #111827;
+                    <select id="activityFilter">
 
-}
+                        <option value="all">
+                            All Students
+                        </option>
 
+                        <option value="active">
+                            Active Now
+                        </option>
 
-.paper-report-track {
+                        <option value="inactive">
+                            Inactive
+                        </option>
 
-    width: 100%;
+                    </select>
 
-    height: 7px;
+                </div>
 
-    background: #e5e7eb;
 
-    border-radius: 20px;
+            </div>
 
-    overflow: hidden;
 
-}
+        </section>
 
 
-.paper-report-bar {
 
-    height: 100%;
+        <!-- =====================================
+             SUMMARY
+        ====================================== -->
 
-    min-width: 0;
+        <section class="stats-grid">
 
-    border-radius: 20px;
 
-    background:
-        linear-gradient(
-            90deg,
-            #6366f1,
-            #8b5cf6
-        );
+            <div class="stat-card">
 
-    transition:
-        width 0.35s ease;
+                <div class="stat-icon purple">
+                    👥
+                </div>
 
-}
+                <div>
 
+                    <span>
+                        TOTAL STUDENTS
+                    </span>
 
-.paper-report-meta {
+                    <strong id="totalStudents">
+                        0
+                    </strong>
 
-    display: flex;
+                    <small>
+                        Registered students
+                    </small>
 
-    justify-content: space-between;
+                </div>
 
-    margin-top: 7px;
+            </div>
 
-    color: #9ca3af;
 
-    font-size: 10px;
 
-}
+            <div class="stat-card">
 
+                <div class="stat-icon orange">
+                    🎓
+                </div>
 
-/* =========================================
-   PROVINCE GRID
-========================================= */
+                <div>
 
-.province-report-grid {
+                    <span>
+                        GRADE 10
+                    </span>
 
-    display: grid;
+                    <strong id="grade10Count">
+                        0
+                    </strong>
 
-    grid-template-columns:
-        repeat(
-            auto-fit,
-            minmax(200px, 1fr)
-        );
+                    <small>
+                        Grade 10 students
+                    </small>
 
-    gap: 12px;
+                </div>
 
-}
+            </div>
 
 
-.province-report-item {
 
-    display: flex;
+            <div class="stat-card">
 
-    align-items: center;
+                <div class="stat-icon green">
+                    🎓
+                </div>
 
-    justify-content: space-between;
+                <div>
 
-    gap: 15px;
+                    <span>
+                        GRADE 11
+                    </span>
 
-    padding: 16px;
+                    <strong id="grade11Count">
+                        0
+                    </strong>
 
-    border:
-        1px solid #e5e7eb;
+                    <small>
+                        Grade 11 students
+                    </small>
 
-    border-radius: 13px;
+                </div>
 
-    background: #fafafa;
+            </div>
 
-}
 
 
-.province-report-info {
+            <div class="stat-card">
 
-    display: flex;
+                <div class="stat-icon pink">
+                    🎓
+                </div>
 
-    align-items: center;
+                <div>
 
-    gap: 10px;
+                    <span>
+                        A/L
+                    </span>
 
-}
+                    <strong id="alCount">
+                        0
+                    </strong>
 
+                    <small>
+                        Advanced Level students
+                    </small>
 
-.province-report-icon {
+                </div>
 
-    width: 36px;
+            </div>
 
-    height: 36px;
 
-    display: flex;
 
-    align-items: center;
+            <div class="stat-card">
 
-    justify-content: center;
+                <div class="stat-icon cyan">
+                    🟢
+                </div>
 
-    border-radius: 10px;
+                <div>
 
-    background: #eef2ff;
+                    <span>
+                        ACTIVE NOW
+                    </span>
 
-    font-size: 16px;
+                    <strong id="activeCount">
+                        0
+                    </strong>
 
-}
+                    <small>
+                        Currently online
+                    </small>
 
+                </div>
 
-.province-report-info strong {
+            </div>
 
-    display: block;
 
-    font-size: 12px;
 
-    color: #374151;
+            <div class="stat-card">
 
-}
+                <div class="stat-icon blue">
+                    📄
+                </div>
 
+                <div>
 
-.province-report-info span {
+                    <span>
+                        PAPER VIEWS
+                    </span>
 
-    display: block;
+                    <strong id="paperViews">
+                        0
+                    </strong>
 
-    margin-top: 3px;
+                    <small>
+                        Recorded views
+                    </small>
 
-    color: #9ca3af;
+                </div>
 
-    font-size: 10px;
+            </div>
 
-}
 
+        </section>
 
-.province-count {
 
-    font-size: 20px;
 
-    font-weight: 800;
+        <!-- =====================================
+             DISTRIBUTION
+        ====================================== -->
 
-    color: #111827;
+        <section class="two-column-grid">
 
-}
 
+            <div class="report-card">
 
-/* =========================================
-   YEAR GRID
-========================================= */
 
-.year-report-grid {
+                <div class="card-heading">
 
-    display: grid;
+                    <div class="heading-icon purple">
+                        👥
+                    </div>
 
-    grid-template-columns:
-        repeat(
-            auto-fit,
-            minmax(150px, 1fr)
-        );
+                    <div>
 
-    gap: 10px;
+                        <h2>
+                            Student Distribution
+                        </h2>
 
-}
+                        <p>
+                            Students by academic level.
+                        </p>
 
+                    </div>
 
-.year-report-item {
+                </div>
 
-    padding: 15px;
 
-    border:
-        1px solid #e5e7eb;
+                <div class="distribution-list">
 
-    border-radius: 12px;
 
-    background: #fafafa;
+                    <div class="distribution-row">
 
-}
+                        <div>
 
+                            <span class="distribution-name">
+                                Grade 10
+                            </span>
 
-.year-report-item strong {
+                            <div class="mini-track">
 
-    display: block;
+                                <div
+                                    id="distributionBar10"
+                                    class="mini-bar orange"
+                                ></div>
 
-    font-size: 14px;
+                            </div>
 
-    color: #374151;
+                        </div>
 
-    margin-bottom: 10px;
+                        <strong id="distribution10">
+                            0
+                        </strong>
 
-}
+                    </div>
 
 
-.year-report-count {
+                    <div class="distribution-row">
 
-    font-size: 22px;
+                        <div>
 
-    font-weight: 800;
+                            <span class="distribution-name">
+                                Grade 11
+                            </span>
 
-    color: #111827;
+                            <div class="mini-track">
 
-}
+                                <div
+                                    id="distributionBar11"
+                                    class="mini-bar green"
+                                ></div>
 
+                            </div>
 
-.year-report-track {
+                        </div>
 
-    height: 6px;
+                        <strong id="distribution11">
+                            0
+                        </strong>
 
-    margin-top: 9px;
+                    </div>
 
-    background: #e5e7eb;
 
-    border-radius: 20px;
+                    <div class="distribution-row">
 
-    overflow: hidden;
+                        <div>
 
-}
+                            <span class="distribution-name">
+                                Advanced Level
+                            </span>
 
+                            <div class="mini-track">
 
-.year-report-bar {
+                                <div
+                                    id="distributionBarAL"
+                                    class="mini-bar pink"
+                                ></div>
 
-    height: 100%;
+                            </div>
 
-    border-radius: 20px;
+                        </div>
 
-    background:
-        linear-gradient(
-            90deg,
-            #0ea5e9,
-            #6366f1
-        );
+                        <strong id="distributionAL">
+                            0
+                        </strong>
 
-}
+                    </div>
 
 
-/* =========================================
-   REPORT EMPTY
-========================================= */
+                </div>
 
-.report-empty {
 
-    padding: 25px;
+            </div>
 
-    text-align: center;
 
-    border:
-        1px dashed #d1d5db;
 
-    border-radius: 12px;
+            <!-- ACTIVITY -->
 
-    color: #9ca3af;
+            <div class="report-card">
 
-    font-size: 12px;
 
-    background: #fafafa;
+                <div class="card-heading">
 
-}
+                    <div class="heading-icon green">
+                        🟢
+                    </div>
 
+                    <div>
 
-/* =========================================
-   MOBILE
-========================================= */
+                        <h2>
+                            Activity Overview
+                        </h2>
 
-@media (max-width: 600px) {
+                        <p>
+                            Current student activity.
+                        </p>
 
-    .paper-report-grid {
+                    </div>
 
-        grid-template-columns: 1fr 1fr;
+                </div>
 
-    }
 
-    .province-report-grid {
+                <div class="activity-grid">
 
-        grid-template-columns: 1fr;
 
-    }
+                    <div class="activity-box active">
 
-    .year-report-grid {
+                        <span>
+                            Active
+                        </span>
 
-        grid-template-columns:
-            1fr 1fr;
+                        <strong id="activityActive">
+                            0
+                        </strong>
 
-    }
+                        <small>
+                            Online now
+                        </small>
 
-}
+                    </div>
 
 
-@media (max-width: 400px) {
+                    <div class="activity-box inactive">
 
-    .paper-report-grid {
+                        <span>
+                            Inactive
+                        </span>
 
-        grid-template-columns: 1fr;
+                        <strong id="activityInactive">
+                            0
+                        </strong>
 
-    }
+                        <small>
+                            Currently offline
+                        </small>
 
-    .year-report-grid {
+                    </div>
 
-        grid-template-columns: 1fr;
 
-    }
+                </div>
 
-}
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =====================================
+             PAPER USAGE REPORTS
+        ====================================== -->
+
+        <section class="report-card paper-reports-card">
+
+
+            <div class="card-heading main-card-heading">
+
+                <div class="heading-icon blue">
+                    📚
+                </div>
+
+                <div>
+
+                    <span class="section-label">
+                        LIVE PAPER ANALYTICS
+                    </span>
+
+                    <h2>
+                        Paper Usage Reports
+                    </h2>
+
+                    <p>
+                        Paper views separated by student
+                        category and paper type.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================
+                 GRADE 10
+            ================================== -->
+
+            <div class="paper-section">
+
+
+                <div class="paper-section-header">
+
+                    <div class="category-icon orange">
+                        🎓
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Grade 10
+                        </h3>
+
+                        <p>
+                            Model Papers
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div id="grade10Reports">
+
+                    <div class="report-loading">
+                        Loading Grade 10 reports...
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================
+                 GRADE 11 MODEL
+            ================================== -->
+
+            <div class="paper-section">
+
+
+                <div class="paper-section-header">
+
+                    <div class="category-icon green">
+                        🎓
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Grade 11
+                        </h3>
+
+                        <p>
+                            Model Paper Usage
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div id="grade11ModelReports">
+
+                    <div class="report-loading">
+                        Loading Grade 11 Model reports...
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================
+                 GRADE 11 PAST
+            ================================== -->
+
+            <div class="paper-section">
+
+
+                <div class="paper-section-header">
+
+                    <div class="category-icon blue">
+                        📖
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Grade 11 Past Papers
+                        </h3>
+
+                        <p>
+                            Past Paper usage by year
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div id="grade11PastReports">
+
+                    <div class="report-loading">
+                        Loading Grade 11 Past Paper reports...
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================
+                 A/L MODEL
+            ================================== -->
+
+            <div class="paper-section">
+
+
+                <div class="paper-section-header">
+
+                    <div class="category-icon pink">
+                        🎓
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Advanced Level
+                        </h3>
+
+                        <p>
+                            Model Paper Usage
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div id="alModelReports">
+
+                    <div class="report-loading">
+                        Loading A/L Model reports...
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================
+                 A/L PROVINCE 1
+            ================================== -->
+
+            <div class="paper-section">
+
+
+                <div class="paper-section-header">
+
+                    <div class="category-icon purple">
+                        🗺️
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            A/L Province Paper 1
+                        </h3>
+
+                        <p>
+                            Province-wise usage
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div id="alProvince1Reports">
+
+                    <div class="report-loading">
+                        Loading Province Paper 1 reports...
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================
+                 A/L PROVINCE 2
+            ================================== -->
+
+            <div class="paper-section">
+
+
+                <div class="paper-section-header">
+
+                    <div class="category-icon cyan">
+                        🗺️
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            A/L Province Paper 2
+                        </h3>
+
+                        <p>
+                            Province-wise usage
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div id="alProvince2Reports">
+
+                    <div class="report-loading">
+                        Loading Province Paper 2 reports...
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =====================================
+             STUDENT ACTIVITY TABLE
+        ====================================== -->
+
+        <section class="report-card">
+
+
+            <div class="card-heading">
+
+                <div class="heading-icon purple">
+                    👤
+                </div>
+
+                <div>
+
+                    <h2>
+                        Student Activity
+                    </h2>
+
+                    <p>
+                        Student-level activity summary.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Student ID
+                            </th>
+
+                            <th>
+                                Grade
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Paper Views
+                            </th>
+
+                            <th>
+                                Last Active
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="studentTableBody">
+
+                        <tr>
+
+                            <td
+                                colspan="5"
+                                class="loading-cell"
+                            >
+                                Loading...
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =====================================
+             FOOTER
+        ====================================== -->
+
+        <footer class="report-footer">
+
+            <div class="live-status">
+
+                <span class="live-dot"></span>
+
+                Live data
+
+            </div>
+
+            <span>
+                •
+            </span>
+
+            <span id="lastUpdated">
+                Updating...
+            </span>
+
+        </footer>
+
+
+    </main>
+
+
+</div>
+
+
+
+<!-- =========================================
+     JAVASCRIPT
+========================================= -->
+
+<script
+    type="module"
+    src="./reports.js"
+></script>
+
+
+</body>
+
+</html>
