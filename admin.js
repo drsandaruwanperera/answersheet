@@ -1,3 +1,7 @@
+// =====================================================
+// ADMIN DASHBOARD JS
+// =====================================================
+
 import {
     db,
     collection,
@@ -6,7 +10,16 @@ import {
 
 
 // =====================================================
-// ADMIN AUTHENTICATION
+// START
+// =====================================================
+
+console.log("=================================");
+console.log("ADMIN DASHBOARD JS STARTED");
+console.log("=================================");
+
+
+// =====================================================
+// SESSION
 // =====================================================
 
 const adminLoggedIn =
@@ -14,23 +27,14 @@ const adminLoggedIn =
         "adminLoggedIn"
     );
 
-const adminRole =
-    String(
-        sessionStorage.getItem(
-            "adminRole"
-        ) || "limited"
-    )
-    .trim()
-    .toLowerCase();
-
-
-// =====================================================
-// LOGIN CHECK
-// =====================================================
 
 if (
     adminLoggedIn !== "true"
 ) {
+
+    console.warn(
+        "Admin is not logged in."
+    );
 
     window.location.replace(
         "admin-login.html"
@@ -40,7 +44,32 @@ if (
 
 
 // =====================================================
-// ROLE
+// GET ROLE
+// =====================================================
+
+const adminRole =
+    String(
+        sessionStorage.getItem(
+            "adminRole"
+        ) ||
+        sessionStorage.getItem(
+            "role"
+        ) ||
+        "admin"
+    )
+    .trim()
+    .toLowerCase();
+
+
+const adminUsername =
+    sessionStorage.getItem(
+        "adminUsername"
+    ) ||
+    "Admin";
+
+
+// =====================================================
+// SUPER ADMIN CHECK
 // =====================================================
 
 const isSuperAdmin =
@@ -49,125 +78,28 @@ const isSuperAdmin =
     adminRole === "super admin";
 
 
-// Normal admin / limited admin
-const isNormalAdmin =
-    !isSuperAdmin;
+console.log(
+    "Admin Username:",
+    adminUsername
+);
+
+console.log(
+    "Admin Role:",
+    adminRole
+);
+
+console.log(
+    "Is Super Admin:",
+    isSuperAdmin
+);
 
 
 // =====================================================
-// ELEMENTS
+// ACTIVE LIMIT
 // =====================================================
-
-const totalStudents =
-    document.getElementById(
-        "totalStudents"
-    );
-
-
-const totalViewed =
-    document.getElementById(
-        "totalViewed"
-    );
-
-
-const activeStudents =
-    document.getElementById(
-        "activeStudents"
-    );
-
-
-const chartTotalStudents =
-    document.getElementById(
-        "chartTotalStudents"
-    );
-
-
-const chartTotalStudentsValue =
-    document.getElementById(
-        "chartTotalStudentsValue"
-    );
-
-
-const chartPaperViews =
-    document.getElementById(
-        "chartPaperViews"
-    );
-
-
-const chartPaperViewsValue =
-    document.getElementById(
-        "chartPaperViewsValue"
-    );
-
-
-const chartGrade10 =
-    document.getElementById(
-        "chartGrade10"
-    );
-
-
-const chartGrade10Value =
-    document.getElementById(
-        "chartGrade10Value"
-    );
-
-
-const chartGrade11 =
-    document.getElementById(
-        "chartGrade11"
-    );
-
-
-const chartGrade11Value =
-    document.getElementById(
-        "chartGrade11Value"
-    );
-
-
-const chartAL =
-    document.getElementById(
-        "chartAL"
-    );
-
-
-const chartALValue =
-    document.getElementById(
-        "chartALValue"
-    );
-
-
-const chartActive =
-    document.getElementById(
-        "chartActive"
-    );
-
-
-const chartActiveValue =
-    document.getElementById(
-        "chartActiveValue"
-    );
-
-
-const adminUsername =
-    document.getElementById(
-        "adminUsername"
-    );
-
-
-const adminRoleElement =
-    document.getElementById(
-        "adminRole"
-    );
-
-
-const logoutBtn =
-    document.getElementById(
-        "logoutBtn"
-    );
-
-
-// =====================================================
-// SETTINGS
+//
+// Student is considered online if the last activity
+// was within the last 90 seconds.
 // =====================================================
 
 const ACTIVE_LIMIT =
@@ -182,37 +114,685 @@ let studentsData = [];
 
 
 // =====================================================
-// DISPLAY ADMIN USER
+// DOM READY
 // =====================================================
 
-if (
-    adminUsername
-) {
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
 
-    adminUsername.textContent =
-        sessionStorage.getItem(
-            "adminUsername"
-        ) || "Admin";
+        initializeAdmin();
+
+    }
+);
+
+
+// =====================================================
+// INITIALIZE
+// =====================================================
+
+function initializeAdmin() {
+
+    console.log(
+        "Initializing Admin Dashboard..."
+    );
+
+
+    setupAdminInfo();
+
+    setupRoleProtection();
+
+    setupNavigation();
+
+    setupLogout();
+
+    setupRefresh();
+
+    loadDashboardData();
 
 }
 
 
-if (
-    adminRoleElement
-) {
+// =====================================================
+// ADMIN INFO
+// =====================================================
+
+function setupAdminInfo() {
+
+    const usernameElements =
+        document.querySelectorAll(
+            "#adminUsername"
+        );
+
+
+    usernameElements.forEach(
+        element => {
+
+            element.textContent =
+                adminUsername;
+
+        }
+    );
+
+
+    const roleText =
+        isSuperAdmin
+            ? "Super Administrator"
+            : "Administrator";
+
+
+    const roleElements =
+        document.querySelectorAll(
+            "#adminRole"
+        );
+
+
+    roleElements.forEach(
+        element => {
+
+            element.textContent =
+                roleText;
+
+        }
+    );
+
+
+    // Optional page role labels
+
+    const roleLabels =
+        document.querySelectorAll(
+            ".admin-role"
+        );
+
+
+    roleLabels.forEach(
+        element => {
+
+            element.textContent =
+                roleText;
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// ROLE PROTECTION
+// =====================================================
+
+function setupRoleProtection() {
+
+    console.log(
+        "Setting role protection..."
+    );
+
+
+    // =================================================
+    // ITEMS THAT REQUIRE SUPERADMIN
+    // =================================================
+
+    const protectedItems =
+        document.querySelectorAll(
+            ".superadmin-only, " +
+            ".full-admin-only, " +
+            "[data-superadmin-only]"
+        );
+
+
+    console.log(
+        "Protected menu items:",
+        protectedItems.length
+    );
+
+
+    // =================================================
+    // SUPERADMIN
+    // =================================================
 
     if (
         isSuperAdmin
     ) {
 
-        adminRoleElement.textContent =
-            "Super Administrator";
+        console.log(
+            "SUPERADMIN ACCESS ENABLED"
+        );
+
+
+        protectedItems.forEach(
+            item => {
+
+                // Remove all lock classes
+                item.classList.remove(
+                    "locked-menu"
+                );
+
+                item.classList.remove(
+                    "locked"
+                );
+
+                item.classList.remove(
+                    "disabled-menu"
+                );
+
+
+                // Remove lock indicators
+                item
+                    .querySelectorAll(
+                        ".lock-icon, " +
+                        ".menu-lock, " +
+                        ".access-lock"
+                    )
+                    .forEach(
+                        lock => {
+
+                            lock.remove();
+
+                        }
+                    );
+
+
+                // Remove aria disabled
+                item.removeAttribute(
+                    "aria-disabled"
+                );
+
+
+                // Remove title
+                item.removeAttribute(
+                    "title"
+                );
+
+
+                // Restore normal appearance
+                item.style.pointerEvents =
+                    "";
+
+                item.style.cursor =
+                    "";
+
+                item.style.opacity =
+                    "";
+
+                item.style.filter =
+                    "";
+
+
+                // =================================================
+                // If it is an anchor, restore normal navigation
+                // =================================================
+
+                if (
+                    item.tagName === "A"
+                ) {
+
+                    item.style.pointerEvents =
+                        "";
+
+                }
+
+            }
+        );
+
+
+        return;
 
     }
-    else {
 
-        adminRoleElement.textContent =
-            "Administrator";
+
+    // =================================================
+    // NORMAL ADMIN
+    // =================================================
+
+    console.log(
+        "NORMAL ADMIN ACCESS MODE"
+    );
+
+
+    protectedItems.forEach(
+        item => {
+
+            item.classList.add(
+                "locked-menu"
+            );
+
+
+            item.setAttribute(
+                "aria-disabled",
+                "true"
+            );
+
+
+            item.setAttribute(
+                "title",
+                "Super Administrator access required"
+            );
+
+
+            item.style.cursor =
+                "not-allowed";
+
+
+            // =================================================
+            // Add lock icon if not already there
+            // =================================================
+
+            const existingLock =
+                item.querySelector(
+                    ".lock-icon"
+                );
+
+
+            if (
+                !existingLock
+            ) {
+
+                const lock =
+                    document.createElement(
+                        "span"
+                    );
+
+
+                lock.className =
+                    "lock-icon";
+
+
+                lock.textContent =
+                    " 🔒";
+
+
+                lock.style.marginLeft =
+                    "auto";
+
+
+                lock.style.fontSize =
+                    "12px";
+
+
+                item.appendChild(
+                    lock
+                );
+
+            }
+
+
+            // =================================================
+            // Capture click
+            // =================================================
+
+            item.addEventListener(
+                "click",
+                event => {
+
+                    event.preventDefault();
+
+                    event.stopPropagation();
+
+                    showAccessDenied();
+
+                },
+                true
+            );
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// ACCESS DENIED MESSAGE
+// =====================================================
+
+function showAccessDenied() {
+
+    // Remove existing message
+    const oldMessage =
+        document.getElementById(
+            "accessDeniedMessage"
+        );
+
+
+    if (
+        oldMessage
+    ) {
+
+        oldMessage.remove();
+
+    }
+
+
+    const message =
+        document.createElement(
+            "div"
+        );
+
+
+    message.id =
+        "accessDeniedMessage";
+
+
+    message.innerHTML = `
+
+        <div class="access-denied-box">
+
+            <div class="access-denied-icon">
+                🔒
+            </div>
+
+            <div>
+
+                <strong>
+                    Access Restricted
+                </strong>
+
+                <p>
+                    This section is available
+                    only to Super Administrators.
+                </p>
+
+            </div>
+
+            <button
+                type="button"
+                id="closeAccessDenied"
+            >
+                OK
+            </button>
+
+        </div>
+
+    `;
+
+
+    document.body.appendChild(
+        message
+    );
+
+
+    const closeBtn =
+        document.getElementById(
+            "closeAccessDenied"
+        );
+
+
+    if (
+        closeBtn
+    ) {
+
+        closeBtn.addEventListener(
+            "click",
+            () => {
+
+                message.remove();
+
+            }
+        );
+
+    }
+
+
+    // Auto close
+    setTimeout(
+        () => {
+
+            if (
+                message
+            ) {
+
+                message.remove();
+
+            }
+
+        },
+        4000
+    );
+
+}
+
+
+// =====================================================
+// NAVIGATION
+// =====================================================
+
+function setupNavigation() {
+
+    const navigationItems =
+        document.querySelectorAll(
+            ".nav-item"
+        );
+
+
+    navigationItems.forEach(
+        item => {
+
+            item.addEventListener(
+                "click",
+                event => {
+
+                    const href =
+                        item.getAttribute(
+                            "href"
+                        );
+
+
+                    if (
+                        !href ||
+                        href === "#"
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    // =================================================
+                    // Protected page check
+                    // =================================================
+
+                    const isProtected =
+                        item.classList.contains(
+                            "superadmin-only"
+                        ) ||
+                        item.classList.contains(
+                            "full-admin-only"
+                        ) ||
+                        item.hasAttribute(
+                            "data-superadmin-only"
+                        );
+
+
+                    if (
+                        isProtected &&
+                        !isSuperAdmin
+                    ) {
+
+                        event.preventDefault();
+
+                        event.stopPropagation();
+
+                        showAccessDenied();
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// LOGOUT
+// =====================================================
+
+function setupLogout() {
+
+    const logoutButtons =
+        document.querySelectorAll(
+            "#logoutBtn, .logout-btn"
+        );
+
+
+    logoutButtons.forEach(
+        button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    console.log(
+                        "Logging out..."
+                    );
+
+
+                    sessionStorage.removeItem(
+                        "adminLoggedIn"
+                    );
+
+                    sessionStorage.removeItem(
+                        "adminRole"
+                    );
+
+                    sessionStorage.removeItem(
+                        "adminUsername"
+                    );
+
+
+                    window.location.replace(
+                        "admin-login.html"
+                    );
+
+                }
+            );
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// REFRESH
+// =====================================================
+
+function setupRefresh() {
+
+    const refreshButtons =
+        document.querySelectorAll(
+            "#refreshBtn, .refresh-btn"
+        );
+
+
+    refreshButtons.forEach(
+        button => {
+
+            button.addEventListener(
+                "click",
+                async () => {
+
+                    await loadDashboardData();
+
+                }
+            );
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// LOAD DASHBOARD DATA
+// =====================================================
+
+async function loadDashboardData() {
+
+    console.log(
+        "Loading dashboard data..."
+    );
+
+
+    try {
+
+        const snapshot =
+            await getDocs(
+                collection(
+                    db,
+                    "students"
+                )
+            );
+
+
+        studentsData = [];
+
+
+        snapshot.forEach(
+            docSnap => {
+
+                const data =
+                    docSnap.data();
+
+
+                studentsData.push({
+
+                    id:
+                        docSnap.id,
+
+                    data:
+                        data,
+
+                    type:
+                        getStudentType(
+                            data
+                        ),
+
+                    active:
+                        isStudentActive(
+                            data
+                        ),
+
+                    views:
+                        getPaperViews(
+                            data
+                        )
+
+                });
+
+            }
+        );
+
+
+        console.log(
+            "Students loaded:",
+            studentsData.length
+        );
+
+
+        renderDashboard();
+
+
+        updateSystemStatus(
+            true
+        );
+
+
+    }
+    catch (
+        error
+    ) {
+
+        console.error(
+            "Dashboard data error:",
+            error
+        );
+
+
+        updateSystemStatus(
+            false
+        );
 
     }
 
@@ -220,23 +800,29 @@ if (
 
 
 // =====================================================
-// STUDENT TYPE
+// GET STUDENT TYPE
 // =====================================================
 
 function getStudentType(
     data
 ) {
 
-    // -------------------------------
+    // =================================================
     // Explicit studentType
-    // -------------------------------
+    // =================================================
+
+    const studentType =
+        String(
+            data?.studentType ||
+            ""
+        )
+        .trim()
+        .toLowerCase();
+
 
     if (
-        String(
-            data?.studentType || ""
-        ).toLowerCase()
-        ===
-        "grade10"
+        studentType === "grade10" ||
+        studentType === "grade 10"
     ) {
 
         return "grade10";
@@ -245,11 +831,8 @@ function getStudentType(
 
 
     if (
-        String(
-            data?.studentType || ""
-        ).toLowerCase()
-        ===
-        "grade11"
+        studentType === "grade11" ||
+        studentType === "grade 11"
     ) {
 
         return "grade11";
@@ -258,11 +841,10 @@ function getStudentType(
 
 
     if (
-        String(
-            data?.studentType || ""
-        ).toLowerCase()
-        ===
-        "al"
+        studentType === "al" ||
+        studentType === "a/l" ||
+        studentType === "advanced" ||
+        studentType === "advanced level"
     ) {
 
         return "al";
@@ -270,13 +852,14 @@ function getStudentType(
     }
 
 
-    // -------------------------------
+    // =================================================
     // Grade field
-    // -------------------------------
+    // =================================================
 
     const grade =
         String(
-            data?.grade || ""
+            data?.grade ||
+            ""
         )
         .trim()
         .toLowerCase();
@@ -284,8 +867,8 @@ function getStudentType(
 
     if (
         grade === "10" ||
-        grade === "grade 10" ||
-        grade === "grade10"
+        grade === "grade10" ||
+        grade === "grade 10"
     ) {
 
         return "grade10";
@@ -295,8 +878,8 @@ function getStudentType(
 
     if (
         grade === "11" ||
-        grade === "grade 11" ||
-        grade === "grade11"
+        grade === "grade11" ||
+        grade === "grade 11"
     ) {
 
         return "grade11";
@@ -304,9 +887,9 @@ function getStudentType(
     }
 
 
-    // -------------------------------
-    // Default
-    // -------------------------------
+    // =================================================
+    // Everything else = A/L
+    // =================================================
 
     return "al";
 
@@ -314,16 +897,17 @@ function getStudentType(
 
 
 // =====================================================
-// ACTIVE STUDENT
+// ACTIVE CHECK
 // =====================================================
 
-function isActive(
+function isStudentActive(
     data
 ) {
 
     const lastActive =
         Number(
-            data?.lastActiveAt || 0
+            data?.lastActiveAt ||
+            0
         );
 
 
@@ -347,20 +931,23 @@ function isActive(
 
 
 // =====================================================
-// PAPER VIEW COUNT
+// PAPER VIEWS
 // =====================================================
 
 function getPaperViews(
     data
 ) {
 
-    let count = 0;
+    let total =
+        0;
 
 
-    /*
-     * Supports paper01
-     * through paper50.
-     */
+    // =================================================
+    // Standard paper fields
+    // paper01Viewed
+    // paper02Viewed
+    // ...
+    // =================================================
 
     for (
         let i = 1;
@@ -369,7 +956,9 @@ function getPaperViews(
     ) {
 
         const number =
-            String(i)
+            String(
+                i
+            )
             .padStart(
                 2,
                 "0"
@@ -383,198 +972,45 @@ function getPaperViews(
 
 
         if (
-            data[field] === true
+            data?.[field] === true
         ) {
 
-            count++;
+            total++;
 
         }
 
     }
 
 
-    return count;
-
-}
-
-
-// =====================================================
-// SET TEXT
-// =====================================================
-
-function setText(
-    element,
-    value
-) {
+    // =================================================
+    // Also support totalPaperViews if you use it
+    // =================================================
 
     if (
-        element
+        total === 0 &&
+        Number(
+            data?.totalPaperViews
+        ) > 0
     ) {
 
-        element.textContent =
-            value;
-
-    }
-
-}
-
-
-// =====================================================
-// SET BAR
-// =====================================================
-
-function setBar(
-    element,
-    value,
-    maximum
-) {
-
-    if (
-        !element
-    ) {
-
-        return;
-
-    }
-
-
-    if (
-        maximum <= 0
-    ) {
-
-        element.style.width =
-            "0%";
-
-        return;
-
-    }
-
-
-    let percentage =
-        (
-            value /
-            maximum
-        ) * 100;
-
-
-    percentage =
-        Math.max(
-            0,
-            Math.min(
-                100,
-                percentage
-            )
-        );
-
-
-    element.style.width =
-        percentage + "%";
-
-}
-
-
-// =====================================================
-// LOAD STUDENTS
-// =====================================================
-
-async function loadDashboardData() {
-
-    try {
-
-        console.log(
-            "Loading admin dashboard..."
-        );
-
-
-        const snapshot =
-            await getDocs(
-                collection(
-                    db,
-                    "students"
-                )
+        total =
+            Number(
+                data.totalPaperViews
             );
 
-
-        studentsData = [];
-
-
-        snapshot.forEach(
-            docSnap => {
-
-                const data =
-                    docSnap.data();
-
-
-                const type =
-                    getStudentType(
-                        data
-                    );
-
-
-                const active =
-                    isActive(
-                        data
-                    );
-
-
-                const views =
-                    getPaperViews(
-                        data
-                    );
-
-
-                studentsData.push({
-
-                    id:
-                        docSnap.id,
-
-                    data:
-                        data,
-
-                    type:
-                        type,
-
-                    active:
-                        active,
-
-                    views:
-                        views
-
-                });
-
-            }
-        );
-
-
-        updateDashboard();
-
-
-        console.log(
-            "Dashboard loaded:",
-            studentsData.length
-        );
-
     }
 
-    catch (
-        error
-    ) {
 
-        console.error(
-            "Dashboard load error:",
-            error
-        );
-
-    }
+    return total;
 
 }
 
 
 // =====================================================
-// UPDATE DASHBOARD
+// RENDER DASHBOARD
 // =====================================================
 
-function updateDashboard() {
+function renderDashboard() {
 
     const total =
         studentsData.length;
@@ -611,76 +1047,76 @@ function updateDashboard() {
         ).length;
 
 
-    const paperViews =
+    const totalViews =
         studentsData.reduce(
             (
-                total,
+                sum,
                 student
             ) =>
-                total +
+                sum +
                 student.views,
             0
         );
 
 
     // =================================================
-    // SUMMARY CARDS
+    // SUMMARY
     // =================================================
 
     setText(
-        totalStudents,
+        "totalStudents",
         total
     );
 
 
     setText(
-        totalViewed,
-        paperViews
+        "totalViewed",
+        totalViews
     );
 
 
     setText(
-        activeStudents,
+        "activeStudents",
         active
     );
 
 
     // =================================================
-    // CHART VALUES
+    // DASHBOARD CHART VALUES
     // =================================================
 
     setText(
-        chartTotalStudentsValue,
+        "chartTotalStudentsValue",
         total
     );
 
 
     setText(
-        chartPaperViewsValue,
-        paperViews
+        "chartPaperViewsValue",
+        totalViews
     );
 
 
     setText(
-        chartGrade10Value,
+        "chartGrade10Value",
         grade10
     );
 
 
     setText(
-        chartGrade11Value,
+        "chartGrade11Value",
         grade11
     );
 
 
     setText(
-        chartALValue,
+        "chartALValue",
         al
     );
 
 
     setText(
-        chartActiveValue,
+        "chartActiveValue",
         active
     );
 
@@ -689,470 +1125,261 @@ function updateDashboard() {
     // CHART BARS
     // =================================================
 
-    const maximum =
-        Math.max(
-            total,
-            paperViews,
-            grade10,
-            grade11,
-            al,
-            active,
-            1
-        );
-
-
-    setBar(
-        chartTotalStudents,
+    updateBar(
+        "chartTotalStudents",
         total,
-        maximum
+        total
     );
 
 
-    setBar(
-        chartPaperViews,
-        paperViews,
-        maximum
+    updateBar(
+        "chartPaperViews",
+        totalViews,
+        Math.max(
+            totalViews,
+            1
+        )
     );
 
 
-    setBar(
-        chartGrade10,
+    updateBar(
+        "chartGrade10",
         grade10,
-        maximum
+        total
     );
 
 
-    setBar(
-        chartGrade11,
+    updateBar(
+        "chartGrade11",
         grade11,
-        maximum
+        total
     );
 
 
-    setBar(
-        chartAL,
+    updateBar(
+        "chartAL",
         al,
-        maximum
+        total
     );
 
 
-    setBar(
-        chartActive,
+    updateBar(
+        "chartActive",
         active,
-        maximum
+        total
+    );
+
+
+    // =================================================
+    // LIVE REPORT CARDS
+    // =================================================
+
+    renderLiveReports(
+        total,
+        grade10,
+        grade11,
+        al,
+        active,
+        totalViews
+    );
+
+
+    // =================================================
+    // Last updated
+    // =================================================
+
+    setText(
+        "lastUpdated",
+        "Last updated: " +
+        new Date().toLocaleTimeString()
     );
 
 }
 
 
 // =====================================================
-// ACCESS DENIED POPUP
+// LIVE REPORT CARDS
 // =====================================================
 
-function showAccessDenied(
-    pageName
+function renderLiveReports(
+    total,
+    grade10,
+    grade11,
+    al,
+    active,
+    totalViews
 ) {
 
-    const oldMessage =
-        document.getElementById(
-            "accessDeniedMessage"
-        );
-
-
-    if (
-        oldMessage
-    ) {
-
-        oldMessage.remove();
-
-    }
-
-
-    const overlay =
-        document.createElement(
-            "div"
-        );
-
-
-    overlay.id =
-        "accessDeniedMessage";
-
-
-    overlay.innerHTML = `
-
-        <div class="access-denied-box">
-
-            <div class="access-denied-icon">
-                🔒
-            </div>
-
-            <div class="access-denied-content">
-
-                <strong>
-                    Access Restricted
-                </strong>
-
-                <p>
-                    You don't have permission
-                    to access
-                    <b>${escapeHTML(
-                        pageName
-                    )}</b>.
-                </p>
-
-            </div>
-
-            <button
-                type="button"
-                class="access-denied-close"
-                aria-label="Close"
-            >
-                ×
-            </button>
-
-        </div>
-
-    `;
-
-
-    document.body.appendChild(
-        overlay
-    );
-
-
-    const closeButton =
-        overlay.querySelector(
-            ".access-denied-close"
-        );
-
-
-    if (
-        closeButton
-    ) {
-
-        closeButton.addEventListener(
-            "click",
-            () => {
-
-                overlay.remove();
-
-            }
-        );
-
-    }
-
-
-    setTimeout(
-        () => {
-
-            if (
-                overlay &&
-                document.body.contains(
-                    overlay
-                )
-            ) {
-
-                overlay.remove();
-
-            }
-
-        },
-        3500
-    );
-
-}
-
-
-// =====================================================
-// ESCAPE HTML
-// =====================================================
-
-function escapeHTML(
-    value
-) {
-
-    return String(
-        value
-    )
-    .replace(
-        /&/g,
-        "&amp;"
-    )
-    .replace(
-        /</g,
-        "&lt;"
-    )
-    .replace(
-        />/g,
-        "&gt;"
-    )
-    .replace(
-        /"/g,
-        "&quot;"
-    )
-    .replace(
-        /'/g,
-        "&#039;"
-    );
-
-}
-
-
-// =====================================================
-// PROTECTED PAGE DETECTION
-// =====================================================
-
-function getProtectedPageName(
-    link
-) {
-
-    const href =
-        String(
-            link.getAttribute(
-                "href"
-            ) || ""
-        )
-        .toLowerCase();
-
-
-    const text =
-        String(
-            link.textContent || ""
-        )
-        .toLowerCase();
-
-
-    if (
-        href.includes(
-            "paper-management"
-        ) ||
-        href.includes(
-            "paper-settings"
-        ) ||
-        text.includes(
-            "paper management"
-        ) ||
-        text.includes(
-            "papers"
-        )
-    ) {
-
-        return "Paper Management";
-
-    }
-
-
-    if (
-        href.includes(
-            "import-students"
-        ) ||
-        text.includes(
-            "import students"
-        )
-    ) {
-
-        return "Import Students";
-
-    }
-
-
-    if (
-        href.includes(
-            "reports"
-        ) ||
-        text.includes(
-            "reports"
-        )
-    ) {
-
-        return "Reports";
-
-    }
-
-
-    if (
-        href.includes(
-            "statistics"
-        ) ||
-        text.includes(
-            "statistics"
-        )
-    ) {
-
-        return "Statistics";
-
-    }
-
-
-    if (
-        href.includes(
-            "settings"
-        ) ||
-        text.includes(
-            "settings"
-        )
-    ) {
-
-        return "Settings";
-
-    }
-
-
-    return null;
-
-}
-
-
-// =====================================================
-// ROLE BASED NAVIGATION
-// =====================================================
-
-function setupRoleProtection() {
-
-    const links =
+    const reports =
         document.querySelectorAll(
-            "a"
+            ".student-report-card, " +
+            ".live-report-card, " +
+            "[data-report-type]"
         );
 
 
-    links.forEach(
-        link => {
+    reports.forEach(
+        card => {
 
-            const pageName =
-                getProtectedPageName(
-                    link
+            const type =
+                card.getAttribute(
+                    "data-report-type"
                 );
 
 
+            let count =
+                0;
+
+
             if (
-                !pageName
+                type === "all"
             ) {
 
-                return;
+                count =
+                    total;
+
+            }
+            else if (
+                type === "grade10"
+            ) {
+
+                count =
+                    grade10;
+
+            }
+            else if (
+                type === "grade11"
+            ) {
+
+                count =
+                    grade11;
+
+            }
+            else if (
+                type === "al"
+            ) {
+
+                count =
+                    al;
 
             }
 
 
-            // -----------------------------------------
-            // SUPER ADMIN
-            // -----------------------------------------
+            const totalElement =
+                card.querySelector(
+                    "[data-total]"
+                );
+
 
             if (
-                isSuperAdmin
+                totalElement
             ) {
 
-                link.classList.remove(
-                    "locked-menu"
-                );
-
-
-                link.removeAttribute(
-                    "aria-disabled"
-                );
-
-
-                return;
+                totalElement.textContent =
+                    count;
 
             }
 
 
-            // -----------------------------------------
-            // NORMAL ADMIN
-            // -----------------------------------------
-
-            link.classList.add(
-                "locked-menu"
-            );
+            const onlineElement =
+                card.querySelector(
+                    "[data-online]"
+                );
 
 
-            link.setAttribute(
-                "aria-disabled",
-                "true"
-            );
+            if (
+                onlineElement
+            ) {
 
+                if (
+                    type === "all"
+                ) {
 
-            link.setAttribute(
-                "title",
-                "Access restricted"
-            );
-
-
-            link.addEventListener(
-                "click",
-                event => {
-
-                    event.preventDefault();
-
-                    event.stopPropagation();
-
-
-                    showAccessDenied(
-                        pageName
-                    );
+                    onlineElement.textContent =
+                        active;
 
                 }
-            );
+                else {
 
-        }
-    );
-
-
-    // =================================================
-    // ALSO PROTECT ELEMENTS WITH
-    // .superadmin-only
-    // =================================================
-
-    const protectedElements =
-        document.querySelectorAll(
-            ".superadmin-only"
-        );
+                    const typeActive =
+                        studentsData.filter(
+                            student =>
+                                student.type ===
+                                    type &&
+                                student.active
+                        ).length;
 
 
-    protectedElements.forEach(
-        element => {
+                    onlineElement.textContent =
+                        typeActive;
 
-            if (
-                isSuperAdmin
-            ) {
-
-                element.classList.remove(
-                    "locked-menu"
-                );
-
-                return;
+                }
 
             }
 
 
-            element.classList.add(
-                "locked-menu"
-            );
+            const offlineElement =
+                card.querySelector(
+                    "[data-offline]"
+                );
 
 
-            element.addEventListener(
-                "click",
-                event => {
+            if (
+                offlineElement
+            ) {
 
-                    event.preventDefault();
+                const online =
+                    type === "all"
+                        ? active
+                        : studentsData.filter(
+                            student =>
+                                student.type ===
+                                    type &&
+                                student.active
+                        ).length;
 
-                    event.stopPropagation();
+
+                offlineElement.textContent =
+                    count -
+                    online;
+
+            }
 
 
-                    const name =
-                        element.textContent
-                            .trim()
-                            .replace(
-                                /\s+/g,
-                                " "
+            const viewsElement =
+                card.querySelector(
+                    "[data-views]"
+                );
+
+
+            if (
+                viewsElement
+            ) {
+
+                const views =
+                    type === "all"
+                        ? totalViews
+                        : studentsData
+                            .filter(
+                                student =>
+                                    student.type ===
+                                    type
+                            )
+                            .reduce(
+                                (
+                                    sum,
+                                    student
+                                ) =>
+                                    sum +
+                                    student.views,
+                                0
                             );
 
 
-                    showAccessDenied(
-                        name || "this section"
-                    );
+                viewsElement.textContent =
+                    views;
 
-                }
-            );
+            }
 
         }
     );
@@ -1161,21 +1388,50 @@ function setupRoleProtection() {
 
 
 // =====================================================
-// PROTECT DIRECT DASHBOARD LINKS
-// =====================================================
-//
-// This catches management cards too.
-// Example:
-// <a href="reports.html">
-// <a href="import-students.html">
-// <a href="paper-management.html">
-//
+// SET TEXT BY ID
 // =====================================================
 
-function protectAllDashboardLinks() {
+function setText(
+    id,
+    value
+) {
+
+    const element =
+        document.getElementById(
+            id
+        );
+
 
     if (
-        isSuperAdmin
+        element
+    ) {
+
+        element.textContent =
+            value;
+
+    }
+
+}
+
+
+// =====================================================
+// UPDATE BAR
+// =====================================================
+
+function updateBar(
+    id,
+    value,
+    max
+) {
+
+    const element =
+        document.getElementById(
+            id
+        );
+
+
+    if (
+        !element
     ) {
 
         return;
@@ -1183,132 +1439,102 @@ function protectAllDashboardLinks() {
     }
 
 
-    const links =
-        document.querySelectorAll(
-            'a[href]'
+    let percentage =
+        0;
+
+
+    if (
+        max > 0
+    ) {
+
+        percentage =
+            (
+                value /
+                max
+            ) *
+            100;
+
+    }
+
+
+    percentage =
+        Math.max(
+            0,
+            Math.min(
+                percentage,
+                100
+            )
         );
 
 
-    links.forEach(
-        link => {
-
-            const pageName =
-                getProtectedPageName(
-                    link
-                );
-
-
-            if (
-                !pageName
-            ) {
-
-                return;
-
-            }
-
-
-            link.classList.add(
-                "locked-menu"
-            );
-
-
-            link.addEventListener(
-                "click",
-                event => {
-
-                    event.preventDefault();
-
-                    showAccessDenied(
-                        pageName
-                    );
-
-                }
-            );
-
-        }
-    );
+    element.style.width =
+        percentage +
+        "%";
 
 }
 
 
 // =====================================================
-// LOGOUT
+// SYSTEM STATUS
 // =====================================================
 
-if (
-    logoutBtn
+function updateSystemStatus(
+    online
 ) {
 
-    logoutBtn.addEventListener(
-        "click",
-        () => {
+    const statusElements =
+        document.querySelectorAll(
+            "#onlineStatus, " +
+            ".system-status"
+        );
 
-            const confirmLogout =
-                confirm(
-                    "Are you sure you want to sign out?"
-                );
 
+    statusElements.forEach(
+        element => {
 
             if (
-                !confirmLogout
+                element.classList.contains(
+                    "system-status"
+                )
             ) {
 
-                return;
+                element.innerHTML = online
+                    ? `
+                        <span class="status-dot"></span>
+                        System Online
+                    `
+                    : `
+                        <span class="status-dot offline"></span>
+                        System Offline
+                    `;
 
             }
-
-
-            sessionStorage.removeItem(
-                "adminLoggedIn"
-            );
-
-
-            sessionStorage.removeItem(
-                "adminRole"
-            );
-
-
-            sessionStorage.removeItem(
-                "adminUsername"
-            );
-
-
-            window.location.replace(
-                "admin-login.html"
-            );
 
         }
     );
 
 }
-
-
-// =====================================================
-// INITIALIZE
-// =====================================================
-
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
-
-        setupRoleProtection();
-
-        protectAllDashboardLinks();
-
-        loadDashboardData();
-
-    }
-);
 
 
 // =====================================================
 // AUTO REFRESH
 // =====================================================
+//
+// Refresh every 30 seconds.
+// =====================================================
 
 setInterval(
     () => {
 
-        loadDashboardData();
+        if (
+            sessionStorage.getItem(
+                "adminLoggedIn"
+            ) === "true"
+        ) {
+
+            loadDashboardData();
+
+        }
 
     },
     30000
@@ -1320,23 +1546,19 @@ setInterval(
 // =====================================================
 
 console.log(
-    "===================================="
+    "================================="
 );
 
 console.log(
-    "ADMIN DASHBOARD"
-);
-
-console.log(
-    "Role:",
+    "ADMIN ROLE:",
     adminRole
 );
 
 console.log(
-    "Super Admin:",
+    "SUPERADMIN:",
     isSuperAdmin
 );
 
 console.log(
-    "===================================="
+    "================================="
 );
