@@ -37,7 +37,9 @@ const paper =
 
 const studentId =
     params.get("id") ||
-    sessionStorage.getItem("studentId");
+    sessionStorage.getItem(
+        "studentId"
+    );
 
 
 const paperType =
@@ -65,41 +67,58 @@ const paperPattern =
 
 
 // =========================================
-// VALID MODEL TYPE
+// GET TRACKING TYPE
 // =========================================
 
-function isModelPaper() {
+function getTrackingInfo() {
 
-    return (
-        paperType === "grade10-model" ||
-        paperType === "grade11-model"
-    );
-
-}
-
-
-// =========================================
-// GET GRADE
-// =========================================
-
-function getGrade() {
+    // =====================================
+    // GRADE 10 MODEL
+    // =====================================
 
     if (
         paperType ===
         "grade10-model"
     ) {
 
-        return "grade10";
+        return {
+            category: "grade10",
+            type: "model"
+        };
 
     }
 
+
+    // =====================================
+    // GRADE 11 MODEL
+    // =====================================
 
     if (
         paperType ===
         "grade11-model"
     ) {
 
-        return "grade11";
+        return {
+            category: "grade11",
+            type: "model"
+        };
+
+    }
+
+
+    // =====================================
+    // A/L MODEL
+    // =====================================
+
+    if (
+        paperType ===
+        "al-model"
+    ) {
+
+        return {
+            category: "al",
+            type: "model"
+        };
 
     }
 
@@ -110,60 +129,23 @@ function getGrade() {
 
 
 // =========================================
-// SAVE MODEL PAPER VIEW
+// SAVE PAPER VIEW
 // =========================================
 
-async function saveModelPaperView(
+async function savePaperView(
     studentRef
 ) {
 
-    if (
-        !isModelPaper()
-    ) {
-
-        return;
-
-    }
-
-
-    const grade =
-        getGrade();
+    const tracking =
+        getTrackingInfo();
 
 
     if (
-        !grade
+        !tracking
     ) {
 
-        return;
-
-    }
-
-
-    if (
-        !["1", "2", "3"].includes(
-            term
-        )
-    ) {
-
-        console.warn(
-            "Invalid term:",
-            term
-        );
-
-        return;
-
-    }
-
-
-    if (
-        !paperPattern.test(
-            paper || ""
-        )
-    ) {
-
-        console.warn(
-            "Invalid paper:",
-            paper
+        console.log(
+            "No category tracking type."
         );
 
         return;
@@ -172,14 +154,36 @@ async function saveModelPaperView(
 
 
     // =====================================
-    // FIREBASE FIELD
+    // GRADE 10 / GRADE 11
     // =====================================
 
-    const fieldPath =
-        `paperViews.${grade}.model.term${term}.${paper}`;
+    if (
+        tracking.category ===
+            "grade10" ||
+
+        tracking.category ===
+            "grade11"
+    ) {
+
+        if (
+            !["1", "2", "3"].includes(
+                term
+            )
+        ) {
+
+            console.warn(
+                "Invalid model paper term:",
+                term
+            );
+
+            return;
+
+        }
 
 
-    try {
+        const fieldPath =
+            `paperViews.${tracking.category}.model.term${term}.${paper}`;
+
 
         await updateDoc(
             studentRef,
@@ -193,22 +197,52 @@ async function saveModelPaperView(
         console.log(
             "✅ Model Paper View Saved",
             {
-                grade,
+                grade:
+                    tracking.category,
+
                 term,
+
                 paper,
+
                 fieldPath
             }
         );
 
+
+        return;
+
     }
 
-    catch (
-        error
+
+    // =====================================
+    // A/L MODEL
+    // =====================================
+
+    if (
+        tracking.category ===
+        "al"
     ) {
 
-        console.error(
-            "Model Paper tracking error:",
-            error
+        const fieldPath =
+            `paperViews.al.model.${paper}`;
+
+
+        await updateDoc(
+            studentRef,
+            {
+                [fieldPath]:
+                    true
+            }
+        );
+
+
+        console.log(
+            "✅ A/L Model Paper View Saved",
+            {
+                paper,
+
+                fieldPath
+            }
         );
 
     }
@@ -223,7 +257,7 @@ async function saveModelPaperView(
 async function loadPaper() {
 
     // =====================================
-    // CHECK PARAMETERS
+    // BASIC VALIDATION
     // =====================================
 
     if (
@@ -247,7 +281,7 @@ async function loadPaper() {
 
 
     // =====================================
-    // CHECK PAPER
+    // PAPER VALIDATION
     // =====================================
 
     if (
@@ -319,7 +353,7 @@ async function loadPaper() {
 
 
         // =================================
-        // PAPER PERMISSION
+        // PERMISSION
         // =================================
 
         const permissionField =
@@ -407,42 +441,49 @@ async function loadPaper() {
 
 
         // =================================
-        // LOG
+        // DEBUG
         // =================================
 
         console.log(
             "================================"
         );
 
-        console.log(
-            "Paper:",
-            paper
-        );
 
         console.log(
             "Student:",
             studentId
         );
 
+
+        console.log(
+            "Paper:",
+            paper
+        );
+
+
         console.log(
             "Type:",
             paperType
         );
 
-        console.log(
-            "Grade:",
-            getGrade()
-        );
 
         console.log(
             "Term:",
             term
         );
 
+
+        console.log(
+            "Tracking:",
+            getTrackingInfo()
+        );
+
+
         console.log(
             "Pages:",
             totalPages
         );
+
 
         console.log(
             "================================"
@@ -450,7 +491,7 @@ async function loadPaper() {
 
 
         // =================================
-        // OLD VIEWED FIELD
+        // UPDATE EXISTING VIEWED FIELD
         // =================================
 
         await updateDoc(
@@ -469,12 +510,27 @@ async function loadPaper() {
 
 
         // =================================
-        // NEW CATEGORY TRACKING
+        // SAVE CATEGORY TRACKING
         // =================================
 
-        await saveModelPaperView(
-            studentRef
-        );
+        try {
+
+            await savePaperView(
+                studentRef
+            );
+
+        }
+
+        catch (
+            trackingError
+        ) {
+
+            console.error(
+                "Category tracking failed:",
+                trackingError
+            );
+
+        }
 
 
         // =================================
@@ -492,7 +548,7 @@ async function loadPaper() {
 
 
         // =================================
-        // CREATE PAGES
+        // CREATE PAPER PAGES
         // =================================
 
         for (
@@ -622,7 +678,7 @@ async function loadPaper() {
 
 
             // =================================
-            // ADD PAGE
+            // ADD PAGE ELEMENTS
             // =================================
 
             page.appendChild(
@@ -646,7 +702,6 @@ async function loadPaper() {
             }
 
         }
-
 
     }
 
@@ -765,7 +820,9 @@ document.addEventListener(
         }
 
 
+        // =================================
         // F12
+        // =================================
 
         if (
             event.key === "F12"
