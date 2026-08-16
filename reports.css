@@ -1,1137 +1,1137 @@
-<!DOCTYPE html>
-<html lang="en">
+/* =========================================================
+   STUDENT ASSESSMENT PORTAL
+   REPORTS - PROFESSIONAL CSS
+========================================================= */
 
-<head>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    <meta charset="UTF-8">
+html {
+    width: 100%;
+    min-height: 100%;
+}
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+body {
+    width: 100%;
+    min-height: 100vh;
 
-    <meta
-        name="description"
-        content="Student Assessment Portal Reports"
-    >
+    font-family:
+        "Segoe UI",
+        Arial,
+        sans-serif;
 
-    <title>
-        Student Assessment Portal - Reports
-    </title>
+    background:
+        linear-gradient(
+            135deg,
+            #f4f6fb 0%,
+            #eef1f8 100%
+        );
 
-    <!-- IMPORTANT -->
-    <link
-        rel="stylesheet"
-        href="./reports.css"
-    >
+    color: #111827;
+}
 
-</head>
 
+/* =========================================================
+   SIDEBAR
+========================================================= */
 
-<body>
+.sidebar {
+    position: fixed;
 
+    top: 0;
+    left: 0;
 
-<div class="app">
+    width: 245px;
+    height: 100vh;
 
+    display: flex;
+    flex-direction: column;
 
-    <!-- =========================================
-         SIDEBAR
-    ========================================== -->
+    padding: 25px 16px;
 
-    <aside class="sidebar">
+    background:
+        linear-gradient(
+            180deg,
+            #3730a3 0%,
+            #4f46e5 48%,
+            #6d28d9 100%
+        );
 
+    color: #ffffff;
 
-        <!-- BRAND -->
+    box-shadow:
+        8px 0 30px
+        rgba(37, 34, 110, 0.15);
 
-        <div class="sidebar-brand">
+    z-index: 100;
+}
 
-            <div class="brand-logo">
-                🎓
-            </div>
 
-            <div>
+/* Sidebar heading */
 
-                <h2>
-                    Student
-                </h2>
+.sidebar h2 {
+    margin-bottom: 30px;
 
-                <span>
-                    Assessment Portal
-                </span>
+    padding: 0 10px;
 
-            </div>
+    font-size: 21px;
+    font-weight: 800;
 
-        </div>
+    letter-spacing: -0.4px;
+}
 
 
-        <!-- LABEL -->
+/* Navigation list */
 
-        <div class="sidebar-label">
-            ADMINISTRATION
-        </div>
+.sidebar ul {
+    list-style: none;
 
+    display: flex;
+    flex-direction: column;
 
-        <!-- NAVIGATION -->
+    gap: 6px;
+}
 
-        <nav class="sidebar-nav">
 
+/* Navigation item */
 
-            <a
-                href="admin.html"
-                class="nav-item"
-            >
+.sidebar li {
+    position: relative;
 
-                <span class="nav-icon">
-                    🏠
-                </span>
+    padding: 13px 15px;
 
-                <span>
-                    Dashboard
-                </span>
+    border-radius: 12px;
 
-            </a>
+    color:
+        rgba(255,255,255,0.72);
 
+    font-size: 12px;
+    font-weight: 600;
 
-            <a
-                href="students.html"
-                class="nav-item"
-            >
+    cursor: pointer;
 
-                <span class="nav-icon">
-                    👥
-                </span>
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
 
-                <span>
-                    Students
-                </span>
 
-            </a>
+/* Hover */
 
+.sidebar li:hover {
+    color: #ffffff;
 
-            <a
-                href="paper-management.html"
-                class="nav-item"
-            >
+    background:
+        rgba(255,255,255,0.12);
 
-                <span class="nav-icon">
-                    📚
-                </span>
+    transform:
+        translateX(2px);
+}
 
-                <span>
-                    Paper Management
-                </span>
 
-            </a>
+/* Active */
 
+.sidebar li.active {
+    color: #ffffff;
 
-            <a
-                href="import-students.html"
-                class="nav-item"
-            >
+    background:
+        rgba(255,255,255,0.18);
 
-                <span class="nav-icon">
-                    📥
-                </span>
+    box-shadow:
+        inset 3px 0 0 #ffffff;
+}
 
-                <span>
-                    Import Students
-                </span>
 
-            </a>
+/* =========================================================
+   MAIN
+========================================================= */
 
+.main {
+    min-height: 100vh;
 
-            <a
-                href="reports.html"
-                class="nav-item active"
-            >
+    margin-left: 245px;
 
-                <span class="nav-icon">
-                    📊
-                </span>
+    padding: 30px;
 
-                <span>
-                    Reports
-                </span>
+    max-width: 1700px;
+}
 
-            </a>
 
+/* =========================================================
+   PAGE HEADER
+========================================================= */
 
-        </nav>
+.page-header {
+    position: relative;
 
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-        <!-- SIDEBAR BOTTOM -->
+    gap: 25px;
 
-        <div class="sidebar-bottom">
+    margin-bottom: 22px;
 
+    padding: 28px 30px;
 
-            <div class="admin-user">
+    border:
+        1px solid #e5e7eb;
 
-                <div class="admin-user-icon">
-                    👨‍💼
-                </div>
+    border-radius: 20px;
 
-                <div>
+    background: #ffffff;
 
-                    <strong id="adminUsername">
-                        Admin
-                    </strong>
+    box-shadow:
+        0 12px 35px
+        rgba(15,23,42,0.06);
+}
 
-                    <span id="adminRole">
-                        Administrator
-                    </span>
 
-                </div>
+.page-header h1 {
+    margin-bottom: 7px;
 
-            </div>
+    color: #111827;
 
+    font-size: 30px;
+    font-weight: 800;
 
-            <button
-                type="button"
-                id="logoutBtn"
-                class="logout-btn"
-            >
+    letter-spacing: -0.8px;
+}
 
-                🚪
 
-                <span>
-                    Sign Out
-                </span>
+.page-header p {
+    color: #64748b;
 
-            </button>
+    font-size: 13px;
+}
 
 
-        </div>
+/* =========================================================
+   HEADER ACTIONS
+========================================================= */
 
+.header-actions {
+    display: flex;
 
-    </aside>
+    gap: 10px;
+}
 
 
+.primary-btn,
+.secondary-btn {
+    height: 42px;
 
-    <!-- =========================================
-         MAIN
-    ========================================== -->
+    padding:
+        0 17px;
 
-    <main class="main-content">
+    border: none;
 
+    border-radius: 10px;
 
-        <!-- =====================================
-             HEADER
-        ====================================== -->
+    font-family: inherit;
 
-        <header class="page-header">
+    font-size: 12px;
+    font-weight: 700;
 
+    cursor: pointer;
 
-            <div>
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
 
-                <p class="page-label">
-                    ADMINISTRATION
-                </p>
 
-                <h1>
-                    Reports & Analytics
-                </h1>
+.primary-btn {
+    background:
+        linear-gradient(
+            135deg,
+            #4f46e5,
+            #7c3aed
+        );
 
-                <p class="page-description">
-                    Student activity, paper usage and
-                    academic-level reports.
-                </p>
+    color: #ffffff;
 
-            </div>
+    box-shadow:
+        0 8px 20px
+        rgba(79,70,229,0.22);
+}
 
 
-            <div class="header-actions">
+.primary-btn:hover {
+    transform:
+        translateY(-2px);
 
-                <button
-                    type="button"
-                    id="refreshBtn"
-                    class="secondary-btn"
-                >
+    box-shadow:
+        0 12px 25px
+        rgba(79,70,229,0.28);
+}
 
-                    🔄 Refresh
 
-                </button>
+.secondary-btn {
+    background: #eef2ff;
 
+    color: #4f46e5;
+}
 
-                <button
-                    type="button"
-                    id="exportBtn"
-                    class="primary-btn"
-                >
 
-                    📥 Export CSV
+.secondary-btn:hover {
+    background: #e0e7ff;
 
-                </button>
+    transform:
+        translateY(-1px);
+}
 
-            </div>
 
+/* =========================================================
+   FILTER CARD
+========================================================= */
 
-        </header>
+.filter-card {
+    margin-bottom: 22px;
 
+    padding: 22px 25px;
 
+    border:
+        1px solid #e5e7eb;
 
-        <!-- =====================================
-             FILTERS
-        ====================================== -->
+    border-radius: 18px;
 
-        <section class="filter-card">
+    background: #ffffff;
 
+    box-shadow:
+        0 10px 30px
+        rgba(15,23,42,0.05);
+}
 
-            <div class="filter-heading">
 
-                <div>
+.filter-title {
+    margin-bottom: 18px;
+}
 
-                    <span class="section-label">
-                        FILTERS
-                    </span>
 
-                    <h2>
-                        Report Filters
-                    </h2>
+.filter-title h2 {
+    margin-bottom: 4px;
 
-                    <p>
-                        Filter the live report data.
-                    </p>
+    color: #111827;
 
-                </div>
+    font-size: 17px;
+    font-weight: 800;
+}
 
-            </div>
 
+.filter-title span {
+    color: #94a3b8;
 
-            <div class="filters">
+    font-size: 11px;
+}
 
 
-                <div class="filter-group">
+.filters {
+    display: flex;
 
-                    <label for="gradeFilter">
-                        Student Category
-                    </label>
+    gap: 16px;
 
+    flex-wrap: wrap;
+}
 
-                    <select id="gradeFilter">
 
-                        <option value="all">
-                            All Students
-                        </option>
+.filter-group {
+    min-width: 190px;
 
-                        <option value="grade10">
-                            Grade 10
-                        </option>
+    display: flex;
+    flex-direction: column;
 
-                        <option value="grade11">
-                            Grade 11
-                        </option>
+    gap: 7px;
+}
 
-                        <option value="al">
-                            Advanced Level
-                        </option>
 
-                    </select>
+.filter-group label {
+    color: #334155;
 
-                </div>
+    font-size: 11px;
+    font-weight: 700;
+}
 
 
+.filter-group select {
+    width: 100%;
 
-                <div class="filter-group">
+    height: 42px;
 
-                    <label for="activityFilter">
-                        Activity
-                    </label>
+    padding:
+        0 12px;
 
+    border:
+        1px solid #dbe2ea;
 
-                    <select id="activityFilter">
+    border-radius: 10px;
 
-                        <option value="all">
-                            All Students
-                        </option>
+    background: #ffffff;
 
-                        <option value="active">
-                            Active Now
-                        </option>
+    color: #334155;
 
-                        <option value="inactive">
-                            Inactive
-                        </option>
+    font-family: inherit;
 
-                    </select>
+    font-size: 12px;
 
-                </div>
+    outline: none;
 
+    cursor: pointer;
 
-            </div>
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
 
 
-        </section>
+.filter-group select:focus {
+    border-color: #6366f1;
 
+    box-shadow:
+        0 0 0 4px
+        rgba(99,102,241,0.10);
+}
 
 
-        <!-- =====================================
-             SUMMARY
-        ====================================== -->
+/* =========================================================
+   STAT CARDS
+========================================================= */
 
-        <section class="stats-grid">
+.stats-grid {
+    display: grid;
 
+    grid-template-columns:
+        repeat(6, minmax(0, 1fr));
 
-            <div class="stat-card">
+    gap: 15px;
 
-                <div class="stat-icon purple">
-                    👥
-                </div>
+    margin-bottom: 22px;
+}
 
-                <div>
 
-                    <span>
-                        TOTAL STUDENTS
-                    </span>
+.stat-card {
+    min-height: 115px;
 
-                    <strong id="totalStudents">
-                        0
-                    </strong>
+    display: flex;
 
-                    <small>
-                        Registered students
-                    </small>
+    align-items: center;
 
-                </div>
+    gap: 13px;
 
-            </div>
+    padding: 18px;
 
+    border:
+        1px solid #e5e7eb;
 
+    border-radius: 16px;
 
-            <div class="stat-card">
+    background: #ffffff;
 
-                <div class="stat-icon orange">
-                    🎓
-                </div>
+    box-shadow:
+        0 8px 25px
+        rgba(15,23,42,0.05);
 
-                <div>
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
 
-                    <span>
-                        GRADE 10
-                    </span>
 
-                    <strong id="grade10Count">
-                        0
-                    </strong>
+.stat-card:hover {
+    transform:
+        translateY(-3px);
 
-                    <small>
-                        Grade 10 students
-                    </small>
+    box-shadow:
+        0 14px 30px
+        rgba(15,23,42,0.08);
+}
 
-                </div>
 
-            </div>
+.stat-icon {
+    width: 48px;
+    height: 48px;
 
+    flex-shrink: 0;
 
+    display: flex;
 
-            <div class="stat-card">
+    align-items: center;
+    justify-content: center;
 
-                <div class="stat-icon green">
-                    🎓
-                </div>
+    border-radius: 13px;
 
-                <div>
+    background: #ede9fe;
 
-                    <span>
-                        GRADE 11
-                    </span>
+    font-size: 22px;
+}
 
-                    <strong id="grade11Count">
-                        0
-                    </strong>
 
-                    <small>
-                        Grade 11 students
-                    </small>
+.stat-card:nth-child(2)
+.stat-icon {
+    background: #fff7ed;
+}
 
-                </div>
 
-            </div>
+.stat-card:nth-child(3)
+.stat-icon {
+    background: #ecfdf5;
+}
 
 
+.stat-card:nth-child(4)
+.stat-icon {
+    background: #fdf2f8;
+}
 
-            <div class="stat-card">
 
-                <div class="stat-icon pink">
-                    🎓
-                </div>
+.stat-card:nth-child(5)
+.stat-icon {
+    background: #ecfdf5;
+}
 
-                <div>
 
-                    <span>
-                        A/L
-                    </span>
+.stat-card:nth-child(6)
+.stat-icon {
+    background: #eff6ff;
+}
 
-                    <strong id="alCount">
-                        0
-                    </strong>
 
-                    <small>
-                        Advanced Level students
-                    </small>
+.stat-card span {
+    display: block;
 
-                </div>
+    margin-bottom: 4px;
 
-            </div>
+    color: #64748b;
 
+    font-size: 10px;
+    font-weight: 700;
 
+    letter-spacing: 0.4px;
+}
 
-            <div class="stat-card">
 
-                <div class="stat-icon cyan">
-                    🟢
-                </div>
+.stat-card strong {
+    display: block;
 
-                <div>
+    color: #111827;
 
-                    <span>
-                        ACTIVE NOW
-                    </span>
+    font-size: 25px;
+    font-weight: 800;
+}
 
-                    <strong id="activeCount">
-                        0
-                    </strong>
 
-                    <small>
-                        Currently online
-                    </small>
+/* =========================================================
+   ANALYTICS GRID
+========================================================= */
 
-                </div>
+.analytics-grid {
+    display: grid;
 
-            </div>
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
 
+    gap: 20px;
 
+    margin-bottom: 20px;
+}
 
-            <div class="stat-card">
 
-                <div class="stat-icon blue">
-                    📄
-                </div>
+/* =========================================================
+   REPORT CARD
+========================================================= */
 
-                <div>
+.report-card {
+    margin-bottom: 20px;
 
-                    <span>
-                        PAPER VIEWS
-                    </span>
+    padding: 25px;
 
-                    <strong id="paperViews">
-                        0
-                    </strong>
+    border:
+        1px solid #e5e7eb;
 
-                    <small>
-                        Recorded views
-                    </small>
+    border-radius: 18px;
 
-                </div>
+    background: #ffffff;
 
-            </div>
+    box-shadow:
+        0 10px 30px
+        rgba(15,23,42,0.05);
+}
 
 
-        </section>
+.full-card {
+    width: 100%;
+}
 
 
+.card-header {
+    margin-bottom: 20px;
+}
 
-        <!-- =====================================
-             DISTRIBUTION
-        ====================================== -->
 
-        <section class="two-column-grid">
+.card-header h2 {
+    margin-bottom: 5px;
 
+    color: #111827;
 
-            <div class="report-card">
+    font-size: 18px;
+    font-weight: 800;
 
+    letter-spacing: -0.3px;
+}
 
-                <div class="card-heading">
 
-                    <div class="heading-icon purple">
-                        👥
-                    </div>
+.card-header p {
+    color: #94a3b8;
 
-                    <div>
+    font-size: 11px;
+}
 
-                        <h2>
-                            Student Distribution
-                        </h2>
 
-                        <p>
-                            Students by academic level.
-                        </p>
+/* =========================================================
+   DISTRIBUTION
+========================================================= */
 
-                    </div>
+.distribution-list {
+    display: flex;
 
-                </div>
+    flex-direction: column;
 
+    gap: 10px;
+}
 
-                <div class="distribution-list">
 
+.distribution-row {
+    min-height: 52px;
 
-                    <div class="distribution-row">
+    display: flex;
 
-                        <div>
+    align-items: center;
+    justify-content: space-between;
 
-                            <span class="distribution-name">
-                                Grade 10
-                            </span>
+    padding:
+        0 15px;
 
-                            <div class="mini-track">
+    border:
+        1px solid #eef2f7;
 
-                                <div
-                                    id="distributionBar10"
-                                    class="mini-bar orange"
-                                ></div>
+    border-radius: 11px;
 
-                            </div>
+    background: #f8fafc;
+}
 
-                        </div>
 
-                        <strong id="distribution10">
-                            0
-                        </strong>
+.distribution-row span {
+    color: #475569;
 
-                    </div>
+    font-size: 12px;
+    font-weight: 600;
+}
 
 
-                    <div class="distribution-row">
+.distribution-row strong {
+    color: #111827;
 
-                        <div>
+    font-size: 18px;
+    font-weight: 800;
+}
 
-                            <span class="distribution-name">
-                                Grade 11
-                            </span>
 
-                            <div class="mini-track">
+/* =========================================================
+   ACTIVITY
+========================================================= */
 
-                                <div
-                                    id="distributionBar11"
-                                    class="mini-bar green"
-                                ></div>
+.activity-summary {
+    display: grid;
 
-                            </div>
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
 
-                        </div>
+    gap: 12px;
+}
 
-                        <strong id="distribution11">
-                            0
-                        </strong>
 
-                    </div>
+.activity-item {
+    padding: 20px;
 
+    text-align: center;
 
-                    <div class="distribution-row">
+    border:
+        1px solid #eef2f7;
 
-                        <div>
+    border-radius: 12px;
 
-                            <span class="distribution-name">
-                                Advanced Level
-                            </span>
+    background: #f8fafc;
+}
 
-                            <div class="mini-track">
 
-                                <div
-                                    id="distributionBarAL"
-                                    class="mini-bar pink"
-                                ></div>
+.activity-item span {
+    display: block;
 
-                            </div>
+    margin-bottom: 8px;
 
-                        </div>
+    color: #64748b;
 
-                        <strong id="distributionAL">
-                            0
-                        </strong>
+    font-size: 12px;
+    font-weight: 600;
+}
 
-                    </div>
 
+.activity-item strong {
+    color: #111827;
 
-                </div>
+    font-size: 28px;
+    font-weight: 800;
+}
 
 
-            </div>
+/* =========================================================
+   PAPER USAGE
+========================================================= */
 
+.paper-usage {
+    display: flex;
 
+    flex-direction: column;
 
-            <!-- ACTIVITY -->
+    gap: 13px;
+}
 
-            <div class="report-card">
 
+.paper-row {
+    display: grid;
 
-                <div class="card-heading">
+    grid-template-columns:
+        230px minmax(100px, 1fr) 55px;
 
-                    <div class="heading-icon green">
-                        🟢
-                    </div>
+    align-items: center;
 
-                    <div>
+    gap: 15px;
 
-                        <h2>
-                            Activity Overview
-                        </h2>
+    min-height: 38px;
+}
 
-                        <p>
-                            Current student activity.
-                        </p>
 
-                    </div>
+.paper-name {
+    overflow: hidden;
 
-                </div>
+    color: #334155;
 
+    font-size: 12px;
+    font-weight: 700;
 
-                <div class="activity-grid">
+    white-space: nowrap;
 
+    text-overflow: ellipsis;
+}
 
-                    <div class="activity-box active">
 
-                        <span>
-                            Active
-                        </span>
+.paper-track {
+    height: 9px;
 
-                        <strong id="activityActive">
-                            0
-                        </strong>
+    overflow: hidden;
 
-                        <small>
-                            Online now
-                        </small>
+    border-radius: 20px;
 
-                    </div>
+    background: #eef2f7;
+}
 
 
-                    <div class="activity-box inactive">
+.paper-bar {
+    height: 100%;
 
-                        <span>
-                            Inactive
-                        </span>
+    min-width: 2px;
 
-                        <strong id="activityInactive">
-                            0
-                        </strong>
+    border-radius: 20px;
 
-                        <small>
-                            Currently offline
-                        </small>
+    background:
+        linear-gradient(
+            90deg,
+            #4f46e5,
+            #8b5cf6
+        );
 
-                    </div>
+    transition:
+        width 0.5s ease;
+}
 
 
-                </div>
+.paper-value {
+    color: #111827;
 
+    text-align: right;
 
-            </div>
+    font-size: 12px;
+    font-weight: 800;
+}
 
 
-        </section>
+/* =========================================================
+   EMPTY STATE
+========================================================= */
 
+.empty-state {
+    padding: 35px 20px;
 
+    text-align: center;
 
-        <!-- =====================================
-             PAPER USAGE REPORTS
-        ====================================== -->
+    border:
+        1px dashed #dbe2ea;
 
-        <section class="report-card paper-reports-card">
+    border-radius: 12px;
 
+    background: #f8fafc;
 
-            <div class="card-heading main-card-heading">
+    color: #94a3b8;
 
-                <div class="heading-icon blue">
-                    📚
-                </div>
+    font-size: 12px;
+}
 
-                <div>
 
-                    <span class="section-label">
-                        LIVE PAPER ANALYTICS
-                    </span>
+/* =========================================================
+   TABLE
+========================================================= */
 
-                    <h2>
-                        Paper Usage Reports
-                    </h2>
+.table-wrapper {
+    width: 100%;
 
-                    <p>
-                        Paper views separated by student
-                        category and paper type.
-                    </p>
+    overflow-x: auto;
 
-                </div>
+    border:
+        1px solid #eef2f7;
 
-            </div>
+    border-radius: 12px;
+}
 
 
+table {
+    width: 100%;
 
-            <!-- =================================
-                 GRADE 10
-            ================================== -->
+    min-width: 720px;
 
-            <div class="paper-section">
+    border-collapse: collapse;
+}
 
 
-                <div class="paper-section-header">
+th,
+td {
+    padding:
+        14px 15px;
 
-                    <div class="category-icon orange">
-                        🎓
-                    </div>
+    text-align: left;
 
-                    <div>
+    border-bottom:
+        1px solid #eef2f7;
 
-                        <h3>
-                            Grade 10
-                        </h3>
+    font-size: 12px;
+}
 
-                        <p>
-                            Model Papers
-                        </p>
 
-                    </div>
+th {
+    background: #f8fafc;
 
-                </div>
+    color: #64748b;
 
+    font-size: 10px;
+    font-weight: 800;
 
-                <div id="grade10Reports">
+    letter-spacing: 0.6px;
 
-                    <div class="report-loading">
-                        Loading Grade 10 reports...
-                    </div>
+    text-transform: uppercase;
+}
 
-                </div>
 
+td {
+    color: #475569;
+}
 
-            </div>
 
+tbody tr {
+    transition:
+        background 0.15s ease;
+}
 
 
-            <!-- =================================
-                 GRADE 11 MODEL
-            ================================== -->
+tbody tr:hover {
+    background: #fafbff;
+}
 
-            <div class="paper-section">
 
+tbody tr:last-child td {
+    border-bottom: none;
+}
 
-                <div class="paper-section-header">
 
-                    <div class="category-icon green">
-                        🎓
-                    </div>
+td strong {
+    color: #111827;
 
-                    <div>
+    font-weight: 700;
+}
 
-                        <h3>
-                            Grade 11
-                        </h3>
 
-                        <p>
-                            Model Paper Usage
-                        </p>
+/* =========================================================
+   STATUS
+========================================================= */
 
-                    </div>
+.status {
+    display: inline-flex;
 
-                </div>
+    align-items: center;
 
+    padding:
+        5px 9px;
 
-                <div id="grade11ModelReports">
+    border-radius: 20px;
 
-                    <div class="report-loading">
-                        Loading Grade 11 Model reports...
-                    </div>
+    font-size: 10px;
+    font-weight: 700;
 
-                </div>
+    white-space: nowrap;
+}
 
 
-            </div>
+.status.active {
+    background: #dcfce7;
 
+    color: #166534;
+}
 
 
-            <!-- =================================
-                 GRADE 11 PAST
-            ================================== -->
+.status.inactive {
+    background: #f1f5f9;
 
-            <div class="paper-section">
+    color: #64748b;
+}
 
 
-                <div class="paper-section-header">
+/* =========================================================
+   LOADING
+========================================================= */
 
-                    <div class="category-icon blue">
-                        📖
-                    </div>
+.loading-cell {
+    padding: 40px !important;
 
-                    <div>
+    text-align: center !important;
 
-                        <h3>
-                            Grade 11 Past Papers
-                        </h3>
+    color: #94a3b8 !important;
 
-                        <p>
-                            Past Paper usage by year
-                        </p>
+    font-size: 12px !important;
+}
 
-                    </div>
 
-                </div>
+/* =========================================================
+   FOOTER
+========================================================= */
 
+.report-footer {
+    display: flex;
 
-                <div id="grade11PastReports">
+    align-items: center;
+    justify-content: center;
 
-                    <div class="report-loading">
-                        Loading Grade 11 Past Paper reports...
-                    </div>
+    gap: 9px;
 
-                </div>
+    padding:
+        8px 0 20px;
 
+    color: #94a3b8;
 
-            </div>
+    font-size: 11px;
+}
 
 
+.report-footer span:first-child {
+    color: #16a34a;
 
-            <!-- =================================
-                 A/L MODEL
-            ================================== -->
+    font-weight: 700;
+}
 
-            <div class="paper-section">
 
+/* =========================================================
+   SCROLLBAR
+========================================================= */
 
-                <div class="paper-section-header">
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
 
-                    <div class="category-icon pink">
-                        🎓
-                    </div>
 
-                    <div>
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
 
-                        <h3>
-                            Advanced Level
-                        </h3>
 
-                        <p>
-                            Model Paper Usage
-                        </p>
+::-webkit-scrollbar-thumb {
+    border-radius: 20px;
 
-                    </div>
+    background: #cbd5e1;
+}
 
-                </div>
 
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
 
-                <div id="alModelReports">
 
-                    <div class="report-loading">
-                        Loading A/L Model reports...
-                    </div>
+/* =========================================================
+   TABLET
+========================================================= */
 
-                </div>
+@media (max-width: 1250px) {
 
+    .stats-grid {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+    }
 
-            </div>
+}
 
 
+@media (max-width: 950px) {
 
-            <!-- =================================
-                 A/L PROVINCE 1
-            ================================== -->
+    .sidebar {
+        position: relative;
 
-            <div class="paper-section">
+        width: 100%;
+        height: auto;
 
+        padding: 18px;
+    }
 
-                <div class="paper-section-header">
 
-                    <div class="category-icon purple">
-                        🗺️
-                    </div>
+    .sidebar h2 {
+        margin-bottom: 15px;
 
-                    <div>
+        text-align: left;
+    }
 
-                        <h3>
-                            A/L Province Paper 1
-                        </h3>
 
-                        <p>
-                            Province-wise usage
-                        </p>
+    .sidebar ul {
+        display: grid;
 
-                    </div>
+        grid-template-columns:
+            repeat(3, 1fr);
+    }
 
-                </div>
 
+    .sidebar li {
+        margin: 0;
+    }
 
-                <div id="alProvince1Reports">
 
-                    <div class="report-loading">
-                        Loading Province Paper 1 reports...
-                    </div>
+    .main {
+        margin-left: 0;
 
-                </div>
+        padding: 20px;
+    }
 
 
-            </div>
+    .analytics-grid {
+        grid-template-columns: 1fr;
+    }
 
+}
 
 
-            <!-- =================================
-                 A/L PROVINCE 2
-            ================================== -->
+@media (max-width: 700px) {
 
-            <div class="paper-section">
+    .main {
+        padding: 12px;
+    }
 
 
-                <div class="paper-section-header">
+    .page-header {
+        flex-direction: column;
 
-                    <div class="category-icon cyan">
-                        🗺️
-                    </div>
+        align-items: stretch;
 
-                    <div>
+        padding: 22px;
+    }
 
-                        <h3>
-                            A/L Province Paper 2
-                        </h3>
 
-                        <p>
-                            Province-wise usage
-                        </p>
+    .page-header h1 {
+        font-size: 25px;
+    }
 
-                    </div>
 
-                </div>
+    .header-actions {
+        width: 100%;
+    }
 
 
-                <div id="alProvince2Reports">
+    .header-actions button {
+        flex: 1;
+    }
 
-                    <div class="report-loading">
-                        Loading Province Paper 2 reports...
-                    </div>
 
-                </div>
+    .stats-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
 
 
-            </div>
+    .filter-group {
+        width: 100%;
+        min-width: 0;
+    }
 
 
-        </section>
+    .paper-row {
+        grid-template-columns:
+            1fr 55px;
 
+        gap: 10px;
+    }
 
 
-        <!-- =====================================
-             STUDENT ACTIVITY TABLE
-        ====================================== -->
+    .paper-track {
+        grid-column: 1 / -1;
+        grid-row: 2;
+    }
 
-        <section class="report-card">
+}
 
 
-            <div class="card-heading">
+@media (max-width: 480px) {
 
-                <div class="heading-icon purple">
-                    👤
-                </div>
+    .sidebar ul {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
 
-                <div>
 
-                    <h2>
-                        Student Activity
-                    </h2>
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
 
-                    <p>
-                        Student-level activity summary.
-                    </p>
 
-                </div>
+    .analytics-grid {
+        gap: 10px;
+    }
 
-            </div>
 
+    .report-card {
+        padding: 18px;
+    }
 
-            <div class="table-wrapper">
 
-                <table>
+    .activity-summary {
+        grid-template-columns: 1fr;
+    }
 
-                    <thead>
 
-                        <tr>
+    .page-header {
+        padding: 18px;
+    }
 
-                            <th>
-                                Student ID
-                            </th>
 
-                            <th>
-                                Grade
-                            </th>
+    .page-header h1 {
+        font-size: 22px;
+    }
 
-                            <th>
-                                Status
-                            </th>
-
-                            <th>
-                                Paper Views
-                            </th>
-
-                            <th>
-                                Last Active
-                            </th>
-
-                        </tr>
-
-                    </thead>
-
-
-                    <tbody id="studentTableBody">
-
-                        <tr>
-
-                            <td
-                                colspan="5"
-                                class="loading-cell"
-                            >
-                                Loading...
-                            </td>
-
-                        </tr>
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-
-        </section>
-
-
-
-        <!-- =====================================
-             FOOTER
-        ====================================== -->
-
-        <footer class="report-footer">
-
-            <div class="live-status">
-
-                <span class="live-dot"></span>
-
-                Live data
-
-            </div>
-
-            <span>
-                •
-            </span>
-
-            <span id="lastUpdated">
-                Updating...
-            </span>
-
-        </footer>
-
-
-    </main>
-
-
-</div>
-
-
-
-<!-- =========================================
-     JAVASCRIPT
-========================================= -->
-
-<script
-    type="module"
-    src="./reports.js"
-></script>
-
-
-</body>
-
-</html>
+}
