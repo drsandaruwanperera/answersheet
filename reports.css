@@ -1135,3 +1135,170 @@ td strong {
     }
 
 }
+/* =========================================================
+   FINAL LAYOUT FIX
+   Fix sidebar overlap + content clipping
+========================================================= */
+
+html,
+body {
+    width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar {
+    position: fixed !important;
+
+    top: 0 !important;
+    left: 0 !important;
+
+    width: 250px !important;
+    height: 100vh !important;
+
+    z-index: 9999 !important;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    flex-shrink: 0 !important;
+}
+
+
+/* Sidebar text */
+
+.sidebar h2 {
+    color: #ffffff !important;
+}
+
+
+/* Remove any accidental link styling */
+
+.sidebar a,
+.sidebar li,
+.sidebar a:visited {
+    color: rgba(255,255,255,0.78) !important;
+    text-decoration: none !important;
+}
+
+
+/* Hover */
+
+.sidebar li:hover {
+    color: #ffffff !important;
+}
+
+
+/* Active */
+
+.sidebar li.active {
+    color: #ffffff !important;
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
+
+.main {
+    position: relative !important;
+
+    margin-left: 250px !important;
+
+    width: calc(100% - 250px) !important;
+
+    min-height: 100vh !important;
+
+    padding: 30px !important;
+
+    overflow: visible !important;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.page-header {
+    width: 100% !important;
+
+    position: relative !important;
+
+    z-index: 1 !important;
+}
+
+
+/* =========================================================
+   FILTER
+========================================================= */
+
+.filter-card {
+    width: 100% !important;
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.stats-grid {
+    width: 100% !important;
+}
+
+
+/* =========================================================
+   ANALYTICS
+========================================================= */
+
+.analytics-grid {
+    width: 100% !important;
+}
+
+
+/* =========================================================
+   REPORT CARDS
+========================================================= */
+
+.report-card {
+    width: 100% !important;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 950px) {
+
+    .sidebar {
+        position: relative !important;
+
+        width: 100% !important;
+
+        height: auto !important;
+    }
+
+
+    .main {
+        margin-left: 0 !important;
+
+        width: 100% !important;
+
+        padding: 20px !important;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .main {
+        padding: 12px !important;
+    }
+
+}
