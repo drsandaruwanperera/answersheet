@@ -4,57 +4,118 @@ import {
     getDoc
 } from "./firebase.js";
 
-console.log("ADMIN LOGIN JS STARTED");
 
-document.addEventListener("DOMContentLoaded", () => {
-
-    const loginBtn =
-        document.getElementById("loginBtn");
-
-    const usernameInput =
-        document.getElementById("username");
-
-    const passwordInput =
-        document.getElementById("password");
-
-    const msg =
-        document.getElementById("msg");
+console.log(
+    "ADMIN LOGIN JS STARTED"
+);
 
 
-    if (!loginBtn) {
+// =====================================================
+// DOM READY
+// =====================================================
 
-        console.error(
-            "loginBtn not found"
-        );
-
-        return;
-    }
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
 
 
-    loginBtn.addEventListener(
-        "click",
-        async () => {
+        // =================================================
+        // ELEMENTS
+        // =================================================
+
+        const loginBtn =
+            document.getElementById(
+                "loginBtn"
+            );
+
+
+        const usernameInput =
+            document.getElementById(
+                "username"
+            );
+
+
+        const passwordInput =
+            document.getElementById(
+                "password"
+            );
+
+
+        const msg =
+            document.getElementById(
+                "msg"
+            );
+
+
+        // =================================================
+        // CHECK ELEMENTS
+        // =================================================
+
+        if (
+            !loginBtn ||
+            !usernameInput ||
+            !passwordInput ||
+            !msg
+        ) {
+
+            console.error(
+                "Admin login elements not found."
+            );
+
+            return;
+
+        }
+
+
+        // =================================================
+        // LOGIN FUNCTION
+        // =================================================
+
+        async function login() {
+
 
             const username =
-                usernameInput.value.trim();
+                usernameInput.value
+                    .trim();
+
 
             const password =
-                passwordInput.value.trim();
+                passwordInput.value
+                    .trim();
 
 
-            msg.textContent = "";
+            // =============================================
+            // CLEAR MESSAGE
+            // =============================================
+
+            msg.textContent =
+                "";
 
 
-            if (!username || !password) {
+            // =============================================
+            // VALIDATION
+            // =============================================
+
+            if (
+                !username ||
+                !password
+            ) {
 
                 msg.textContent =
                     "Please enter username and password.";
 
                 return;
+
             }
 
 
-            loginBtn.disabled = true;
+            // =============================================
+            // LOADING
+            // =============================================
+
+            loginBtn.disabled =
+                true;
+
 
             loginBtn.textContent =
                 "Signing in...";
@@ -62,14 +123,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
             try {
 
+
                 console.log(
-                    "Checking admin login..."
+                    "Checking admin:",
+                    username
                 );
 
 
-                // =================================
-                // GET ADMIN DOCUMENT
-                // =================================
+                // =========================================
+                // ADMIN DOCUMENT
+                // =========================================
 
                 const adminRef =
                     doc(
@@ -91,37 +154,51 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
 
 
-                // =================================
-                // NOT FOUND
-                // =================================
+                // =========================================
+                // ADMIN NOT FOUND
+                // =========================================
 
-                if (!adminSnap.exists()) {
+                if (
+                    !adminSnap.exists()
+                ) {
 
                     msg.textContent =
                         "Invalid username or password.";
 
                     return;
+
                 }
 
+
+                // =========================================
+                // ADMIN DATA
+                // =========================================
 
                 const adminData =
                     adminSnap.data();
 
 
                 console.log(
-                    "Admin data loaded."
+                    "Admin data:",
+                    adminData
                 );
 
 
-                // =================================
-                // CHECK USERNAME
-                // =================================
+                // =========================================
+                // USERNAME CHECK
+                // =========================================
+
+                const storedUsername =
+                    String(
+                        adminData.username ||
+                        ""
+                    )
+                    .trim()
+                    .toLowerCase();
+
 
                 if (
-                    String(
-                        adminData.username || ""
-                    ).trim().toLowerCase()
-                    !==
+                    storedUsername !==
                     username.toLowerCase()
                 ) {
 
@@ -129,18 +206,24 @@ document.addEventListener("DOMContentLoaded", () => {
                         "Invalid username or password.";
 
                     return;
+
                 }
 
 
-                // =================================
-                // CHECK PASSWORD
-                // =================================
+                // =========================================
+                // PASSWORD CHECK
+                // =========================================
+
+                const storedPassword =
+                    String(
+                        adminData.password ||
+                        ""
+                    )
+                    .trim();
+
 
                 if (
-                    String(
-                        adminData.password || ""
-                    ).trim()
-                    !==
+                    storedPassword !==
                     password
                 ) {
 
@@ -148,17 +231,68 @@ document.addEventListener("DOMContentLoaded", () => {
                         "Invalid username or password.";
 
                     return;
+
                 }
 
 
-                // =================================
+                // =========================================
+                // GET ROLE
+                // =========================================
+
+                let role =
+                    String(
+                        adminData.role ||
+                        ""
+                    )
+                    .trim()
+                    .toLowerCase();
+
+
+                console.log(
+                    "Original Firestore role:",
+                    adminData.role
+                );
+
+
+                // =========================================
+                // NORMALIZE ROLE
+                // =========================================
+
+                if (
+                    role === "super admin" ||
+                    role === "super_admin" ||
+                    role === "superadministrator" ||
+                    role === "super administrator" ||
+                    role === "super-admin" ||
+                    role === "superadmin"
+                ) {
+
+                    role =
+                        "superadmin";
+
+                }
+
+                else if (
+                    role === "administrator" ||
+                    role === "admin"
+                ) {
+
+                    role =
+                        "admin";
+
+                }
+
+                else {
+
+                    role =
+                        "limited";
+
+                }
+
+
+                // =========================================
                 // LOGIN SUCCESS
-                // =================================
-
-                const role =
-                    adminData.role ||
-                    "limited";
-
+                // =========================================
 
                 sessionStorage.setItem(
                     "adminLoggedIn",
@@ -178,21 +312,77 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
 
 
+                // =========================================
+                // EXTRA ROLE STORAGE
+                // =========================================
+                //
+                // This makes the role easier to use
+                // from other pages as well.
+                //
+
+                sessionStorage.setItem(
+                    "role",
+                    role
+                );
+
+
+                sessionStorage.setItem(
+                    "userRole",
+                    role
+                );
+
+
+                sessionStorage.setItem(
+                    "username",
+                    username
+                );
+
+
+                // =========================================
+                // DEBUG
+                // =========================================
+
+                console.log(
+                    "================================"
+                );
+
                 console.log(
                     "ADMIN LOGIN SUCCESS"
                 );
 
+                console.log(
+                    "Username:",
+                    username
+                );
 
-                // =================================
-                // OPEN ADMIN PANEL
-                // =================================
+                console.log(
+                    "Role:",
+                    role
+                );
 
-                window.location.href =
-                    "admin.html";
+                console.log(
+                    "Superadmin:",
+                    role === "superadmin"
+                );
+
+                console.log(
+                    "================================"
+                );
+
+
+                // =========================================
+                // REDIRECT
+                // =========================================
+
+                window.location.replace(
+                    "admin.html"
+                );
 
             }
 
-            catch (error) {
+            catch (
+                error
+            ) {
 
                 console.error(
                     "ADMIN LOGIN ERROR:",
@@ -201,8 +391,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
                 msg.textContent =
-                    "Login failed: " +
-                    error.message;
+                    "Login failed. Please try again.";
 
             }
 
@@ -211,32 +400,66 @@ document.addEventListener("DOMContentLoaded", () => {
                 loginBtn.disabled =
                     false;
 
+
                 loginBtn.textContent =
                     "Sign In →";
 
             }
 
         }
-    );
 
 
-    // =================================
-    // ENTER KEY
-    // =================================
+        // =================================================
+        // BUTTON CLICK
+        // =================================================
 
-    passwordInput.addEventListener(
-        "keydown",
-        event => {
+        loginBtn.addEventListener(
+            "click",
+            login
+        );
 
-            if (
-                event.key === "Enter"
-            ) {
 
-                loginBtn.click();
+        // =================================================
+        // ENTER KEY
+        // =================================================
+
+        passwordInput.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key ===
+                    "Enter"
+                ) {
+
+                    event.preventDefault();
+
+                    login();
+
+                }
 
             }
+        );
 
-        }
-    );
 
-});
+        usernameInput.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key ===
+                    "Enter"
+                ) {
+
+                    event.preventDefault();
+
+                    login();
+
+                }
+
+            }
+        );
+
+
+    }
+);
