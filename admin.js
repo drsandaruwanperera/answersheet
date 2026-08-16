@@ -1,7 +1,3 @@
-// =====================================================
-// ADMIN DASHBOARD - admin.js
-// =====================================================
-
 import {
     db,
     collection,
@@ -10,7 +6,7 @@ import {
 
 
 // =====================================================
-// 1. LOGIN CHECK
+// ADMIN AUTHENTICATION
 // =====================================================
 
 const adminLoggedIn =
@@ -18,6 +14,19 @@ const adminLoggedIn =
         "adminLoggedIn"
     );
 
+const adminRole =
+    String(
+        sessionStorage.getItem(
+            "adminRole"
+        ) || "limited"
+    )
+    .trim()
+    .toLowerCase();
+
+
+// =====================================================
+// LOGIN CHECK
+// =====================================================
 
 if (
     adminLoggedIn !== "true"
@@ -31,226 +40,37 @@ if (
 
 
 // =====================================================
-// 2. GET SESSION ROLE
+// ROLE
 // =====================================================
-
-const rawRole =
-    sessionStorage.getItem(
-        "adminRole"
-    ) ||
-    sessionStorage.getItem(
-        "role"
-    ) ||
-    sessionStorage.getItem(
-        "userRole"
-    ) ||
-    "";
-
-
-const adminRole =
-    String(
-        rawRole
-    )
-    .toLowerCase()
-    .trim();
-
-
-// =====================================================
-// 3. SUPERADMIN DETECTION
-// =====================================================
-//
-// Supports:
-//
-// superadmin
-// super_admin
-// super admin
-// Super Administrator
-// SUPERADMIN
-//
 
 const isSuperAdmin =
     adminRole === "superadmin" ||
     adminRole === "super_admin" ||
-    adminRole === "super admin" ||
-    adminRole === "superadministrator" ||
-    adminRole === "super administrator" ||
-    adminRole.includes("superadmin") ||
-    adminRole.includes("super administrator");
+    adminRole === "super admin";
+
+
+// Normal admin / limited admin
+const isNormalAdmin =
+    !isSuperAdmin;
 
 
 // =====================================================
-// 4. ADMIN USERNAME
+// ELEMENTS
 // =====================================================
 
-const adminUsername =
-    sessionStorage.getItem(
-        "adminUsername"
-    ) ||
-    sessionStorage.getItem(
-        "username"
-    ) ||
-    "Admin";
-
-
-// =====================================================
-// 5. DISPLAY ADMIN USER
-// =====================================================
-
-const usernameElement =
-    document.getElementById(
-        "adminUsername"
-    );
-
-
-const roleElement =
-    document.getElementById(
-        "adminRole"
-    );
-
-
-if (
-    usernameElement
-) {
-
-    usernameElement.textContent =
-        adminUsername;
-
-}
-
-
-if (
-    roleElement
-) {
-
-    roleElement.textContent =
-        isSuperAdmin
-            ? "Super Administrator"
-            : "Administrator";
-
-}
-
-
-// =====================================================
-// 6. ROLE ACCESS
-// =====================================================
-//
-// IMPORTANT
-//
-// Superadmin:
-// Dashboard
-// Students
-// Paper Management
-// Import Students
-// Statistics
-//
-// Admin:
-// Dashboard
-// Students
-//
-
-function applyRoleAccess() {
-
-    const superAdminElements =
-        document.querySelectorAll(
-            ".superadmin-only, .superadmin-card"
-        );
-
-
-    superAdminElements.forEach(
-        element => {
-
-            if (
-                isSuperAdmin
-            ) {
-
-                // SHOW
-
-                element.hidden =
-                    false;
-
-                element.style.removeProperty(
-                    "display"
-                );
-
-                element.classList.remove(
-                    "role-hidden"
-                );
-
-            }
-            else {
-
-                // HIDE
-
-                element.hidden =
-                    true;
-
-                element.classList.add(
-                    "role-hidden"
-                );
-
-            }
-
-        }
-    );
-
-
-    console.log(
-        "Admin role:",
-        adminRole
-    );
-
-
-    console.log(
-        "Is Superadmin:",
-        isSuperAdmin
-    );
-
-
-    console.log(
-        "Superadmin elements:",
-        superAdminElements.length
-    );
-
-}
-
-
-// Apply after DOM is ready
-
-if (
-    document.readyState ===
-    "loading"
-) {
-
-    document.addEventListener(
-        "DOMContentLoaded",
-        applyRoleAccess
-    );
-
-}
-else {
-
-    applyRoleAccess();
-
-}
-
-
-// =====================================================
-// 7. ELEMENTS
-// =====================================================
-
-const totalStudentsElement =
+const totalStudents =
     document.getElementById(
         "totalStudents"
     );
 
 
-const totalViewedElement =
+const totalViewed =
     document.getElementById(
         "totalViewed"
     );
 
 
-const activeStudentsElement =
+const activeStudents =
     document.getElementById(
         "activeStudents"
     );
@@ -262,39 +82,15 @@ const chartTotalStudents =
     );
 
 
-const chartPaperViews =
-    document.getElementById(
-        "chartPaperViews"
-    );
-
-
-const chartGrade10 =
-    document.getElementById(
-        "chartGrade10"
-    );
-
-
-const chartGrade11 =
-    document.getElementById(
-        "chartGrade11"
-    );
-
-
-const chartAL =
-    document.getElementById(
-        "chartAL"
-    );
-
-
-const chartActive =
-    document.getElementById(
-        "chartActive"
-    );
-
-
 const chartTotalStudentsValue =
     document.getElementById(
         "chartTotalStudentsValue"
+    );
+
+
+const chartPaperViews =
+    document.getElementById(
+        "chartPaperViews"
     );
 
 
@@ -304,9 +100,21 @@ const chartPaperViewsValue =
     );
 
 
+const chartGrade10 =
+    document.getElementById(
+        "chartGrade10"
+    );
+
+
 const chartGrade10Value =
     document.getElementById(
         "chartGrade10Value"
+    );
+
+
+const chartGrade11 =
+    document.getElementById(
+        "chartGrade11"
     );
 
 
@@ -316,15 +124,39 @@ const chartGrade11Value =
     );
 
 
+const chartAL =
+    document.getElementById(
+        "chartAL"
+    );
+
+
 const chartALValue =
     document.getElementById(
         "chartALValue"
     );
 
 
+const chartActive =
+    document.getElementById(
+        "chartActive"
+    );
+
+
 const chartActiveValue =
     document.getElementById(
         "chartActiveValue"
+    );
+
+
+const adminUsername =
+    document.getElementById(
+        "adminUsername"
+    );
+
+
+const adminRoleElement =
+    document.getElementById(
+        "adminRole"
     );
 
 
@@ -335,7 +167,7 @@ const logoutBtn =
 
 
 // =====================================================
-// 8. ACTIVE LIMIT
+// SETTINGS
 // =====================================================
 
 const ACTIVE_LIMIT =
@@ -343,39 +175,68 @@ const ACTIVE_LIMIT =
 
 
 // =====================================================
-// 9. STUDENT TYPE
+// DATA
+// =====================================================
+
+let studentsData = [];
+
+
+// =====================================================
+// DISPLAY ADMIN USER
+// =====================================================
+
+if (
+    adminUsername
+) {
+
+    adminUsername.textContent =
+        sessionStorage.getItem(
+            "adminUsername"
+        ) || "Admin";
+
+}
+
+
+if (
+    adminRoleElement
+) {
+
+    if (
+        isSuperAdmin
+    ) {
+
+        adminRoleElement.textContent =
+            "Super Administrator";
+
+    }
+    else {
+
+        adminRoleElement.textContent =
+            "Administrator";
+
+    }
+
+}
+
+
+// =====================================================
+// STUDENT TYPE
 // =====================================================
 
 function getStudentType(
     data
 ) {
 
-    const studentType =
-        String(
-            data?.studentType ||
-            ""
-        )
-        .toLowerCase()
-        .trim();
-
-
-    const grade =
-        String(
-            data?.grade ||
-            ""
-        )
-        .toLowerCase()
-        .trim();
-
-
-    // Grade 10
+    // -------------------------------
+    // Explicit studentType
+    // -------------------------------
 
     if (
-        studentType === "grade10" ||
-        studentType === "grade 10" ||
-        grade === "10" ||
-        grade === "grade10" ||
-        grade === "grade 10"
+        String(
+            data?.studentType || ""
+        ).toLowerCase()
+        ===
+        "grade10"
     ) {
 
         return "grade10";
@@ -383,14 +244,12 @@ function getStudentType(
     }
 
 
-    // Grade 11
-
     if (
-        studentType === "grade11" ||
-        studentType === "grade 11" ||
-        grade === "11" ||
-        grade === "grade11" ||
-        grade === "grade 11"
+        String(
+            data?.studentType || ""
+        ).toLowerCase()
+        ===
+        "grade11"
     ) {
 
         return "grade11";
@@ -398,7 +257,56 @@ function getStudentType(
     }
 
 
-    // A/L
+    if (
+        String(
+            data?.studentType || ""
+        ).toLowerCase()
+        ===
+        "al"
+    ) {
+
+        return "al";
+
+    }
+
+
+    // -------------------------------
+    // Grade field
+    // -------------------------------
+
+    const grade =
+        String(
+            data?.grade || ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+    if (
+        grade === "10" ||
+        grade === "grade 10" ||
+        grade === "grade10"
+    ) {
+
+        return "grade10";
+
+    }
+
+
+    if (
+        grade === "11" ||
+        grade === "grade 11" ||
+        grade === "grade11"
+    ) {
+
+        return "grade11";
+
+    }
+
+
+    // -------------------------------
+    // Default
+    // -------------------------------
 
     return "al";
 
@@ -406,7 +314,7 @@ function getStudentType(
 
 
 // =====================================================
-// 10. ACTIVE CHECK
+// ACTIVE STUDENT
 // =====================================================
 
 function isActive(
@@ -415,8 +323,7 @@ function isActive(
 
     const lastActive =
         Number(
-            data?.lastActiveAt ||
-            0
+            data?.lastActiveAt || 0
         );
 
 
@@ -431,7 +338,8 @@ function isActive(
 
     return (
         Date.now() -
-        lastActive <=
+        lastActive
+        <=
         ACTIVE_LIMIT
     );
 
@@ -439,15 +347,20 @@ function isActive(
 
 
 // =====================================================
-// 11. PAPER VIEWS
+// PAPER VIEW COUNT
 // =====================================================
 
 function getPaperViews(
     data
 ) {
 
-    let total = 0;
+    let count = 0;
 
+
+    /*
+     * Supports paper01
+     * through paper50.
+     */
 
     for (
         let i = 1;
@@ -456,9 +369,7 @@ function getPaperViews(
     ) {
 
         const number =
-            String(
-                i
-            )
+            String(i)
             .padStart(
                 2,
                 "0"
@@ -472,254 +383,23 @@ function getPaperViews(
 
 
         if (
-            data?.[field] === true
+            data[field] === true
         ) {
 
-            total++;
+            count++;
 
         }
 
     }
 
 
-    return total;
+    return count;
 
 }
 
 
 // =====================================================
-// 12. LOAD DASHBOARD
-// =====================================================
-
-async function loadDashboard() {
-
-    try {
-
-        const snapshot =
-            await getDocs(
-                collection(
-                    db,
-                    "students"
-                )
-            );
-
-
-        let totalStudents = 0;
-
-        let totalViewed = 0;
-
-        let activeStudents = 0;
-
-        let grade10 = 0;
-
-        let grade11 = 0;
-
-        let al = 0;
-
-
-        // =================================================
-        // LOOP STUDENTS
-        // =================================================
-
-        snapshot.forEach(
-            studentDoc => {
-
-                const data =
-                    studentDoc.data();
-
-
-                totalStudents++;
-
-
-                const type =
-                    getStudentType(
-                        data
-                    );
-
-
-                if (
-                    type === "grade10"
-                ) {
-
-                    grade10++;
-
-                }
-                else if (
-                    type === "grade11"
-                ) {
-
-                    grade11++;
-
-                }
-                else {
-
-                    al++;
-
-                }
-
-
-                totalViewed +=
-                    getPaperViews(
-                        data
-                    );
-
-
-                if (
-                    isActive(
-                        data
-                    )
-                ) {
-
-                    activeStudents++;
-
-                }
-
-            }
-        );
-
-
-        // =================================================
-        // SUMMARY
-        // =================================================
-
-        setText(
-            totalStudentsElement,
-            totalStudents
-        );
-
-
-        setText(
-            totalViewedElement,
-            totalViewed
-        );
-
-
-        setText(
-            activeStudentsElement,
-            activeStudents
-        );
-
-
-        // =================================================
-        // CHART VALUES
-        // =================================================
-
-        setText(
-            chartTotalStudentsValue,
-            totalStudents
-        );
-
-
-        setText(
-            chartPaperViewsValue,
-            totalViewed
-        );
-
-
-        setText(
-            chartGrade10Value,
-            grade10
-        );
-
-
-        setText(
-            chartGrade11Value,
-            grade11
-        );
-
-
-        setText(
-            chartALValue,
-            al
-        );
-
-
-        setText(
-            chartActiveValue,
-            activeStudents
-        );
-
-
-        // =================================================
-        // CHART BARS
-        // =================================================
-
-        setBar(
-            chartTotalStudents,
-            totalStudents,
-            totalStudents
-        );
-
-
-        setBar(
-            chartPaperViews,
-            totalViewed,
-            Math.max(
-                totalStudents,
-                totalViewed,
-                1
-            )
-        );
-
-
-        setBar(
-            chartGrade10,
-            grade10,
-            totalStudents
-        );
-
-
-        setBar(
-            chartGrade11,
-            grade11,
-            totalStudents
-        );
-
-
-        setBar(
-            chartAL,
-            al,
-            totalStudents
-        );
-
-
-        setBar(
-            chartActive,
-            activeStudents,
-            totalStudents
-        );
-
-
-        console.log(
-            "Dashboard data loaded:",
-            {
-                totalStudents,
-                grade10,
-                grade11,
-                al,
-                totalViewed,
-                activeStudents
-            }
-        );
-
-    }
-
-    catch (
-        error
-    ) {
-
-        console.error(
-            "Dashboard error:",
-            error
-        );
-
-    }
-
-}
-
-
-// =====================================================
-// 13. SET TEXT
+// SET TEXT
 // =====================================================
 
 function setText(
@@ -740,13 +420,13 @@ function setText(
 
 
 // =====================================================
-// 14. SET BAR
+// SET BAR
 // =====================================================
 
 function setBar(
     element,
     value,
-    max
+    maximum
 ) {
 
     if (
@@ -759,8 +439,7 @@ function setBar(
 
 
     if (
-        !max ||
-        max <= 0
+        maximum <= 0
     ) {
 
         element.style.width =
@@ -773,27 +452,19 @@ function setBar(
 
     let percentage =
         (
-            Number(value) /
-            Number(max)
-        ) *
-        100;
+            value /
+            maximum
+        ) * 100;
 
 
     percentage =
-        Math.min(
-            percentage,
-            100
+        Math.max(
+            0,
+            Math.min(
+                100,
+                percentage
+            )
         );
-
-
-    if (
-        value > 0 &&
-        percentage < 2
-    ) {
-
-        percentage = 2;
-
-    }
 
 
     element.style.width =
@@ -803,7 +474,765 @@ function setBar(
 
 
 // =====================================================
-// 15. LOGOUT
+// LOAD STUDENTS
+// =====================================================
+
+async function loadDashboardData() {
+
+    try {
+
+        console.log(
+            "Loading admin dashboard..."
+        );
+
+
+        const snapshot =
+            await getDocs(
+                collection(
+                    db,
+                    "students"
+                )
+            );
+
+
+        studentsData = [];
+
+
+        snapshot.forEach(
+            docSnap => {
+
+                const data =
+                    docSnap.data();
+
+
+                const type =
+                    getStudentType(
+                        data
+                    );
+
+
+                const active =
+                    isActive(
+                        data
+                    );
+
+
+                const views =
+                    getPaperViews(
+                        data
+                    );
+
+
+                studentsData.push({
+
+                    id:
+                        docSnap.id,
+
+                    data:
+                        data,
+
+                    type:
+                        type,
+
+                    active:
+                        active,
+
+                    views:
+                        views
+
+                });
+
+            }
+        );
+
+
+        updateDashboard();
+
+
+        console.log(
+            "Dashboard loaded:",
+            studentsData.length
+        );
+
+    }
+
+    catch (
+        error
+    ) {
+
+        console.error(
+            "Dashboard load error:",
+            error
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// UPDATE DASHBOARD
+// =====================================================
+
+function updateDashboard() {
+
+    const total =
+        studentsData.length;
+
+
+    const grade10 =
+        studentsData.filter(
+            student =>
+                student.type ===
+                "grade10"
+        ).length;
+
+
+    const grade11 =
+        studentsData.filter(
+            student =>
+                student.type ===
+                "grade11"
+        ).length;
+
+
+    const al =
+        studentsData.filter(
+            student =>
+                student.type ===
+                "al"
+        ).length;
+
+
+    const active =
+        studentsData.filter(
+            student =>
+                student.active
+        ).length;
+
+
+    const paperViews =
+        studentsData.reduce(
+            (
+                total,
+                student
+            ) =>
+                total +
+                student.views,
+            0
+        );
+
+
+    // =================================================
+    // SUMMARY CARDS
+    // =================================================
+
+    setText(
+        totalStudents,
+        total
+    );
+
+
+    setText(
+        totalViewed,
+        paperViews
+    );
+
+
+    setText(
+        activeStudents,
+        active
+    );
+
+
+    // =================================================
+    // CHART VALUES
+    // =================================================
+
+    setText(
+        chartTotalStudentsValue,
+        total
+    );
+
+
+    setText(
+        chartPaperViewsValue,
+        paperViews
+    );
+
+
+    setText(
+        chartGrade10Value,
+        grade10
+    );
+
+
+    setText(
+        chartGrade11Value,
+        grade11
+    );
+
+
+    setText(
+        chartALValue,
+        al
+    );
+
+
+    setText(
+        chartActiveValue,
+        active
+    );
+
+
+    // =================================================
+    // CHART BARS
+    // =================================================
+
+    const maximum =
+        Math.max(
+            total,
+            paperViews,
+            grade10,
+            grade11,
+            al,
+            active,
+            1
+        );
+
+
+    setBar(
+        chartTotalStudents,
+        total,
+        maximum
+    );
+
+
+    setBar(
+        chartPaperViews,
+        paperViews,
+        maximum
+    );
+
+
+    setBar(
+        chartGrade10,
+        grade10,
+        maximum
+    );
+
+
+    setBar(
+        chartGrade11,
+        grade11,
+        maximum
+    );
+
+
+    setBar(
+        chartAL,
+        al,
+        maximum
+    );
+
+
+    setBar(
+        chartActive,
+        active,
+        maximum
+    );
+
+}
+
+
+// =====================================================
+// ACCESS DENIED POPUP
+// =====================================================
+
+function showAccessDenied(
+    pageName
+) {
+
+    const oldMessage =
+        document.getElementById(
+            "accessDeniedMessage"
+        );
+
+
+    if (
+        oldMessage
+    ) {
+
+        oldMessage.remove();
+
+    }
+
+
+    const overlay =
+        document.createElement(
+            "div"
+        );
+
+
+    overlay.id =
+        "accessDeniedMessage";
+
+
+    overlay.innerHTML = `
+
+        <div class="access-denied-box">
+
+            <div class="access-denied-icon">
+                🔒
+            </div>
+
+            <div class="access-denied-content">
+
+                <strong>
+                    Access Restricted
+                </strong>
+
+                <p>
+                    You don't have permission
+                    to access
+                    <b>${escapeHTML(
+                        pageName
+                    )}</b>.
+                </p>
+
+            </div>
+
+            <button
+                type="button"
+                class="access-denied-close"
+                aria-label="Close"
+            >
+                ×
+            </button>
+
+        </div>
+
+    `;
+
+
+    document.body.appendChild(
+        overlay
+    );
+
+
+    const closeButton =
+        overlay.querySelector(
+            ".access-denied-close"
+        );
+
+
+    if (
+        closeButton
+    ) {
+
+        closeButton.addEventListener(
+            "click",
+            () => {
+
+                overlay.remove();
+
+            }
+        );
+
+    }
+
+
+    setTimeout(
+        () => {
+
+            if (
+                overlay &&
+                document.body.contains(
+                    overlay
+                )
+            ) {
+
+                overlay.remove();
+
+            }
+
+        },
+        3500
+    );
+
+}
+
+
+// =====================================================
+// ESCAPE HTML
+// =====================================================
+
+function escapeHTML(
+    value
+) {
+
+    return String(
+        value
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
+
+
+// =====================================================
+// PROTECTED PAGE DETECTION
+// =====================================================
+
+function getProtectedPageName(
+    link
+) {
+
+    const href =
+        String(
+            link.getAttribute(
+                "href"
+            ) || ""
+        )
+        .toLowerCase();
+
+
+    const text =
+        String(
+            link.textContent || ""
+        )
+        .toLowerCase();
+
+
+    if (
+        href.includes(
+            "paper-management"
+        ) ||
+        href.includes(
+            "paper-settings"
+        ) ||
+        text.includes(
+            "paper management"
+        ) ||
+        text.includes(
+            "papers"
+        )
+    ) {
+
+        return "Paper Management";
+
+    }
+
+
+    if (
+        href.includes(
+            "import-students"
+        ) ||
+        text.includes(
+            "import students"
+        )
+    ) {
+
+        return "Import Students";
+
+    }
+
+
+    if (
+        href.includes(
+            "reports"
+        ) ||
+        text.includes(
+            "reports"
+        )
+    ) {
+
+        return "Reports";
+
+    }
+
+
+    if (
+        href.includes(
+            "statistics"
+        ) ||
+        text.includes(
+            "statistics"
+        )
+    ) {
+
+        return "Statistics";
+
+    }
+
+
+    if (
+        href.includes(
+            "settings"
+        ) ||
+        text.includes(
+            "settings"
+        )
+    ) {
+
+        return "Settings";
+
+    }
+
+
+    return null;
+
+}
+
+
+// =====================================================
+// ROLE BASED NAVIGATION
+// =====================================================
+
+function setupRoleProtection() {
+
+    const links =
+        document.querySelectorAll(
+            "a"
+        );
+
+
+    links.forEach(
+        link => {
+
+            const pageName =
+                getProtectedPageName(
+                    link
+                );
+
+
+            if (
+                !pageName
+            ) {
+
+                return;
+
+            }
+
+
+            // -----------------------------------------
+            // SUPER ADMIN
+            // -----------------------------------------
+
+            if (
+                isSuperAdmin
+            ) {
+
+                link.classList.remove(
+                    "locked-menu"
+                );
+
+
+                link.removeAttribute(
+                    "aria-disabled"
+                );
+
+
+                return;
+
+            }
+
+
+            // -----------------------------------------
+            // NORMAL ADMIN
+            // -----------------------------------------
+
+            link.classList.add(
+                "locked-menu"
+            );
+
+
+            link.setAttribute(
+                "aria-disabled",
+                "true"
+            );
+
+
+            link.setAttribute(
+                "title",
+                "Access restricted"
+            );
+
+
+            link.addEventListener(
+                "click",
+                event => {
+
+                    event.preventDefault();
+
+                    event.stopPropagation();
+
+
+                    showAccessDenied(
+                        pageName
+                    );
+
+                }
+            );
+
+        }
+    );
+
+
+    // =================================================
+    // ALSO PROTECT ELEMENTS WITH
+    // .superadmin-only
+    // =================================================
+
+    const protectedElements =
+        document.querySelectorAll(
+            ".superadmin-only"
+        );
+
+
+    protectedElements.forEach(
+        element => {
+
+            if (
+                isSuperAdmin
+            ) {
+
+                element.classList.remove(
+                    "locked-menu"
+                );
+
+                return;
+
+            }
+
+
+            element.classList.add(
+                "locked-menu"
+            );
+
+
+            element.addEventListener(
+                "click",
+                event => {
+
+                    event.preventDefault();
+
+                    event.stopPropagation();
+
+
+                    const name =
+                        element.textContent
+                            .trim()
+                            .replace(
+                                /\s+/g,
+                                " "
+                            );
+
+
+                    showAccessDenied(
+                        name || "this section"
+                    );
+
+                }
+            );
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// PROTECT DIRECT DASHBOARD LINKS
+// =====================================================
+//
+// This catches management cards too.
+// Example:
+// <a href="reports.html">
+// <a href="import-students.html">
+// <a href="paper-management.html">
+//
+// =====================================================
+
+function protectAllDashboardLinks() {
+
+    if (
+        isSuperAdmin
+    ) {
+
+        return;
+
+    }
+
+
+    const links =
+        document.querySelectorAll(
+            'a[href]'
+        );
+
+
+    links.forEach(
+        link => {
+
+            const pageName =
+                getProtectedPageName(
+                    link
+                );
+
+
+            if (
+                !pageName
+            ) {
+
+                return;
+
+            }
+
+
+            link.classList.add(
+                "locked-menu"
+            );
+
+
+            link.addEventListener(
+                "click",
+                event => {
+
+                    event.preventDefault();
+
+                    showAccessDenied(
+                        pageName
+                    );
+
+                }
+            );
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// LOGOUT
 // =====================================================
 
 if (
@@ -814,28 +1243,33 @@ if (
         "click",
         () => {
 
+            const confirmLogout =
+                confirm(
+                    "Are you sure you want to sign out?"
+                );
+
+
+            if (
+                !confirmLogout
+            ) {
+
+                return;
+
+            }
+
+
             sessionStorage.removeItem(
                 "adminLoggedIn"
             );
 
-            sessionStorage.removeItem(
-                "adminUsername"
-            );
 
             sessionStorage.removeItem(
                 "adminRole"
             );
 
-            sessionStorage.removeItem(
-                "username"
-            );
 
             sessionStorage.removeItem(
-                "role"
-            );
-
-            sessionStorage.removeItem(
-                "userRole"
+                "adminUsername"
             );
 
 
@@ -850,54 +1284,59 @@ if (
 
 
 // =====================================================
-// 16. INITIAL LOAD
+// INITIALIZE
 // =====================================================
 
-loadDashboard();
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        setupRoleProtection();
+
+        protectAllDashboardLinks();
+
+        loadDashboardData();
+
+    }
+);
 
 
 // =====================================================
-// 17. AUTO REFRESH
+// AUTO REFRESH
 // =====================================================
 
 setInterval(
-    loadDashboard,
+    () => {
+
+        loadDashboardData();
+
+    },
     30000
 );
 
 
 // =====================================================
-// 18. DEBUG
+// CONSOLE
 // =====================================================
 
 console.log(
-    "================================="
+    "===================================="
 );
 
 console.log(
-    "ADMIN DASHBOARD READY"
+    "ADMIN DASHBOARD"
 );
 
 console.log(
-    "Username:",
-    adminUsername
-);
-
-console.log(
-    "Raw role:",
-    rawRole
-);
-
-console.log(
-    "Normalized role:",
+    "Role:",
     adminRole
 );
 
 console.log(
-    "Superadmin:",
+    "Super Admin:",
     isSuperAdmin
 );
 
 console.log(
-    "================================="
+    "===================================="
 );
