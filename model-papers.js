@@ -32,7 +32,9 @@ const params =
 
 const studentId =
     params.get("id") ||
-    sessionStorage.getItem("studentId");
+    sessionStorage.getItem(
+        "studentId"
+    );
 
 
 if (
@@ -61,9 +63,11 @@ async function loadModelPapers() {
             "Student ID not found. Please login again."
         );
 
+
         window.location.replace(
             "index.html"
         );
+
 
         return;
 
@@ -71,6 +75,10 @@ async function loadModelPapers() {
 
 
     try {
+
+        // =====================================
+        // STUDENT
+        // =====================================
 
         const studentRef =
             doc(
@@ -94,9 +102,11 @@ async function loadModelPapers() {
                 "Student account not found."
             );
 
+
             window.location.replace(
                 "index.html"
             );
+
 
             return;
 
@@ -118,7 +128,9 @@ async function loadModelPapers() {
         ) {
 
             const number =
-                String(i).padStart(
+                String(
+                    i
+                ).padStart(
                     2,
                     "0"
                 );
@@ -161,6 +173,7 @@ async function loadModelPapers() {
 
                 btn.style.display =
                     "none";
+
 
                 continue;
 
@@ -236,7 +249,7 @@ async function loadModelPapers() {
     ) {
 
         console.error(
-            "Model Papers Error:",
+            "A/L Model Papers Error:",
             error
         );
 
@@ -253,12 +266,6 @@ async function loadModelPapers() {
 // =========================================
 // OPEN PAPER
 // =========================================
-//
-// IMPORTANT:
-// Do NOT mark Viewed here.
-//
-// viewer.js will mark it as viewed.
-//
 
 function openPaper(
     paperNumber
@@ -272,9 +279,11 @@ function openPaper(
             "Student ID not found. Please login again."
         );
 
+
         window.location.replace(
             "index.html"
         );
+
 
         return;
 
@@ -295,15 +304,34 @@ function openPaper(
         number;
 
 
-    window.location.replace(
-        "viewer.html?paper=" +
+    // =====================================
+    // A/L MODEL PAPER
+    // =====================================
+    //
+    // viewer.js will save:
+    //
+    // paperViews
+    //   al
+    //     model
+    //       paper01: true
+    //
+    // =====================================
+
+    const url =
+        "viewer.html?" +
+        "paper=" +
         encodeURIComponent(
             paper
         ) +
         "&id=" +
         encodeURIComponent(
             studentId
-        )
+        ) +
+        "&type=al-model";
+
+
+    window.location.replace(
+        url
     );
 
 }
