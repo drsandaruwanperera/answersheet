@@ -1,47 +1,54 @@
-// ==========================
-// Get URL Parameters
-// ==========================
+// =========================================
+// GET URL PARAMETERS
+// =========================================
 
 const params =
     new URLSearchParams(
         window.location.search
     );
 
+
 const term =
     params.get("term");
+
 
 const paper =
     params.get("paper");
 
 
-// ==========================
-// Elements
-// ==========================
+// =========================================
+// ELEMENTS
+// =========================================
 
 const paperTitle =
     document.getElementById(
         "paperTitle"
     );
 
+
 const paperSubtitle =
     document.getElementById(
         "paperSubtitle"
     );
+
 
 const mcqBtn =
     document.getElementById(
         "mcqBtn"
     );
 
+
 const mcqAnswerBtn =
     document.getElementById(
         "mcqAnswerBtn"
     );
 
+
 const questionBtn =
     document.getElementById(
         "questionBtn"
     );
+
 
 const answerBtn =
     document.getElementById(
@@ -49,18 +56,53 @@ const answerBtn =
     );
 
 
-// ==========================
-// Validate
-// ==========================
+// =========================================
+// TERM NAMES
+// =========================================
+
+const termNames = {
+
+    "1":
+        "1st Term",
+
+    "2":
+        "2nd Term",
+
+    "3":
+        "3rd Term"
+
+};
+
+
+// =========================================
+// VALIDATION
+// =========================================
+
+const validTerm =
+    [
+        "1",
+        "2",
+        "3"
+    ].includes(
+        term
+    );
+
+
+const validPaper =
+    /^\d{2}$/.test(
+        paper || ""
+    );
+
 
 if (
-    !["1", "2", "3"].includes(term) ||
-    !/^\d{2}$/.test(paper)
+    !validTerm ||
+    !validPaper
 ) {
 
     alert(
         "Invalid Model Paper."
     );
+
 
     window.location.replace(
         "grade10-model-papers.html"
@@ -69,27 +111,23 @@ if (
 }
 
 
-// ==========================
-// Term Names
-// ==========================
-
-const termNames = {
-
-    "1": "1st Term",
-    "2": "2nd Term",
-    "3": "3rd Term"
-
-};
+// =========================================
+// TERM NAME
+// =========================================
 
 const termName =
-    termNames[term];
+    termNames[
+        term
+    ];
 
 
-// ==========================
-// Page Title
-// ==========================
+// =========================================
+// PAGE TITLE
+// =========================================
 
-if (paperTitle) {
+if (
+    paperTitle
+) {
 
     paperTitle.textContent =
         "📘 Model Paper - " +
@@ -97,7 +135,10 @@ if (paperTitle) {
 
 }
 
-if (paperSubtitle) {
+
+if (
+    paperSubtitle
+) {
 
     paperSubtitle.textContent =
         "Grade 10 • " +
@@ -106,19 +147,21 @@ if (paperSubtitle) {
 }
 
 
-// ==========================
-// PDF Base Path
-// ==========================
+// =========================================
+// PDF BASE PATH
+// =========================================
 
 const basePath =
     `./papers/grade10/term${term}/paper${paper}`;
 
 
-// ==========================
-// Part A - MCQ
-// ==========================
+// =========================================
+// MCQ PDF
+// =========================================
 
-if (mcqBtn) {
+if (
+    mcqBtn
+) {
 
     mcqBtn.addEventListener(
         "click",
@@ -126,6 +169,7 @@ if (mcqBtn) {
 
             const pdf =
                 `${basePath}/mcq.pdf`;
+
 
             window.open(
                 pdf,
@@ -138,11 +182,13 @@ if (mcqBtn) {
 }
 
 
-// ==========================
-// Part A - MCQ Answer
-// ==========================
+// =========================================
+// MCQ ANSWER
+// =========================================
 
-if (mcqAnswerBtn) {
+if (
+    mcqAnswerBtn
+) {
 
     mcqAnswerBtn.addEventListener(
         "click",
@@ -154,6 +200,7 @@ if (mcqAnswerBtn) {
                 `&paper=${encodeURIComponent(paper)}` +
                 `&type=mcq`;
 
+
             window.location.assign(
                 url
             );
@@ -164,11 +211,13 @@ if (mcqAnswerBtn) {
 }
 
 
-// ==========================
-// Part B - Question Paper
-// ==========================
+// =========================================
+// QUESTION PAPER
+// =========================================
 
-if (questionBtn) {
+if (
+    questionBtn
+) {
 
     questionBtn.addEventListener(
         "click",
@@ -176,6 +225,7 @@ if (questionBtn) {
 
             const pdf =
                 `${basePath}/question.pdf`;
+
 
             window.open(
                 pdf,
@@ -188,11 +238,13 @@ if (questionBtn) {
 }
 
 
-// ==========================
-// Part B - Answer
-// ==========================
+// =========================================
+// ANSWER SCHEME
+// =========================================
 
-if (answerBtn) {
+if (
+    answerBtn
+) {
 
     answerBtn.addEventListener(
         "click",
@@ -204,6 +256,7 @@ if (answerBtn) {
                 `&paper=${encodeURIComponent(paper)}` +
                 `&type=answer`;
 
+
             window.location.assign(
                 url
             );
@@ -214,11 +267,23 @@ if (answerBtn) {
 }
 
 
+// =========================================
+// CONSOLE
+// =========================================
+
 console.log(
     "✅ Grade 10 Model Paper Loaded",
     {
+        grade:
+            "grade10",
+
+        type:
+            "model",
+
         term,
+
         paper,
+
         basePath
     }
 );
