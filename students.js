@@ -627,216 +627,53 @@ function renderTable(list) {
 // FILTER TABLE
 // =====================================================
 
-function applyFilters() {
+// ==================================================
+// FAST STUDENT SEARCH
+// ==================================================
 
-    const keyword =
-        searchInput?.value
-            .trim()
-            .toLowerCase() || "";
+let searchTimer = null;
 
+search.addEventListener(
+    "input",
+    () => {
 
-    const selectedType =
-        typeFilter?.value || "all";
+        clearTimeout(searchTimer);
 
+        searchTimer = setTimeout(
+            () => {
 
-    const selectedStatus =
-        statusFilter?.value || "all";
+                applyFilters();
 
-
-    const filtered =
-        allStudents.filter(student => {
-
-            const id =
-                String(
-                    student.id
-                ).toLowerCase();
-
-
-            const type =
-                getStudentType(
-                    student.data
-                );
-
-
-            const active =
-                isStudentActive(
-                    student.data
-                );
-
-
-            // Search
-
-            if (
-                keyword &&
-                !id.includes(keyword)
-            ) {
-                return false;
-            }
-
-
-            // Grade
-
-            if (
-                selectedType !== "all" &&
-                type !== selectedType
-            ) {
-                return false;
-            }
-
-
-            // Status
-
-            if (
-                selectedStatus === "active" &&
-                !active
-            ) {
-                return false;
-            }
-
-
-            if (
-                selectedStatus === "offline" &&
-                active
-            ) {
-                return false;
-            }
-
-
-            return true;
-
-        });
-
-
-    renderTable(
-        filtered
-    );
-}
-
-
-// =====================================================
-// LOAD STUDENTS
-// =====================================================
-
-async function loadStudents() {
-
-    try {
-
-        if (table) {
-
-            table.innerHTML = `
-
-                <tr>
-
-                    <td
-                        colspan="6"
-                        style="
-                            text-align:center;
-                            padding:45px;
-                            color:#64748b;
-                        "
-                    >
-
-                        Loading students...
-
-                    </td>
-
-                </tr>
-
-            `;
-        }
-
-
-        const snapshot =
-            await getDocs(
-                collection(
-                    db,
-                    "students"
-                )
-            );
-
-
-        allStudents = [];
-
-
-        snapshot.forEach(docSnap => {
-
-            const data =
-                docSnap.data();
-
-
-            allStudents.push({
-
-                id:
-                    docSnap.id,
-
-                data:
-                    data,
-
-                viewed:
-                    getViewedCount(
-                        data
-                    )
-
-            });
-
-        });
-
-
-        // Sort by student ID
-
-        allStudents.sort(
-            (a, b) =>
-                String(a.id)
-                    .localeCompare(
-                        String(b.id),
-                        undefined,
-                        {
-                            numeric: true
-                        }
-                    )
+            },
+            100
         );
 
-
-        renderSummary();
-
-        applyFilters();
-
-
     }
-    catch (error) {
+);
 
-        console.error(
-            "Load Students Error:",
-            error
+
+// Press ENTER = Open student directly
+search.addEventListener(
+    "keydown",
+    async event => {
+
+        if (event.key !== "Enter") {
+            return;
+        }
+
+        const studentId =
+            search.value.trim();
+
+        if (!studentId) {
+            return;
+        }
+
+        await openEditStudent(
+            studentId
         );
 
-
-        if (table) {
-
-            table.innerHTML = `
-
-                <tr>
-
-                    <td
-                        colspan="6"
-                        style="
-                            text-align:center;
-                            padding:45px;
-                            color:#dc2626;
-                        "
-                    >
-
-                        Failed to load students.
-
-                    </td>
-
-                </tr>
-
-            `;
-        }
     }
-}
-
+);
 
 // =====================================================
 // SEARCH EVENT
