@@ -1315,126 +1315,116 @@ if (cancelAdd) {
 // OPEN EDIT MODAL
 // =====================================================
 
+// ==================================================
+// OPEN EDIT STUDENT - FAST DIRECT LOOKUP
+// ==================================================
+
 async function openEditStudent(studentId) {
-
-    currentStudent =
-        studentId;
-
 
     try {
 
-        const snap =
-            await getDoc(
+        studentId = String(studentId).trim();
+
+        if (!studentId) {
+            alert("Please enter Student ID.");
+            return;
+        }
+
+        // First check already-loaded students
+        let student =
+            allStudents.find(
+                item => item.id === studentId
+            );
+
+        let studentData;
+
+        // If not already loaded, get ONLY this student
+        if (!student) {
+
+            const studentRef =
                 doc(
                     db,
                     "students",
                     studentId
-                )
-            );
+                );
 
+            const snapshot =
+                await getDoc(studentRef);
 
-        if (!snap.exists()) {
+            if (!snapshot.exists()) {
 
-            alert(
-                "Student not found."
-            );
+                alert(
+                    "Student ID not found: " +
+                    studentId
+                );
 
-            currentStudent = "";
+                return;
+            }
 
-            return;
-        }
+            studentData =
+                snapshot.data();
 
+        } else {
 
-        const data =
-            snap.data();
-
-
-        // Student ID
-
-        if (editStudentId) {
-
-            editStudentId.value =
-                studentId;
+            studentData =
+                student.data;
 
         }
 
+        currentStudent = studentId;
 
-        // Password
+        editStudentId.value =
+            studentId;
 
-        if (editPassword) {
+        editPassword.value =
+            studentData?.password || "";
 
-            editPassword.value =
-                data.password || "";
-
-        }
-
-
-        // Must change
-
-        if (editMustChange) {
-
-            editMustChange.checked =
-                data.mustChangePassword === true;
-
-        }
+        editMustChange.checked =
+            studentData?.mustChangePassword === true;
 
 
         // Paper permissions
-
         for (
             let i = 1;
-            i <= PAPER_COUNT;
+            i <= 10;
             i++
         ) {
 
             const field =
                 "paper" +
-                String(i)
-                    .padStart(
-                        2,
-                        "0"
-                    );
-
+                String(i).padStart(2, "0");
 
             const checkbox =
-                document.getElementById(
-                    field
-                );
-
+                document.getElementById(field);
 
             if (checkbox) {
 
                 checkbox.checked =
-                    data[field] === true;
+                    studentData?.[field] === true;
 
             }
-
         }
 
 
-        if (editModal) {
-
-            editModal.style.display =
-                "flex";
-
-        }
+        editModal.style.display = "flex";
 
     }
+
     catch (error) {
 
         console.error(
-            "Open Edit Error:",
+            "Fast edit error:",
             error
         );
 
-
         alert(
-            "Failed to load student."
+            "Failed to open student.\n\n" +
+            error.message
         );
 
     }
-}
 
+}
 
 // =====================================================
 // EDIT BUTTON EVENT
