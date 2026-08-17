@@ -67,6 +67,13 @@ const paperPattern =
 
 
 // =========================================
+// TOTAL PAPERS
+// =========================================
+
+const DEFAULT_PAGES = 10;
+
+
+// =========================================
 // GET TRACKING TYPE
 // =========================================
 
@@ -131,6 +138,14 @@ function getTrackingInfo() {
 // =========================================
 // SAVE PAPER VIEW
 // =========================================
+//
+// IMPORTANT:
+// This function is NOT awaited when the
+// paper is opened.
+//
+// Therefore Firebase saving will happen
+// in the background while the paper loads.
+//
 
 async function savePaperView(
     studentRef
@@ -251,6 +266,258 @@ async function savePaperView(
 
 
 // =========================================
+// CREATE PAGE
+// =========================================
+
+function createPaperPage(
+    pageNumber
+) {
+
+    const page =
+        document.createElement(
+            "div"
+        );
+
+
+    page.className =
+        "page";
+
+
+    // =====================================
+    // IMAGE
+    // =====================================
+
+    const img =
+        document.createElement(
+            "img"
+        );
+
+
+    const pageNumberText =
+        String(
+            pageNumber
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    img.src =
+        `papers/${paper}/${paper}_Page_${pageNumberText}.jpg`;
+
+
+    img.alt =
+        `${paper} Page ${pageNumber}`;
+
+
+    // =====================================
+    // PERFORMANCE
+    // =====================================
+
+    img.decoding =
+        "async";
+
+
+    /*
+        First 2 pages load immediately.
+
+        Remaining pages use browser lazy
+        loading so the browser does not
+        aggressively load everything at once.
+    */
+
+    if (
+        pageNumber > 2
+    ) {
+
+        img.loading =
+            "lazy";
+
+    }
+    else {
+
+        img.loading =
+            "eager";
+
+    }
+
+
+    img.draggable =
+        false;
+
+
+    // =====================================
+    // IMAGE ERROR
+    // =====================================
+
+    img.onerror =
+        () => {
+
+            console.error(
+                "Image not found:",
+                img.src
+            );
+
+
+            img.style.display =
+                "none";
+
+
+            const errorMessage =
+                document.createElement(
+                    "div"
+                );
+
+
+            errorMessage.className =
+                "page-error";
+
+
+            errorMessage.textContent =
+                `Page ${pageNumber} could not be loaded.`;
+
+
+            page.appendChild(
+                errorMessage
+            );
+
+        };
+
+
+    // =====================================
+    // WATERMARK
+    // =====================================
+
+    const watermark =
+        document.createElement(
+            "div"
+        );
+
+
+    watermark.className =
+        "watermark";
+
+
+    /*
+        Create watermark only once per page.
+        This keeps the existing design while
+        avoiding unnecessary work.
+    */
+
+    const fragment =
+        document.createDocumentFragment();
+
+
+    for (
+        let w = 0;
+        w < 20;
+        w++
+    ) {
+
+        const mark =
+            document.createElement(
+                "span"
+            );
+
+
+        mark.textContent =
+            studentId;
+
+
+        fragment.appendChild(
+            mark
+        );
+
+    }
+
+
+    watermark.appendChild(
+        fragment
+    );
+
+
+    // =====================================
+    // ADD TO PAGE
+    // =====================================
+
+    page.appendChild(
+        img
+    );
+
+
+    page.appendChild(
+        watermark
+    );
+
+
+    return page;
+
+}
+
+
+// =========================================
+// CREATE ALL PAPER PAGES
+// =========================================
+
+function renderPaperPages(
+    totalPages
+) {
+
+    if (
+        !viewer
+    ) {
+
+        return;
+
+    }
+
+
+    // =====================================
+    // CLEAR VIEWER
+    // =====================================
+
+    viewer.replaceChildren();
+
+
+    // =====================================
+    // CREATE PAGES
+    // =====================================
+
+    const fragment =
+        document.createDocumentFragment();
+
+
+    for (
+        let i = 1;
+        i <= totalPages;
+        i++
+    ) {
+
+        const page =
+            createPaperPage(
+                i
+            );
+
+
+        fragment.appendChild(
+            page
+        );
+
+    }
+
+
+    // =====================================
+    // ONE DOM UPDATE
+    // =====================================
+
+    viewer.appendChild(
+        fragment
+    );
+
+}
+
+
+// =========================================
 // LOAD PAPER
 // =========================================
 
@@ -356,13 +623,9 @@ async function loadPaper() {
         // PERMISSION
         // =================================
 
-        const permissionField =
-            paper;
-
-
         if (
             studentData[
-                permissionField
+                paper
             ] !== true
         ) {
 
@@ -435,7 +698,8 @@ async function loadPaper() {
             totalPages <= 0
         ) {
 
-            totalPages = 10;
+            totalPages =
+                DEFAULT_PAGES;
 
         }
 
@@ -491,217 +755,80 @@ async function loadPaper() {
 
 
         // =================================
-        // UPDATE EXISTING VIEWED FIELD
+        // IMPORTANT:
+        // RENDER PAPER FIRST
         // =================================
 
-        await updateDoc(
+        renderPaperPages(
+            totalPages
+        );
+
+
+        // =================================
+        // SAVE VIEWED STATUS IN BACKGROUND
+        // =================================
+        //
+        // DO NOT await.
+        //
+        // Student can see the paper while
+        // Firebase saves the view.
+        //
+
+        updateDoc(
             studentRef,
             {
                 [viewedField]:
                     true
             }
-        );
+        )
+        .then(() => {
 
-
-        console.log(
-            "✅ Existing viewed field updated:",
-            viewedField
-        );
-
-
-        // =================================
-        // SAVE CATEGORY TRACKING
-        // =================================
-
-        try {
-
-            await savePaperView(
-                studentRef
+            console.log(
+                "✅ Viewed status saved:",
+                viewedField
             );
 
-        }
+        })
+        .catch(
+            error => {
 
-        catch (
-            trackingError
-        ) {
-
-            console.error(
-                "Category tracking failed:",
-                trackingError
-            );
-
-        }
-
-
-        // =================================
-        // CLEAR VIEWER
-        // =================================
-
-        if (
-            viewer
-        ) {
-
-            viewer.innerHTML =
-                "";
-
-        }
-
-
-        // =================================
-        // CREATE PAPER PAGES
-        // =================================
-
-        for (
-            let i = 1;
-            i <= totalPages;
-            i++
-        ) {
-
-            const pageNumber =
-                String(
-                    i
-                ).padStart(
-                    2,
-                    "0"
-                );
-
-
-            // =================================
-            // PAGE
-            // =================================
-
-            const page =
-                document.createElement(
-                    "div"
-                );
-
-
-            page.className =
-                "page";
-
-
-            // =================================
-            // IMAGE
-            // =================================
-
-            const img =
-                document.createElement(
-                    "img"
-                );
-
-
-            img.src =
-                `papers/${paper}/${paper}_Page_${pageNumber}.jpg`;
-
-
-            img.alt =
-                `${paper} Page ${i}`;
-
-
-            img.draggable =
-                false;
-
-
-            // =================================
-            // IMAGE ERROR
-            // =================================
-
-            img.onerror =
-                () => {
-
-                    console.error(
-                        "Image not found:",
-                        img.src
-                    );
-
-
-                    img.style.display =
-                        "none";
-
-
-                    const errorMessage =
-                        document.createElement(
-                            "div"
-                        );
-
-
-                    errorMessage.className =
-                        "page-error";
-
-
-                    errorMessage.textContent =
-                        `Page ${i} could not be loaded.`;
-
-
-                    page.appendChild(
-                        errorMessage
-                    );
-
-                };
-
-
-            // =================================
-            // WATERMARK
-            // =================================
-
-            const watermark =
-                document.createElement(
-                    "div"
-                );
-
-
-            watermark.className =
-                "watermark";
-
-
-            for (
-                let w = 0;
-                w < 20;
-                w++
-            ) {
-
-                const mark =
-                    document.createElement(
-                        "span"
-                    );
-
-
-                mark.textContent =
-                    studentId;
-
-
-                watermark.appendChild(
-                    mark
+                console.error(
+                    "Viewed status save failed:",
+                    error
                 );
 
             }
+        );
 
 
-            // =================================
-            // ADD PAGE ELEMENTS
-            // =================================
+        // =================================
+        // CATEGORY TRACKING IN BACKGROUND
+        // =================================
+        //
+        // DO NOT await.
+        //
 
-            page.appendChild(
-                img
+        savePaperView(
+            studentRef
+        )
+        .then(() => {
+
+            console.log(
+                "✅ Category tracking saved"
             );
 
+        })
+        .catch(
+            error => {
 
-            page.appendChild(
-                watermark
-            );
-
-
-            if (
-                viewer
-            ) {
-
-                viewer.appendChild(
-                    page
+                console.error(
+                    "Category tracking failed:",
+                    error
                 );
 
             }
+        );
 
-        }
 
     }
 
@@ -715,9 +842,24 @@ async function loadPaper() {
         );
 
 
-        alert(
-            "Failed to load paper. Please try again."
-        );
+        if (
+            viewer
+        ) {
+
+            viewer.innerHTML = `
+                <div
+                    style="
+                        padding:40px;
+                        text-align:center;
+                        color:#64748b;
+                    "
+                >
+                    Failed to load paper.
+                    Please try again.
+                </div>
+            `;
+
+        }
 
     }
 
@@ -794,6 +936,10 @@ document.addEventListener(
 document.addEventListener(
     "keydown",
     event => {
+
+        // =================================
+        // CTRL / CMD
+        // =================================
 
         if (
             event.ctrlKey ||
