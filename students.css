@@ -432,7 +432,7 @@ body {
 .main > header p {
     margin-top: 7px;
 
-    color: var(--muted);
+    color: #64748b;
 
     font-size: 14px;
 }
