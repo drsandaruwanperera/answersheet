@@ -416,13 +416,17 @@ body {
 }
 
 .main > header h1 {
-    font-size: 38px;
+    margin: 0;
 
-    line-height: 1.1;
+    font-size: 28px;
+
+    line-height: 1.2;
 
     font-weight: 800;
 
-    letter-spacing: -1px;
+    color: #111827;
+
+    letter-spacing: 0;
 }
 
 .main > header p {
