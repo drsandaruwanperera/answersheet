@@ -375,11 +375,13 @@ body {
 .main {
     margin-left: 260px;
 
+    width: calc(100% - 260px);
+
     min-height: 100vh;
 
     padding: 32px 38px 50px;
 
-    max-width: 1800px;
+    max-width: none;
 }
 
 
