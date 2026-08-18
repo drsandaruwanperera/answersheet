@@ -63,7 +63,7 @@ body {
     top: 0;
     left: 0;
 
-    width: 258px;
+    width: 260px;
     height: 100vh;
 
     padding: 24px 16px;
@@ -373,7 +373,7 @@ body {
 ===================================================== */
 
 .main {
-    margin-left: 258px;
+    margin-left: 260px;
 
     min-height: 100vh;
 
