@@ -18,11 +18,12 @@ if (
         "index.html"
     );
 
+    throw new Error("Not logged in");
 }
 
 
 // =========================================
-// GET URL PARAMETERS
+// URL PARAMETERS
 // =========================================
 
 const params =
@@ -37,9 +38,7 @@ const paper =
 
 const studentId =
     params.get("id") ||
-    sessionStorage.getItem(
-        "studentId"
-    );
+    sessionStorage.getItem("studentId");
 
 
 const paperType =
@@ -59,7 +58,7 @@ const viewer =
 
 
 // =========================================
-// VALID PAPER FORMAT
+// PAPER FORMAT
 // =========================================
 
 const paperPattern =
@@ -67,21 +66,10 @@ const paperPattern =
 
 
 // =========================================
-// TOTAL PAPERS
-// =========================================
-
-const DEFAULT_PAGES = 10;
-
-
-// =========================================
-// GET TRACKING TYPE
+// TRACKING
 // =========================================
 
 function getTrackingInfo() {
-
-    // =====================================
-    // GRADE 10 MODEL
-    // =====================================
 
     if (
         paperType ===
@@ -96,10 +84,6 @@ function getTrackingInfo() {
     }
 
 
-    // =====================================
-    // GRADE 11 MODEL
-    // =====================================
-
     if (
         paperType ===
         "grade11-model"
@@ -112,10 +96,6 @@ function getTrackingInfo() {
 
     }
 
-
-    // =====================================
-    // A/L MODEL
-    // =====================================
 
     if (
         paperType ===
@@ -136,16 +116,8 @@ function getTrackingInfo() {
 
 
 // =========================================
-// SAVE PAPER VIEW
+// SAVE CATEGORY VIEW
 // =========================================
-//
-// IMPORTANT:
-// This function is NOT awaited when the
-// paper is opened.
-//
-// Therefore Firebase saving will happen
-// in the background while the paper loads.
-//
 
 async function savePaperView(
     studentRef
@@ -155,39 +127,26 @@ async function savePaperView(
         getTrackingInfo();
 
 
-    if (
-        !tracking
-    ) {
-
-        console.log(
-            "No category tracking type."
-        );
-
+    if (!tracking) {
         return;
-
     }
 
 
     // =====================================
-    // GRADE 10 / GRADE 11
+    // GRADE 10 / 11
     // =====================================
 
     if (
-        tracking.category ===
-            "grade10" ||
-
-        tracking.category ===
-            "grade11"
+        tracking.category === "grade10" ||
+        tracking.category === "grade11"
     ) {
 
         if (
-            !["1", "2", "3"].includes(
-                term
-            )
+            !["1", "2", "3"].includes(term)
         ) {
 
             console.warn(
-                "Invalid model paper term:",
+                "Invalid term:",
                 term
             );
 
@@ -203,23 +162,7 @@ async function savePaperView(
         await updateDoc(
             studentRef,
             {
-                [fieldPath]:
-                    true
-            }
-        );
-
-
-        console.log(
-            "✅ Model Paper View Saved",
-            {
-                grade:
-                    tracking.category,
-
-                term,
-
-                paper,
-
-                fieldPath
+                [fieldPath]: true
             }
         );
 
@@ -230,12 +173,11 @@ async function savePaperView(
 
 
     // =====================================
-    // A/L MODEL
+    // A/L
     // =====================================
 
     if (
-        tracking.category ===
-        "al"
+        tracking.category === "al"
     ) {
 
         const fieldPath =
@@ -245,18 +187,7 @@ async function savePaperView(
         await updateDoc(
             studentRef,
             {
-                [fieldPath]:
-                    true
-            }
-        );
-
-
-        console.log(
-            "✅ A/L Model Paper View Saved",
-            {
-                paper,
-
-                fieldPath
+                [fieldPath]: true
             }
         );
 
@@ -266,253 +197,80 @@ async function savePaperView(
 
 
 // =========================================
-// CREATE PAGE
+// GET PAPER PAGE COUNT
+// =========================================
+//
+// IMPORTANT:
+// Page count comes from:
+//
+// papers
+//   paper05
+//      pages: 13
+//
+// NOT from:
+//
+// students
+//   paper05Pages
+//
 // =========================================
 
-function createPaperPage(
-    pageNumber
-) {
+async function getPaperPageCount() {
 
-    const page =
-        document.createElement(
-            "div"
+    const paperRef =
+        doc(
+            db,
+            "papers",
+            paper
         );
 
 
-    page.className =
-        "page";
-
-
-    // =====================================
-    // IMAGE
-    // =====================================
-
-    const img =
-        document.createElement(
-            "img"
+    const paperSnap =
+        await getDoc(
+            paperRef
         );
 
-
-    const pageNumberText =
-        String(
-            pageNumber
-        ).padStart(
-            2,
-            "0"
-        );
-
-
-    img.src =
-        `papers/${paper}/${paper}_Page_${pageNumberText}.jpg`;
-
-
-    img.alt =
-        `${paper} Page ${pageNumber}`;
-
-
-    // =====================================
-    // PERFORMANCE
-    // =====================================
-
-    img.decoding =
-        "async";
-
-
-    /*
-        First 2 pages load immediately.
-
-        Remaining pages use browser lazy
-        loading so the browser does not
-        aggressively load everything at once.
-    */
 
     if (
-        pageNumber > 2
+        !paperSnap.exists()
     ) {
 
-        img.loading =
-            "lazy";
-
-    }
-    else {
-
-        img.loading =
-            "eager";
-
-    }
-
-
-    img.draggable =
-        false;
-
-
-    // =====================================
-    // IMAGE ERROR
-    // =====================================
-
-    img.onerror =
-        () => {
-
-            console.error(
-                "Image not found:",
-                img.src
-            );
-
-
-            img.style.display =
-                "none";
-
-
-            const errorMessage =
-                document.createElement(
-                    "div"
-                );
-
-
-            errorMessage.className =
-                "page-error";
-
-
-            errorMessage.textContent =
-                `Page ${pageNumber} could not be loaded.`;
-
-
-            page.appendChild(
-                errorMessage
-            );
-
-        };
-
-
-    // =====================================
-    // WATERMARK
-    // =====================================
-
-    const watermark =
-        document.createElement(
-            "div"
+        console.warn(
+            "Paper settings not found:",
+            paper
         );
 
-
-    watermark.className =
-        "watermark";
-
-
-    /*
-        Create watermark only once per page.
-        This keeps the existing design while
-        avoiding unnecessary work.
-    */
-
-    const fragment =
-        document.createDocumentFragment();
-
-
-    for (
-        let w = 0;
-        w < 20;
-        w++
-    ) {
-
-        const mark =
-            document.createElement(
-                "span"
-            );
-
-
-        mark.textContent =
-            studentId;
-
-
-        fragment.appendChild(
-            mark
-        );
+        // Safe fallback
+        return 10;
 
     }
 
 
-    watermark.appendChild(
-        fragment
-    );
+    const paperData =
+        paperSnap.data();
 
 
-    // =====================================
-    // ADD TO PAGE
-    // =====================================
+    const pages =
+        Number(
+            paperData.pages
+        );
 
-    page.appendChild(
-        img
-    );
-
-
-    page.appendChild(
-        watermark
-    );
-
-
-    return page;
-
-}
-
-
-// =========================================
-// CREATE ALL PAPER PAGES
-// =========================================
-
-function renderPaperPages(
-    totalPages
-) {
 
     if (
-        !viewer
+        !Number.isInteger(pages) ||
+        pages < 1
     ) {
 
-        return;
-
-    }
-
-
-    // =====================================
-    // CLEAR VIEWER
-    // =====================================
-
-    viewer.replaceChildren();
-
-
-    // =====================================
-    // CREATE PAGES
-    // =====================================
-
-    const fragment =
-        document.createDocumentFragment();
-
-
-    for (
-        let i = 1;
-        i <= totalPages;
-        i++
-    ) {
-
-        const page =
-            createPaperPage(
-                i
-            );
-
-
-        fragment.appendChild(
-            page
+        console.warn(
+            "Invalid page count:",
+            pages
         );
 
+        return 10;
+
     }
 
 
-    // =====================================
-    // ONE DOM UPDATE
-    // =====================================
-
-    viewer.appendChild(
-        fragment
-    );
+    return pages;
 
 }
 
@@ -523,10 +281,6 @@ function renderPaperPages(
 
 async function loadPaper() {
 
-    // =====================================
-    // BASIC VALIDATION
-    // =====================================
-
     if (
         !paper ||
         !studentId
@@ -536,36 +290,26 @@ async function loadPaper() {
             "Invalid paper request."
         );
 
-
         window.location.replace(
             "dashboard.html"
         );
-
 
         return;
 
     }
 
 
-    // =====================================
-    // PAPER VALIDATION
-    // =====================================
-
     if (
-        !paperPattern.test(
-            paper
-        )
+        !paperPattern.test(paper)
     ) {
 
         alert(
             "Invalid paper."
         );
 
-
         window.location.replace(
             "dashboard.html"
         );
-
 
         return;
 
@@ -575,7 +319,7 @@ async function loadPaper() {
     try {
 
         // =================================
-        // STUDENT REFERENCE
+        // STUDENT
         // =================================
 
         const studentRef =
@@ -585,10 +329,6 @@ async function loadPaper() {
                 studentId
             );
 
-
-        // =================================
-        // GET STUDENT
-        // =================================
 
         const studentSnap =
             await getDoc(
@@ -604,11 +344,9 @@ async function loadPaper() {
                 "Student not found."
             );
 
-
             window.location.replace(
                 "index.html"
             );
-
 
             return;
 
@@ -624,20 +362,16 @@ async function loadPaper() {
         // =================================
 
         if (
-            studentData[
-                paper
-            ] !== true
+            studentData[paper] !== true
         ) {
 
             alert(
                 "You do not have permission to view this paper."
             );
 
-
             window.location.replace(
                 "dashboard.html"
             );
-
 
             return;
 
@@ -645,29 +379,24 @@ async function loadPaper() {
 
 
         // =================================
-        // EXISTING VIEWED SYSTEM
+        // ALREADY VIEWED
         // =================================
 
         const viewedField =
-            paper +
-            "Viewed";
+            paper + "Viewed";
 
 
         if (
-            studentData[
-                viewedField
-            ] === true
+            studentData[viewedField] === true
         ) {
 
             alert(
                 "This paper has already been viewed."
             );
 
-
             window.location.replace(
                 "dashboard.html"
             );
-
 
             return;
 
@@ -675,79 +404,36 @@ async function loadPaper() {
 
 
         // =================================
-        // NUMBER OF PAGES
+        // GET REAL PAGE COUNT
         // =================================
 
-        const pagesField =
-            paper +
-            "Pages";
+        const totalPages =
+            await getPaperPageCount();
 
-
-        let totalPages =
-            Number(
-                studentData[
-                    pagesField
-                ]
-            );
-
-
-        if (
-            !Number.isInteger(
-                totalPages
-            ) ||
-            totalPages <= 0
-        ) {
-
-            totalPages =
-                DEFAULT_PAGES;
-
-        }
-
-
-        // =================================
-        // DEBUG
-        // =================================
 
         console.log(
             "================================"
         );
-
 
         console.log(
             "Student:",
             studentId
         );
 
-
         console.log(
             "Paper:",
             paper
         );
 
-
         console.log(
-            "Type:",
+            "Paper Type:",
             paperType
         );
 
-
         console.log(
-            "Term:",
-            term
-        );
-
-
-        console.log(
-            "Tracking:",
-            getTrackingInfo()
-        );
-
-
-        console.log(
-            "Pages:",
+            "Total Pages:",
             totalPages
         );
-
 
         console.log(
             "================================"
@@ -755,86 +441,205 @@ async function loadPaper() {
 
 
         // =================================
-        // IMPORTANT:
-        // RENDER PAPER FIRST
+        // MARK VIEWED
         // =================================
 
-        renderPaperPages(
-            totalPages
-        );
-
-
-        // =================================
-        // SAVE VIEWED STATUS IN BACKGROUND
-        // =================================
-        //
-        // DO NOT await.
-        //
-        // Student can see the paper while
-        // Firebase saves the view.
-        //
-
-        updateDoc(
+        await updateDoc(
             studentRef,
             {
-                [viewedField]:
-                    true
-            }
-        )
-        .then(() => {
-
-            console.log(
-                "✅ Viewed status saved:",
-                viewedField
-            );
-
-        })
-        .catch(
-            error => {
-
-                console.error(
-                    "Viewed status save failed:",
-                    error
-                );
-
+                [viewedField]: true
             }
         );
 
 
         // =================================
-        // CATEGORY TRACKING IN BACKGROUND
+        // CATEGORY TRACKING
         // =================================
-        //
-        // DO NOT await.
-        //
 
-        savePaperView(
-            studentRef
-        )
-        .then(() => {
+        try {
 
-            console.log(
-                "✅ Category tracking saved"
+            await savePaperView(
+                studentRef
             );
 
-        })
-        .catch(
-            error => {
+        }
 
-                console.error(
-                    "Category tracking failed:",
-                    error
+        catch (trackingError) {
+
+            console.error(
+                "Category tracking error:",
+                trackingError
+            );
+
+        }
+
+
+        // =================================
+        // CLEAR VIEWER
+        // =================================
+
+        if (viewer) {
+
+            viewer.innerHTML = "";
+
+        }
+
+
+        // =================================
+        // CREATE ALL PAGES
+        // =================================
+
+        for (
+            let i = 1;
+            i <= totalPages;
+            i++
+        ) {
+
+            const pageNumber =
+                String(i).padStart(
+                    2,
+                    "0"
+                );
+
+
+            // =============================
+            // PAGE CONTAINER
+            // =============================
+
+            const page =
+                document.createElement(
+                    "div"
+                );
+
+
+            page.className =
+                "page";
+
+
+            // =============================
+            // IMAGE
+            // =============================
+
+            const img =
+                document.createElement(
+                    "img"
+                );
+
+
+            img.src =
+                `papers/${paper}/${paper}_Page_${pageNumber}.jpg`;
+
+
+            img.alt =
+                `${paper} Page ${i}`;
+
+
+            img.draggable =
+                false;
+
+
+            // =============================
+            // IMAGE ERROR
+            // =============================
+
+            img.onerror =
+                () => {
+
+                    console.error(
+                        "Image not found:",
+                        img.src
+                    );
+
+
+                    img.style.display =
+                        "none";
+
+
+                    const errorMessage =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    errorMessage.className =
+                        "page-error";
+
+
+                    errorMessage.textContent =
+                        `Page ${i} could not be loaded.`;
+
+
+                    page.appendChild(
+                        errorMessage
+                    );
+
+                };
+
+
+            // =============================
+            // WATERMARK
+            // =============================
+
+            const watermark =
+                document.createElement(
+                    "div"
+                );
+
+
+            watermark.className =
+                "watermark";
+
+
+            for (
+                let w = 0;
+                w < 20;
+                w++
+            ) {
+
+                const mark =
+                    document.createElement(
+                        "span"
+                    );
+
+
+                mark.textContent =
+                    studentId;
+
+
+                watermark.appendChild(
+                    mark
                 );
 
             }
-        );
 
+
+            // =============================
+            // ADD
+            // =============================
+
+            page.appendChild(
+                img
+            );
+
+
+            page.appendChild(
+                watermark
+            );
+
+
+            if (viewer) {
+
+                viewer.appendChild(
+                    page
+                );
+
+            }
+
+        }
 
     }
 
-    catch (
-        error
-    ) {
+    catch (error) {
 
         console.error(
             "Paper loading error:",
@@ -842,24 +647,9 @@ async function loadPaper() {
         );
 
 
-        if (
-            viewer
-        ) {
-
-            viewer.innerHTML = `
-                <div
-                    style="
-                        padding:40px;
-                        text-align:center;
-                        color:#64748b;
-                    "
-                >
-                    Failed to load paper.
-                    Please try again.
-                </div>
-            `;
-
-        }
+        alert(
+            "Failed to load paper. Please try again."
+        );
 
     }
 
@@ -874,72 +664,44 @@ loadPaper();
 
 
 // =========================================
-// DISABLE RIGHT CLICK
+// SECURITY
 // =========================================
 
 document.addEventListener(
     "contextmenu",
     event => {
-
         event.preventDefault();
-
     }
 );
 
-
-// =========================================
-// DISABLE DRAGGING
-// =========================================
 
 document.addEventListener(
     "dragstart",
     event => {
-
         event.preventDefault();
-
     }
 );
 
-
-// =========================================
-// DISABLE COPY
-// =========================================
 
 document.addEventListener(
     "copy",
     event => {
-
         event.preventDefault();
-
     }
 );
 
-
-// =========================================
-// DISABLE CUT
-// =========================================
 
 document.addEventListener(
     "cut",
     event => {
-
         event.preventDefault();
-
     }
 );
 
 
-// =========================================
-// DISABLE SHORTCUTS
-// =========================================
-
 document.addEventListener(
     "keydown",
     event => {
-
-        // =================================
-        // CTRL / CMD
-        // =================================
 
         if (
             event.ctrlKey ||
@@ -965,10 +727,6 @@ document.addEventListener(
 
         }
 
-
-        // =================================
-        // F12
-        // =================================
 
         if (
             event.key === "F12"
