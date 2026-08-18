@@ -4,9 +4,10 @@ import {
     getDoc,
     setDoc
 } from "./firebase.js";
-// ==========================
-// Super Admin Protection
-// ==========================
+
+// =========================================
+// SUPER ADMIN PROTECTION
+// =========================================
 
 const adminLoggedIn =
     sessionStorage.getItem("adminLoggedIn") === "true";
@@ -15,164 +16,403 @@ const adminRole =
     sessionStorage.getItem("adminRole") || "limited";
 
 if (!adminLoggedIn) {
-
-    window.location.replace(
-        "admin-login.html"
-    );
-
+    window.location.replace("admin-login.html");
+    throw new Error("Admin not logged in");
 }
 
 if (adminRole !== "full") {
 
-    alert(
-        "Access denied. Super Admin only."
-    );
+    alert("Access denied. Super Admin only.");
 
-    window.location.replace(
-        "admin.html"
-    );
+    window.location.replace("admin.html");
 
+    throw new Error("Super Admin only");
 }
 
-const table = document.getElementById("paperTable");
-console.log("Table:", table);
-console.log("loadPapers started");
+
+// =========================================
+// TABLE
+// =========================================
+
+const table =
+    document.getElementById("paperTable");
+
+
+// =========================================
+// LOAD PAPERS
+// =========================================
 
 async function loadPapers() {
 
-    table.innerHTML = "";
+    if (!table) {
+        console.error("paperTable not found.");
+        return;
+    }
 
-    for (let i = 1; i <= 10; i++) {
+    table.innerHTML = `
+        <tr>
+            <td colspan="5" style="text-align:center;padding:30px;">
+                Loading papers...
+            </td>
+        </tr>
+    `;
 
-        const id = "paper" + String(i).padStart(2, "0");
+    try {
 
-        const ref = doc(db, "papers", id);
-        console.log("Loading:", id);
-        
-        let snap = await getDoc(ref);
+        table.innerHTML = "";
 
-        let data;
+        for (let i = 1; i <= 10; i++) {
 
-        if (!snap.exists()) {
+            const number =
+                String(i).padStart(2, "0");
 
-            data = {
-                title: "Model Paper " + String(i).padStart(2, "0"),
-                pages: 10,
-                defaultAvailable: i === 1
-            };
+            const id =
+                "paper" + number;
 
-            await setDoc(ref, data);
+            const ref =
+                doc(db, "papers", id);
 
-        } else {
+            let snap =
+                await getDoc(ref);
 
-            data = snap.data();
+            let data;
+
+            // =====================================
+            // CREATE DEFAULT PAPER
+            // =====================================
+
+            if (!snap.exists()) {
+
+                data = {
+
+                    title:
+                        "Model Paper " + number,
+
+                    pages:
+                        10,
+
+                    defaultAvailable:
+                        i === 1
+
+                };
+
+                await setDoc(
+                    ref,
+                    data
+                );
+
+            } else {
+
+                data =
+                    snap.data();
+
+            }
+
+
+            const pages =
+                Number(data.pages) > 0
+                    ? Number(data.pages)
+                    : 10;
+
+
+            // =====================================
+            // ROW
+            // =====================================
+
+            const row =
+                document.createElement("tr");
+
+
+            row.innerHTML = `
+
+                <td>
+                    ${id}
+                </td>
+
+                <td>
+
+                    <input
+                        type="text"
+                        id="title-${id}"
+                        value="${escapeHTML(
+                            data.title ||
+                            ("Model Paper " + number)
+                        )}"
+                    >
+
+                </td>
+
+                <td>
+
+                    <input
+                        type="number"
+                        min="1"
+                        id="pages-${id}"
+                        value="${pages}"
+                    >
+
+                </td>
+
+                <td>
+
+                    <input
+                        type="checkbox"
+                        id="default-${id}"
+                        ${
+                            data.defaultAvailable
+                                ? "checked"
+                                : ""
+                        }
+                    >
+
+                </td>
+
+                <td>
+
+                    <button
+                        type="button"
+                        class="saveBtn"
+                        data-id="${id}"
+                    >
+                        💾 Save
+                    </button>
+
+                </td>
+
+            `;
+
+
+            table.appendChild(row);
 
         }
 
-        const row = document.createElement("tr");
 
-        row.innerHTML = `
-            <td>${id}</td>
+        // =====================================
+        // SAVE EVENTS
+        // =====================================
 
-            <td>
-                <input
-                    type="text"
-                    id="title-${id}"
-                    value="${data.title}">
-            </td>
+        document
+            .querySelectorAll(".saveBtn")
+            .forEach(button => {
 
-            <td>
-                <input
-                    type="number"
-                    min="1"
-                    id="pages-${id}"
-                    value="${data.pages}">
-            </td>
-
-            <td>
-                <input
-                    type="checkbox"
-                    id="default-${id}"
-                    ${data.defaultAvailable ? "checked" : ""}>
-            </td>
-
-            <td>
-                <button
-                    class="saveBtn"
-                    data-id="${id}">
-                    💾 Save
-                </button>
-            </td>
-        `;
-
-        table.appendChild(row);
-
-    }
-      // ==========================
-    // Save Button Events
-    // ==========================
-
-    document.querySelectorAll(".saveBtn").forEach(btn => {
-
-        btn.addEventListener("click", async () => {
-
-            const id = btn.dataset.id;
-
-            const title = document
-                .getElementById(`title-${id}`)
-                .value
-                .trim();
-
-            const pages = parseInt(
-                document.getElementById(`pages-${id}`).value
-            );
-
-            const defaultAvailable =
-                document.getElementById(`default-${id}`).checked;
-
-            if (!title) {
-
-                alert("Please enter a paper title.");
-                return;
-
-            }
-
-            if (isNaN(pages) || pages < 1) {
-
-                alert("Pages must be at least 1.");
-                return;
-
-            }
-
-            try {
-
-                await setDoc(
-                    doc(db, "papers", id),
-                    {
-                        title,
-                        pages,
-                        defaultAvailable
-                    },
-                    { merge: true }
+                button.addEventListener(
+                    "click",
+                    () => savePaper(
+                        button.dataset.id,
+                        button
+                    )
                 );
 
-                alert(id + " saved successfully.");
+            });
 
-            } catch (err) {
+    }
 
-                console.error(err);
+    catch (error) {
 
-                alert("Failed to save paper.");
+        console.error(
+            "Load papers error:",
+            error
+        );
 
-            }
+        table.innerHTML = `
+            <tr>
+                <td
+                    colspan="5"
+                    style="
+                        text-align:center;
+                        padding:30px;
+                        color:red;
+                    "
+                >
+                    Failed to load papers.
+                </td>
+            </tr>
+        `;
 
-        });
-
-    });
+    }
 
 }
-// ==========================
-// Start
-// ==========================
+
+
+// =========================================
+// SAVE PAPER
+// =========================================
+
+async function savePaper(
+    id,
+    button
+) {
+
+    const titleInput =
+        document.getElementById(
+            `title-${id}`
+        );
+
+    const pagesInput =
+        document.getElementById(
+            `pages-${id}`
+        );
+
+    const defaultInput =
+        document.getElementById(
+            `default-${id}`
+        );
+
+
+    if (
+        !titleInput ||
+        !pagesInput ||
+        !defaultInput
+    ) {
+
+        alert(
+            "Paper fields not found."
+        );
+
+        return;
+
+    }
+
+
+    const title =
+        titleInput.value.trim();
+
+
+    const pages =
+        Number(
+            pagesInput.value
+        );
+
+
+    const defaultAvailable =
+        defaultInput.checked;
+
+
+    // =====================================
+    // VALIDATION
+    // =====================================
+
+    if (!title) {
+
+        alert(
+            "Please enter a paper title."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        !Number.isInteger(pages) ||
+        pages < 1
+    ) {
+
+        alert(
+            "Pages must be at least 1."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        button.disabled = true;
+
+        button.textContent =
+            "Saving...";
+
+
+        // =================================
+        // SAVE TO PAPERS COLLECTION
+        // =================================
+
+        await setDoc(
+            doc(
+                db,
+                "papers",
+                id
+            ),
+            {
+
+                title:
+                    title,
+
+                pages:
+                    pages,
+
+                defaultAvailable:
+                    defaultAvailable
+
+            },
+            {
+                merge: true
+            }
+        );
+
+
+        console.log(
+            "Paper saved:",
+            {
+                id,
+                title,
+                pages,
+                defaultAvailable
+            }
+        );
+
+
+        alert(
+            `${id} saved successfully.\nPages: ${pages}`
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Save paper error:",
+            error
+        );
+
+        alert(
+            "Failed to save paper."
+        );
+
+    }
+
+    finally {
+
+        button.disabled = false;
+
+        button.textContent =
+            "💾 Save";
+
+    }
+
+}
+
+
+// =========================================
+// ESCAPE HTML
+// =========================================
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+// =========================================
+// START
+// =========================================
 
 loadPapers();
