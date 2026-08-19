@@ -20,11 +20,30 @@ const deleteDoc = firebase.deleteDoc;
 // ADMIN PROTECTION
 // =====================================================
 
-if (
-    sessionStorage.getItem("adminLoggedIn") !== "true"
-) {
-    window.location.replace("admin-login.html");
+const adminLoggedIn =
+    sessionStorage.getItem("adminLoggedIn") === "true";
+
+const adminRole =
+    sessionStorage.getItem("adminRole") || "limited";
+
+
+if (!adminLoggedIn) {
+
+    window.location.replace(
+        "admin-login.html"
+    );
+
 }
+
+
+// =====================================================
+// PAPER SETTINGS
+// =====================================================
+
+const TOTAL_PAPERS = 13;
+
+const ACTIVE_LIMIT =
+    90 * 1000;
 
 
 // =====================================================
@@ -44,7 +63,10 @@ const statusFilter =
     document.getElementById("statusFilter");
 
 
-// Summary
+// =====================================================
+// SUMMARY
+// =====================================================
+
 const totalStudents =
     document.getElementById("totalStudents");
 
@@ -58,7 +80,10 @@ const alStudents =
     document.getElementById("alStudents");
 
 
-// Add modal
+// =====================================================
+// ADD MODAL
+// =====================================================
+
 const addStudentBtn =
     document.getElementById("addStudentBtn");
 
@@ -90,7 +115,10 @@ const newMustChange =
     document.getElementById("newMustChange");
 
 
-// Edit modal
+// =====================================================
+// EDIT MODAL
+// =====================================================
+
 const editModal =
     document.getElementById("editModal");
 
@@ -128,7 +156,10 @@ const resetViewed =
     document.getElementById("resetViewed");
 
 
-// Logout
+// =====================================================
+// LOGOUT
+// =====================================================
+
 const logoutBtn =
     document.getElementById("logoutBtn");
 
@@ -143,41 +174,175 @@ let currentStudentId = "";
 
 
 // =====================================================
-// SETTINGS
+// NAVIGATION ACCESS CONTROL
+// =====================================================
+//
+// FULL / SUPER ADMIN:
+// Dashboard
+// Students
+// Paper Management
+// Import Students
+// Reports
+//
+// LIMITED ADMIN:
+// Dashboard
+// Students
+// Others LOCKED
 // =====================================================
 
-const ACTIVE_LIMIT =
-    90 * 1000;
+function setupNavigationAccess() {
+
+    const paperManagement =
+        document.querySelector(
+            "button[onclick*='paper-settings']"
+        );
+
+    const importStudents =
+        document.querySelector(
+            "button[onclick*='import-students']"
+        );
+
+    const reports =
+        document.querySelector(
+            "button[onclick*='reports']"
+        );
+
+
+    // -------------------------------------------------
+    // SUPER ADMIN
+    // -------------------------------------------------
+
+    if (
+        adminRole === "full" ||
+        adminRole === "superadmin"
+    ) {
+
+        return;
+
+    }
+
+
+    // -------------------------------------------------
+    // LIMITED ADMIN
+    // -------------------------------------------------
+
+    const lockedItems = [
+
+        paperManagement,
+        importStudents,
+        reports
+
+    ];
+
+
+    lockedItems.forEach(
+        item => {
+
+            if (!item) {
+                return;
+            }
+
+
+            // Remove existing onclick
+            item.onclick = null;
+
+
+            // Locked class
+            item.classList.add(
+                "locked-nav-item"
+            );
+
+
+            // Prevent navigation
+            item.addEventListener(
+                "click",
+                event => {
+
+                    event.preventDefault();
+
+                    event.stopPropagation();
+
+
+                    alert(
+                        "🔒 Access denied. Super Administrator only."
+                    );
+
+                }
+            );
+
+
+            // Add lock
+            if (
+                !item.querySelector(
+                    ".nav-lock"
+                )
+            ) {
+
+                const lock =
+                    document.createElement(
+                        "span"
+                    );
+
+                lock.className =
+                    "nav-lock";
+
+                lock.textContent =
+                    "🔒";
+
+                lock.style.marginLeft =
+                    "auto";
+
+                item.appendChild(
+                    lock
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+// Run navigation protection
+setupNavigationAccess();
 
 
 // =====================================================
 // HIDE ACTIVE NOW CARD
 // =====================================================
-// Dashboard already shows live active students.
-// We don't need another active card on this page.
+//
+// Dashboard already shows active students.
+// =====================================================
 
 function hideActiveCard() {
 
     const activeElement =
-        document.getElementById("activeStudents");
+        document.getElementById(
+            "activeStudents"
+        );
+
 
     if (!activeElement) {
         return;
     }
 
+
     const card =
-        activeElement.closest(".card");
+        activeElement.closest(
+            ".card"
+        );
+
 
     if (card) {
-        card.style.display = "none";
+
+        card.style.display =
+            "none";
+
     }
 
 }
 
-
-// =====================================================
-// HIDE OLD ACTIVE CARD / STATUS IF REQUIRED
-// =====================================================
 
 hideActiveCard();
 
@@ -193,33 +358,34 @@ function loadAdminInfo() {
             "adminUsername"
         ) || "Admin";
 
-    const role =
-        sessionStorage.getItem(
-            "adminRole"
-        ) || "Administrator";
-
 
     const adminName =
         document.querySelector(
             ".admin-copy strong"
         );
 
-    const adminRole =
+
+    const adminRoleElement =
         document.querySelector(
             ".admin-copy span"
         );
 
 
     if (adminName) {
+
         adminName.textContent =
             username;
+
     }
 
 
-    if (adminRole) {
+    if (adminRoleElement) {
 
-        adminRole.textContent =
-            role === "superadmin"
+        adminRoleElement.textContent =
+            (
+                adminRole === "full" ||
+                adminRole === "superadmin"
+            )
                 ? "Super Administrator"
                 : "Administrator";
 
@@ -282,30 +448,44 @@ if (logoutBtn) {
 function getStudentType(data) {
 
     if (
-        data?.studentType === "grade10"
+        data?.studentType ===
+        "grade10"
     ) {
+
         return "grade10";
+
     }
 
 
     if (
-        data?.studentType === "grade11"
+        data?.studentType ===
+        "grade11"
     ) {
+
         return "grade11";
+
     }
 
 
     if (
-        String(data?.grade || "") === "10"
+        String(
+            data?.grade || ""
+        ) === "10"
     ) {
+
         return "grade10";
+
     }
 
 
     if (
-        String(data?.grade || "") === "11"
+        String(
+            data?.grade || ""
+        ) === "11"
     ) {
+
         return "grade11";
+
     }
 
 
@@ -315,7 +495,7 @@ function getStudentType(data) {
 
 
 // =====================================================
-// DISPLAY STUDENT TYPE
+// STUDENT TYPE LABEL
 // =====================================================
 
 function getStudentTypeLabel(data) {
@@ -324,13 +504,21 @@ function getStudentTypeLabel(data) {
         getStudentType(data);
 
 
-    if (type === "grade10") {
+    if (
+        type === "grade10"
+    ) {
+
         return "Grade 10";
+
     }
 
 
-    if (type === "grade11") {
+    if (
+        type === "grade11"
+    ) {
+
         return "Grade 11";
+
     }
 
 
@@ -357,12 +545,56 @@ function isStudentActive(data) {
 
 
     const difference =
-        Date.now() - lastActive;
+        Date.now() -
+        lastActive;
 
 
     return (
         difference >= 0 &&
         difference <= ACTIVE_LIMIT
+    );
+
+}
+
+
+// =====================================================
+// PAPER FIELD
+// =====================================================
+
+function getPaperField(number) {
+
+    return (
+        "paper" +
+        String(number)
+            .padStart(2, "0")
+    );
+
+}
+
+
+// =====================================================
+// PAPER VIEW FIELD
+// =====================================================
+
+function getPaperViewedField(number) {
+
+    return (
+        getPaperField(number) +
+        "Viewed"
+    );
+
+}
+
+
+// =====================================================
+// PAPER PAGES FIELD
+// =====================================================
+
+function getPaperPagesField(number) {
+
+    return (
+        getPaperField(number) +
+        "Pages"
     );
 
 }
@@ -379,14 +611,12 @@ function getViewedCount(data) {
 
     for (
         let i = 1;
-        i <= 10;
+        i <= TOTAL_PAPERS;
         i++
     ) {
 
         const field =
-            "paper" +
-            String(i).padStart(2, "0") +
-            "Viewed";
+            getPaperViewedField(i);
 
 
         if (
@@ -411,23 +641,30 @@ function getViewedCount(data) {
 
 function escapeHTML(value) {
 
-    return String(value ?? "")
+    return String(
+        value ?? ""
+    )
+
         .replace(
             /&/g,
             "&amp;"
         )
+
         .replace(
             /</g,
             "&lt;"
         )
+
         .replace(
             />/g,
             "&gt;"
         )
+
         .replace(
             /"/g,
             "&quot;"
         )
+
         .replace(
             /'/g,
             "&#039;"
@@ -446,7 +683,10 @@ function setText(
 ) {
 
     if (element) {
-        element.textContent = value;
+
+        element.textContent =
+            value;
+
     }
 
 }
@@ -549,7 +789,9 @@ function renderTable(list) {
                         color:#64748b;
                     "
                 >
+
                     No students found.
+
                 </td>
 
             </tr>
@@ -596,30 +838,43 @@ function renderTable(list) {
                         <td>
 
                             <strong>
+
                                 ${escapeHTML(
                                     student.id
                                 )}
+
                             </strong>
 
                         </td>
 
 
                         <td>
-                            ${type}
+
+                            ${escapeHTML(
+                                type
+                            )}
+
                         </td>
 
 
                         <td>
-                            ${student.viewed}/10
+
+                            ${student.viewed}/${TOTAL_PAPERS}
+
                         </td>
 
 
                         <td>
 
                             <span
-                                class="status ${statusClass}"
+                                class="
+                                    status
+                                    ${statusClass}
+                                "
                             >
+
                                 ${statusText}
+
                             </span>
 
                         </td>
@@ -634,7 +889,9 @@ function renderTable(list) {
                                     student.id
                                 )}"
                             >
+
                                 ✏️ Edit
+
                             </button>
 
                         </td>
@@ -644,12 +901,17 @@ function renderTable(list) {
 
                             <button
                                 type="button"
-                                class="action-btn manage-btn"
+                                class="
+                                    action-btn
+                                    manage-btn
+                                "
                                 data-id="${escapeHTML(
                                     student.id
                                 )}"
                             >
+
                                 ⚙️ Manage
+
                             </button>
 
                         </td>
@@ -695,9 +957,9 @@ function applyFilters() {
         allStudents.filter(
             student => {
 
-                // -----------------------------
+                // -------------------------------------
                 // SEARCH
-                // -----------------------------
+                // -------------------------------------
 
                 if (keyword) {
 
@@ -731,9 +993,9 @@ function applyFilters() {
                 }
 
 
-                // -----------------------------
+                // -------------------------------------
                 // TYPE
-                // -----------------------------
+                // -------------------------------------
 
                 if (
                     type !== "all" &&
@@ -747,9 +1009,9 @@ function applyFilters() {
                 }
 
 
-                // -----------------------------
+                // -------------------------------------
                 // STATUS
-                // -----------------------------
+                // -------------------------------------
 
                 if (
                     status !== "all"
@@ -819,7 +1081,9 @@ async function loadStudents() {
                     color:#64748b;
                 "
             >
+
                 Loading students...
+
             </td>
 
         </tr>
@@ -868,6 +1132,7 @@ async function loadStudents() {
 
 
         // Sort by student ID
+
         newStudents.sort(
             (a, b) =>
                 String(a.id)
@@ -888,7 +1153,6 @@ async function loadStudents() {
         updateSummary();
 
         applyFilters();
-
 
     }
     catch (error) {
@@ -911,8 +1175,10 @@ async function loadStudents() {
                         color:#dc2626;
                     "
                 >
+
                     Failed to load students.
                     Please refresh the page.
+
                 </td>
 
             </tr>
@@ -985,6 +1251,7 @@ if (addStudentBtn) {
 
             clearAddForm();
 
+
             if (addModal) {
 
                 addModal.style.display =
@@ -1005,27 +1272,42 @@ if (addStudentBtn) {
 function clearAddForm() {
 
     if (newStudentType) {
-        newStudentType.value = "";
+
+        newStudentType.value =
+            "";
+
     }
 
 
     if (newStudentGrade) {
-        newStudentGrade.textContent = "";
+
+        newStudentGrade.textContent =
+            "";
+
     }
 
 
     if (newStudentId) {
-        newStudentId.value = "";
+
+        newStudentId.value =
+            "";
+
     }
 
 
     if (newStudentPassword) {
-        newStudentPassword.value = "";
+
+        newStudentPassword.value =
+            "";
+
     }
 
 
     if (newMustChange) {
-        newMustChange.checked = false;
+
+        newMustChange.checked =
+            false;
+
     }
 
 
@@ -1035,10 +1317,12 @@ function clearAddForm() {
         )
         .forEach(
             button => {
+
                 button.classList.remove(
                     "selected",
                     "active"
                 );
+
             }
         );
 
@@ -1096,7 +1380,8 @@ document
                     if (newStudentGrade) {
 
                         if (
-                            type === "grade10"
+                            type ===
+                            "grade10"
                         ) {
 
                             newStudentGrade.textContent =
@@ -1104,7 +1389,8 @@ document
 
                         }
                         else if (
-                            type === "grade11"
+                            type ===
+                            "grade11"
                         ) {
 
                             newStudentGrade.textContent =
@@ -1139,13 +1425,15 @@ if (saveNewStudent) {
 
             const id =
                 newStudentId
-                    ? newStudentId.value.trim()
+                    ? newStudentId.value
+                        .trim()
                     : "";
 
 
             const password =
                 newStudentPassword
-                    ? newStudentPassword.value.trim()
+                    ? newStudentPassword.value
+                        .trim()
                     : "";
 
 
@@ -1161,9 +1449,9 @@ if (saveNewStudent) {
                     : false;
 
 
-            // -----------------------------
+            // -------------------------------------
             // VALIDATION
-            // -----------------------------
+            // -------------------------------------
 
             if (!type) {
 
@@ -1198,7 +1486,9 @@ if (saveNewStudent) {
             }
 
 
-            saveNewStudent.disabled = true;
+            saveNewStudent.disabled =
+                true;
+
 
             saveNewStudent.textContent =
                 "Saving...";
@@ -1206,9 +1496,9 @@ if (saveNewStudent) {
 
             try {
 
-                // -----------------------------
+                // ---------------------------------
                 // CHECK DUPLICATE
-                // -----------------------------
+                // ---------------------------------
 
                 const studentRef =
                     doc(
@@ -1237,9 +1527,9 @@ if (saveNewStudent) {
                 }
 
 
-                // -----------------------------
+                // ---------------------------------
                 // STUDENT DATA
-                // -----------------------------
+                // ---------------------------------
 
                 const studentData = {
 
@@ -1268,44 +1558,46 @@ if (saveNewStudent) {
                 };
 
 
-                // -----------------------------
-                // DEFAULT PAPERS
-                // -----------------------------
+                // ---------------------------------
+                // DEFAULT PAPERS 01 - 13
+                // ---------------------------------
 
                 for (
                     let i = 1;
-                    i <= 10;
+                    i <= TOTAL_PAPERS;
                     i++
                 ) {
 
                     const paper =
-                        "paper" +
-                        String(i).padStart(
-                            2,
-                            "0"
-                        );
+                        getPaperField(i);
 
+
+                    // Permission
 
                     studentData[
                         paper
                     ] = false;
 
 
+                    // Viewed
+
                     studentData[
-                        paper + "Viewed"
+                        getPaperViewedField(i)
                     ] = false;
 
 
+                    // Pages
+
                     studentData[
-                        paper + "Pages"
+                        getPaperPagesField(i)
                     ] = 10;
 
                 }
 
 
-                // -----------------------------
+                // ---------------------------------
                 // SAVE
-                // -----------------------------
+                // ---------------------------------
 
                 await setDoc(
                     studentRef,
@@ -1396,7 +1688,9 @@ if (cancelAdd) {
 // OPEN EDIT MODAL
 // =====================================================
 
-async function openEditStudent(studentId) {
+async function openEditStudent(
+    studentId
+) {
 
     if (!studentId) {
         return;
@@ -1415,16 +1709,19 @@ async function openEditStudent(studentId) {
     }
 
 
-    // Show loading in ID
     if (editStudentId) {
+
         editStudentId.value =
             studentId;
+
     }
 
 
     if (editPassword) {
+
         editPassword.value =
             "";
+
     }
 
 
@@ -1444,7 +1741,9 @@ async function openEditStudent(studentId) {
             );
 
 
-        if (!snapshot.exists()) {
+        if (
+            !snapshot.exists()
+        ) {
 
             alert(
                 "Student not found."
@@ -1461,9 +1760,9 @@ async function openEditStudent(studentId) {
             snapshot.data();
 
 
-        // -----------------------------
+        // -------------------------------------
         // PASSWORD
-        // -----------------------------
+        // -------------------------------------
 
         if (editPassword) {
 
@@ -1473,9 +1772,9 @@ async function openEditStudent(studentId) {
         }
 
 
-        // -----------------------------
+        // -------------------------------------
         // MUST CHANGE
-        // -----------------------------
+        // -------------------------------------
 
         if (editMustChange) {
 
@@ -1485,22 +1784,18 @@ async function openEditStudent(studentId) {
         }
 
 
-        // -----------------------------
-        // PAPERS
-        // -----------------------------
+        // -------------------------------------
+        // PAPERS 01 - 13
+        // -------------------------------------
 
         for (
             let i = 1;
-            i <= 10;
+            i <= TOTAL_PAPERS;
             i++
         ) {
 
             const field =
-                "paper" +
-                String(i).padStart(
-                    2,
-                    "0"
-                );
+                getPaperField(i);
 
 
             const checkbox =
@@ -1517,7 +1812,6 @@ async function openEditStudent(studentId) {
             }
 
         }
-
 
     }
     catch (error) {
@@ -1562,9 +1856,7 @@ if (table) {
                 );
 
 
-            if (
-                editButton
-            ) {
+            if (editButton) {
 
                 openEditStudent(
                     editButton.dataset.id
@@ -1575,9 +1867,7 @@ if (table) {
             }
 
 
-            if (
-                manageButton
-            ) {
+            if (manageButton) {
 
                 openEditStudent(
                     manageButton.dataset.id
@@ -1597,7 +1887,8 @@ if (table) {
 
 function closeEditModal() {
 
-    currentStudentId = "";
+    currentStudentId =
+        "";
 
 
     if (editModal) {
@@ -1653,7 +1944,8 @@ if (updateStudent) {
 
             const password =
                 editPassword
-                    ? editPassword.value.trim()
+                    ? editPassword.value
+                        .trim()
                     : "";
 
 
@@ -1668,7 +1960,9 @@ if (updateStudent) {
             }
 
 
-            updateStudent.disabled = true;
+            updateStudent.disabled =
+                true;
+
 
             updateStudent.textContent =
                 "Saving...";
@@ -1689,22 +1983,18 @@ if (updateStudent) {
                 };
 
 
-                // -----------------------------
-                // PAPER PERMISSIONS
-                // -----------------------------
+                // ---------------------------------
+                // PAPER PERMISSIONS 01 - 13
+                // ---------------------------------
 
                 for (
                     let i = 1;
-                    i <= 10;
+                    i <= TOTAL_PAPERS;
                     i++
                 ) {
 
                     const field =
-                        "paper" +
-                        String(i).padStart(
-                            2,
-                            "0"
-                        );
+                        getPaperField(i);
 
 
                     const checkbox =
@@ -1893,7 +2183,7 @@ if (resetPasswordBtn) {
 
 
 // =====================================================
-// SELECT ALL PAPERS
+// SELECT ALL PAPERS 01 - 13
 // =====================================================
 
 if (selectAllPapers) {
@@ -1904,16 +2194,12 @@ if (selectAllPapers) {
 
             for (
                 let i = 1;
-                i <= 10;
+                i <= TOTAL_PAPERS;
                 i++
             ) {
 
                 const field =
-                    "paper" +
-                    String(i).padStart(
-                        2,
-                        "0"
-                    );
+                    getPaperField(i);
 
 
                 const checkbox =
@@ -1938,7 +2224,7 @@ if (selectAllPapers) {
 
 
 // =====================================================
-// REMOVE ALL PAPERS
+// REMOVE ALL PAPERS 01 - 13
 // =====================================================
 
 if (removeAllPapers) {
@@ -1949,16 +2235,12 @@ if (removeAllPapers) {
 
             for (
                 let i = 1;
-                i <= 10;
+                i <= TOTAL_PAPERS;
                 i++
             ) {
 
                 const field =
-                    "paper" +
-                    String(i).padStart(
-                        2,
-                        "0"
-                    );
+                    getPaperField(i);
 
 
                 const checkbox =
@@ -1983,7 +2265,7 @@ if (removeAllPapers) {
 
 
 // =====================================================
-// RESET VIEWED
+// RESET VIEWED 01 - 13
 // =====================================================
 
 if (resetViewed) {
@@ -2023,23 +2305,19 @@ if (resetViewed) {
                 const updateData = {};
 
 
+                // ---------------------------------
+                // RESET PAPER 01 - 13
+                // ---------------------------------
+
                 for (
                     let i = 1;
-                    i <= 10;
+                    i <= TOTAL_PAPERS;
                     i++
                 ) {
 
-                    const field =
-                        "paper" +
-                        String(i).padStart(
-                            2,
-                            "0"
-                        ) +
-                        "Viewed";
-
-
-                    updateData[field] =
-                        false;
+                    updateData[
+                        getPaperViewedField(i)
+                    ] = false;
 
                 }
 
@@ -2059,7 +2337,10 @@ if (resetViewed) {
                 );
 
 
-                // Update local data immediately
+                // ---------------------------------
+                // UPDATE LOCAL DATA
+                // ---------------------------------
+
                 const localStudent =
                     allStudents.find(
                         student =>
@@ -2072,21 +2353,13 @@ if (resetViewed) {
 
                     for (
                         let i = 1;
-                        i <= 10;
+                        i <= TOTAL_PAPERS;
                         i++
                     ) {
 
-                        const field =
-                            "paper" +
-                            String(i).padStart(
-                                2,
-                                "0"
-                            ) +
-                            "Viewed";
-
-
-                        localStudent.data[field] =
-                            false;
+                        localStudent.data[
+                            getPaperViewedField(i)
+                        ] = false;
 
                     }
 
@@ -2185,4 +2458,14 @@ document.addEventListener(
 
 console.log(
     "✅ Students module loaded"
+);
+
+console.log(
+    "📚 Total papers:",
+    TOTAL_PAPERS
+);
+
+console.log(
+    "👤 Admin role:",
+    adminRole
 );
