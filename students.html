@@ -27,33 +27,181 @@
      Sidebar
 =========================== -->
 
-<aside class="sidebar" aria-label="Admin navigation">
-  <div class="brand"><div class="brand-mark">🎓</div><div><div class="brand-title">Student</div><div class="brand-subtitle">Assessment Portal</div></div></div>
-  <div class="nav-section-title">ADMINISTRATION</div>
-  <nav class="nav-list">
-    <button class="nav-item" type="button" onclick="location.href='admin.html'"><span class="nav-icon">🏠</span><span>Dashboard</span></button>
-    <button class="nav-item active" type="button" aria-current="page"><span class="nav-icon">👥</span><span>Students</span></button>
-  <button
-    class="nav-item"
-    type="button"
-    onclick="location.href='paper-management.html'"
+<aside
+    class="sidebar"
+    aria-label="Admin navigation"
 >
-    <span class="nav-icon">📚</span>
-    <span>Paper Management</span>
-</button>
-    <button class="nav-item" type="button" onclick="location.href='import-students.html'"><span class="nav-icon">📥</span><span>Import Students</span></button>
-    <button class="nav-item" type="button" onclick="location.href='reports.html'"><span class="nav-icon">📊</span><span>Reports</span></button>
-  </nav>
-  <div class="sidebar-spacer"></div>
-  <div class="admin-card"><div class="admin-avatar">👤</div><div class="admin-copy"><strong>Admin</strong><span>Administrator</span></div></div>
-  <button class="logout-btn" id="logoutBtn" type="button"><span>🚪</span><span>Sign Out</span></button>
+
+    <div class="brand">
+
+        <div class="brand-mark">
+            🎓
+        </div>
+
+        <div>
+
+            <div class="brand-title">
+                Student
+            </div>
+
+            <div class="brand-subtitle">
+                Assessment Portal
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="nav-section-title">
+        ADMINISTRATION
+    </div>
+
+
+    <nav class="nav-list">
+
+        <button
+            class="nav-item"
+            type="button"
+            onclick="location.href='admin.html'"
+        >
+
+            <span class="nav-icon">
+                🏠
+            </span>
+
+            <span>
+                Dashboard
+            </span>
+
+        </button>
+
+
+        <button
+            class="nav-item active"
+            type="button"
+            aria-current="page"
+        >
+
+            <span class="nav-icon">
+                👥
+            </span>
+
+            <span>
+                Students
+            </span>
+
+        </button>
+
+
+        <button
+            class="nav-item"
+            type="button"
+            onclick="location.href='paper-settings.html'"
+        >
+
+            <span class="nav-icon">
+                📚
+            </span>
+
+            <span>
+                Paper Management
+            </span>
+
+        </button>
+
+
+        <button
+            class="nav-item"
+            type="button"
+            onclick="location.href='import-students.html'"
+        >
+
+            <span class="nav-icon">
+                📥
+            </span>
+
+            <span>
+                Import Students
+            </span>
+
+        </button>
+
+
+        <button
+            class="nav-item"
+            type="button"
+            onclick="location.href='reports.html'"
+        >
+
+            <span class="nav-icon">
+                📊
+            </span>
+
+            <span>
+                Reports
+            </span>
+
+        </button>
+
+    </nav>
+
+
+    <div class="sidebar-spacer"></div>
+
+
+    <div class="admin-card">
+
+        <div class="admin-avatar">
+            👤
+        </div>
+
+        <div class="admin-copy">
+
+            <strong>
+                Admin
+            </strong>
+
+            <span>
+                Administrator
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <button
+        class="logout-btn"
+        id="logoutBtn"
+        type="button"
+    >
+
+        <span>
+            🚪
+        </span>
+
+        <span>
+            Sign Out
+        </span>
+
+    </button>
+
+
 </aside>
+
+
 
 <!-- ==========================
      Main
 =========================== -->
 
 <div class="main">
+
+
+    <!-- ==========================
+         Header
+    =========================== -->
 
     <header>
 
@@ -75,7 +223,9 @@
             id="addStudentBtn"
             type="button"
         >
+
             ➕ Add Student
+
         </button>
 
     </header>
@@ -88,13 +238,20 @@
 
     <div class="cards">
 
+
+        <!-- Total -->
+
         <div class="card">
 
-            <span>👨‍🎓</span>
+            <span>
+                👨‍🎓
+            </span>
 
             <div>
 
-                <p>Total Students</p>
+                <p>
+                    Total Students
+                </p>
 
                 <h2 id="totalStudents">
                     0
@@ -105,13 +262,19 @@
         </div>
 
 
+        <!-- Grade 10 -->
+
         <div class="card">
 
-            <span>🎓</span>
+            <span>
+                🎓
+            </span>
 
             <div>
 
-                <p>Grade 10</p>
+                <p>
+                    Grade 10
+                </p>
 
                 <h2 id="grade10Students">
                     0
@@ -122,13 +285,19 @@
         </div>
 
 
+        <!-- Grade 11 -->
+
         <div class="card">
 
-            <span>🎓</span>
+            <span>
+                🎓
+            </span>
 
             <div>
 
-                <p>Grade 11</p>
+                <p>
+                    Grade 11
+                </p>
 
                 <h2 id="grade11Students">
                     0
@@ -139,13 +308,19 @@
         </div>
 
 
+        <!-- A/L -->
+
         <div class="card">
 
-            <span>📚</span>
+            <span>
+                📚
+            </span>
 
             <div>
 
-                <p>A/L Students</p>
+                <p>
+                    A/L Students
+                </p>
 
                 <h2 id="alStudents">
                     0
@@ -156,12 +331,41 @@
         </div>
 
 
-        
+        <!-- Active -->
+
+        <div class="card active-card">
+
+            <span>
+                🟢
+            </span>
+
+            <div>
+
+                <p>
+                    Active Now
+                </p>
+
+                <h2 id="activeStudents">
+                    0
+                </h2>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
     <!-- ==========================
          Filters
     =========================== -->
 
     <div class="filters">
+
+
+        <!-- Search -->
 
         <div class="search-box">
 
@@ -171,10 +375,13 @@
                 type="text"
                 id="search"
                 placeholder="Search Student ID..."
+                autocomplete="off"
             >
 
         </div>
 
+
+        <!-- Type -->
 
         <select id="typeFilter">
 
@@ -197,6 +404,8 @@
         </select>
 
 
+        <!-- Status -->
+
         <select id="statusFilter">
 
             <option value="all">
@@ -213,7 +422,9 @@
 
         </select>
 
+
     </div>
+    <!-- ⭐ IMPORTANT: FILTERS CLOSE HERE -->
 
 
 
@@ -259,11 +470,16 @@
 
 
             <tbody id="studentTable">
+
+                <!-- Students loaded by students.js -->
+
             </tbody>
 
         </table>
 
     </div>
+
+
 
 </div>
 
@@ -279,6 +495,9 @@
 >
 
     <div class="modal-content">
+
+
+        <!-- Header -->
 
         <div class="modal-header">
 
@@ -300,16 +519,16 @@
                 class="close-btn"
                 type="button"
             >
+
                 ✕
+
             </button>
 
         </div>
 
 
 
-        <!-- ==========================
-             Student Category
-        =========================== -->
+        <!-- Student Category -->
 
         <label>
             Student Category
@@ -318,12 +537,15 @@
 
         <div class="student-category">
 
+
             <button
                 type="button"
                 class="category-btn"
                 data-type="al"
             >
+
                 🎓 A/L Student
+
             </button>
 
 
@@ -332,7 +554,9 @@
                 class="category-btn"
                 data-type="grade10"
             >
+
                 🎓 Grade 10
+
             </button>
 
 
@@ -341,8 +565,11 @@
                 class="category-btn"
                 data-type="grade11"
             >
+
                 🎓 Grade 11
+
             </button>
+
 
         </div>
 
@@ -361,9 +588,7 @@
 
 
 
-        <!-- ==========================
-             Student ID
-        =========================== -->
+        <!-- Student ID -->
 
         <label>
             Student ID
@@ -378,9 +603,7 @@
 
 
 
-        <!-- ==========================
-             Password
-        =========================== -->
+        <!-- Password -->
 
         <label>
             Password
@@ -395,9 +618,7 @@
 
 
 
-        <!-- ==========================
-             Force Password Change
-        =========================== -->
+        <!-- Force Password Change -->
 
         <label class="check-row">
 
@@ -412,9 +633,7 @@
 
 
 
-        <!-- ==========================
-             Buttons
-        =========================== -->
+        <!-- Buttons -->
 
         <div class="modal-buttons">
 
@@ -423,7 +642,9 @@
                 class="cancel-btn"
                 type="button"
             >
+
                 Cancel
+
             </button>
 
 
@@ -432,10 +653,13 @@
                 class="save-btn"
                 type="button"
             >
+
                 💾 Save Student
+
             </button>
 
         </div>
+
 
     </div>
 
@@ -453,6 +677,9 @@
 >
 
     <div class="modal-content">
+
+
+        <!-- Header -->
 
         <div class="modal-header">
 
@@ -474,7 +701,9 @@
                 class="close-btn"
                 type="button"
             >
+
                 ✕
+
             </button>
 
         </div>
@@ -515,7 +744,9 @@
                 id="resetPasswordBtn"
                 type="button"
             >
+
                 🔐 Reset
+
             </button>
 
         </div>
@@ -546,11 +777,14 @@
 
         <div class="paper-tools">
 
+
             <button
                 id="selectAllPapers"
                 type="button"
             >
+
                 ✅ Select All
+
             </button>
 
 
@@ -558,7 +792,9 @@
                 id="removeAllPapers"
                 type="button"
             >
+
                 ❌ Remove All
+
             </button>
 
 
@@ -566,103 +802,182 @@
                 id="resetViewed"
                 type="button"
             >
+
                 🔄 Reset Viewed
+
             </button>
+
 
         </div>
 
 
 
+        <!-- Papers -->
+
         <div class="papers">
 
+
             <label>
+
                 <input
                     type="checkbox"
                     id="paper01"
                 >
+
                 Paper 01
+
             </label>
 
 
             <label>
+
                 <input
                     type="checkbox"
                     id="paper02"
                 >
+
                 Paper 02
+
             </label>
 
 
             <label>
+
                 <input
                     type="checkbox"
                     id="paper03"
                 >
+
                 Paper 03
+
             </label>
 
 
             <label>
+
                 <input
                     type="checkbox"
                     id="paper04"
                 >
+
                 Paper 04
+
             </label>
 
 
             <label>
+
                 <input
                     type="checkbox"
                     id="paper05"
                 >
+
                 Paper 05
+
             </label>
 
 
             <label>
+
                 <input
                     type="checkbox"
                     id="paper06"
                 >
+
                 Paper 06
+
             </label>
 
 
             <label>
+
                 <input
                     type="checkbox"
                     id="paper07"
                 >
+
                 Paper 07
+
             </label>
 
 
             <label>
+
                 <input
                     type="checkbox"
                     id="paper08"
                 >
+
                 Paper 08
+
             </label>
 
 
             <label>
+
                 <input
                     type="checkbox"
                     id="paper09"
                 >
+
                 Paper 09
+
             </label>
 
 
             <label>
+
                 <input
                     type="checkbox"
                     id="paper10"
                 >
+
                 Paper 10
+
             </label>
+
+
+            <!-- Paper 11 -->
+
+            <label>
+
+                <input
+                    type="checkbox"
+                    id="paper11"
+                >
+
+                Paper 11
+
+            </label>
+
+
+            <!-- Paper 12 -->
+
+            <label>
+
+                <input
+                    type="checkbox"
+                    id="paper12"
+                >
+
+                Paper 12
+
+            </label>
+
+
+            <!-- Paper 13 -->
+
+            <label>
+
+                <input
+                    type="checkbox"
+                    id="paper13"
+                >
+
+                Paper 13
+
+            </label>
+
 
         </div>
 
@@ -672,23 +987,29 @@
 
         <div class="modal-buttons">
 
+
             <button
                 id="deleteStudent"
                 class="delete-btn"
                 type="button"
             >
+
                 🗑 Delete
+
             </button>
 
 
             <div>
+
 
                 <button
                     id="closeEditBottom"
                     class="cancel-btn"
                     type="button"
                 >
+
                     Cancel
+
                 </button>
 
 
@@ -697,12 +1018,17 @@
                     class="save-btn"
                     type="button"
                 >
+
                     💾 Save Changes
+
                 </button>
+
 
             </div>
 
+
         </div>
+
 
     </div>
 
