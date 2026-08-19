@@ -35,7 +35,7 @@
          SIDEBAR
     ====================================================== -->
 
-    <aside class="sidebar">
+    <aside class="sidebar" aria-label="Admin navigation">
 
 
         <!-- BRAND -->
@@ -149,21 +149,24 @@
             </a>
 
 
-            <!-- STATISTICS -->
+            <!-- REPORTS -->
 
-           <a
-    href="reports.html"
-    class="nav-item superadmin-only"
-    id="reportsNav"
->
-    <span class="nav-icon">
-        📈
-    </span>
+            <a
+                href="reports.html"
+                class="nav-item superadmin-only"
+                id="reportsNav"
+            >
 
-    <span>
-        Reports
-    </span>
-</a>
+                <span class="nav-icon">
+                    📈
+                </span>
+
+                <span>
+                    Reports
+                </span>
+
+            </a>
+
         </nav>
 
 
@@ -206,6 +209,7 @@
             >
 
                 🚪
+
                 <span>
                     Sign Out
                 </span>
@@ -359,402 +363,406 @@
 
 
         <!-- =================================================
-             PORTAL ACTIVITY
+             LIVE STUDENT REPORTS
         ================================================== -->
 
-        <!-- =====================================================
-     LIVE STUDENT REPORTS
-====================================================== -->
-
-<section class="live-reports-section">
-
-    <div class="section-heading">
-
-        <div>
-
-            <p class="card-label">
-                LIVE MONITORING
-            </p>
-
-            <h2>
-                Student Reports
-            </h2>
-
-            <p>
-                Live student activity by academic category.
-            </p>
-
-        </div>
-
-        <div class="live-indicator">
-            <span></span>
-            Live
-        </div>
-
-    </div>
+        <section class="live-reports-section">
 
 
-    <div class="report-grid">
+            <div class="section-heading">
 
+                <div>
 
-        <!-- =========================================
-             ALL STUDENTS
-        ========================================== -->
+                    <p class="card-label">
+                        LIVE MONITORING
+                    </p>
 
-        <article class="report-card report-all">
+                    <h2>
+                        Student Reports
+                    </h2>
 
-            <div class="report-card-top">
+                    <p>
+                        Live student activity by academic category.
+                    </p>
 
-                <div class="report-icon">
-                    👥
                 </div>
 
-                <span class="report-status">
-                    ALL STUDENTS
-                </span>
+
+                <div class="live-indicator">
+
+                    <span></span>
+
+                    Live
+
+                </div>
 
             </div>
 
 
-            <h3>
-                All Students
-            </h3>
 
-            <p>
-                Complete student portal overview.
-            </p>
+            <div class="report-grid">
 
 
-            <div class="report-stats">
+                <!-- =========================================
+                     ALL STUDENTS
+                ========================================== -->
+
+                <article class="report-card report-all">
+
+                    <div class="report-card-top">
+
+                        <div class="report-icon">
+                            👥
+                        </div>
+
+                        <span class="report-status">
+                            ALL STUDENTS
+                        </span>
+
+                    </div>
 
 
-                <div class="report-stat">
+                    <h3>
+                        All Students
+                    </h3>
 
-                    <span>
-                        Total
-                    </span>
-
-                    <strong id="reportAllTotal">
-                        0
-                    </strong>
-
-                </div>
+                    <p>
+                        Complete student portal overview.
+                    </p>
 
 
-                <div class="report-stat online">
-
-                    <span>
-                        Online
-                    </span>
-
-                    <strong id="reportAllOnline">
-                        0
-                    </strong>
-
-                </div>
+                    <div class="report-stats">
 
 
-                <div class="report-stat">
+                        <div class="report-stat">
 
-                    <span>
-                        Offline
-                    </span>
+                            <span>
+                                Total
+                            </span>
 
-                    <strong id="reportAllOffline">
-                        0
-                    </strong>
+                            <strong id="reportAllTotal">
+                                0
+                            </strong>
 
-                </div>
+                        </div>
 
 
-                <div class="report-stat">
+                        <div class="report-stat online">
 
-                    <span>
-                        Paper Views
-                    </span>
+                            <span>
+                                Online
+                            </span>
 
-                    <strong id="reportAllViews">
-                        0
-                    </strong>
+                            <strong id="reportAllOnline">
+                                0
+                            </strong>
 
-                </div>
+                        </div>
+
+
+                        <div class="report-stat">
+
+                            <span>
+                                Offline
+                            </span>
+
+                            <strong id="reportAllOffline">
+                                0
+                            </strong>
+
+                        </div>
+
+
+                        <div class="report-stat">
+
+                            <span>
+                                Paper Views
+                            </span>
+
+                            <strong id="reportAllViews">
+                                0
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- =========================================
+                     GRADE 10
+                ========================================== -->
+
+                <article class="report-card report-grade10">
+
+                    <div class="report-card-top">
+
+                        <div class="report-icon">
+                            🎓
+                        </div>
+
+                        <span class="report-status">
+                            GRADE 10
+                        </span>
+
+                    </div>
+
+
+                    <h3>
+                        Grade 10
+                    </h3>
+
+                    <p>
+                        Grade 10 student activity.
+                    </p>
+
+
+                    <div class="report-stats">
+
+
+                        <div class="report-stat">
+
+                            <span>
+                                Total
+                            </span>
+
+                            <strong id="reportGrade10Total">
+                                0
+                            </strong>
+
+                        </div>
+
+
+                        <div class="report-stat online">
+
+                            <span>
+                                Online
+                            </span>
+
+                            <strong id="reportGrade10Online">
+                                0
+                            </strong>
+
+                        </div>
+
+
+                        <div class="report-stat">
+
+                            <span>
+                                Offline
+                            </span>
+
+                            <strong id="reportGrade10Offline">
+                                0
+                            </strong>
+
+                        </div>
+
+
+                        <div class="report-stat">
+
+                            <span>
+                                Paper Views
+                            </span>
+
+                            <strong id="reportGrade10Views">
+                                0
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- =========================================
+                     GRADE 11
+                ========================================== -->
+
+                <article class="report-card report-grade11">
+
+                    <div class="report-card-top">
+
+                        <div class="report-icon">
+                            🎓
+                        </div>
+
+                        <span class="report-status">
+                            GRADE 11
+                        </span>
+
+                    </div>
+
+
+                    <h3>
+                        Grade 11
+                    </h3>
+
+                    <p>
+                        Grade 11 student activity.
+                    </p>
+
+
+                    <div class="report-stats">
+
+
+                        <div class="report-stat">
+
+                            <span>
+                                Total
+                            </span>
+
+                            <strong id="reportGrade11Total">
+                                0
+                            </strong>
+
+                        </div>
+
+
+                        <div class="report-stat online">
+
+                            <span>
+                                Online
+                            </span>
+
+                            <strong id="reportGrade11Online">
+                                0
+                            </strong>
+
+                        </div>
+
+
+                        <div class="report-stat">
+
+                            <span>
+                                Offline
+                            </span>
+
+                            <strong id="reportGrade11Offline">
+                                0
+                            </strong>
+
+                        </div>
+
+
+                        <div class="report-stat">
+
+                            <span>
+                                Paper Views
+                            </span>
+
+                            <strong id="reportGrade11Views">
+                                0
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- =========================================
+                     A/L
+                ========================================== -->
+
+                <article class="report-card report-al">
+
+                    <div class="report-card-top">
+
+                        <div class="report-icon">
+                            🎓
+                        </div>
+
+                        <span class="report-status">
+                            ADVANCED LEVEL
+                        </span>
+
+                    </div>
+
+
+                    <h3>
+                        Advanced Level
+                    </h3>
+
+                    <p>
+                        A/L student activity.
+                    </p>
+
+
+                    <div class="report-stats">
+
+
+                        <div class="report-stat">
+
+                            <span>
+                                Total
+                            </span>
+
+                            <strong id="reportALTotal">
+                                0
+                            </strong>
+
+                        </div>
+
+
+                        <div class="report-stat online">
+
+                            <span>
+                                Online
+                            </span>
+
+                            <strong id="reportALOnline">
+                                0
+                            </strong>
+
+                        </div>
+
+
+                        <div class="report-stat">
+
+                            <span>
+                                Offline
+                            </span>
+
+                            <strong id="reportALOffline">
+                                0
+                            </strong>
+
+                        </div>
+
+
+                        <div class="report-stat">
+
+                            <span>
+                                Paper Views
+                            </span>
+
+                            <strong id="reportALViews">
+                                0
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+                </article>
 
 
             </div>
 
-        </article>
+        </section>
 
 
-
-        <!-- =========================================
-             GRADE 10
-        ========================================== -->
-
-        <article class="report-card report-grade10">
-
-            <div class="report-card-top">
-
-                <div class="report-icon">
-                    🎓
-                </div>
-
-                <span class="report-status">
-                    GRADE 10
-                </span>
-
-            </div>
-
-
-            <h3>
-                Grade 10
-            </h3>
-
-            <p>
-                Grade 10 student activity.
-            </p>
-
-
-            <div class="report-stats">
-
-
-                <div class="report-stat">
-
-                    <span>
-                        Total
-                    </span>
-
-                    <strong id="reportGrade10Total">
-                        0
-                    </strong>
-
-                </div>
-
-
-                <div class="report-stat online">
-
-                    <span>
-                        Online
-                    </span>
-
-                    <strong id="reportGrade10Online">
-                        0
-                    </strong>
-
-                </div>
-
-
-                <div class="report-stat">
-
-                    <span>
-                        Offline
-                    </span>
-
-                    <strong id="reportGrade10Offline">
-                        0
-                    </strong>
-
-                </div>
-
-
-                <div class="report-stat">
-
-                    <span>
-                        Paper Views
-                    </span>
-
-                    <strong id="reportGrade10Views">
-                        0
-                    </strong>
-
-                </div>
-
-
-            </div>
-
-        </article>
-
-
-
-        <!-- =========================================
-             GRADE 11
-        ========================================== -->
-
-        <article class="report-card report-grade11">
-
-            <div class="report-card-top">
-
-                <div class="report-icon">
-                    🎓
-                </div>
-
-                <span class="report-status">
-                    GRADE 11
-                </span>
-
-            </div>
-
-
-            <h3>
-                Grade 11
-            </h3>
-
-            <p>
-                Grade 11 student activity.
-            </p>
-
-
-            <div class="report-stats">
-
-
-                <div class="report-stat">
-
-                    <span>
-                        Total
-                    </span>
-
-                    <strong id="reportGrade11Total">
-                        0
-                    </strong>
-
-                </div>
-
-
-                <div class="report-stat online">
-
-                    <span>
-                        Online
-                    </span>
-
-                    <strong id="reportGrade11Online">
-                        0
-                    </strong>
-
-                </div>
-
-
-                <div class="report-stat">
-
-                    <span>
-                        Offline
-                    </span>
-
-                    <strong id="reportGrade11Offline">
-                        0
-                    </strong>
-
-                </div>
-
-
-                <div class="report-stat">
-
-                    <span>
-                        Paper Views
-                    </span>
-
-                    <strong id="reportGrade11Views">
-                        0
-                    </strong>
-
-                </div>
-
-
-            </div>
-
-        </article>
-
-
-
-        <!-- =========================================
-             A/L
-        ========================================== -->
-
-        <article class="report-card report-al">
-
-            <div class="report-card-top">
-
-                <div class="report-icon">
-                    🎓
-                </div>
-
-                <span class="report-status">
-                    ADVANCED LEVEL
-                </span>
-
-            </div>
-
-
-            <h3>
-                Advanced Level
-            </h3>
-
-            <p>
-                A/L student activity.
-            </p>
-
-
-            <div class="report-stats">
-
-
-                <div class="report-stat">
-
-                    <span>
-                        Total
-                    </span>
-
-                    <strong id="reportALTotal">
-                        0
-                    </strong>
-
-                </div>
-
-
-                <div class="report-stat online">
-
-                    <span>
-                        Online
-                    </span>
-
-                    <strong id="reportALOnline">
-                        0
-                    </strong>
-
-                </div>
-
-
-                <div class="report-stat">
-
-                    <span>
-                        Offline
-                    </span>
-
-                    <strong id="reportALOffline">
-                        0
-                    </strong>
-
-                </div>
-
-
-                <div class="report-stat">
-
-                    <span>
-                        Paper Views
-                    </span>
-
-                    <strong id="reportALViews">
-                        0
-                    </strong>
-
-                </div>
-
-
-            </div>
-
-        </article>
-
-
-    </div>
-
-</section>
 
         <!-- =================================================
              MANAGEMENT CARDS
@@ -763,7 +771,9 @@
         <section class="management-grid">
 
 
-            <!-- STUDENT MANAGEMENT -->
+            <!-- =============================================
+                 STUDENT MANAGEMENT
+            ============================================== -->
 
             <article class="management-card">
 
@@ -790,18 +800,21 @@
 
 
                 <a
-    href="reports.html"
-    class="management-link"
->
-    View Reports →
-</a>
+                    href="students.html"
+                    class="management-link"
+                    id="studentManagementLink"
+                >
+                    Manage Students →
+                </a>
 
 
             </article>
 
 
 
-            <!-- PAPER MANAGEMENT -->
+            <!-- =============================================
+                 PAPER MANAGEMENT
+            ============================================== -->
 
             <article
                 class="management-card superadmin-card"
@@ -831,7 +844,8 @@
 
                 <a
                     href="paper-management.html"
-                    class="management-link"
+                    class="management-link superadmin-link"
+                    id="paperManagementLink"
                 >
                     Open Paper Management →
                 </a>
@@ -841,7 +855,9 @@
 
 
 
-            <!-- IMPORT -->
+            <!-- =============================================
+                 IMPORT
+            ============================================== -->
 
             <article
                 class="management-card superadmin-card"
@@ -871,7 +887,8 @@
 
                 <a
                     href="import-students.html"
-                    class="management-link"
+                    class="management-link superadmin-link"
+                    id="importStudentsLink"
                 >
                     Import Student Data →
                 </a>
@@ -881,7 +898,9 @@
 
 
 
-            <!-- STATISTICS -->
+            <!-- =============================================
+                 STATISTICS
+            ============================================== -->
 
             <article
                 class="management-card superadmin-card"
@@ -911,7 +930,8 @@
 
                 <a
                     href="statistics.html"
-                    class="management-link"
+                    class="management-link superadmin-link"
+                    id="statisticsLink"
                 >
                     View Statistics →
                 </a>
@@ -937,7 +957,7 @@
                 </strong>
 
                 <span>
-                   © 2026 Administration Dashboard
+                    © 2026 Administration Dashboard
                 </span>
 
             </div>
@@ -949,6 +969,19 @@
 
 
 </div>
+
+
+
+<!-- =====================================================
+     ACCESS DENIED MESSAGE
+====================================================== -->
+
+<div
+    id="accessDeniedMessage"
+    class="access-denied-message"
+    aria-live="polite"
+></div>
+
 
 
 <!-- =====================================================
