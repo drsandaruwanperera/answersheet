@@ -1,495 +1,507 @@
-import {
-    db,
-    doc,
-    getDoc
-} from "./firebase.js";
+// =====================================================
+// GRADE 10 MODEL PAPER VIEWER
+// =====================================================
 
 
 // =====================================================
-// ELEMENT
+// GET URL PARAMETERS
 // =====================================================
 
-const termGrid =
-    document.getElementById("termGrid");
-
-
-// =====================================================
-// TERM DATA
-// =====================================================
-
-const TERMS = [
-    {
-        number: "1",
-        title: "1st Term",
-        description: "Grade 10 Model Papers"
-    },
-    {
-        number: "2",
-        title: "2nd Term",
-        description: "Grade 10 Model Papers"
-    },
-    {
-        number: "3",
-        title: "3rd Term",
-        description: "Grade 10 Model Papers"
-    }
-];
-
-
-// =====================================================
-// ERROR DISPLAY
-// =====================================================
-
-function showError(error) {
-
-    console.error(
-        "Grade 10 Model Papers Error:",
-        error
-    );
-
-    if (!termGrid) {
-        return;
-    }
-
-    const message =
-        error?.message ||
-        String(error) ||
-        "Unknown error";
-
-
-    termGrid.innerHTML = `
-
-        <div
-            style="
-                grid-column:1/-1;
-                background:#fff;
-                border-radius:20px;
-                padding:35px;
-                text-align:center;
-                box-shadow:0 10px 30px rgba(0,0,0,.08);
-            "
-        >
-
-            <div
-                style="
-                    font-size:45px;
-                    margin-bottom:15px;
-                "
-            >
-                ⚠️
-            </div>
-
-            <h2
-                style="
-                    margin:0 0 12px;
-                    color:#111827;
-                "
-            >
-                Unable to Load Model Papers
-            </h2>
-
-            <p
-                style="
-                    color:#64748b;
-                    margin:0 auto 20px;
-                    max-width:650px;
-                "
-            >
-                ${escapeHTML(message)}
-            </p>
-
-            <button
-                type="button"
-                onclick="location.reload()"
-                style="
-                    border:0;
-                    padding:12px 22px;
-                    border-radius:10px;
-                    background:#6d35f2;
-                    color:white;
-                    font-weight:600;
-                    cursor:pointer;
-                "
-            >
-                🔄 Try Again
-            </button>
-
-        </div>
-
-    `;
-
-}
-
-
-// =====================================================
-// ESCAPE HTML
-// =====================================================
-
-function escapeHTML(value) {
-
-    return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-
-}
-
-
-// =====================================================
-// GET FIRESTORE SETTINGS
-// =====================================================
-
-async function getPaperSettings() {
-
-    console.log(
-        "Reading Firestore paper settings..."
+const params =
+    new URLSearchParams(
+        window.location.search
     );
 
 
-    const settingsRef =
-        doc(
-            db,
-            "paperSettings",
-            "settings"
-        );
+const term =
+    params.get("term");
 
 
-    const snapshot =
-        await getDoc(
-            settingsRef
-        );
+const paper =
+    params.get("paper");
 
 
-    if (!snapshot.exists()) {
+// =====================================================
+// ELEMENTS
+// =====================================================
 
-        console.log(
-            "paperSettings/settings does not exist."
-        );
-
-        return {};
-
-    }
-
-
-    const data =
-        snapshot.data() || {};
-
-
-    console.log(
-        "Paper settings loaded:",
-        data
+const paperTitle =
+    document.getElementById(
+        "paperTitle"
     );
 
 
-    return data;
+const paperSubtitle =
+    document.getElementById(
+        "paperSubtitle"
+    );
 
-}
+
+const mcqBtn =
+    document.getElementById(
+        "mcqBtn"
+    );
+
+
+const mcqAnswerBtn =
+    document.getElementById(
+        "mcqAnswerBtn"
+    );
+
+
+const questionBtn =
+    document.getElementById(
+        "questionBtn"
+    );
+
+
+const answerBtn =
+    document.getElementById(
+        "answerBtn"
+    );
 
 
 // =====================================================
-// CHECK TERM STATUS
+// DEBUG
 // =====================================================
 
-function isTermEnabled(
-    settings,
-    termNumber
+console.log(
+    "======================================"
+);
+
+console.log(
+    "GRADE 10 MODEL PAPER"
+);
+
+console.log(
+    "Term:",
+    term
+);
+
+console.log(
+    "Paper:",
+    paper
+);
+
+console.log(
+    "MCQ Button:",
+    mcqBtn
+);
+
+console.log(
+    "MCQ Answer Button:",
+    mcqAnswerBtn
+);
+
+console.log(
+    "Question Button:",
+    questionBtn
+);
+
+console.log(
+    "Answer Button:",
+    answerBtn
+);
+
+console.log(
+    "======================================"
+);
+
+
+// =====================================================
+// LOGIN
+// =====================================================
+
+if (
+    sessionStorage.getItem(
+        "loggedIn"
+    ) !== "true"
 ) {
 
-    const settingId =
-        `grade10_term${termNumber}_enabled`;
+    window.location.replace(
+        "index.html"
+    );
 
+    throw new Error(
+        "Student not logged in"
+    );
+
+}
+
+
+// =====================================================
+// VALIDATE TERM
+// =====================================================
+
+if (
+    !["1", "2", "3"].includes(term)
+) {
+
+    alert(
+        "Invalid term."
+    );
+
+    window.location.replace(
+        "grade10-model-papers.html"
+    );
+
+    throw new Error(
+        "Invalid term"
+    );
+
+}
+
+
+// =====================================================
+// VALIDATE PAPER
+// =====================================================
+
+const paperNumber =
+    Number(paper);
+
+
+if (
+    !Number.isInteger(
+        paperNumber
+    ) ||
+    paperNumber < 1 ||
+    paperNumber > 99
+) {
+
+    alert(
+        "Invalid paper."
+    );
+
+    window.location.replace(
+        `grade10-term.html?term=${encodeURIComponent(
+            term
+        )}`
+    );
+
+    throw new Error(
+        "Invalid paper"
+    );
+
+}
+
+
+// =====================================================
+// FORMAT PAPER
+// =====================================================
+
+const paperFormatted =
+    String(
+        paperNumber
+    ).padStart(
+        2,
+        "0"
+    );
+
+
+// =====================================================
+// TERM NAMES
+// =====================================================
+
+const termNames = {
+
+    "1":
+        "1st Term",
+
+    "2":
+        "2nd Term",
+
+    "3":
+        "3rd Term"
+
+};
+
+
+const termName =
+    termNames[
+        term
+    ];
+
+
+// =====================================================
+// PAGE TITLE
+// =====================================================
+
+if (
+    paperTitle
+) {
+
+    paperTitle.textContent =
+        `📘 Model Paper ${paperFormatted}`;
+
+}
+
+
+if (
+    paperSubtitle
+) {
+
+    paperSubtitle.textContent =
+        `Grade 10 • ${termName}`;
+
+}
+
+
+// =====================================================
+// PDF BASE PATH
+// =====================================================
+//
+// Expected GitHub structure:
+//
+// papers/
+//   grade10/
+//     term1/
+//       paper01/
+//         mcq.pdf
+//         question.pdf
+//
+//     term2/
+//       paper01/
+//         mcq.pdf
+//         question.pdf
+//
+//     term3/
+//       paper01/
+//         mcq.pdf
+//         question.pdf
+//
+// =====================================================
+
+const basePath =
+    `./papers/grade10/term${term}/paper${paperFormatted}`;
+
+
+const mcqPDF =
+    `${basePath}/mcq.pdf`;
+
+
+const questionPDF =
+    `${basePath}/question.pdf`;
+
+
+// =====================================================
+// ANSWER PAGE
+// =====================================================
+
+const mcqAnswerPage =
+    `grade10-answer.html` +
+    `?term=${encodeURIComponent(term)}` +
+    `&paper=${encodeURIComponent(paperFormatted)}` +
+    `&type=mcq`;
+
+
+const answerSchemePage =
+    `grade10-answer.html` +
+    `?term=${encodeURIComponent(term)}` +
+    `&paper=${encodeURIComponent(paperFormatted)}` +
+    `&type=answer`;
+
+
+// =====================================================
+// OPEN PDF FUNCTION
+// =====================================================
+
+function openPDF(
+    url
+) {
 
     console.log(
-        "Checking:",
-        settingId,
-        settings[settingId]
+        "Opening PDF:",
+        url
     );
 
 
-    // If no term setting exists,
-    // show the term by default.
-
-    if (
-        !Object.prototype.hasOwnProperty.call(
-            settings,
-            settingId
-        )
-    ) {
-
-        return true;
-
-    }
-
-
-    return (
-        settings[settingId] === true
+    window.open(
+        url,
+        "_blank",
+        "noopener,noreferrer"
     );
 
 }
 
 
 // =====================================================
-// CREATE CARD
+// MCQ
 // =====================================================
 
-function createTermCard(term) {
+if (
+    mcqBtn
+) {
 
-    const card =
-        document.createElement("div");
-
-
-    card.className =
-        "term-card";
-
-
-    card.style.cursor =
-        "pointer";
-
-
-    card.innerHTML = `
-
-        <div class="term-icon">
-            📚
-        </div>
-
-        <h2>
-            ${escapeHTML(term.title)}
-        </h2>
-
-        <p>
-            ${escapeHTML(term.description)}
-        </p>
-
-    `;
-
-
-    card.addEventListener(
+    mcqBtn.addEventListener(
         "click",
-        () => {
+        function (event) {
 
-            window.location.href =
-                `grade10-term.html?term=${encodeURIComponent(
-                    term.number
-                )}`;
+            event.preventDefault();
 
-        }
-    );
-
-
-    return card;
-
-}
-
-
-// =====================================================
-// SHOW NO PAPERS
-// =====================================================
-
-function showNoTerms() {
-
-    termGrid.innerHTML = `
-
-        <div
-            style="
-                grid-column:1/-1;
-                background:white;
-                border-radius:20px;
-                padding:50px 25px;
-                text-align:center;
-                box-shadow:0 10px 30px rgba(0,0,0,.08);
-            "
-        >
-
-            <div
-                style="
-                    font-size:50px;
-                    margin-bottom:15px;
-                "
-            >
-                🔒
-            </div>
-
-            <h2
-                style="
-                    margin:0 0 10px;
-                    color:#111827;
-                "
-            >
-                No Model Papers Available
-            </h2>
-
-            <p
-                style="
-                    margin:0;
-                    color:#64748b;
-                "
-            >
-                Model papers are currently unavailable.
-            </p>
-
-        </div>
-
-    `;
-
-}
-
-
-// =====================================================
-// LOAD
-// =====================================================
-
-async function loadTerms() {
-
-    try {
-
-        console.log(
-            "================================"
-        );
-
-        console.log(
-            "GRADE 10 MODEL PAPERS START"
-        );
-
-        console.log(
-            "================================"
-        );
-
-
-        if (!termGrid) {
-
-            throw new Error(
-                "termGrid element not found in HTML."
-            );
-
-        }
-
-
-        // =========================================
-        // SHOW LOADING
-        // =========================================
-
-        termGrid.innerHTML = `
-
-            <div
-                style="
-                    grid-column:1/-1;
-                    text-align:center;
-                    padding:40px;
-                    color:#64748b;
-                "
-            >
-                Loading...
-            </div>
-
-        `;
-
-
-        // =========================================
-        // FIRESTORE
-        // =========================================
-
-        const settings =
-            await getPaperSettings();
-
-
-        // =========================================
-        // CLEAR
-        // =========================================
-
-        termGrid.innerHTML =
-            "";
-
-
-        let visibleCount =
-            0;
-
-
-        // =========================================
-        // TERMS
-        // =========================================
-
-        for (
-            const term of TERMS
-        ) {
-
-            const enabled =
-                isTermEnabled(
-                    settings,
-                    term.number
-                );
+            event.stopPropagation();
 
 
             console.log(
-                term.title,
-                enabled
-                    ? "ACTIVE"
-                    : "DISABLED"
+                "MCQ clicked"
             );
 
 
-            if (!enabled) {
-
-                continue;
-
-            }
-
-
-            const card =
-                createTermCard(
-                    term
-                );
-
-
-            termGrid.appendChild(
-                card
+            openPDF(
+                mcqPDF
             );
 
-
-            visibleCount++;
-
         }
+    );
 
+}
+else {
 
-        // =========================================
-        // NONE
-        // =========================================
-
-        if (
-            visibleCount === 0
-        ) {
-
-            showNoTerms();
-
-        }
-
-
-        console.log(
-            "Visible terms:",
-            visibleCount
-        );
-
-
-        console.log(
-            "GRADE 10 MODEL PAPERS COMPLETE"
-        );
-
-    }
-
-    catch (error) {
-
-        showError(
-            error
-        );
-
-    }
+    console.error(
+        "❌ mcqBtn not found"
+    );
 
 }
 
 
 // =====================================================
-// START
+// MCQ ANSWER
 // =====================================================
 
-loadTerms();
+if (
+    mcqAnswerBtn
+) {
+
+    mcqAnswerBtn.addEventListener(
+        "click",
+        function (event) {
+
+            event.preventDefault();
+
+            event.stopPropagation();
+
+
+            console.log(
+                "MCQ Answer clicked"
+            );
+
+
+            window.location.href =
+                mcqAnswerPage;
+
+        }
+    );
+
+}
+else {
+
+    console.error(
+        "❌ mcqAnswerBtn not found"
+    );
+
+}
+
+
+// =====================================================
+// QUESTION PAPER
+// =====================================================
+
+if (
+    questionBtn
+) {
+
+    questionBtn.addEventListener(
+        "click",
+        function (event) {
+
+            event.preventDefault();
+
+            event.stopPropagation();
+
+
+            console.log(
+                "Question Paper clicked"
+            );
+
+
+            openPDF(
+                questionPDF
+            );
+
+        }
+    );
+
+}
+else {
+
+    console.error(
+        "❌ questionBtn not found"
+    );
+
+}
+
+
+// =====================================================
+// ANSWER SCHEME
+// =====================================================
+
+if (
+    answerBtn
+) {
+
+    answerBtn.addEventListener(
+        "click",
+        function (event) {
+
+            event.preventDefault();
+
+            event.stopPropagation();
+
+
+            console.log(
+                "Answer Scheme clicked"
+            );
+
+
+            window.location.href =
+                answerSchemePage;
+
+        }
+    );
+
+}
+else {
+
+    console.error(
+        "❌ answerBtn not found"
+    );
+
+}
+
+
+// =====================================================
+// FINAL DEBUG
+// =====================================================
+
+console.log(
+    "MCQ PDF:",
+    mcqPDF
+);
+
+console.log(
+    "Question PDF:",
+    questionPDF
+);
+
+console.log(
+    "MCQ Answer:",
+    mcqAnswerPage
+);
+
+console.log(
+    "Answer Scheme:",
+    answerSchemePage
+);
+
+console.log(
+    "✅ Grade 10 Model Paper JS loaded"
+);
