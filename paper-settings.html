@@ -1,45 +1,622 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paper Settings</title>
 
-    <link rel="stylesheet" href="paper-settings.css">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Paper Management</title>
+
+    <link
+        rel="stylesheet"
+        href="paper-settings.css"
+    >
+
+    <link
+        rel="icon"
+        href="data:,"
+    >
+
 </head>
+
+
 <body>
 
-<div class="container">
 
-    <h2>Paper Settings</h2>
+<div class="admin-layout">
 
-    <table>
 
-        <thead>
-            <tr>
-               <th>Paper</th>
-               <th>Title</th>
-               <th>Pages</th>
-             <th>Default</th>
-              <th>Action</th>
-            </tr>
-        </thead>
+    <!-- =========================================
+         SIDEBAR
+    ========================================== -->
 
-        <tbody id="paperTable">
-        </tbody>
+    <aside class="sidebar">
 
-    </table>
 
-    <br>
+        <!-- BRAND -->
 
-    <button onclick="location.href='admin.html'">
-        ← Back to Admin
-    </button>
+        <div class="sidebar-brand">
+
+            <div class="brand-logo">
+                🎓
+            </div>
+
+            <div>
+
+                <h2>
+                    Student
+                </h2>
+
+                <span>
+                    Assessment Portal
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- NAVIGATION -->
+
+        <div class="sidebar-label">
+            ADMINISTRATION
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+
+            <!-- DASHBOARD -->
+
+            <a
+                href="admin.html"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    🏠
+                </span>
+
+                <span>
+                    Dashboard
+                </span>
+
+            </a>
+
+
+            <!-- STUDENTS -->
+
+            <a
+                href="students.html"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    👥
+                </span>
+
+                <span>
+                    Students
+                </span>
+
+            </a>
+
+
+            <!-- PAPER MANAGEMENT -->
+
+            <a
+                href="paper-settings.html"
+                class="nav-item active"
+            >
+
+                <span class="nav-icon">
+                    📚
+                </span>
+
+                <span>
+                    Paper Management
+                </span>
+
+            </a>
+
+
+            <!-- IMPORT -->
+
+            <a
+                href="import-students.html"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    📥
+                </span>
+
+                <span>
+                    Import Students
+                </span>
+
+            </a>
+
+
+            <!-- REPORTS -->
+
+            <a
+                href="reports.html"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    📊
+                </span>
+
+                <span>
+                    Reports
+                </span>
+
+            </a>
+
+
+        </nav>
+
+
+        <!-- SIDEBAR BOTTOM -->
+
+        <div class="sidebar-bottom">
+
+
+            <div class="admin-user-card">
+
+                <div class="admin-user-icon">
+                    👨‍💼
+                </div>
+
+
+                <div class="admin-user-info">
+
+                    <strong id="adminUsername">
+                        Admin
+                    </strong>
+
+                    <span id="adminRole">
+                        Administrator
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="button"
+                id="logoutBtn"
+                class="logout-btn"
+            >
+
+                🚪
+
+                <span>
+                    Sign Out
+                </span>
+
+            </button>
+
+
+        </div>
+
+
+    </aside>
+
+
+
+    <!-- =========================================
+         MAIN CONTENT
+    ========================================== -->
+
+    <main class="main-content">
+
+
+        <!-- PAGE HEADER -->
+
+        <header class="page-header">
+
+
+            <div>
+
+                <p class="page-label">
+                    SUPER ADMINISTRATION
+                </p>
+
+
+                <h1>
+                    Paper Management
+                </h1>
+
+
+                <p class="page-description">
+                    Control which papers and paper categories
+                    are available to students.
+                </p>
+
+            </div>
+
+
+            <div class="admin-status">
+
+                <span class="status-dot"></span>
+
+                Superadmin Only
+
+            </div>
+
+
+        </header>
+
+
+
+        <!-- =========================================
+             INFORMATION
+        ========================================== -->
+
+        <section class="info-banner">
+
+            <div class="info-banner-icon">
+                🔐
+            </div>
+
+
+            <div>
+
+                <strong>
+                    Super Administrator Access
+                </strong>
+
+
+                <p>
+                    Enable or disable papers from the
+                    student portal. Disabled papers will
+                    not be available to students.
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================
+             CONTROLS
+        ========================================== -->
+
+        <section class="management-toolbar">
+
+
+            <div>
+
+                <span class="toolbar-label">
+                    PAPER AVAILABILITY
+                </span>
+
+                <h2>
+                    Manage Student Resources
+                </h2>
+
+            </div>
+
+
+            <div class="toolbar-actions">
+
+
+                <button
+                    type="button"
+                    id="enableAllBtn"
+                    class="toolbar-btn enable-all"
+                >
+                    🟢 Enable All
+                </button>
+
+
+                <button
+                    type="button"
+                    id="disableAllBtn"
+                    class="toolbar-btn disable-all"
+                >
+                    🔴 Disable All
+                </button>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =========================================
+             GRADE 10
+        ========================================== -->
+
+        <section
+            class="paper-section"
+            data-category="grade10"
+        >
+
+
+            <div class="section-header">
+
+
+                <div class="section-title">
+
+
+                    <div class="section-icon grade10-icon">
+                        🎓
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            GRADE 10
+                        </span>
+
+                        <h2>
+                            Grade 10 Papers
+                        </h2>
+
+                        <p>
+                            Manage Grade 10 terms,
+                            model papers and assessments.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="section-toggle"
+                    data-section-toggle="grade10"
+                >
+                    Expand
+                </button>
+
+
+            </div>
+
+
+
+            <div
+                class="paper-list"
+                id="grade10PaperList"
+            >
+
+                <!-- JS LOADS PAPERS HERE -->
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =========================================
+             GRADE 11
+        ========================================== -->
+
+        <section
+            class="paper-section"
+            data-category="grade11"
+        >
+
+
+            <div class="section-header">
+
+
+                <div class="section-title">
+
+
+                    <div class="section-icon grade11-icon">
+                        🎓
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            GRADE 11
+                        </span>
+
+                        <h2>
+                            Grade 11 Papers
+                        </h2>
+
+                        <p>
+                            Manage term tests, model papers
+                            and past examination papers.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="section-toggle"
+                    data-section-toggle="grade11"
+                >
+                    Expand
+                </button>
+
+
+            </div>
+
+
+
+            <div
+                class="paper-list"
+                id="grade11PaperList"
+            >
+
+                <!-- JS LOADS PAPERS HERE -->
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =========================================
+             A/L
+        ========================================== -->
+
+        <section
+            class="paper-section"
+            data-category="al"
+        >
+
+
+            <div class="section-header">
+
+
+                <div class="section-title">
+
+
+                    <div class="section-icon al-icon">
+                        🎓
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            ADVANCED LEVEL
+                        </span>
+
+                        <h2>
+                            A/L Papers
+                        </h2>
+
+                        <p>
+                            Manage model papers,
+                            province papers and other
+                            A/L resources.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="section-toggle"
+                    data-section-toggle="al"
+                >
+                    Expand
+                </button>
+
+
+            </div>
+
+
+
+            <div
+                class="paper-list"
+                id="alPaperList"
+            >
+
+                <!-- JS LOADS PAPERS HERE -->
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =========================================
+             SAVE BAR
+        ========================================== -->
+
+        <div class="save-bar">
+
+
+            <div>
+
+                <strong>
+                    Paper Settings
+                </strong>
+
+                <span id="changesStatus">
+                    No unsaved changes
+                </span>
+
+            </div>
+
+
+            <button
+                type="button"
+                id="saveSettingsBtn"
+                class="save-settings-btn"
+            >
+
+                💾 Save Changes
+
+            </button>
+
+
+        </div>
+
+
+
+        <!-- =========================================
+             FOOTER
+        ========================================== -->
+
+        <footer class="admin-footer">
+
+            <div>
+
+                <strong>
+                    Student Assessment Portal
+                </strong>
+
+                <span>
+                    © 2026 Administration Dashboard
+                </span>
+
+            </div>
+
+        </footer>
+
+
+    </main>
+
 
 </div>
 
+
+
+<!-- =========================================
+     JAVASCRIPT
+========================================== -->
+
 <script src="session.js"></script>
-<script type="module" src="paper-settings.js"></script>
+
+
+<script
+    type="module"
+    src="paper-settings.js"
+></script>
+
 
 </body>
+
 </html>
