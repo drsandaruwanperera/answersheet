@@ -4,7 +4,7 @@
 
 
 // =====================================================
-// GET URL
+// URL PARAMETER
 // =====================================================
 
 const params =
@@ -47,7 +47,7 @@ const termNames = {
 
 
 // =====================================================
-// VALIDATE TERM
+// VALIDATE
 // =====================================================
 
 if (
@@ -70,7 +70,7 @@ if (
 
 
 // =====================================================
-// SET TITLE
+// TITLE
 // =====================================================
 
 if (termTitle) {
@@ -82,7 +82,7 @@ if (termTitle) {
 
 
 // =====================================================
-// PAPER LIST
+// PAPER DATA
 // =====================================================
 
 const PAPERS = [
@@ -116,25 +116,25 @@ const PAPERS = [
 
 
 // =====================================================
-// CREATE PAPER CARD
+// CREATE CARD
 // =====================================================
 
-function createPaperCard(
-    paper
-) {
+function createPaperCard(paper) {
 
     const card =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
 
     card.className =
         "paper-card";
 
 
-    card.dataset.paperId =
+    const settingId =
         `grade10_term${term}_model_${paper.number}`;
+
+
+    card.dataset.settingId =
+        settingId;
 
 
     card.innerHTML = `
@@ -175,7 +175,7 @@ function createPaperCard(
 
 
 // =====================================================
-// RENDER PAPERS IMMEDIATELY
+// RENDER PAPERS
 // =====================================================
 
 function renderPapers() {
@@ -183,7 +183,7 @@ function renderPapers() {
     if (!paperContainer) {
 
         console.error(
-            "❌ paperContainer not found."
+            "❌ paperContainer NOT FOUND"
         );
 
         return;
@@ -213,105 +213,24 @@ function renderPapers() {
 
 
     console.log(
-        "✅ 5 papers rendered immediately."
+        "✅ 5 Grade 10 papers rendered"
     );
 
 }
 
 
 // =====================================================
-// SHOW TERM DISABLED
+// FIREBASE SETTINGS
 // =====================================================
 
-function showTermDisabled() {
-
-    if (!paperContainer) {
-        return;
-    }
-
-
-    paperContainer.innerHTML = `
-
-        <div
-            style="
-                width:100%;
-                box-sizing:border-box;
-                background:#fff;
-                border-radius:20px;
-                padding:50px 25px;
-                text-align:center;
-                box-shadow:0 10px 30px rgba(0,0,0,.08);
-            "
-        >
-
-            <div
-                style="
-                    font-size:50px;
-                    margin-bottom:15px;
-                "
-            >
-                🔒
-            </div>
-
-
-            <h2>
-                ${termNames[term]} Unavailable
-            </h2>
-
-
-            <p
-                style="
-                    color:#64748b;
-                    margin-bottom:25px;
-                "
-            >
-                This term has been disabled
-                by the administrator.
-            </p>
-
-
-            <button
-                type="button"
-                onclick="
-                    window.location.href='grade10-model-papers.html'
-                "
-                style="
-                    border:0;
-                    padding:12px 24px;
-                    border-radius:10px;
-                    background:#6d35f2;
-                    color:white;
-                    font-weight:600;
-                    cursor:pointer;
-                "
-            >
-                ← Back
-            </button>
-
-        </div>
-
-    `;
-
-}
-
-
-// =====================================================
-// GET FIRESTORE SETTINGS
-// =====================================================
-
-async function loadSettings() {
+async function loadFirebaseSettings() {
 
     try {
 
-        /*
-         * IMPORTANT:
-         *
-         * Firebase is dynamically imported.
-         *
-         * Therefore, if Firebase has an error,
-         * the papers already rendered above
-         * will NOT disappear.
-         */
+        console.log(
+            "Loading Firebase..."
+        );
+
 
         const firebase =
             await import(
@@ -319,11 +238,27 @@ async function loadSettings() {
             );
 
 
-        const {
-            db,
-            doc,
-            getDoc
-        } = firebase;
+        const db =
+            firebase.db;
+
+        const doc =
+            firebase.doc;
+
+        const getDoc =
+            firebase.getDoc;
+
+
+        if (
+            !db ||
+            !doc ||
+            !getDoc
+        ) {
+
+            throw new Error(
+                "firebase.js exports are missing."
+            );
+
+        }
 
 
         const settingsRef =
@@ -345,7 +280,7 @@ async function loadSettings() {
         ) {
 
             console.log(
-                "No paper settings found."
+                "No paper settings document."
             );
 
             return {};
@@ -353,35 +288,25 @@ async function loadSettings() {
         }
 
 
-        const settings =
-            snapshot.data() || {};
-
-
-        console.log(
-            "✅ Paper settings:",
-            settings
+        return (
+            snapshot.data() || {}
         );
-
-
-        return settings;
 
     }
 
     catch (error) {
 
         console.error(
-            "⚠️ Could not load paper settings:",
+            "Firebase settings error:",
             error
         );
 
 
         /*
-         * IMPORTANT:
+         * IMPORTANT
          *
-         * If Firestore fails,
-         * DO NOT HIDE THE PAPERS.
-         *
-         * Papers remain visible.
+         * Firebase error එකක් තිබුණත්
+         * papers hide කරන්නේ නැහැ.
          */
 
         return null;
@@ -395,13 +320,15 @@ async function loadSettings() {
 // GET ENABLED VALUE
 // =====================================================
 
-function isEnabled(
+function getEnabled(
     settings,
     id
 ) {
 
-    // Firebase failed
-    // Keep paper visible.
+    /*
+     * Firebase fail වුණොත්
+     * paper active.
+     */
 
     if (
         settings === null
@@ -412,8 +339,10 @@ function isEnabled(
     }
 
 
-    // No setting exists
-    // Default = enabled.
+    /*
+     * Setting එක නැත්නම්
+     * paper active.
+     */
 
     if (
         !Object.prototype.hasOwnProperty.call(
@@ -467,15 +396,12 @@ function isEnabled(
 
 
 // =====================================================
-// CHECK TERM ENABLED
+// CHECK TERM
 // =====================================================
 
 function isTermEnabled(
     settings
 ) {
-
-    // Firebase failed
-    // Keep visible.
 
     if (
         settings === null
@@ -486,14 +412,14 @@ function isTermEnabled(
     }
 
 
-    const id =
+    const termId =
         `grade10_term${term}_enabled`;
 
 
     if (
         !Object.prototype.hasOwnProperty.call(
             settings,
-            id
+            termId
         )
     ) {
 
@@ -503,7 +429,7 @@ function isTermEnabled(
 
 
     const value =
-        settings[id];
+        settings[termId];
 
 
     if (
@@ -520,14 +446,9 @@ function isTermEnabled(
         value !== null
     ) {
 
-        if (
-            typeof value.enabled ===
-            "boolean"
-        ) {
-
-            return value.enabled;
-
-        }
+        return (
+            value.enabled !== false
+        );
 
     }
 
@@ -538,7 +459,7 @@ function isTermEnabled(
 
 
 // =====================================================
-// APPLY FIRESTORE SETTINGS
+// APPLY SETTINGS
 // =====================================================
 
 function applySettings(
@@ -560,13 +481,61 @@ function applySettings(
         )
     ) {
 
-        console.log(
-            "🚫 Term disabled:",
-            term
-        );
+        paperContainer.innerHTML = `
 
+            <div
+                style="
+                    grid-column:1/-1;
+                    background:white;
+                    padding:50px 25px;
+                    border-radius:20px;
+                    text-align:center;
+                    box-shadow:0 10px 30px rgba(0,0,0,.08);
+                "
+            >
 
-        showTermDisabled();
+                <div
+                    style="
+                        font-size:50px;
+                    "
+                >
+                    🔒
+                </div>
+
+                <h2>
+                    ${termNames[term]} Unavailable
+                </h2>
+
+                <p
+                    style="
+                        color:#64748b;
+                    "
+                >
+                    This term has been disabled
+                    by the administrator.
+                </p>
+
+                <button
+                    type="button"
+                    onclick="
+                        window.location.href='grade10-model-papers.html'
+                    "
+                    style="
+                        margin-top:15px;
+                        border:0;
+                        padding:12px 24px;
+                        border-radius:10px;
+                        background:#6d35f2;
+                        color:white;
+                        cursor:pointer;
+                    "
+                >
+                    ← Back
+                </button>
+
+            </div>
+
+        `;
 
         return;
 
@@ -574,10 +543,10 @@ function applySettings(
 
 
     // =================================================
-    // CHECK INDIVIDUAL PAPERS
+    // INDIVIDUAL PAPERS
     // =================================================
 
-    let visible =
+    let visibleCount =
         0;
 
 
@@ -589,7 +558,7 @@ function applySettings(
 
 
             const enabled =
-                isEnabled(
+                getEnabled(
                     settings,
                     id
                 );
@@ -605,7 +574,7 @@ function applySettings(
 
             const card =
                 paperContainer.querySelector(
-                    `[data-paper-id="${id}"]`
+                    `[data-setting-id="${id}"]`
                 );
 
 
@@ -621,7 +590,7 @@ function applySettings(
             }
             else {
 
-                visible++;
+                visibleCount++;
 
             }
 
@@ -630,31 +599,26 @@ function applySettings(
 
 
     // =================================================
-    // NO PAPERS
+    // NO ACTIVE PAPERS
     // =================================================
 
     if (
-        visible === 0
+        visibleCount === 0
     ) {
 
         paperContainer.innerHTML = `
 
             <div
                 style="
-                    width:100%;
-                    box-sizing:border-box;
-                    background:#fff;
-                    border-radius:20px;
+                    grid-column:1/-1;
+                    background:white;
                     padding:50px 25px;
+                    border-radius:20px;
                     text-align:center;
                 "
             >
 
-                <div
-                    style="
-                        font-size:50px;
-                    "
-                >
+                <div style="font-size:50px;">
                     📭
                 </div>
 
@@ -668,7 +632,7 @@ function applySettings(
                     "
                 >
                     No model papers are currently
-                    available for ${termNames[term]}.
+                    available.
                 </p>
 
             </div>
@@ -687,7 +651,7 @@ function applySettings(
 async function init() {
 
     console.log(
-        "===================================="
+        "================================"
     );
 
     console.log(
@@ -695,38 +659,33 @@ async function init() {
     );
 
     console.log(
-        "Term:",
+        "TERM:",
         term
     );
 
     console.log(
-        "===================================="
+        "================================"
     );
 
 
-    // =================================================
-    // VERY IMPORTANT
-    // =================================================
-    //
-    // Render papers BEFORE Firebase.
-    //
-    // So they can never be stuck on Loading.
-    //
+    // -------------------------------------------------
+    // FIRST: SHOW PAPERS
+    // -------------------------------------------------
 
     renderPapers();
 
 
-    // =================================================
-    // THEN CHECK ADMIN SETTINGS
-    // =================================================
+    // -------------------------------------------------
+    // SECOND: LOAD FIREBASE
+    // -------------------------------------------------
 
     const settings =
-        await loadSettings();
+        await loadFirebaseSettings();
 
 
-    // =================================================
-    // APPLY ADMIN SETTINGS
-    // =================================================
+    // -------------------------------------------------
+    // THIRD: APPLY ADMIN SETTINGS
+    // -------------------------------------------------
 
     applySettings(
         settings
@@ -734,7 +693,7 @@ async function init() {
 
 
     console.log(
-        "✅ Grade 10 Term finished."
+        "✅ Grade 10 Term page ready"
     );
 
 }
