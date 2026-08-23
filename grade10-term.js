@@ -6,14 +6,13 @@ import {
 
 
 // =====================================================
-// GET TERM
+// URL
 // =====================================================
 
 const params =
     new URLSearchParams(
         window.location.search
     );
-
 
 const term =
     params.get("term");
@@ -28,7 +27,6 @@ const termTitle =
         "termTitle"
     );
 
-
 const paperContainer =
     document.getElementById(
         "paperContainer"
@@ -36,26 +34,21 @@ const paperContainer =
 
 
 // =====================================================
-// VALIDATE TERM
+// VALIDATE
 // =====================================================
 
 if (
-    !["1", "2", "3"].includes(
-        term
-    )
+    !["1", "2", "3"].includes(term)
 ) {
 
-    alert(
-        "Invalid term."
+    alert("Invalid term.");
+
+    window.location.replace(
+        "grade10-model-papers.html"
     );
 
-
-    window.location.href =
-        "grade10-model-papers.html";
-
-
     throw new Error(
-        "Invalid Grade 10 term."
+        "Invalid term"
     );
 
 }
@@ -67,51 +60,140 @@ if (
 
 const termNames = {
 
-    "1":
-        "1st Term",
-
-    "2":
-        "2nd Term",
-
-    "3":
-        "3rd Term"
+    "1": "1st Term",
+    "2": "2nd Term",
+    "3": "3rd Term"
 
 };
 
 
 // =====================================================
-// SET TITLE
+// TITLE
 // =====================================================
 
-if (
-    termTitle
-) {
+if (termTitle) {
 
     termTitle.textContent =
-        "📚 Grade 10 - " +
-        termNames[term];
+        `📚 Grade 10 - ${termNames[term]}`;
 
 }
 
 
 // =====================================================
-// CHECK WHOLE TERM
+// SHOW ERROR
 // =====================================================
 
-function isTermEnabled(
-    settings
-) {
+function showError(error) {
 
-    const settingId =
+    console.error(
+        "Grade 10 Term Error:",
+        error
+    );
+
+    if (!paperContainer) {
+        return;
+    }
+
+    paperContainer.innerHTML = `
+
+        <div
+            style="
+                width:100%;
+                padding:40px;
+                box-sizing:border-box;
+                text-align:center;
+                background:white;
+                border-radius:20px;
+            "
+        >
+
+            <h2>
+                ⚠️ Unable to Load Papers
+            </h2>
+
+            <p
+                style="
+                    color:#64748b;
+                    word-break:break-word;
+                "
+            >
+                ${error.message || error}
+            </p>
+
+            <button
+                onclick="location.reload()"
+                style="
+                    padding:12px 22px;
+                    border:0;
+                    border-radius:10px;
+                    background:#6d35f2;
+                    color:white;
+                    cursor:pointer;
+                "
+            >
+                🔄 Try Again
+            </button>
+
+        </div>
+
+    `;
+
+}
+
+
+// =====================================================
+// FIRESTORE SETTINGS
+// =====================================================
+
+async function getSettings() {
+
+    const ref =
+        doc(
+            db,
+            "paperSettings",
+            "settings"
+        );
+
+    const snap =
+        await getDoc(ref);
+
+    if (!snap.exists()) {
+
+        console.log(
+            "No paper settings found."
+        );
+
+        return {};
+
+    }
+
+    return snap.data() || {};
+
+}
+
+
+// =====================================================
+// TERM STATUS
+// =====================================================
+
+function termIsEnabled(settings) {
+
+    const id =
         `grade10_term${term}_enabled`;
 
+    console.log(
+        "TERM SETTING:",
+        id,
+        settings[id]
+    );
 
-    // No term setting = Active
+
+    // No setting = active
 
     if (
         !Object.prototype.hasOwnProperty.call(
             settings,
-            settingId
+            id
         )
     ) {
 
@@ -120,34 +202,37 @@ function isTermEnabled(
     }
 
 
-    return (
-        settings[
-            settingId
-        ] === true
-    );
+    return settings[id] === true;
 
 }
 
 
 // =====================================================
-// CHECK INDIVIDUAL PAPER
+// PAPER STATUS
 // =====================================================
 
-function isPaperEnabled(
+function paperIsEnabled(
     settings,
-    paperNumber
+    number
 ) {
 
-    const paperId =
-        `grade10_term${term}_model_${paperNumber}`;
+    const id =
+        `grade10_term${term}_model_${number}`;
 
 
-    // No individual setting = Active
+    console.log(
+        "PAPER SETTING:",
+        id,
+        settings[id]
+    );
+
+
+    // No setting = active
 
     if (
         !Object.prototype.hasOwnProperty.call(
             settings,
-            paperId
+            id
         )
     ) {
 
@@ -156,21 +241,35 @@ function isPaperEnabled(
     }
 
 
-    return (
-        settings[
-            paperId
-        ]?.enabled === true
-    );
+    const value =
+        settings[id];
+
+
+    // Object format
+
+    if (
+        typeof value === "object" &&
+        value !== null
+    ) {
+
+        return value.enabled === true;
+
+    }
+
+
+    // Boolean format
+
+    return value === true;
 
 }
 
 
 // =====================================================
-// CREATE PAPER CARD
+// CREATE PAPER
 // =====================================================
 
-function createPaperCard(
-    paperNumber
+function createPaper(
+    number
 ) {
 
     const card =
@@ -178,10 +277,8 @@ function createPaperCard(
             "div"
         );
 
-
     card.className =
         "paper-card";
-
 
     card.style.cursor =
         "pointer";
@@ -193,11 +290,9 @@ function createPaperCard(
             📘
         </div>
 
-
         <h2>
-            Model Paper - ${paperNumber}
+            Model Paper - ${number}
         </h2>
-
 
         <p>
             Part A & Part B
@@ -211,15 +306,11 @@ function createPaperCard(
         () => {
 
             window.location.href =
-                "grade10-model-paper.html" +
-                "?term=" +
-                encodeURIComponent(
+                `grade10-model-paper.html?term=${encodeURIComponent(
                     term
-                ) +
-                "&paper=" +
-                encodeURIComponent(
-                    paperNumber
-                );
+                )}&paper=${encodeURIComponent(
+                    number
+                )}`;
 
         }
     );
@@ -231,160 +322,97 @@ function createPaperCard(
 
 
 // =====================================================
-// SHOW TERM DISABLED
+// TERM DISABLED
 // =====================================================
 
 function showTermDisabled() {
-
-    if (!paperContainer) {
-        return;
-    }
-
 
     paperContainer.innerHTML = `
 
         <div
             style="
                 width:100%;
-                box-sizing:border-box;
-                background:#ffffff;
-                border-radius:20px;
+                background:white;
                 padding:50px 25px;
+                box-sizing:border-box;
                 text-align:center;
-                box-shadow:0 10px 30px rgba(0,0,0,.08);
+                border-radius:20px;
             "
         >
 
-            <div
-                style="
-                    font-size:50px;
-                    margin-bottom:15px;
-                "
-            >
+            <div style="font-size:50px;">
                 🔒
             </div>
 
-
-            <h2
-                style="
-                    margin:0 0 10px;
-                    color:#111827;
-                "
-            >
+            <h2>
                 ${termNames[term]} Unavailable
             </h2>
 
-
             <p
                 style="
-                    margin:0;
                     color:#64748b;
-                    line-height:1.6;
                 "
             >
-                This term has currently been
-                disabled by the administrator.
+                This term has been disabled
+                by the administrator.
             </p>
 
-
             <button
-                type="button"
-                id="backModelPapersBtn"
+                onclick="location.href='grade10-model-papers.html'"
                 style="
-                    margin-top:25px;
-                    border:0;
+                    margin-top:20px;
                     padding:12px 24px;
+                    border:0;
                     border-radius:10px;
                     background:#6d35f2;
                     color:white;
-                    font-weight:600;
                     cursor:pointer;
                 "
             >
-                ← Back to Model Papers
+                ← Back
             </button>
 
         </div>
 
     `;
 
-
-    const backBtn =
-        document.getElementById(
-            "backModelPapersBtn"
-        );
-
-
-    if (backBtn) {
-
-        backBtn.addEventListener(
-            "click",
-            () => {
-
-                window.location.href =
-                    "grade10-model-papers.html";
-
-            }
-        );
-
-    }
-
 }
 
 
 // =====================================================
-// SHOW NO PAPERS
+// NO PAPERS
 // =====================================================
 
 function showNoPapers() {
-
-    if (!paperContainer) {
-        return;
-    }
-
 
     paperContainer.innerHTML = `
 
         <div
             style="
                 width:100%;
-                box-sizing:border-box;
-                background:#ffffff;
-                border-radius:20px;
+                background:white;
                 padding:50px 25px;
+                box-sizing:border-box;
                 text-align:center;
-                box-shadow:0 10px 30px rgba(0,0,0,.08);
+                border-radius:20px;
             "
         >
 
-            <div
-                style="
-                    font-size:50px;
-                    margin-bottom:15px;
-                "
-            >
-                🔒
+            <div style="font-size:50px;">
+                📭
             </div>
 
-
-            <h2
-                style="
-                    margin:0 0 10px;
-                    color:#111827;
-                "
-            >
+            <h2>
                 No Papers Available
             </h2>
 
-
             <p
                 style="
-                    margin:0;
                     color:#64748b;
                 "
             >
-                There are currently no active
-                papers for this term.
+                No active papers are available
+                for ${termNames[term]}.
             </p>
 
         </div>
@@ -395,7 +423,7 @@ function showNoPapers() {
 
 
 // =====================================================
-// LOAD PAPERS
+// LOAD
 // =====================================================
 
 async function loadPapers() {
@@ -403,11 +431,11 @@ async function loadPapers() {
     try {
 
         console.log(
-            "======================================"
+            "================================"
         );
 
         console.log(
-            "GRADE 10 TERM PAGE"
+            "GRADE 10 TERM LOADING"
         );
 
         console.log(
@@ -416,12 +444,7 @@ async function loadPapers() {
         );
 
         console.log(
-            "Term name:",
-            termNames[term]
-        );
-
-        console.log(
-            "======================================"
+            "================================"
         );
 
 
@@ -433,10 +456,6 @@ async function loadPapers() {
 
         }
 
-
-        // =================================================
-        // LOADING
-        // =================================================
 
         paperContainer.innerHTML = `
 
@@ -454,85 +473,29 @@ async function loadPapers() {
         `;
 
 
-        // =================================================
+        // =============================================
         // FIRESTORE
-        // =================================================
+        // =============================================
 
-        console.log(
-            "Reading paper settings..."
-        );
-
-
-        const settingsRef =
-            doc(
-                db,
-                "paperSettings",
-                "settings"
-            );
-
-
-        const snapshot =
-            await getDoc(
-                settingsRef
-            );
-
-
-        let settings = {};
-
-
-        if (
-            snapshot.exists()
-        ) {
-
-            settings =
-                snapshot.data() || {};
-
-
-            console.log(
-                "Settings:",
-                settings
-            );
-
-        }
-
-        else {
-
-            console.warn(
-                "paperSettings/settings does not exist."
-            );
-
-        }
-
-
-        // =================================================
-        // CHECK WHOLE TERM
-        // =================================================
-
-        const termEnabled =
-            isTermEnabled(
-                settings
-            );
+        const settings =
+            await getSettings();
 
 
         console.log(
-            "Term enabled:",
-            termEnabled
+            "ALL SETTINGS:",
+            settings
         );
 
 
-        // =================================================
-        // TERM DISABLED
-        // =================================================
+        // =============================================
+        // CHECK TERM
+        // =============================================
 
         if (
-            !termEnabled
+            !termIsEnabled(
+                settings
+            )
         ) {
-
-            console.warn(
-                "Term disabled by admin:",
-                term
-            );
-
 
             showTermDisabled();
 
@@ -541,31 +504,21 @@ async function loadPapers() {
         }
 
 
-        // =================================================
+        // =============================================
         // CLEAR
-        // =================================================
+        // =============================================
 
         paperContainer.innerHTML =
             "";
 
 
-        let visiblePapers =
+        let count =
             0;
 
 
-        // =================================================
-        // LOAD 5 PAPERS
-        // =================================================
-        //
-        // Admin catalog has:
-        //
-        // 01
-        // 02
-        // 03
-        // 04
-        // 05
-        //
-        // =================================================
+        // =============================================
+        // PAPERS 01 - 05
+        // =============================================
 
         for (
             let i = 1;
@@ -573,7 +526,7 @@ async function loadPapers() {
             i++
         ) {
 
-            const paperNumber =
+            const number =
                 String(i).padStart(
                     2,
                     "0"
@@ -581,38 +534,28 @@ async function loadPapers() {
 
 
             const enabled =
-                isPaperEnabled(
+                paperIsEnabled(
                     settings,
-                    paperNumber
+                    number
                 );
 
 
             console.log(
-                `Paper ${paperNumber}:`,
+                `Model Paper ${number}:`,
                 enabled
                     ? "ACTIVE"
                     : "DISABLED"
             );
 
 
-            // =============================================
-            // HIDE DISABLED PAPER
-            // =============================================
-
             if (!enabled) {
-
                 continue;
-
             }
 
 
-            // =============================================
-            // SHOW ACTIVE PAPER
-            // =============================================
-
             const card =
-                createPaperCard(
-                    paperNumber
+                createPaper(
+                    number
                 );
 
 
@@ -621,17 +564,17 @@ async function loadPapers() {
             );
 
 
-            visiblePapers++;
+            count++;
 
         }
 
 
-        // =================================================
-        // NO ACTIVE PAPERS
-        // =================================================
+        // =============================================
+        // NONE
+        // =============================================
 
         if (
-            visiblePapers === 0
+            count === 0
         ) {
 
             showNoPapers();
@@ -641,133 +584,19 @@ async function loadPapers() {
 
         console.log(
             "Visible papers:",
-            visiblePapers
+            count
         );
 
-
-        console.log(
-            "Grade 10 term loaded successfully."
-        );
 
     }
 
     catch (error) {
 
-        console.error(
-            "Grade 10 term loading error:",
+        showError(
             error
         );
 
-
-        if (
-            paperContainer
-        ) {
-
-            paperContainer.innerHTML = `
-
-                <div
-                    style="
-                        width:100%;
-                        box-sizing:border-box;
-                        background:#ffffff;
-                        border-radius:20px;
-                        padding:40px 25px;
-                        text-align:center;
-                    "
-                >
-
-                    <div
-                        style="
-                            font-size:45px;
-                        "
-                    >
-                        ⚠️
-                    </div>
-
-
-                    <h2>
-                        Unable to Load Papers
-                    </h2>
-
-
-                    <p
-                        style="
-                            color:#64748b;
-                            word-break:break-word;
-                        "
-                    >
-                        ${
-                            escapeHTML(
-                                error.message ||
-                                String(error)
-                            )
-                        }
-                    </p>
-
-
-                    <button
-                        type="button"
-                        onclick="location.reload()"
-                        style="
-                            margin-top:20px;
-                            padding:12px 24px;
-                            border:0;
-                            border-radius:10px;
-                            background:#6d35f2;
-                            color:white;
-                            cursor:pointer;
-                        "
-                    >
-                        🔄 Try Again
-                    </button>
-
-                </div>
-
-            `;
-
-        }
-
     }
-
-}
-
-
-// =====================================================
-// ESCAPE HTML
-// =====================================================
-
-function escapeHTML(
-    value
-) {
-
-    return String(
-        value
-    )
-
-    .replace(
-        /&/g,
-        "&amp;"
-    )
-
-    .replace(
-        /</g,
-        "&lt;"
-    )
-
-    .replace(
-        />/g,
-        "&gt;"
-    )
-
-    .replace(
-        /"/g,
-        "&quot;"
-    )
-
-    .replace(
-        /'/g,
-        "&#039;"
-    );
 
 }
 
@@ -779,10 +608,6 @@ function escapeHTML(
 loadPapers();
 
 
-// =====================================================
-// CONSOLE
-// =====================================================
-
 console.log(
-    "✅ Grade 10 Term JS Loaded"
+    "✅ grade10-term.js loaded"
 );
