@@ -112,7 +112,7 @@ else {
     ) {
 
         paperTitle.textContent =
-            "📘 Model Paper - " +
+            "🏆 TOP Ranking - " +
             paper;
 
     }
@@ -174,8 +174,12 @@ else {
 
                 window.location.href =
                     `grade11-answer.html?` +
-                    `term=${encodeURIComponent(term)}` +
-                    `&paper=${encodeURIComponent(paper)}` +
+                    `term=${encodeURIComponent(
+                        term
+                    )}` +
+                    `&paper=${encodeURIComponent(
+                        paper
+                    )}` +
                     `&type=mcq`;
 
             }
@@ -221,8 +225,12 @@ else {
 
                 window.location.href =
                     `grade11-answer.html?` +
-                    `term=${encodeURIComponent(term)}` +
-                    `&paper=${encodeURIComponent(paper)}` +
+                    `term=${encodeURIComponent(
+                        term
+                    )}` +
+                    `&paper=${encodeURIComponent(
+                        paper
+                    )}` +
                     `&type=answer`;
 
             }
@@ -233,12 +241,21 @@ else {
 }
 
 
+// =========================================
+// CONSOLE
+// =========================================
+
 console.log(
-    "✅ Grade 11 Model Paper Loaded",
+    "✅ Grade 11 TOP Ranking Loaded",
     {
-        grade: "grade11",
-        type: "model",
+        grade:
+            "grade11",
+
+        type:
+            "top-ranking",
+
         term,
+
         paper
     }
 );
