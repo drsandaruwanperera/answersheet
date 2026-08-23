@@ -629,19 +629,18 @@ async function loadSettings() {
 
     }
 
-    catch (error) {
+   catch (error) {
 
-        console.error(
-            "Paper settings load error:",
-            error
-        );
+    console.error(
+        "Paper settings load error:",
+        error
+    );
 
-
-        alert(
-            "Failed to load paper settings."
-        );
-
-    }
+    alert(
+        "Failed to load paper settings.\n\n" +
+        "Error: " +
+        error.message
+    );
 
 }
 
