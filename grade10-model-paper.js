@@ -5,158 +5,343 @@ import {
 } from "./firebase.js";
 
 
-// =========================================
-// GET URL PARAMETERS
-// =========================================
-
-const params =
-    new URLSearchParams(
-        window.location.search
-    );
-
-
-const term =
-    params.get("term");
-
-
-const paper =
-    params.get("paper");
-
-
-// =========================================
-// ELEMENTS
-// =========================================
-
-const paperTitle =
-    document.getElementById(
-        "paperTitle"
-    );
-
-
-const paperSubtitle =
-    document.getElementById(
-        "paperSubtitle"
-    );
-
-
-const mcqBtn =
-    document.getElementById(
-        "mcqBtn"
-    );
-
-
-const mcqAnswerBtn =
-    document.getElementById(
-        "mcqAnswerBtn"
-    );
-
-
-const questionBtn =
-    document.getElementById(
-        "questionBtn"
-    );
-
-
-const answerBtn =
-    document.getElementById(
-        "answerBtn"
-    );
-
-
-// =========================================
-// TERM NAMES
-// =========================================
-
-const termNames = {
-
-    "1":
-        "1st Term",
-
-    "2":
-        "2nd Term",
-
-    "3":
-        "3rd Term"
-
-};
-
-
-// =========================================
-// VALIDATION
-// =========================================
-
-const validTerm =
-    [
-        "1",
-        "2",
-        "3"
-    ].includes(
-        term
-    );
-
-
-const validPaper =
-    /^\d{2}$/.test(
-        paper || ""
-    );
-
+// =====================================================
+// LOGIN CHECK
+// =====================================================
 
 if (
-    !validTerm ||
-    !validPaper
+    sessionStorage.getItem("loggedIn") !== "true"
 ) {
 
-    alert(
-        "Invalid Model Paper."
-    );
-
-
     window.location.replace(
-        "grade10-model-papers.html"
+        "index.html"
     );
 
     throw new Error(
-        "Invalid Grade 10 model paper."
+        "Student not logged in"
     );
 
 }
 
 
-// =========================================
-// TERM NAME
-// =========================================
+// =====================================================
+// ELEMENTS
+// =====================================================
 
-const termName =
-    termNames[
-        term
-    ];
+const termGrid =
+    document.getElementById(
+        "termGrid"
+    );
 
 
-// =========================================
-// FIRESTORE SETTING ID
-// =========================================
+const noTermsMessage =
+    document.getElementById(
+        "noTermsMessage"
+    );
+
+
+// =====================================================
+// TERM CARDS
+// =====================================================
+
+const termCards = {
+
+    "1":
+        document.getElementById(
+            "termCard1"
+        ),
+
+    "2":
+        document.getElementById(
+            "termCard2"
+        ),
+
+    "3":
+        document.getElementById(
+            "termCard3"
+        )
+
+};
+
+
+// =====================================================
+// PAPER SETTINGS
+// =====================================================
+
+let paperSettings = {};
+
+
+// =====================================================
+// PAPER IDs
+// =====================================================
 //
-// Example:
+// Must match paper-settings.js
 //
-// term=1, paper=01
-//
-// grade10_term1_model_01
-//
-// term=2, paper=03
-//
-// grade10_term2_model_03
-//
-// =========================================
+// =====================================================
 
-const settingId =
-    `grade10_term${term}_model_${paper}`;
+const termPaperIds = {
+
+    "1": [
+
+        "grade10_term1_model_01",
+
+        "grade10_term1_model_02",
+
+        "grade10_term1_model_03",
+
+        "grade10_term1_model_04",
+
+        "grade10_term1_model_05"
+
+    ],
 
 
-// =========================================
-// CHECK PAPER ACCESS
-// =========================================
+    "2": [
 
-async function checkPaperAccess() {
+        "grade10_term2_model_01",
+
+        "grade10_term2_model_02",
+
+        "grade10_term2_model_03",
+
+        "grade10_term2_model_04",
+
+        "grade10_term2_model_05"
+
+    ],
+
+
+    "3": [
+
+        "grade10_term3_model_01",
+
+        "grade10_term3_model_02",
+
+        "grade10_term3_model_03",
+
+        "grade10_term3_model_04",
+
+        "grade10_term3_model_05"
+
+    ]
+
+};
+
+
+// =====================================================
+// CHECK PAPER ENABLED
+// =====================================================
+
+function isPaperEnabled(
+    paperId
+) {
+
+    // -------------------------------------------------
+    // No setting = Active
+    // -------------------------------------------------
+
+    if (
+        !Object.prototype.hasOwnProperty.call(
+            paperSettings,
+            paperId
+        )
+    ) {
+
+        return true;
+
+    }
+
+
+    const setting =
+        paperSettings[
+            paperId
+        ];
+
+
+    if (
+        !setting ||
+        typeof setting.enabled ===
+        "undefined"
+    ) {
+
+        return true;
+
+    }
+
+
+    return (
+        setting.enabled === true
+    );
+
+}
+
+
+// =====================================================
+// CHECK TERM ENABLED
+// =====================================================
+//
+// Term is visible when at least ONE paper
+// inside that term is Active.
+//
+// If all 5 papers are Disabled,
+// the whole Term card is hidden.
+//
+// =====================================================
+
+function isTermEnabled(
+    term
+) {
+
+    const papers =
+        termPaperIds[
+            term
+        ] || [];
+
+
+    return papers.some(
+        paperId =>
+            isPaperEnabled(
+                paperId
+            )
+    );
+
+}
+
+
+// =====================================================
+// OPEN TERM
+// =====================================================
+
+function openTerm(
+    term
+) {
+
+    if (
+        !isTermEnabled(
+            term
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    window.location.href =
+        `grade10-term.html?term=${encodeURIComponent(
+            term
+        )}`;
+
+}
+
+
+// =====================================================
+// SETUP CARD
+// =====================================================
+
+function setupCard(
+    term
+) {
+
+    const card =
+        termCards[
+            term
+        ];
+
+
+    if (!card) {
+        return;
+    }
+
+
+    // Remove old handlers
+
+    card.onclick =
+        null;
+
+
+    card.onkeydown =
+        null;
+
+
+    // -------------------------------------------------
+    // Check availability
+    // -------------------------------------------------
+
+    const enabled =
+        isTermEnabled(
+            term
+        );
+
+
+    // -------------------------------------------------
+    // DISABLED
+    // -------------------------------------------------
+
+    if (!enabled) {
+
+        card.style.display =
+            "none";
+
+        card.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+        return;
+
+    }
+
+
+    // -------------------------------------------------
+    // ACTIVE
+    // -------------------------------------------------
+
+    card.style.display =
+        "";
+
+
+    card.removeAttribute(
+        "aria-hidden"
+    );
+
+
+    card.onclick =
+        () => {
+
+            openTerm(
+                term
+            );
+
+        };
+
+
+    card.onkeydown =
+        event => {
+
+            if (
+                event.key === "Enter" ||
+                event.key === " "
+            ) {
+
+                event.preventDefault();
+
+                openTerm(
+                    term
+                );
+
+            }
+
+        };
+
+}
+
+
+// =====================================================
+// LOAD SETTINGS
+// =====================================================
+
+async function loadSettings() {
 
     try {
 
@@ -174,514 +359,180 @@ async function checkPaperAccess() {
             );
 
 
-        // =====================================
-        // SETTINGS DOCUMENT DOES NOT EXIST
-        // =====================================
+        // =============================================
+        // NO SETTINGS DOCUMENT
+        // =============================================
 
         if (
             !snapshot.exists()
         ) {
 
             console.warn(
-                "Paper settings document not found."
+                "paperSettings/settings does not exist."
             );
 
 
-            // Default = enabled
-            return true;
+            paperSettings = {};
+
+        }
+
+        else {
+
+            paperSettings =
+                snapshot.data() || {};
 
         }
 
 
-        const settings =
-            snapshot.data() || {};
-
-
-        // =====================================
-        // GET THIS PAPER SETTING
-        // =====================================
-
-        const paperSetting =
-            settings[
-                settingId
-            ];
-
-
-        // =====================================
-        // NO SETTING FOUND
-        // =====================================
-        //
-        // New papers are active by default.
-        //
-        // =====================================
-
-        if (
-            !paperSetting ||
-            typeof paperSetting.enabled ===
-            "undefined"
-        ) {
-
-            console.log(
-                "No specific setting found. " +
-                "Paper is enabled by default:",
-                settingId
-            );
-
-
-            return true;
-
-        }
-
-
-        // =====================================
-        // CHECK ENABLED
-        // =====================================
-
-        return (
-            paperSetting.enabled === true
+        console.log(
+            "Paper settings loaded:",
+            paperSettings
         );
+
+
+        renderTerms();
 
     }
 
     catch (error) {
 
         console.error(
-            "Paper access check error:",
+            "Failed to load paper settings:",
             error
         );
 
 
-        // =====================================
-        // IMPORTANT
-        // =====================================
-        //
+        // ------------------------------------------------
         // If settings cannot be loaded,
-        // do NOT automatically block the
-        // student.
-        //
-        // =====================================
+        // keep papers visible instead of hiding them.
+        // ------------------------------------------------
 
-        return true;
-
-    }
-
-}
+        paperSettings = {};
 
 
-// =========================================
-// DISABLE PAGE
-// =========================================
-
-function showDisabledPage() {
-
-    document.body.innerHTML = `
-
-        <div
-            style="
-                min-height:100vh;
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                padding:30px;
-                box-sizing:border-box;
-                background:#f4f6fb;
-                font-family:Arial, Helvetica, sans-serif;
-            "
-        >
-
-            <div
-                style="
-                    width:min(500px, 100%);
-                    background:white;
-                    border-radius:20px;
-                    padding:40px;
-                    text-align:center;
-                    box-shadow:0 15px 40px rgba(0,0,0,.10);
-                "
-            >
-
-                <div
-                    style="
-                        width:75px;
-                        height:75px;
-                        margin:0 auto 20px;
-                        border-radius:50%;
-                        display:flex;
-                        align-items:center;
-                        justify-content:center;
-                        background:#fff0f0;
-                        font-size:35px;
-                    "
-                >
-                    🔒
-                </div>
-
-
-                <h1
-                    style="
-                        margin:0 0 12px;
-                        color:#111827;
-                        font-size:26px;
-                    "
-                >
-                    Paper Not Available
-                </h1>
-
-
-                <p
-                    style="
-                        margin:0 auto 25px;
-                        color:#64748b;
-                        line-height:1.7;
-                        max-width:400px;
-                    "
-                >
-                    This paper has currently been
-                    disabled by the administrator.
-                    Please try again later.
-                </p>
-
-
-                <button
-                    id="backToGrade10"
-                    type="button"
-                    style="
-                        border:0;
-                        padding:12px 24px;
-                        border-radius:10px;
-                        background:#6d35f2;
-                        color:white;
-                        font-size:15px;
-                        font-weight:600;
-                        cursor:pointer;
-                    "
-                >
-                    ← Back to Model Papers
-                </button>
-
-            </div>
-
-        </div>
-
-    `;
-
-
-    const backBtn =
-        document.getElementById(
-            "backToGrade10"
-        );
-
-
-    if (backBtn) {
-
-        backBtn.addEventListener(
-            "click",
-            () => {
-
-                window.location.replace(
-                    "grade10-model-papers.html"
-                );
-
-            }
-        );
+        renderTerms();
 
     }
 
 }
 
 
-// =========================================
-// DISABLE PAPER BUTTONS
-// =========================================
+// =====================================================
+// RENDER TERMS
+// =====================================================
 
-function disableButtons() {
+function renderTerms() {
+
+    let visibleTerms =
+        0;
+
 
     [
-        mcqBtn,
-        mcqAnswerBtn,
-        questionBtn,
-        answerBtn
+        "1",
+        "2",
+        "3"
     ]
     .forEach(
-        button => {
+        term => {
 
-            if (!button) {
-                return;
+            setupCard(
+                term
+            );
+
+
+            if (
+                isTermEnabled(
+                    term
+                )
+            ) {
+
+                visibleTerms++;
+
             }
 
-
-            button.disabled =
-                true;
-
-
-            button.style.opacity =
-                "0.5";
+        }
+    );
 
 
-            button.style.pointerEvents =
+    // =================================================
+    // NO TERMS
+    // =================================================
+
+    if (
+        visibleTerms === 0
+    ) {
+
+        if (termGrid) {
+
+            termGrid.style.display =
                 "none";
 
         }
-    );
-
-}
 
 
-// =========================================
-// SET PAGE CONTENT
-// =========================================
+        if (noTermsMessage) {
 
-function setupPage() {
+            noTermsMessage.style.display =
+                "block";
 
-    // =====================================
-    // PAGE TITLE
-    // =====================================
-
-    if (
-        paperTitle
-    ) {
-
-        paperTitle.textContent =
-            "📘 Model Paper - " +
-            paper;
+        }
 
     }
 
+    else {
 
-    // =====================================
-    // SUBTITLE
-    // =====================================
+        if (termGrid) {
 
-    if (
-        paperSubtitle
-    ) {
+            termGrid.style.display =
+                "";
 
-        paperSubtitle.textContent =
-            "Grade 10 • " +
-            termName;
-
-    }
+        }
 
 
-    // =====================================
-    // PDF BASE PATH
-    // =====================================
+        if (noTermsMessage) {
 
-    const basePath =
-        `./papers/grade10/term${term}/paper${paper}`;
+            noTermsMessage.style.display =
+                "none";
 
-
-    // =====================================
-    // MCQ PDF
-    // =====================================
-
-    if (
-        mcqBtn
-    ) {
-
-        mcqBtn.addEventListener(
-            "click",
-            () => {
-
-                const pdf =
-                    `${basePath}/mcq.pdf`;
-
-
-                window.open(
-                    pdf,
-                    "_blank"
-                );
-
-            }
-        );
+        }
 
     }
 
-
-    // =====================================
-    // MCQ ANSWER
-    // =====================================
-
-    if (
-        mcqAnswerBtn
-    ) {
-
-        mcqAnswerBtn.addEventListener(
-            "click",
-            () => {
-
-                const url =
-                    `grade10-answer.html?` +
-                    `term=${encodeURIComponent(
-                        term
-                    )}` +
-                    `&paper=${encodeURIComponent(
-                        paper
-                    )}` +
-                    `&type=mcq`;
-
-
-                window.location.assign(
-                    url
-                );
-
-            }
-        );
-
-    }
-
-
-    // =====================================
-    // QUESTION PAPER
-    // =====================================
-
-    if (
-        questionBtn
-    ) {
-
-        questionBtn.addEventListener(
-            "click",
-            () => {
-
-                const pdf =
-                    `${basePath}/question.pdf`;
-
-
-                window.open(
-                    pdf,
-                    "_blank"
-                );
-
-            }
-        );
-
-    }
-
-
-    // =====================================
-    // ANSWER SCHEME
-    // =====================================
-
-    if (
-        answerBtn
-    ) {
-
-        answerBtn.addEventListener(
-            "click",
-            () => {
-
-                const url =
-                    `grade10-answer.html?` +
-                    `term=${encodeURIComponent(
-                        term
-                    )}` +
-                    `&paper=${encodeURIComponent(
-                        paper
-                    )}` +
-                    `&type=answer`;
-
-
-                window.location.assign(
-                    url
-                );
-
-            }
-        );
-
-    }
-
-
-    // =====================================
-    // CONSOLE
-    // =====================================
 
     console.log(
-        "✅ Grade 10 Model Paper Loaded",
+        "Grade 10 Terms:",
         {
-            grade:
-                "grade10",
 
-            type:
-                "model",
+            term1:
+                isTermEnabled("1"),
 
-            term,
+            term2:
+                isTermEnabled("2"),
 
-            termName,
+            term3:
+                isTermEnabled("3")
 
-            paper,
-
-            settingId,
-
-            basePath
         }
     );
 
 }
 
 
-// =========================================
+// =====================================================
 // START
-// =========================================
+// =====================================================
 
-async function init() {
-
-    console.log(
-        "Checking paper access..."
-    );
+loadSettings();
 
 
-    console.log(
-        "Setting ID:",
-        settingId
-    );
+console.log(
+    "======================================"
+);
 
+console.log(
+    "✅ Grade 10 Model Papers Loaded"
+);
 
-    const allowed =
-        await checkPaperAccess();
-
-
-    console.log(
-        "Paper allowed:",
-        allowed
-    );
-
-
-    // =====================================
-    // DISABLED
-    // =====================================
-
-    if (
-        !allowed
-    ) {
-
-        console.warn(
-            "🚫 Paper disabled:",
-            settingId
-        );
-
-
-        disableButtons();
-
-
-        showDisabledPage();
-
-
-        return;
-
-    }
-
-
-    // =====================================
-    // ACTIVE
-    // =====================================
-
-    setupPage();
-
-}
-
-
-// =========================================
-// RUN
-// =========================================
-
-init();
+console.log(
+    "======================================"
+);
