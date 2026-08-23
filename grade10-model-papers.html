@@ -23,26 +23,41 @@
 
 <div class="container">
 
+    <!-- HEADER -->
+
     <div class="header">
 
         <h1>
             📘 Grade 10 Model Papers
         </h1>
 
-        <button onclick="history.back()">
+        <button
+            type="button"
+            onclick="history.back()"
+        >
             ← Back
         </button>
 
     </div>
 
 
-    <div class="term-grid">
+    <!-- TERM GRID -->
 
-        <!-- 1st Term -->
+    <div
+        class="term-grid"
+        id="termGrid"
+    >
+
+        <!-- =====================================
+             1ST TERM
+        ====================================== -->
 
         <div
             class="term-card"
-            onclick="location.href='grade10-term.html?term=1'"
+            id="termCard1"
+            data-term="1"
+            role="button"
+            tabindex="0"
         >
 
             <div class="term-icon">
@@ -60,11 +75,16 @@
         </div>
 
 
-        <!-- 2nd Term -->
+        <!-- =====================================
+             2ND TERM
+        ====================================== -->
 
         <div
             class="term-card"
-            onclick="location.href='grade10-term.html?term=2'"
+            id="termCard2"
+            data-term="2"
+            role="button"
+            tabindex="0"
         >
 
             <div class="term-icon">
@@ -82,11 +102,16 @@
         </div>
 
 
-        <!-- 3rd Term -->
+        <!-- =====================================
+             3RD TERM
+        ====================================== -->
 
         <div
             class="term-card"
-            onclick="location.href='grade10-term.html?term=3'"
+            id="termCard3"
+            data-term="3"
+            role="button"
+            tabindex="0"
         >
 
             <div class="term-icon">
@@ -105,7 +130,50 @@
 
     </div>
 
+
+    <!-- NO PAPERS MESSAGE -->
+
+    <div
+        id="noTermsMessage"
+        style="
+            display:none;
+            text-align:center;
+            padding:50px 20px;
+        "
+    >
+
+        <div
+            style="
+                font-size:45px;
+                margin-bottom:15px;
+            "
+        >
+            🔒
+        </div>
+
+        <h2>
+            No Model Papers Available
+        </h2>
+
+        <p>
+            Model papers are currently unavailable.
+            Please check again later.
+        </p>
+
+    </div>
+
 </div>
+
+
+<!-- =========================================
+     JAVASCRIPT
+========================================= -->
+
+<script
+    type="module"
+    src="grade10-model-papers.js?v=1"
+></script>
+
 
 </body>
 
