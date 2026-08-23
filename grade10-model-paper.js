@@ -6,162 +6,216 @@ import {
 
 
 // =====================================================
-// LOGIN CHECK
+// ELEMENT
 // =====================================================
 
-if (
-    sessionStorage.getItem("loggedIn") !== "true"
-) {
+const termGrid =
+    document.getElementById("termGrid");
 
-    window.location.replace(
-        "index.html"
+
+// =====================================================
+// TERM DATA
+// =====================================================
+
+const TERMS = [
+    {
+        number: "1",
+        title: "1st Term",
+        description: "Grade 10 Model Papers"
+    },
+    {
+        number: "2",
+        title: "2nd Term",
+        description: "Grade 10 Model Papers"
+    },
+    {
+        number: "3",
+        title: "3rd Term",
+        description: "Grade 10 Model Papers"
+    }
+];
+
+
+// =====================================================
+// ERROR DISPLAY
+// =====================================================
+
+function showError(error) {
+
+    console.error(
+        "Grade 10 Model Papers Error:",
+        error
     );
 
-    throw new Error(
-        "Student not logged in"
-    );
+    if (!termGrid) {
+        return;
+    }
+
+    const message =
+        error?.message ||
+        String(error) ||
+        "Unknown error";
+
+
+    termGrid.innerHTML = `
+
+        <div
+            style="
+                grid-column:1/-1;
+                background:#fff;
+                border-radius:20px;
+                padding:35px;
+                text-align:center;
+                box-shadow:0 10px 30px rgba(0,0,0,.08);
+            "
+        >
+
+            <div
+                style="
+                    font-size:45px;
+                    margin-bottom:15px;
+                "
+            >
+                ⚠️
+            </div>
+
+            <h2
+                style="
+                    margin:0 0 12px;
+                    color:#111827;
+                "
+            >
+                Unable to Load Model Papers
+            </h2>
+
+            <p
+                style="
+                    color:#64748b;
+                    margin:0 auto 20px;
+                    max-width:650px;
+                "
+            >
+                ${escapeHTML(message)}
+            </p>
+
+            <button
+                type="button"
+                onclick="location.reload()"
+                style="
+                    border:0;
+                    padding:12px 22px;
+                    border-radius:10px;
+                    background:#6d35f2;
+                    color:white;
+                    font-weight:600;
+                    cursor:pointer;
+                "
+            >
+                🔄 Try Again
+            </button>
+
+        </div>
+
+    `;
 
 }
 
 
 // =====================================================
-// ELEMENTS
+// ESCAPE HTML
 // =====================================================
 
-const termGrid =
-    document.getElementById(
-        "termGrid"
+function escapeHTML(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+// =====================================================
+// GET FIRESTORE SETTINGS
+// =====================================================
+
+async function getPaperSettings() {
+
+    console.log(
+        "Reading Firestore paper settings..."
     );
 
 
-const noTermsMessage =
-    document.getElementById(
-        "noTermsMessage"
-    );
+    const settingsRef =
+        doc(
+            db,
+            "paperSettings",
+            "settings"
+        );
 
 
-// =====================================================
-// TERM CARDS
-// =====================================================
-
-const termCards = {
-
-    "1":
-        document.getElementById(
-            "termCard1"
-        ),
-
-    "2":
-        document.getElementById(
-            "termCard2"
-        ),
-
-    "3":
-        document.getElementById(
-            "termCard3"
-        )
-
-};
+    const snapshot =
+        await getDoc(
+            settingsRef
+        );
 
 
-// =====================================================
-// PAPER SETTINGS
-// =====================================================
+    if (!snapshot.exists()) {
 
-let paperSettings = {};
+        console.log(
+            "paperSettings/settings does not exist."
+        );
 
-
-// =====================================================
-// PAPER IDs
-// =====================================================
-//
-// Must match paper-settings.js
-//
-// =====================================================
-
-const termPaperIds = {
-
-    "1": [
-
-        "grade10_term1_model_01",
-
-        "grade10_term1_model_02",
-
-        "grade10_term1_model_03",
-
-        "grade10_term1_model_04",
-
-        "grade10_term1_model_05"
-
-    ],
-
-
-    "2": [
-
-        "grade10_term2_model_01",
-
-        "grade10_term2_model_02",
-
-        "grade10_term2_model_03",
-
-        "grade10_term2_model_04",
-
-        "grade10_term2_model_05"
-
-    ],
-
-
-    "3": [
-
-        "grade10_term3_model_01",
-
-        "grade10_term3_model_02",
-
-        "grade10_term3_model_03",
-
-        "grade10_term3_model_04",
-
-        "grade10_term3_model_05"
-
-    ]
-
-};
-
-
-// =====================================================
-// CHECK PAPER ENABLED
-// =====================================================
-
-function isPaperEnabled(
-    paperId
-) {
-
-    // -------------------------------------------------
-    // No setting = Active
-    // -------------------------------------------------
-
-    if (
-        !Object.prototype.hasOwnProperty.call(
-            paperSettings,
-            paperId
-        )
-    ) {
-
-        return true;
+        return {};
 
     }
 
 
-    const setting =
-        paperSettings[
-            paperId
-        ];
+    const data =
+        snapshot.data() || {};
 
+
+    console.log(
+        "Paper settings loaded:",
+        data
+    );
+
+
+    return data;
+
+}
+
+
+// =====================================================
+// CHECK TERM STATUS
+// =====================================================
+
+function isTermEnabled(
+    settings,
+    termNumber
+) {
+
+    const settingId =
+        `grade10_term${termNumber}_enabled`;
+
+
+    console.log(
+        "Checking:",
+        settingId,
+        settings[settingId]
+    );
+
+
+    // If no term setting exists,
+    // show the term by default.
 
     if (
-        !setting ||
-        typeof setting.enabled ===
-        "undefined"
+        !Object.prototype.hasOwnProperty.call(
+            settings,
+            settingId
+        )
     ) {
 
         return true;
@@ -170,350 +224,266 @@ function isPaperEnabled(
 
 
     return (
-        setting.enabled === true
+        settings[settingId] === true
     );
 
 }
 
 
 // =====================================================
-// CHECK TERM ENABLED
-// =====================================================
-//
-// Term is visible when at least ONE paper
-// inside that term is Active.
-//
-// If all 5 papers are Disabled,
-// the whole Term card is hidden.
-//
+// CREATE CARD
 // =====================================================
 
-function isTermEnabled(
-    term
-) {
-
-    const papers =
-        termPaperIds[
-            term
-        ] || [];
-
-
-    return papers.some(
-        paperId =>
-            isPaperEnabled(
-                paperId
-            )
-    );
-
-}
-
-
-// =====================================================
-// OPEN TERM
-// =====================================================
-
-function openTerm(
-    term
-) {
-
-    if (
-        !isTermEnabled(
-            term
-        )
-    ) {
-
-        return;
-
-    }
-
-
-    window.location.href =
-        `grade10-term.html?term=${encodeURIComponent(
-            term
-        )}`;
-
-}
-
-
-// =====================================================
-// SETUP CARD
-// =====================================================
-
-function setupCard(
-    term
-) {
+function createTermCard(term) {
 
     const card =
-        termCards[
-            term
-        ];
+        document.createElement("div");
 
 
-    if (!card) {
-        return;
-    }
+    card.className =
+        "term-card";
 
 
-    // Remove old handlers
-
-    card.onclick =
-        null;
+    card.style.cursor =
+        "pointer";
 
 
-    card.onkeydown =
-        null;
+    card.innerHTML = `
+
+        <div class="term-icon">
+            📚
+        </div>
+
+        <h2>
+            ${escapeHTML(term.title)}
+        </h2>
+
+        <p>
+            ${escapeHTML(term.description)}
+        </p>
+
+    `;
 
 
-    // -------------------------------------------------
-    // Check availability
-    // -------------------------------------------------
+    card.addEventListener(
+        "click",
+        () => {
 
-    const enabled =
-        isTermEnabled(
-            term
-        );
+            window.location.href =
+                `grade10-term.html?term=${encodeURIComponent(
+                    term.number
+                )}`;
 
-
-    // -------------------------------------------------
-    // DISABLED
-    // -------------------------------------------------
-
-    if (!enabled) {
-
-        card.style.display =
-            "none";
-
-        card.setAttribute(
-            "aria-hidden",
-            "true"
-        );
-
-        return;
-
-    }
-
-
-    // -------------------------------------------------
-    // ACTIVE
-    // -------------------------------------------------
-
-    card.style.display =
-        "";
-
-
-    card.removeAttribute(
-        "aria-hidden"
+        }
     );
 
 
-    card.onclick =
-        () => {
-
-            openTerm(
-                term
-            );
-
-        };
-
-
-    card.onkeydown =
-        event => {
-
-            if (
-                event.key === "Enter" ||
-                event.key === " "
-            ) {
-
-                event.preventDefault();
-
-                openTerm(
-                    term
-                );
-
-            }
-
-        };
+    return card;
 
 }
 
 
 // =====================================================
-// LOAD SETTINGS
+// SHOW NO PAPERS
 // =====================================================
 
-async function loadSettings() {
+function showNoTerms() {
+
+    termGrid.innerHTML = `
+
+        <div
+            style="
+                grid-column:1/-1;
+                background:white;
+                border-radius:20px;
+                padding:50px 25px;
+                text-align:center;
+                box-shadow:0 10px 30px rgba(0,0,0,.08);
+            "
+        >
+
+            <div
+                style="
+                    font-size:50px;
+                    margin-bottom:15px;
+                "
+            >
+                🔒
+            </div>
+
+            <h2
+                style="
+                    margin:0 0 10px;
+                    color:#111827;
+                "
+            >
+                No Model Papers Available
+            </h2>
+
+            <p
+                style="
+                    margin:0;
+                    color:#64748b;
+                "
+            >
+                Model papers are currently unavailable.
+            </p>
+
+        </div>
+
+    `;
+
+}
+
+
+// =====================================================
+// LOAD
+// =====================================================
+
+async function loadTerms() {
 
     try {
 
-        const settingsRef =
-            doc(
-                db,
-                "paperSettings",
-                "settings"
+        console.log(
+            "================================"
+        );
+
+        console.log(
+            "GRADE 10 MODEL PAPERS START"
+        );
+
+        console.log(
+            "================================"
+        );
+
+
+        if (!termGrid) {
+
+            throw new Error(
+                "termGrid element not found in HTML."
             );
-
-
-        const snapshot =
-            await getDoc(
-                settingsRef
-            );
-
-
-        // =============================================
-        // NO SETTINGS DOCUMENT
-        // =============================================
-
-        if (
-            !snapshot.exists()
-        ) {
-
-            console.warn(
-                "paperSettings/settings does not exist."
-            );
-
-
-            paperSettings = {};
 
         }
 
-        else {
 
-            paperSettings =
-                snapshot.data() || {};
+        // =========================================
+        // SHOW LOADING
+        // =========================================
+
+        termGrid.innerHTML = `
+
+            <div
+                style="
+                    grid-column:1/-1;
+                    text-align:center;
+                    padding:40px;
+                    color:#64748b;
+                "
+            >
+                Loading...
+            </div>
+
+        `;
+
+
+        // =========================================
+        // FIRESTORE
+        // =========================================
+
+        const settings =
+            await getPaperSettings();
+
+
+        // =========================================
+        // CLEAR
+        // =========================================
+
+        termGrid.innerHTML =
+            "";
+
+
+        let visibleCount =
+            0;
+
+
+        // =========================================
+        // TERMS
+        // =========================================
+
+        for (
+            const term of TERMS
+        ) {
+
+            const enabled =
+                isTermEnabled(
+                    settings,
+                    term.number
+                );
+
+
+            console.log(
+                term.title,
+                enabled
+                    ? "ACTIVE"
+                    : "DISABLED"
+            );
+
+
+            if (!enabled) {
+
+                continue;
+
+            }
+
+
+            const card =
+                createTermCard(
+                    term
+                );
+
+
+            termGrid.appendChild(
+                card
+            );
+
+
+            visibleCount++;
+
+        }
+
+
+        // =========================================
+        // NONE
+        // =========================================
+
+        if (
+            visibleCount === 0
+        ) {
+
+            showNoTerms();
 
         }
 
 
         console.log(
-            "Paper settings loaded:",
-            paperSettings
+            "Visible terms:",
+            visibleCount
         );
 
 
-        renderTerms();
+        console.log(
+            "GRADE 10 MODEL PAPERS COMPLETE"
+        );
 
     }
 
     catch (error) {
 
-        console.error(
-            "Failed to load paper settings:",
+        showError(
             error
         );
 
-
-        // ------------------------------------------------
-        // If settings cannot be loaded,
-        // keep papers visible instead of hiding them.
-        // ------------------------------------------------
-
-        paperSettings = {};
-
-
-        renderTerms();
-
     }
-
-}
-
-
-// =====================================================
-// RENDER TERMS
-// =====================================================
-
-function renderTerms() {
-
-    let visibleTerms =
-        0;
-
-
-    [
-        "1",
-        "2",
-        "3"
-    ]
-    .forEach(
-        term => {
-
-            setupCard(
-                term
-            );
-
-
-            if (
-                isTermEnabled(
-                    term
-                )
-            ) {
-
-                visibleTerms++;
-
-            }
-
-        }
-    );
-
-
-    // =================================================
-    // NO TERMS
-    // =================================================
-
-    if (
-        visibleTerms === 0
-    ) {
-
-        if (termGrid) {
-
-            termGrid.style.display =
-                "none";
-
-        }
-
-
-        if (noTermsMessage) {
-
-            noTermsMessage.style.display =
-                "block";
-
-        }
-
-    }
-
-    else {
-
-        if (termGrid) {
-
-            termGrid.style.display =
-                "";
-
-        }
-
-
-        if (noTermsMessage) {
-
-            noTermsMessage.style.display =
-                "none";
-
-        }
-
-    }
-
-
-    console.log(
-        "Grade 10 Terms:",
-        {
-
-            term1:
-                isTermEnabled("1"),
-
-            term2:
-                isTermEnabled("2"),
-
-            term3:
-                isTermEnabled("3")
-
-        }
-    );
 
 }
 
@@ -522,17 +492,4 @@ function renderTerms() {
 // START
 // =====================================================
 
-loadSettings();
-
-
-console.log(
-    "======================================"
-);
-
-console.log(
-    "✅ Grade 10 Model Papers Loaded"
-);
-
-console.log(
-    "======================================"
-);
+loadTerms();
