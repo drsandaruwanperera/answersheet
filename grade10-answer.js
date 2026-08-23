@@ -1,314 +1,853 @@
-// ==========================
-// Get URL Parameters
-// ==========================
-
-const params = new URLSearchParams(
-    window.location.search
-);
-
-const term = params.get("term");
-const paper = params.get("paper");
-const type = params.get("type");
+import {
+    db,
+    doc,
+    getDoc
+} from "./firebase.js";
 
 
-// ==========================
-// Elements
-// ==========================
+// =====================================================
+// URL PARAMETERS
+// =====================================================
+
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+const term =
+    params.get("term");
+
+
+const paper =
+    params.get("paper");
+
+
+const type =
+    params.get("type");
+
+
+// =====================================================
+// ELEMENTS
+// =====================================================
 
 const answerTitle =
-    document.getElementById("answerTitle");
+    document.getElementById(
+        "answerTitle"
+    );
+
 
 const answerContainer =
-    document.getElementById("answerContainer");
+    document.getElementById(
+        "answerContainer"
+    );
 
 
-// ==========================
-// Login Check
-// ==========================
+// =====================================================
+// LOGIN CHECK
+// =====================================================
 
 if (
-    sessionStorage.getItem("loggedIn") !== "true"
+    sessionStorage.getItem(
+        "loggedIn"
+    ) !== "true"
 ) {
-    window.location.replace("index.html");
+
+    window.location.replace(
+        "index.html"
+    );
+
+    throw new Error(
+        "Student not logged in."
+    );
+
 }
 
 
-// ==========================
-// Student ID
-// ==========================
+// =====================================================
+// STUDENT ID
+// =====================================================
 
 const studentId =
-    sessionStorage.getItem("studentId") || "";
+    sessionStorage.getItem(
+        "studentId"
+    ) || "";
 
 
-// ==========================
-// Validate Term
-// ==========================
+// =====================================================
+// VALIDATE TERM
+// =====================================================
 
 if (
-    !["1", "2", "3"].includes(term)
+    ![
+        "1",
+        "2",
+        "3"
+    ].includes(
+        term
+    )
 ) {
 
-    alert("Invalid term.");
+    alert(
+        "Invalid term."
+    );
+
 
     window.location.replace(
         "grade10-model-papers.html"
     );
 
+
+    throw new Error(
+        "Invalid term."
+    );
+
 }
 
 
-// ==========================
-// Validate Paper
-// ==========================
-
-// Accept 1 or 01
+// =====================================================
+// VALIDATE PAPER
+// =====================================================
 
 const paperNumber =
-    Number(paper);
+    Number(
+        paper
+    );
+
 
 if (
-    !Number.isInteger(paperNumber) ||
+    !Number.isInteger(
+        paperNumber
+    ) ||
     paperNumber < 1 ||
     paperNumber > 99
 ) {
 
-    alert("Invalid paper.");
+    alert(
+        "Invalid paper."
+    );
+
 
     window.location.replace(
-        `grade10-term.html?term=${encodeURIComponent(term)}`
+        `grade10-term.html?term=${encodeURIComponent(
+            term
+        )}`
+    );
+
+
+    throw new Error(
+        "Invalid paper."
     );
 
 }
 
 
-// ==========================
-// Paper Format
-// ==========================
+// =====================================================
+// PAPER FORMAT
+// =====================================================
 
 const paperFolder =
-    `paper${String(paperNumber).padStart(2, "0")}`;
+    `paper${String(
+        paperNumber
+    ).padStart(
+        2,
+        "0"
+    )}`;
 
 
-// ==========================
-// Term Names
-// ==========================
+// =====================================================
+// TERM NAMES
+// =====================================================
 
 const termNames = {
 
-    "1": "1st Term",
-    "2": "2nd Term",
-    "3": "3rd Term"
+    "1":
+        "1st Term",
+
+    "2":
+        "2nd Term",
+
+    "3":
+        "3rd Term"
 
 };
 
+
 const termName =
-    termNames[term];
+    termNames[
+        term
+    ];
 
 
-// ==========================
-// Answer Type
-// ==========================
+// =====================================================
+// ANSWER TYPE
+// =====================================================
 
 let answerFolder = "";
-let title = "";
 
-if (type === "mcq") {
+let pageTitle = "";
 
-    answerFolder = "mcq-answer";
 
-    title = "📝 MCQ Answer";
+if (
+    type === "mcq"
+) {
+
+    answerFolder =
+        "mcq-answer";
+
+    pageTitle =
+        "📝 MCQ Answer";
 
 }
-else if (type === "answer") {
 
-    answerFolder = "answer";
+else if (
+    type === "answer"
+) {
 
-    title = "📝 Answer Scheme";
+    answerFolder =
+        "answer";
+
+    pageTitle =
+        "📝 Answer Scheme";
 
 }
+
 else {
 
-    alert("Invalid answer type.");
+    alert(
+        "Invalid answer type."
+    );
+
 
     window.location.replace(
-        `grade10-term.html?term=${encodeURIComponent(term)}`
+        `grade10-term.html?term=${encodeURIComponent(
+            term
+        )}`
+    );
+
+
+    throw new Error(
+        "Invalid answer type."
     );
 
 }
 
 
-// ==========================
-// Set Title
-// ==========================
+// =====================================================
+// SET TITLE
+// =====================================================
 
-if (answerTitle) {
+if (
+    answerTitle
+) {
 
     answerTitle.textContent =
-        `${title} - ${termName} - Paper ${String(
+        `${pageTitle} - ${termName} - Paper ${String(
             paperNumber
-        ).padStart(2, "0")}`;
+        ).padStart(
+            2,
+            "0"
+        )}`;
 
 }
 
 
-// ==========================
-// Image Folder
-// ==========================
+// =====================================================
+// FIRESTORE SETTINGS
+// =====================================================
+
+async function getPaperSettings() {
+
+    const settingsRef =
+        doc(
+            db,
+            "paperSettings",
+            "settings"
+        );
+
+
+    const snapshot =
+        await getDoc(
+            settingsRef
+        );
+
+
+    if (
+        !snapshot.exists()
+    ) {
+
+        return {};
+
+    }
+
+
+    return (
+        snapshot.data() || {}
+    );
+
+}
+
+
+// =====================================================
+// CHECK TERM
+// =====================================================
+
+function isTermEnabled(
+    settings
+) {
+
+    const termSettingId =
+        `grade10_term${term}_enabled`;
+
+
+    // No setting = active
+
+    if (
+        !Object.prototype.hasOwnProperty.call(
+            settings,
+            termSettingId
+        )
+    ) {
+
+        return true;
+
+    }
+
+
+    return (
+        settings[
+            termSettingId
+        ] === true
+    );
+
+}
+
+
+// =====================================================
+// CHECK PAPER
+// =====================================================
+
+function isPaperEnabled(
+    settings
+) {
+
+    const paperSettingId =
+        `grade10_term${term}_model_${paperFolder.replace(
+            "paper",
+            ""
+        )}`;
+
+
+    // No setting = active
+
+    if (
+        !Object.prototype.hasOwnProperty.call(
+            settings,
+            paperSettingId
+        )
+    ) {
+
+        return true;
+
+    }
+
+
+    return (
+        settings[
+            paperSettingId
+        ]?.enabled === true
+    );
+
+}
+
+
+// =====================================================
+// SHOW NOT AVAILABLE
+// =====================================================
+
+function showNotAvailable(
+    title,
+    message
+) {
+
+    if (
+        !answerContainer
+    ) {
+
+        return;
+
+    }
+
+
+    answerContainer.innerHTML = `
+
+        <div
+            class="no-answer"
+            style="
+                background:#fff;
+                padding:45px 25px;
+                border-radius:20px;
+                text-align:center;
+                box-shadow:0 10px 30px rgba(0,0,0,.08);
+            "
+        >
+
+            <div
+                style="
+                    font-size:50px;
+                    margin-bottom:15px;
+                "
+            >
+                🔒
+            </div>
+
+
+            <h2>
+                ${escapeHTML(title)}
+            </h2>
+
+
+            <p
+                style="
+                    color:#64748b;
+                    line-height:1.6;
+                "
+            >
+                ${escapeHTML(message)}
+            </p>
+
+
+            <button
+                type="button"
+                id="backBtn"
+                style="
+                    margin-top:20px;
+                    padding:12px 24px;
+                    border:0;
+                    border-radius:10px;
+                    background:#6d35f2;
+                    color:white;
+                    cursor:pointer;
+                    font-weight:600;
+                "
+            >
+                ← Back
+            </button>
+
+        </div>
+
+    `;
+
+
+    const backBtn =
+        document.getElementById(
+            "backBtn"
+        );
+
+
+    if (
+        backBtn
+    ) {
+
+        backBtn.addEventListener(
+            "click",
+            () => {
+
+                window.location.href =
+                    `grade10-term.html?term=${encodeURIComponent(
+                        term
+                    )}`;
+
+            }
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// IMAGE FOLDER
+// =====================================================
 
 const imageFolder =
     `papers/grade10/term${term}/${paperFolder}/${answerFolder}/`;
 
 
-// ==========================
-// Load Answer Images
-// ==========================
+// =====================================================
+// LOAD ANSWER IMAGES
+// =====================================================
 
-let pageNumber = 1;
+let pageNumber =
+    1;
 
 
-// ==========================
-// Load Next Image
-// ==========================
+let loadedPages =
+    0;
+
+
+// =====================================================
+// LOAD NEXT PAGE
+// =====================================================
 
 function loadNextPage() {
 
     const number =
-        String(pageNumber).padStart(2, "0");
+        String(
+            pageNumber
+        ).padStart(
+            2,
+            "0"
+        );
+
 
     const imagePath =
         `${imageFolder}Page_${number}.jpg`;
 
 
-    const img =
-        document.createElement("img");
+    console.log(
+        "Trying image:",
+        imagePath
+    );
 
-    img.src = imagePath;
+
+    const img =
+        document.createElement(
+            "img"
+        );
+
+
+    img.src =
+        imagePath;
+
 
     img.alt =
-        `${termName} Model Paper ${paperNumber} Answer Page ${pageNumber}`;
-
-    img.draggable = false;
+        `${termName} Model Paper ${paperFolder} ${pageTitle} Page ${pageNumber}`;
 
 
-    // ==========================
-    // Image Loaded
-    // ==========================
-
-    img.onload = function () {
-
-        const page =
-            document.createElement("div");
-
-        page.className =
-            "answer-page";
+    img.draggable =
+        false;
 
 
-        // ==========================
-        // Watermark
-        // ==========================
+    // =================================================
+    // IMAGE SUCCESS
+    // =================================================
 
-        const watermark =
-            document.createElement("div");
+    img.onload =
+        function () {
 
-        watermark.className =
-            "watermark";
+            const page =
+                document.createElement(
+                    "div"
+                );
 
 
-        for (
-            let w = 0;
-            w < 20;
-            w++
+            page.className =
+                "answer-page";
+
+
+            // =========================================
+            // WATERMARK
+            // =========================================
+
+            const watermark =
+                document.createElement(
+                    "div"
+                );
+
+
+            watermark.className =
+                "watermark";
+
+
+            for (
+                let w = 0;
+                w < 20;
+                w++
+            ) {
+
+                const mark =
+                    document.createElement(
+                        "span"
+                    );
+
+
+                mark.textContent =
+                    studentId;
+
+
+                watermark.appendChild(
+                    mark
+                );
+
+            }
+
+
+            // =========================================
+            // IMAGE
+            // =========================================
+
+            page.appendChild(
+                img
+            );
+
+
+            page.appendChild(
+                watermark
+            );
+
+
+            answerContainer.appendChild(
+                page
+            );
+
+
+            loadedPages++;
+
+
+            pageNumber++;
+
+
+            loadNextPage();
+
+        };
+
+
+    // =================================================
+    // IMAGE NOT FOUND
+    // =================================================
+
+    img.onerror =
+        function () {
+
+            console.log(
+                "Image not found:",
+                imagePath
+            );
+
+
+            img.remove();
+
+
+            // =========================================
+            // NO PAGES AT ALL
+            // =========================================
+
+            if (
+                loadedPages === 0
+            ) {
+
+                showNotAvailable(
+                    "Answer Not Available",
+                    `No answer images were found for ${termName}, ${paperFolder}.`
+                );
+
+            }
+
+        };
+
+}
+
+
+// =====================================================
+// ESCAPE HTML
+// =====================================================
+
+function escapeHTML(
+    value
+) {
+
+    return String(
+        value
+    )
+
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+
+    .replace(
+        /</g,
+        "&lt;"
+    )
+
+    .replace(
+        />/g,
+        "&gt;"
+    )
+
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
+
+
+// =====================================================
+// INITIALIZE
+// =====================================================
+
+async function init() {
+
+    try {
+
+        if (
+            !answerContainer
         ) {
 
-            const mark =
-                document.createElement("span");
-
-            mark.textContent =
-                studentId;
-
-            watermark.appendChild(mark);
+            throw new Error(
+                "answerContainer not found."
+            );
 
         }
 
 
-        // ==========================
-        // Add Image
-        // ==========================
+        answerContainer.innerHTML = `
 
-        page.appendChild(img);
+            <div
+                style="
+                    text-align:center;
+                    padding:40px;
+                    color:#64748b;
+                "
+            >
+                Loading answer...
+            </div>
 
-        page.appendChild(watermark);
-
-        answerContainer.appendChild(page);
+        `;
 
 
-        // ==========================
-        // Next Page
-        // ==========================
+        // =============================================
+        // GET SETTINGS
+        // =============================================
 
-        pageNumber++;
+        const settings =
+            await getPaperSettings();
+
+
+        // =============================================
+        // CHECK WHOLE TERM
+        // =============================================
+
+        if (
+            !isTermEnabled(
+                settings
+            )
+        ) {
+
+            showNotAvailable(
+                `${termName} Disabled`,
+                "This term has been disabled by the administrator."
+            );
+
+            return;
+
+        }
+
+
+        // =============================================
+        // CHECK PAPER
+        // =============================================
+
+        if (
+            !isPaperEnabled(
+                settings
+            )
+        ) {
+
+            showNotAvailable(
+                "Paper Disabled",
+                "This paper has been disabled by the administrator."
+            );
+
+            return;
+
+        }
+
+
+        // =============================================
+        // CLEAR LOADING
+        // =============================================
+
+        answerContainer.innerHTML =
+            "";
+
+
+        // =============================================
+        // LOAD IMAGES
+        // =============================================
 
         loadNextPage();
 
-    };
-
-
-    // ==========================
-    // Image Not Found
-    // ==========================
-
-    img.onerror = function () {
 
         console.log(
-            "No more answer pages."
+            "======================================"
         );
 
-        // Remove broken image
-        img.remove();
 
-        // If no pages loaded
-        if (
-            answerContainer.children.length === 0
-        ) {
+        console.log(
+            "✅ Grade 10 Answer Viewer Loaded"
+        );
 
-            answerContainer.innerHTML = `
 
-                <div class="no-answer">
+        console.log(
+            "Term:",
+            term
+        );
 
-                    <h2>
-                        Answer Not Available
-                    </h2>
 
-                    <p>
-                        The answer pages are not available yet.
-                    </p>
+        console.log(
+            "Paper:",
+            paperFolder
+        );
 
-                </div>
 
-            `;
+        console.log(
+            "Type:",
+            type
+        );
 
-        }
 
-    };
+        console.log(
+            "Folder:",
+            imageFolder
+        );
+
+
+        console.log(
+            "======================================"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Answer viewer error:",
+            error
+        );
+
+
+        showNotAvailable(
+            "Unable to Load Answer",
+            error.message ||
+            String(error)
+        );
+
+    }
 
 }
 
 
-// ==========================
-// Start Loading
-// ==========================
-
-if (answerContainer) {
-
-    loadNextPage();
-
-}
-
-
-// ==========================
-// Disable Right Click
-// ==========================
+// =====================================================
+// PROTECTION
+// =====================================================
 
 document.addEventListener(
     "contextmenu",
@@ -320,10 +859,6 @@ document.addEventListener(
 );
 
 
-// ==========================
-// Disable Dragging
-// ==========================
-
 document.addEventListener(
     "dragstart",
     event => {
@@ -333,10 +868,6 @@ document.addEventListener(
     }
 );
 
-
-// ==========================
-// Disable Copy
-// ==========================
 
 document.addEventListener(
     "copy",
@@ -348,10 +879,6 @@ document.addEventListener(
 );
 
 
-// ==========================
-// Disable Cut
-// ==========================
-
 document.addEventListener(
     "cut",
     event => {
@@ -361,10 +888,6 @@ document.addEventListener(
     }
 );
 
-
-// ==========================
-// Disable Text Selection
-// ==========================
 
 document.addEventListener(
     "selectstart",
@@ -376,10 +899,6 @@ document.addEventListener(
 );
 
 
-// ==========================
-// Disable Shortcuts
-// ==========================
-
 document.addEventListener(
     "keydown",
     event => {
@@ -387,8 +906,6 @@ document.addEventListener(
         const key =
             event.key.toLowerCase();
 
-
-        // Ctrl / Cmd shortcuts
 
         if (
             event.ctrlKey ||
@@ -403,7 +920,9 @@ document.addEventListener(
                     "x",
                     "u",
                     "a"
-                ].includes(key)
+                ].includes(
+                    key
+                )
             ) {
 
                 event.preventDefault();
@@ -412,8 +931,6 @@ document.addEventListener(
 
         }
 
-
-        // F12
 
         if (
             event.key === "F12"
@@ -427,12 +944,8 @@ document.addEventListener(
 );
 
 
-console.log(
-    "✅ Grade 10 Answer Viewer Loaded",
-    {
-        term,
-        paper: paperFolder,
-        type,
-        imageFolder
-    }
-);
+// =====================================================
+// START
+// =====================================================
+
+init();
