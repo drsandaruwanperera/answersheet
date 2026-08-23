@@ -1,8 +1,71 @@
 import {
     db,
     doc,
+    getDoc,
     updateDoc
 } from "./firebase.js";
+
+
+// =========================================
+// LOGIN CHECK
+// =========================================
+
+if (
+    sessionStorage.getItem("loggedIn") !== "true"
+) {
+
+    window.location.replace(
+        "index.html"
+    );
+
+}
+
+
+// =========================================
+// GET STUDENT ID
+// =========================================
+
+const studentId =
+    sessionStorage.getItem(
+        "studentId"
+    );
+
+
+// =========================================
+// GET STUDENT TYPE
+// =========================================
+
+const sessionType =
+    String(
+        sessionStorage.getItem(
+            "studentType"
+        ) || ""
+    )
+    .toLowerCase()
+    .trim();
+
+
+// =========================================
+// ONLY A/L STUDENTS ALLOWED
+// =========================================
+
+if (
+    sessionType !== "al" &&
+    sessionType !== "a/l" &&
+    sessionType !== "a level" &&
+    sessionType !== "advanced" &&
+    sessionType !== "advanced level"
+) {
+
+    alert(
+        "Province Papers are available only for A/L students."
+    );
+
+    window.location.replace(
+        "dashboard.html"
+    );
+
+}
 
 
 // =========================================
@@ -26,32 +89,61 @@ const province =
 const provinceMap = {
 
     "central": {
-        name: "Central Province",
-        paper: "paper01"
+
+        name:
+            "Central Province",
+
+        paper:
+            "paper01"
+
     },
 
     "western": {
-        name: "Western Province",
-        paper: "paper02"
+
+        name:
+            "Western Province",
+
+        paper:
+            "paper02"
+
     },
 
     "north-western": {
-        name: "North Western Province",
-        paper: "paper03"
+
+        name:
+            "North Western Province",
+
+        paper:
+            "paper03"
+
     },
 
     "southern": {
-        name: "Southern Province",
-        paper: "paper04"
+
+        name:
+            "Southern Province",
+
+        paper:
+            "paper04"
+
     },
 
     "sabaragamuwa": {
-        name: "Sabaragamuwa Province",
-        paper: "paper05"
+
+        name:
+            "Sabaragamuwa Province",
+
+        paper:
+            "paper05"
+
     }
 
 };
 
+
+// =========================================
+// FIND PROVINCE
+// =========================================
 
 const data =
     provinceMap[
@@ -60,7 +152,7 @@ const data =
 
 
 // =========================================
-// VALIDATE
+// VALIDATE PROVINCE
 // =========================================
 
 if (
@@ -73,23 +165,6 @@ if (
 
     window.location.replace(
         "province-paper1.html"
-    );
-
-}
-
-
-// =========================================
-// LOGIN
-// =========================================
-
-if (
-    sessionStorage.getItem(
-        "loggedIn"
-    ) !== "true"
-) {
-
-    window.location.replace(
-        "index.html"
     );
 
 }
@@ -116,23 +191,14 @@ const container =
 // =========================================
 
 if (
-    title
+    title &&
+    data
 ) {
 
     title.textContent =
         data.name;
 
 }
-
-
-// =========================================
-// STUDENT ID
-// =========================================
-
-const studentId =
-    sessionStorage.getItem(
-        "studentId"
-    );
 
 
 // =========================================
@@ -171,8 +237,10 @@ async function trackProvincePaper() {
         await updateDoc(
             studentRef,
             {
+
                 [fieldPath]:
                     true
+
             }
         );
 
@@ -206,7 +274,8 @@ async function trackProvincePaper() {
 // =========================================
 
 if (
-    container
+    container &&
+    data
 ) {
 
     container.innerHTML = `
@@ -217,6 +286,12 @@ if (
                 📁 ${data.name}
             </h2>
 
+
+            <p>
+                A/L Province Wise 1st Paper
+            </p>
+
+
             <div class="button-grid">
 
                 <button
@@ -224,9 +299,7 @@ if (
                     id="provincePaperBtn"
                     type="button"
                 >
-
                     📄 MCQ Paper
-
                 </button>
 
 
@@ -235,9 +308,7 @@ if (
                     id="provinceAnswerBtn"
                     type="button"
                 >
-
                     📝 MCQ Answer Scheme
-
                 </button>
 
             </div>
@@ -248,7 +319,7 @@ if (
 
 
     // =====================================
-    // PDF BUTTON
+    // MCQ PAPER BUTTON
     // =====================================
 
     const paperBtn =
@@ -280,7 +351,7 @@ if (
 
 
     // =====================================
-    // ANSWER BUTTON
+    // ANSWER SCHEME BUTTON
     // =====================================
 
     const answerBtn =
@@ -315,11 +386,23 @@ if (
 }
 
 
+// =========================================
+// CONSOLE
+// =========================================
+
 console.log(
     "✅ Province Paper 1 Loaded",
     {
+
         province,
+
         paper:
-            data?.paper
+            data?.paper,
+
+        studentId,
+
+        studentType:
+            sessionType
+
     }
 );
