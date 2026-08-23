@@ -11,11 +11,16 @@ import {
 // =====================================================
 
 const adminLoggedIn =
-    sessionStorage.getItem("adminLoggedIn") === "true";
+    sessionStorage.getItem(
+        "adminLoggedIn"
+    ) === "true";
+
 
 const adminRole =
     String(
-        sessionStorage.getItem("adminRole") || ""
+        sessionStorage.getItem(
+            "adminRole"
+        ) || ""
     )
     .toLowerCase()
     .trim();
@@ -60,45 +65,54 @@ const grade10List =
         "grade10PaperList"
     );
 
+
 const grade11List =
     document.getElementById(
         "grade11PaperList"
     );
+
 
 const alList =
     document.getElementById(
         "alPaperList"
     );
 
+
 const saveBtn =
     document.getElementById(
         "saveSettingsBtn"
     );
+
 
 const enableAllBtn =
     document.getElementById(
         "enableAllBtn"
     );
 
+
 const disableAllBtn =
     document.getElementById(
         "disableAllBtn"
     );
+
 
 const changesStatus =
     document.getElementById(
         "changesStatus"
     );
 
+
 const adminUsername =
     document.getElementById(
         "adminUsername"
     );
 
+
 const adminRoleElement =
     document.getElementById(
         "adminRole"
     );
+
 
 const logoutBtn =
     document.getElementById(
@@ -138,7 +152,6 @@ if (adminRoleElement) {
 
 const PAPER_CATALOG = {
 
-
     // =================================================
     // GRADE 10
     // =================================================
@@ -151,36 +164,56 @@ const PAPER_CATALOG = {
             papers: [
 
                 {
-                    id: "grade10_term1_model_01",
-                    title: "1st Term - Model Paper 01",
+                    id:
+                        "grade10_term1_model_01",
+
+                    title:
+                        "1st Term - Model Paper 01",
+
                     description:
                         "MCQ Paper • Question Paper • Answers"
                 },
 
                 {
-                    id: "grade10_term1_model_02",
-                    title: "1st Term - Model Paper 02",
+                    id:
+                        "grade10_term1_model_02",
+
+                    title:
+                        "1st Term - Model Paper 02",
+
                     description:
                         "MCQ Paper • Question Paper • Answers"
                 },
 
                 {
-                    id: "grade10_term1_model_03",
-                    title: "1st Term - Model Paper 03",
+                    id:
+                        "grade10_term1_model_03",
+
+                    title:
+                        "1st Term - Model Paper 03",
+
                     description:
                         "MCQ Paper • Question Paper • Answers"
                 },
 
                 {
-                    id: "grade10_term1_model_04",
-                    title: "1st Term - Model Paper 04",
+                    id:
+                        "grade10_term1_model_04",
+
+                    title:
+                        "1st Term - Model Paper 04",
+
                     description:
                         "MCQ Paper • Question Paper • Answers"
                 },
 
                 {
-                    id: "grade10_term1_model_05",
-                    title: "1st Term - Model Paper 05",
+                    id:
+                        "grade10_term1_model_05",
+
+                    title:
+                        "1st Term - Model Paper 05",
+
                     description:
                         "MCQ Paper • Question Paper • Answers"
                 }
@@ -195,36 +228,56 @@ const PAPER_CATALOG = {
             papers: [
 
                 {
-                    id: "grade10_term2_model_01",
-                    title: "2nd Term - Model Paper 01",
+                    id:
+                        "grade10_term2_model_01",
+
+                    title:
+                        "2nd Term - Model Paper 01",
+
                     description:
                         "MCQ Paper • Question Paper • Answers"
                 },
 
                 {
-                    id: "grade10_term2_model_02",
-                    title: "2nd Term - Model Paper 02",
+                    id:
+                        "grade10_term2_model_02",
+
+                    title:
+                        "2nd Term - Model Paper 02",
+
                     description:
                         "MCQ Paper • Question Paper • Answers"
                 },
 
                 {
-                    id: "grade10_term2_model_03",
-                    title: "2nd Term - Model Paper 03",
+                    id:
+                        "grade10_term2_model_03",
+
+                    title:
+                        "2nd Term - Model Paper 03",
+
                     description:
                         "MCQ Paper • Question Paper • Answers"
                 },
 
                 {
-                    id: "grade10_term2_model_04",
-                    title: "2nd Term - Model Paper 04",
+                    id:
+                        "grade10_term2_model_04",
+
+                    title:
+                        "2nd Term - Model Paper 04",
+
                     description:
                         "MCQ Paper • Question Paper • Answers"
                 },
 
                 {
-                    id: "grade10_term2_model_05",
-                    title: "2nd Term - Model Paper 05",
+                    id:
+                        "grade10_term2_model_05",
+
+                    title:
+                        "2nd Term - Model Paper 05",
+
                     description:
                         "MCQ Paper • Question Paper • Answers"
                 }
@@ -239,36 +292,56 @@ const PAPER_CATALOG = {
             papers: [
 
                 {
-                    id: "grade10_term3_model_01",
-                    title: "3rd Term - Model Paper 01",
+                    id:
+                        "grade10_term3_model_01",
+
+                    title:
+                        "3rd Term - Model Paper 01",
+
                     description:
                         "MCQ Paper • Question Paper • Answers"
                 },
 
                 {
-                    id: "grade10_term3_model_02",
-                    title: "3rd Term - Model Paper 02",
+                    id:
+                        "grade10_term3_model_02",
+
+                    title:
+                        "3rd Term - Model Paper 02",
+
                     description:
                         "MCQ Paper • Question Paper • Answers"
                 },
 
                 {
-                    id: "grade10_term3_model_03",
-                    title: "3rd Term - Model Paper 03",
+                    id:
+                        "grade10_term3_model_03",
+
+                    title:
+                        "3rd Term - Model Paper 03",
+
                     description:
                         "MCQ Paper • Question Paper • Answers"
                 },
 
                 {
-                    id: "grade10_term3_model_04",
-                    title: "3rd Term - Model Paper 04",
+                    id:
+                        "grade10_term3_model_04",
+
+                    title:
+                        "3rd Term - Model Paper 04",
+
                     description:
                         "MCQ Paper • Question Paper • Answers"
                 },
 
                 {
-                    id: "grade10_term3_model_05",
-                    title: "3rd Term - Model Paper 05",
+                    id:
+                        "grade10_term3_model_05",
+
+                    title:
+                        "3rd Term - Model Paper 05",
+
                     description:
                         "MCQ Paper • Question Paper • Answers"
                 }
@@ -286,34 +359,51 @@ const PAPER_CATALOG = {
     grade11: [
 
         {
-            group: "Term Test Papers",
+            group:
+                "Term Test Papers",
 
             papers: [
 
                 {
-                    id: "grade11_termtest_01",
-                    title: "Term Test Paper 01",
+                    id:
+                        "grade11_termtest_01",
+
+                    title:
+                        "Term Test Paper 01",
+
                     description:
                         "Question Paper • Answer Scheme"
                 },
 
                 {
-                    id: "grade11_termtest_02",
-                    title: "Term Test Paper 02",
+                    id:
+                        "grade11_termtest_02",
+
+                    title:
+                        "Term Test Paper 02",
+
                     description:
                         "Question Paper • Answer Scheme"
                 },
 
                 {
-                    id: "grade11_termtest_03",
-                    title: "Term Test Paper 03",
+                    id:
+                        "grade11_termtest_03",
+
+                    title:
+                        "Term Test Paper 03",
+
                     description:
                         "Question Paper • Answer Scheme"
                 },
 
                 {
-                    id: "grade11_termtest_04",
-                    title: "Term Test Paper 04",
+                    id:
+                        "grade11_termtest_04",
+
+                    title:
+                        "Term Test Paper 04",
+
                     description:
                         "Question Paper • Answer Scheme"
                 }
@@ -323,76 +413,117 @@ const PAPER_CATALOG = {
 
 
         {
-            group: "Past Papers (2016 – 2025)",
+            group:
+                "Past Papers (2016 – 2025)",
 
             papers: [
 
                 {
-                    id: "grade11_past_2016",
-                    title: "2016 Past Paper",
+                    id:
+                        "grade11_past_2016",
+
+                    title:
+                        "2016 Past Paper",
+
                     description:
                         "Past Examination Paper"
                 },
 
                 {
-                    id: "grade11_past_2017",
-                    title: "2017 Past Paper",
+                    id:
+                        "grade11_past_2017",
+
+                    title:
+                        "2017 Past Paper",
+
                     description:
                         "Past Examination Paper"
                 },
 
                 {
-                    id: "grade11_past_2018",
-                    title: "2018 Past Paper",
+                    id:
+                        "grade11_past_2018",
+
+                    title:
+                        "2018 Past Paper",
+
                     description:
                         "Past Examination Paper"
                 },
 
                 {
-                    id: "grade11_past_2019",
-                    title: "2019 Past Paper",
+                    id:
+                        "grade11_past_2019",
+
+                    title:
+                        "2019 Past Paper",
+
                     description:
                         "Past Examination Paper"
                 },
 
                 {
-                    id: "grade11_past_2020",
-                    title: "2020 Past Paper",
+                    id:
+                        "grade11_past_2020",
+
+                    title:
+                        "2020 Past Paper",
+
                     description:
                         "Past Examination Paper"
                 },
 
                 {
-                    id: "grade11_past_2021",
-                    title: "2021 Past Paper",
+                    id:
+                        "grade11_past_2021",
+
+                    title:
+                        "2021 Past Paper",
+
                     description:
                         "Past Examination Paper"
                 },
 
                 {
-                    id: "grade11_past_2022",
-                    title: "2022 Past Paper",
+                    id:
+                        "grade11_past_2022",
+
+                    title:
+                        "2022 Past Paper",
+
                     description:
                         "Past Examination Paper"
                 },
 
                 {
-                    id: "grade11_past_2023",
-                    title: "2023 Past Paper",
+                    id:
+                        "grade11_past_2023",
+
+                    title:
+                        "2023 Past Paper",
+
                     description:
                         "Past Examination Paper"
                 },
 
                 {
-                    id: "grade11_past_2024",
-                    title: "2024 Past Paper",
+                    id:
+                        "grade11_past_2024",
+
+                    title:
+                        "2024 Past Paper",
+
                     description:
                         "Past Examination Paper"
                 },
 
                 {
-                    id: "grade11_past_2025",
-                    title: "2025 Past Paper",
+                    id:
+                        "grade11_past_2025",
+
+                    title:
+                        "2025 Past Paper",
+
                     description:
                         "Past Examination Paper"
                 }
@@ -410,111 +541,172 @@ const PAPER_CATALOG = {
     al: [
 
         {
-            group: "Model Papers",
+            group:
+                "Model Papers",
 
             papers: [
 
                 {
-                    id: "al_model_01",
-                    title: "Model Paper 01",
+                    id:
+                        "al_model_01",
+
+                    title:
+                        "Model Paper 01",
+
                     description:
                         "Paper • Answers • Marking Scheme"
                 },
 
                 {
-                    id: "al_model_02",
-                    title: "Model Paper 02",
+                    id:
+                        "al_model_02",
+
+                    title:
+                        "Model Paper 02",
+
                     description:
                         "Paper • Answers • Marking Scheme"
                 },
 
                 {
-                    id: "al_model_03",
-                    title: "Model Paper 03",
+                    id:
+                        "al_model_03",
+
+                    title:
+                        "Model Paper 03",
+
                     description:
                         "Paper • Answers • Marking Scheme"
                 },
 
                 {
-                    id: "al_model_04",
-                    title: "Model Paper 04",
+                    id:
+                        "al_model_04",
+
+                    title:
+                        "Model Paper 04",
+
                     description:
                         "Paper • Answers • Marking Scheme"
                 },
 
                 {
-                    id: "al_model_05",
-                    title: "Model Paper 05",
+                    id:
+                        "al_model_05",
+
+                    title:
+                        "Model Paper 05",
+
                     description:
                         "Paper • Answers • Marking Scheme"
                 },
 
                 {
-                    id: "al_model_06",
-                    title: "Model Paper 06",
+                    id:
+                        "al_model_06",
+
+                    title:
+                        "Model Paper 06",
+
                     description:
                         "Paper • Answers • Marking Scheme"
                 },
 
                 {
-                    id: "al_model_07",
-                    title: "Model Paper 07",
+                    id:
+                        "al_model_07",
+
+                    title:
+                        "Model Paper 07",
+
                     description:
                         "Paper • Answers • Marking Scheme"
                 },
 
                 {
-                    id: "al_model_08",
-                    title: "Model Paper 08",
+                    id:
+                        "al_model_08",
+
+                    title:
+                        "Model Paper 08",
+
                     description:
                         "Paper • Answers • Marking Scheme"
                 },
 
                 {
-                    id: "al_model_09",
-                    title: "Model Paper 09",
+                    id:
+                        "al_model_09",
+
+                    title:
+                        "Model Paper 09",
+
                     description:
                         "Paper • Answers • Marking Scheme"
                 },
 
                 {
-                    id: "al_model_10",
-                    title: "Model Paper 10",
+                    id:
+                        "al_model_10",
+
+                    title:
+                        "Model Paper 10",
+
                     description:
                         "Paper • Answers • Marking Scheme"
                 },
 
                 {
-                    id: "al_model_11",
-                    title: "Model Paper 11",
+                    id:
+                        "al_model_11",
+
+                    title:
+                        "Model Paper 11",
+
                     description:
                         "Paper • Answers • Marking Scheme"
                 },
 
                 {
-                    id: "al_model_12",
-                    title: "Model Paper 12",
+                    id:
+                        "al_model_12",
+
+                    title:
+                        "Model Paper 12",
+
                     description:
                         "Paper • Answers • Marking Scheme"
                 },
 
                 {
-                    id: "al_model_13",
-                    title: "Model Paper 13",
+                    id:
+                        "al_model_13",
+
+                    title:
+                        "Model Paper 13",
+
                     description:
                         "Paper • Answers • Marking Scheme"
                 },
 
                 {
-                    id: "al_model_14",
-                    title: "Model Paper 14",
+                    id:
+                        "al_model_14",
+
+                    title:
+                        "Model Paper 14",
+
                     description:
                         "Paper • Answers • Marking Scheme"
                 },
 
                 {
-                    id: "al_model_15",
-                    title: "Model Paper 15",
+                    id:
+                        "al_model_15",
+
+                    title:
+                        "Model Paper 15",
+
                     description:
                         "Paper • Answers • Marking Scheme"
                 }
@@ -524,69 +716,106 @@ const PAPER_CATALOG = {
 
 
         {
-            group: "Province Papers",
+            group:
+                "Province Papers",
 
             papers: [
 
                 {
-                    id: "al_province_western",
-                    title: "Western Province",
+                    id:
+                        "al_province_western",
+
+                    title:
+                        "Western Province",
+
                     description:
                         "Province Paper • Answer Scheme"
                 },
 
                 {
-                    id: "al_province_central",
-                    title: "Central Province",
+                    id:
+                        "al_province_central",
+
+                    title:
+                        "Central Province",
+
                     description:
                         "Province Paper • Answer Scheme"
                 },
 
                 {
-                    id: "al_province_southern",
-                    title: "Southern Province",
+                    id:
+                        "al_province_southern",
+
+                    title:
+                        "Southern Province",
+
                     description:
                         "Province Paper • Answer Scheme"
                 },
 
                 {
-                    id: "al_province_northern",
-                    title: "Northern Province",
+                    id:
+                        "al_province_northern",
+
+                    title:
+                        "Northern Province",
+
                     description:
                         "Province Paper • Answer Scheme"
                 },
 
                 {
-                    id: "al_province_north_western",
-                    title: "North Western Province",
+                    id:
+                        "al_province_north_western",
+
+                    title:
+                        "North Western Province",
+
                     description:
                         "Province Paper • Answer Scheme"
                 },
 
                 {
-                    id: "al_province_eastern",
-                    title: "Eastern Province",
+                    id:
+                        "al_province_eastern",
+
+                    title:
+                        "Eastern Province",
+
                     description:
                         "Province Paper • Answer Scheme"
                 },
 
                 {
-                    id: "al_province_uva",
-                    title: "Uva Province",
+                    id:
+                        "al_province_uva",
+
+                    title:
+                        "Uva Province",
+
                     description:
                         "Province Paper • Answer Scheme"
                 },
 
                 {
-                    id: "al_province_sabaragamuwa",
-                    title: "Sabaragamuwa Province",
+                    id:
+                        "al_province_sabaragamuwa",
+
+                    title:
+                        "Sabaragamuwa Province",
+
                     description:
                         "Province Paper • Answer Scheme"
                 },
 
                 {
-                    id: "al_province_all_island",
-                    title: "All Island Papers",
+                    id:
+                        "al_province_all_island",
+
+                    title:
+                        "All Island Papers",
+
                     description:
                         "Province / Island-wide Papers"
                 }
@@ -605,7 +834,8 @@ const PAPER_CATALOG = {
 
 let paperSettings = {};
 
-let hasUnsavedChanges = false;
+let hasUnsavedChanges =
+    false;
 
 
 // =====================================================
@@ -616,28 +846,43 @@ function getAllPapers() {
 
     const result = [];
 
+
     Object.keys(
         PAPER_CATALOG
-    ).forEach(category => {
+    )
+    .forEach(
+        category => {
 
-        PAPER_CATALOG[
-            category
-        ].forEach(group => {
+            PAPER_CATALOG[
+                category
+            ]
+            .forEach(
+                group => {
 
-            group.papers.forEach(paper => {
+                    group.papers
+                        .forEach(
+                            paper => {
 
-                result.push({
-                    ...paper,
-                    category,
-                    group:
-                        group.group
-                });
+                                result.push({
 
-            });
+                                    ...paper,
 
-        });
+                                    category,
 
-    });
+                                    group:
+                                        group.group
+
+                                });
+
+                            }
+                        );
+
+                }
+            );
+
+        }
+    );
+
 
     return result;
 
@@ -648,7 +893,9 @@ function getAllPapers() {
 // CHECK PAPER STATUS
 // =====================================================
 
-function isPaperEnabled(id) {
+function isPaperEnabled(
+    id
+) {
 
     if (
         Object.prototype.hasOwnProperty.call(
@@ -658,15 +905,109 @@ function isPaperEnabled(id) {
     ) {
 
         return (
-            paperSettings[id]?.enabled === true
+            paperSettings[
+                id
+            ]?.enabled === true
         );
 
     }
 
 
-    // New papers are active by default
+    // New papers active by default
 
     return true;
+
+}
+
+
+// =====================================================
+// GRADE 10 TERM SETTING ID
+// =====================================================
+
+function getGrade10TermSettingId(
+    termNumber
+) {
+
+    return (
+        `grade10_term${termNumber}_enabled`
+    );
+
+}
+
+
+// =====================================================
+// CHECK GRADE 10 TERM STATUS
+// =====================================================
+
+function isGrade10TermEnabled(
+    termNumber
+) {
+
+    const settingId =
+        getGrade10TermSettingId(
+            termNumber
+        );
+
+
+    // No term setting = Active
+
+    if (
+        !Object.prototype.hasOwnProperty.call(
+            paperSettings,
+            settingId
+        )
+    ) {
+
+        return true;
+
+    }
+
+
+    return (
+        paperSettings[
+            settingId
+        ] === true
+    );
+
+}
+
+
+// =====================================================
+// GET GRADE 10 TERM NUMBER
+// =====================================================
+
+function getGrade10TermNumber(
+    groupName
+) {
+
+    if (
+        groupName === "1st Term"
+    ) {
+
+        return "1";
+
+    }
+
+
+    if (
+        groupName === "2nd Term"
+    ) {
+
+        return "2";
+
+    }
+
+
+    if (
+        groupName === "3rd Term"
+    ) {
+
+        return "3";
+
+    }
+
+
+    return null;
 
 }
 
@@ -688,24 +1029,26 @@ async function loadSettings() {
 
 
         const snap =
-            await getDoc(ref);
+            await getDoc(
+                ref
+            );
 
 
-        if (snap.exists()) {
+        if (
+            snap.exists()
+        ) {
 
             paperSettings =
                 snap.data() || {};
 
         }
+
         else {
 
             paperSettings = {};
 
         }
 
-
-        // IMPORTANT
-        // Always render after loading
 
         renderAll();
 
@@ -723,13 +1066,6 @@ async function loadSettings() {
             error
         );
 
-
-        // =============================================
-        // IMPORTANT FIX
-        // =============================================
-        // Even if Firestore fails,
-        // render the paper list.
-        // =============================================
 
         paperSettings = {};
 
@@ -796,7 +1132,8 @@ function renderCategory(
     }
 
 
-    container.innerHTML = "";
+    container.innerHTML =
+        "";
 
 
     const groups =
@@ -807,7 +1144,6 @@ function renderCategory(
 
     groups.forEach(
         group => {
-
 
             // =========================================
             // GROUP HEADER
@@ -823,23 +1159,106 @@ function renderCategory(
                 "paper-group-header";
 
 
-            groupHeader.innerHTML = `
+            const termNumber =
+                category === "grade10"
+                    ? getGrade10TermNumber(
+                        group.group
+                    )
+                    : null;
 
-                <div>
 
-                    <strong>
-                        ${escapeHTML(
-                            group.group
-                        )}
-                    </strong>
+            const termEnabled =
+                termNumber
+                    ? isGrade10TermEnabled(
+                        termNumber
+                    )
+                    : true;
 
-                </div>
 
-                <span>
-                    ${group.papers.length} papers
-                </span>
+            // =========================================
+            // GRADE 10 TERM HEADER
+            // =========================================
 
-            `;
+            if (
+                category === "grade10" &&
+                termNumber
+            ) {
+
+                groupHeader.innerHTML = `
+
+                    <div>
+
+                        <strong>
+                            ${escapeHTML(
+                                group.group
+                            )}
+                        </strong>
+
+
+                        <span
+                            style="
+                                margin-left:10px;
+                                font-size:13px;
+                                font-weight:600;
+                                color:${
+                                    termEnabled
+                                        ? "#16a34a"
+                                        : "#dc2626"
+                                };
+                            "
+                        >
+
+                            ${
+                                termEnabled
+                                    ? "Active"
+                                    : "Disabled"
+                            }
+
+                        </span>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="term-toggle-btn"
+                        data-term-number="${termNumber}"
+                    >
+
+                        ${
+                            termEnabled
+                                ? "Disable Term"
+                                : "Enable Term"
+                        }
+
+                    </button>
+
+                `;
+
+            }
+
+            else {
+
+                groupHeader.innerHTML = `
+
+                    <div>
+
+                        <strong>
+                            ${escapeHTML(
+                                group.group
+                            )}
+                        </strong>
+
+                    </div>
+
+
+                    <span>
+                        ${group.papers.length} papers
+                    </span>
+
+                `;
+
+            }
 
 
             container.appendChild(
@@ -853,7 +1272,6 @@ function renderCategory(
 
             group.papers.forEach(
                 paper => {
-
 
                     const enabled =
                         isPaperEnabled(
@@ -961,7 +1379,20 @@ function renderCategory(
     );
 
 
+    // =========================================
+    // PAPER TOGGLE EVENTS
+    // =========================================
+
     attachToggleEvents(
+        container
+    );
+
+
+    // =========================================
+    // TERM TOGGLE EVENTS
+    // =========================================
+
+    attachTermToggleEvents(
         container
     );
 
@@ -969,7 +1400,7 @@ function renderCategory(
 
 
 // =====================================================
-// TOGGLE EVENTS
+// PAPER TOGGLE EVENTS
 // =====================================================
 
 function attachToggleEvents(
@@ -989,7 +1420,6 @@ function attachToggleEvents(
                 "change",
                 () => {
 
-
                     const id =
                         toggle.dataset.paperId;
 
@@ -998,7 +1428,9 @@ function attachToggleEvents(
                         toggle.checked;
 
 
-                    paperSettings[id] = {
+                    paperSettings[
+                        id
+                    ] = {
 
                         enabled:
                             enabled,
@@ -1027,7 +1459,64 @@ function attachToggleEvents(
 
 
 // =====================================================
-// UPDATE ACTIVE / DISABLED UI
+// TERM TOGGLE EVENTS
+// =====================================================
+
+function attachTermToggleEvents(
+    container
+) {
+
+    const buttons =
+        container.querySelectorAll(
+            ".term-toggle-btn"
+        );
+
+
+    buttons.forEach(
+        button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    const termNumber =
+                        button.dataset.termNumber;
+
+
+                    const settingId =
+                        getGrade10TermSettingId(
+                            termNumber
+                        );
+
+
+                    const currentStatus =
+                        isGrade10TermEnabled(
+                            termNumber
+                        );
+
+
+                    paperSettings[
+                        settingId
+                    ] =
+                        !currentStatus;
+
+
+                    markUnsaved();
+
+
+                    renderAll();
+
+                }
+            );
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// UPDATE PAPER STATUS UI
 // =====================================================
 
 function updateStatusUI(
@@ -1098,16 +1587,12 @@ function setupSectionButtons() {
     buttons.forEach(
         button => {
 
-
-            // Remove old event
-
             button.onclick =
                 null;
 
 
             button.onclick =
                 function () {
-
 
                     const category =
                         button.dataset.sectionToggle;
@@ -1168,7 +1653,6 @@ if (enableAllBtn) {
         "click",
         () => {
 
-
             const confirmed =
                 confirm(
                     "Enable ALL papers for students?"
@@ -1180,23 +1664,41 @@ if (enableAllBtn) {
             }
 
 
-            getAllPapers().forEach(
-                paper => {
+            getAllPapers()
+                .forEach(
+                    paper => {
 
-                    paperSettings[
-                        paper.id
-                    ] = {
+                        paperSettings[
+                            paper.id
+                        ] = {
 
-                        enabled:
-                            true,
+                            enabled:
+                                true,
 
-                        updatedAt:
-                            Date.now()
+                            updatedAt:
+                                Date.now()
 
-                    };
+                        };
 
-                }
-            );
+                    }
+                );
+
+
+            // Enable all Grade 10 terms too
+
+            paperSettings[
+                "grade10_term1_enabled"
+            ] = true;
+
+
+            paperSettings[
+                "grade10_term2_enabled"
+            ] = true;
+
+
+            paperSettings[
+                "grade10_term3_enabled"
+            ] = true;
 
 
             renderAll();
@@ -1220,7 +1722,6 @@ if (disableAllBtn) {
         "click",
         () => {
 
-
             const confirmed =
                 confirm(
                     "Disable ALL papers for students?"
@@ -1232,23 +1733,41 @@ if (disableAllBtn) {
             }
 
 
-            getAllPapers().forEach(
-                paper => {
+            getAllPapers()
+                .forEach(
+                    paper => {
 
-                    paperSettings[
-                        paper.id
-                    ] = {
+                        paperSettings[
+                            paper.id
+                        ] = {
 
-                        enabled:
-                            false,
+                            enabled:
+                                false,
 
-                        updatedAt:
-                            Date.now()
+                            updatedAt:
+                                Date.now()
 
-                    };
+                        };
 
-                }
-            );
+                    }
+                );
+
+
+            // Disable all Grade 10 terms too
+
+            paperSettings[
+                "grade10_term1_enabled"
+            ] = false;
+
+
+            paperSettings[
+                "grade10_term2_enabled"
+            ] = false;
+
+
+            paperSettings[
+                "grade10_term3_enabled"
+            ] = false;
 
 
             renderAll();
@@ -1355,7 +1874,8 @@ async function saveSettings() {
 
             },
             {
-                merge: true
+                merge:
+                    true
             }
         );
 
@@ -1436,7 +1956,6 @@ if (logoutBtn) {
         "click",
         () => {
 
-
             const confirmed =
                 confirm(
                     "Are you sure you want to sign out?"
@@ -1483,8 +2002,12 @@ window.addEventListener(
     "beforeunload",
     event => {
 
-        if (!hasUnsavedChanges) {
+        if (
+            !hasUnsavedChanges
+        ) {
+
             return;
+
         }
 
 
@@ -1500,34 +2023,38 @@ window.addEventListener(
 // ESCAPE HTML
 // =====================================================
 
-function escapeHTML(value) {
+function escapeHTML(
+    value
+) {
 
-    return String(value)
+    return String(
+        value
+    )
 
-        .replace(
-            /&/g,
-            "&amp;"
-        )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
 
-        .replace(
-            /</g,
-            "&lt;"
-        )
+    .replace(
+        /</g,
+        "&lt;"
+    )
 
-        .replace(
-            />/g,
-            "&gt;"
-        )
+    .replace(
+        />/g,
+        "&gt;"
+    )
 
-        .replace(
-            /"/g,
-            "&quot;"
-        )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
 
-        .replace(
-            /'/g,
-            "&#039;"
-        );
+    .replace(
+        /'/g,
+        "&#039;"
+    );
 
 }
 
@@ -1548,7 +2075,7 @@ console.log(
 );
 
 console.log(
-    "Admin:",
+    "Super Admin:",
     adminUsername
         ? adminUsername.textContent
         : "unknown"
