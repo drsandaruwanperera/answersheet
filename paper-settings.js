@@ -107,7 +107,7 @@ const logoutBtn =
 
 
 // =====================================================
-// ADMIN INFORMATION
+// ADMIN DISPLAY
 // =====================================================
 
 if (adminUsername) {
@@ -135,20 +135,9 @@ if (adminRoleElement) {
 // =====================================================
 // PAPER CATALOG
 // =====================================================
-//
-// IMPORTANT:
-//
-// These IDs are the permanent IDs used in Firestore.
-//
-// enabled = true
-//     -> Student can access
-//
-// enabled = false
-//     -> Student cannot access
-//
-// =====================================================
 
 const PAPER_CATALOG = {
+
 
     // =================================================
     // GRADE 10
@@ -158,109 +147,132 @@ const PAPER_CATALOG = {
 
         {
             group: "1st Term",
+
             papers: [
+
                 {
                     id: "grade10_term1_model_01",
                     title: "1st Term - Model Paper 01",
                     description:
                         "MCQ Paper • Question Paper • Answers"
                 },
+
                 {
                     id: "grade10_term1_model_02",
                     title: "1st Term - Model Paper 02",
                     description:
                         "MCQ Paper • Question Paper • Answers"
                 },
+
                 {
                     id: "grade10_term1_model_03",
                     title: "1st Term - Model Paper 03",
                     description:
                         "MCQ Paper • Question Paper • Answers"
                 },
+
                 {
                     id: "grade10_term1_model_04",
                     title: "1st Term - Model Paper 04",
                     description:
                         "MCQ Paper • Question Paper • Answers"
                 },
+
                 {
                     id: "grade10_term1_model_05",
                     title: "1st Term - Model Paper 05",
                     description:
                         "MCQ Paper • Question Paper • Answers"
                 }
+
             ]
         },
 
+
         {
             group: "2nd Term",
+
             papers: [
+
                 {
                     id: "grade10_term2_model_01",
                     title: "2nd Term - Model Paper 01",
                     description:
                         "MCQ Paper • Question Paper • Answers"
                 },
+
                 {
                     id: "grade10_term2_model_02",
                     title: "2nd Term - Model Paper 02",
                     description:
                         "MCQ Paper • Question Paper • Answers"
                 },
+
                 {
                     id: "grade10_term2_model_03",
                     title: "2nd Term - Model Paper 03",
                     description:
                         "MCQ Paper • Question Paper • Answers"
                 },
+
                 {
                     id: "grade10_term2_model_04",
                     title: "2nd Term - Model Paper 04",
                     description:
                         "MCQ Paper • Question Paper • Answers"
                 },
+
                 {
                     id: "grade10_term2_model_05",
                     title: "2nd Term - Model Paper 05",
                     description:
                         "MCQ Paper • Question Paper • Answers"
                 }
+
             ]
         },
 
+
         {
             group: "3rd Term",
+
             papers: [
+
                 {
                     id: "grade10_term3_model_01",
                     title: "3rd Term - Model Paper 01",
                     description:
                         "MCQ Paper • Question Paper • Answers"
                 },
+
                 {
                     id: "grade10_term3_model_02",
                     title: "3rd Term - Model Paper 02",
                     description:
                         "MCQ Paper • Question Paper • Answers"
                 },
+
                 {
                     id: "grade10_term3_model_03",
                     title: "3rd Term - Model Paper 03",
                     description:
                         "MCQ Paper • Question Paper • Answers"
                 },
+
                 {
                     id: "grade10_term3_model_04",
                     title: "3rd Term - Model Paper 04",
                     description:
                         "MCQ Paper • Question Paper • Answers"
                 },
+
                 {
                     id: "grade10_term3_model_05",
                     title: "3rd Term - Model Paper 05",
                     description:
                         "MCQ Paper • Question Paper • Answers"
                 }
+
             ]
         }
 
@@ -275,97 +287,116 @@ const PAPER_CATALOG = {
 
         {
             group: "Term Test Papers",
+
             papers: [
+
                 {
                     id: "grade11_termtest_01",
                     title: "Term Test Paper 01",
                     description:
                         "Question Paper • Answer Scheme"
                 },
+
                 {
                     id: "grade11_termtest_02",
                     title: "Term Test Paper 02",
                     description:
                         "Question Paper • Answer Scheme"
                 },
+
                 {
                     id: "grade11_termtest_03",
                     title: "Term Test Paper 03",
                     description:
                         "Question Paper • Answer Scheme"
                 },
+
                 {
                     id: "grade11_termtest_04",
                     title: "Term Test Paper 04",
                     description:
                         "Question Paper • Answer Scheme"
                 }
+
             ]
         },
 
+
         {
             group: "Past Papers (2016 – 2025)",
+
             papers: [
+
                 {
                     id: "grade11_past_2016",
                     title: "2016 Past Paper",
                     description:
                         "Past Examination Paper"
                 },
+
                 {
                     id: "grade11_past_2017",
                     title: "2017 Past Paper",
                     description:
                         "Past Examination Paper"
                 },
+
                 {
                     id: "grade11_past_2018",
                     title: "2018 Past Paper",
                     description:
                         "Past Examination Paper"
                 },
+
                 {
                     id: "grade11_past_2019",
                     title: "2019 Past Paper",
                     description:
                         "Past Examination Paper"
                 },
+
                 {
                     id: "grade11_past_2020",
                     title: "2020 Past Paper",
                     description:
                         "Past Examination Paper"
                 },
+
                 {
                     id: "grade11_past_2021",
                     title: "2021 Past Paper",
                     description:
                         "Past Examination Paper"
                 },
+
                 {
                     id: "grade11_past_2022",
                     title: "2022 Past Paper",
                     description:
                         "Past Examination Paper"
                 },
+
                 {
                     id: "grade11_past_2023",
                     title: "2023 Past Paper",
                     description:
                         "Past Examination Paper"
                 },
+
                 {
                     id: "grade11_past_2024",
                     title: "2024 Past Paper",
                     description:
                         "Past Examination Paper"
                 },
+
                 {
                     id: "grade11_past_2025",
                     title: "2025 Past Paper",
                     description:
                         "Past Examination Paper"
                 }
+
             ]
         }
 
@@ -380,6 +411,7 @@ const PAPER_CATALOG = {
 
         {
             group: "Model Papers",
+
             papers: [
 
                 {
@@ -388,84 +420,98 @@ const PAPER_CATALOG = {
                     description:
                         "Paper • Answers • Marking Scheme"
                 },
+
                 {
                     id: "al_model_02",
                     title: "Model Paper 02",
                     description:
                         "Paper • Answers • Marking Scheme"
                 },
+
                 {
                     id: "al_model_03",
                     title: "Model Paper 03",
                     description:
                         "Paper • Answers • Marking Scheme"
                 },
+
                 {
                     id: "al_model_04",
                     title: "Model Paper 04",
                     description:
                         "Paper • Answers • Marking Scheme"
                 },
+
                 {
                     id: "al_model_05",
                     title: "Model Paper 05",
                     description:
                         "Paper • Answers • Marking Scheme"
                 },
+
                 {
                     id: "al_model_06",
                     title: "Model Paper 06",
                     description:
                         "Paper • Answers • Marking Scheme"
                 },
+
                 {
                     id: "al_model_07",
                     title: "Model Paper 07",
                     description:
                         "Paper • Answers • Marking Scheme"
                 },
+
                 {
                     id: "al_model_08",
                     title: "Model Paper 08",
                     description:
                         "Paper • Answers • Marking Scheme"
                 },
+
                 {
                     id: "al_model_09",
                     title: "Model Paper 09",
                     description:
                         "Paper • Answers • Marking Scheme"
                 },
+
                 {
                     id: "al_model_10",
                     title: "Model Paper 10",
                     description:
                         "Paper • Answers • Marking Scheme"
                 },
+
                 {
                     id: "al_model_11",
                     title: "Model Paper 11",
                     description:
                         "Paper • Answers • Marking Scheme"
                 },
+
                 {
                     id: "al_model_12",
                     title: "Model Paper 12",
                     description:
                         "Paper • Answers • Marking Scheme"
                 },
+
                 {
                     id: "al_model_13",
                     title: "Model Paper 13",
                     description:
                         "Paper • Answers • Marking Scheme"
                 },
+
                 {
                     id: "al_model_14",
                     title: "Model Paper 14",
                     description:
                         "Paper • Answers • Marking Scheme"
                 },
+
                 {
                     id: "al_model_15",
                     title: "Model Paper 15",
@@ -476,8 +522,10 @@ const PAPER_CATALOG = {
             ]
         },
 
+
         {
             group: "Province Papers",
+
             papers: [
 
                 {
@@ -486,48 +534,56 @@ const PAPER_CATALOG = {
                     description:
                         "Province Paper • Answer Scheme"
                 },
+
                 {
                     id: "al_province_central",
                     title: "Central Province",
                     description:
                         "Province Paper • Answer Scheme"
                 },
+
                 {
                     id: "al_province_southern",
                     title: "Southern Province",
                     description:
                         "Province Paper • Answer Scheme"
                 },
+
                 {
                     id: "al_province_northern",
                     title: "Northern Province",
                     description:
                         "Province Paper • Answer Scheme"
                 },
+
                 {
                     id: "al_province_north_western",
                     title: "North Western Province",
                     description:
                         "Province Paper • Answer Scheme"
                 },
+
                 {
                     id: "al_province_eastern",
                     title: "Eastern Province",
                     description:
                         "Province Paper • Answer Scheme"
                 },
+
                 {
-                    id: "al_province_uwaprovince",
+                    id: "al_province_uva",
                     title: "Uva Province",
                     description:
                         "Province Paper • Answer Scheme"
                 },
+
                 {
                     id: "al_province_sabaragamuwa",
                     title: "Sabaragamuwa Province",
                     description:
                         "Province Paper • Answer Scheme"
                 },
+
                 {
                     id: "al_province_all_island",
                     title: "All Island Papers",
@@ -544,7 +600,7 @@ const PAPER_CATALOG = {
 
 
 // =====================================================
-// SETTINGS CACHE
+// SETTINGS
 // =====================================================
 
 let paperSettings = {};
@@ -589,70 +645,7 @@ function getAllPapers() {
 
 
 // =====================================================
-// LOAD SETTINGS FROM FIRESTORE
-// =====================================================
-
-async function loadSettings() {
-
-    try {
-
-        const ref =
-            doc(
-                db,
-                "paperSettings",
-                "settings"
-            );
-
-        const snap =
-            await getDoc(ref);
-
-
-        if (snap.exists()) {
-
-            paperSettings =
-                snap.data() || {};
-
-        } else {
-
-            paperSettings = {};
-
-        }
-
-
-        renderAll();
-
-
-        setChangesStatus(
-            "All settings loaded"
-        );
-
-
-    }
-
-   catch (error) {
-
-    console.error(
-        "Paper settings load error:",
-        error
-    );
-
-    alert(
-        "Failed to load paper settings.\n\n" +
-        "Error: " +
-        error.message
-    );
-
-}
-
-
-// =====================================================
-// DEFAULT ENABLED STATUS
-// =====================================================
-//
-// New papers are enabled by default.
-//
-// Superadmin can disable them.
-//
+// CHECK PAPER STATUS
 // =====================================================
 
 function isPaperEnabled(id) {
@@ -671,13 +664,90 @@ function isPaperEnabled(id) {
     }
 
 
+    // New papers are active by default
+
     return true;
 
 }
 
 
 // =====================================================
-// RENDER ALL
+// LOAD FIRESTORE SETTINGS
+// =====================================================
+
+async function loadSettings() {
+
+    try {
+
+        const ref =
+            doc(
+                db,
+                "paperSettings",
+                "settings"
+            );
+
+
+        const snap =
+            await getDoc(ref);
+
+
+        if (snap.exists()) {
+
+            paperSettings =
+                snap.data() || {};
+
+        }
+        else {
+
+            paperSettings = {};
+
+        }
+
+
+        // IMPORTANT
+        // Always render after loading
+
+        renderAll();
+
+
+        setChangesStatus(
+            "All settings loaded"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Paper settings load error:",
+            error
+        );
+
+
+        // =============================================
+        // IMPORTANT FIX
+        // =============================================
+        // Even if Firestore fails,
+        // render the paper list.
+        // =============================================
+
+        paperSettings = {};
+
+
+        renderAll();
+
+
+        setChangesStatus(
+            "Default settings loaded"
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// RENDER EVERYTHING
 // =====================================================
 
 function renderAll() {
@@ -687,15 +757,18 @@ function renderAll() {
         grade10List
     );
 
+
     renderCategory(
         "grade11",
         grade11List
     );
 
+
     renderCategory(
         "al",
         alList
     );
+
 
     setupSectionButtons();
 
@@ -712,7 +785,14 @@ function renderCategory(
 ) {
 
     if (!container) {
+
+        console.error(
+            "Paper container not found:",
+            category
+        );
+
         return;
+
     }
 
 
@@ -725,153 +805,160 @@ function renderCategory(
         ] || [];
 
 
-    groups.forEach(group => {
-
-        // =============================================
-        // GROUP HEADER
-        // =============================================
-
-        const groupHeader =
-            document.createElement(
-                "div"
-            );
-
-        groupHeader.className =
-            "paper-group-header";
+    groups.forEach(
+        group => {
 
 
-        groupHeader.innerHTML = `
+            // =========================================
+            // GROUP HEADER
+            // =========================================
 
-            <div>
-
-                <strong>
-                    ${escapeHTML(
-                        group.group
-                    )}
-                </strong>
-
-            </div>
-
-            <span>
-                ${group.papers.length} papers
-            </span>
-
-        `;
-
-
-        container.appendChild(
-            groupHeader
-        );
-
-
-        // =============================================
-        // PAPERS
-        // =============================================
-
-        group.papers.forEach(
-            paper => {
-
-                const enabled =
-                    isPaperEnabled(
-                        paper.id
-                    );
-
-
-                const item =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                item.className =
-                    "paper-item";
-
-
-                item.dataset.paperId =
-                    paper.id;
-
-
-                item.innerHTML = `
-
-                    <div class="paper-info">
-
-                        <div class="paper-icon">
-                            📄
-                        </div>
-
-                        <div class="paper-details">
-
-                            <strong>
-                                ${escapeHTML(
-                                    paper.title
-                                )}
-                            </strong>
-
-                            <span>
-                                ${escapeHTML(
-                                    paper.description
-                                )}
-                            </span>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="paper-action">
-
-                        <span
-                            class="paper-status ${
-                                enabled
-                                    ? "active"
-                                    : "disabled"
-                            }"
-                            data-status
-                        >
-
-                            ${
-                                enabled
-                                    ? "Active"
-                                    : "Disabled"
-                            }
-
-                        </span>
-
-
-                        <label
-                            class="paper-switch-control"
-                        >
-
-                            <input
-                                type="checkbox"
-                                class="paper-toggle"
-                                data-paper-id="${paper.id}"
-                                ${
-                                    enabled
-                                        ? "checked"
-                                        : ""
-                                }
-                            >
-
-                            <span
-                                class="switch-slider"
-                            ></span>
-
-                        </label>
-
-                    </div>
-
-                `;
-
-
-                container.appendChild(
-                    item
+            const groupHeader =
+                document.createElement(
+                    "div"
                 );
 
-            }
-        );
 
-    });
+            groupHeader.className =
+                "paper-group-header";
+
+
+            groupHeader.innerHTML = `
+
+                <div>
+
+                    <strong>
+                        ${escapeHTML(
+                            group.group
+                        )}
+                    </strong>
+
+                </div>
+
+                <span>
+                    ${group.papers.length} papers
+                </span>
+
+            `;
+
+
+            container.appendChild(
+                groupHeader
+            );
+
+
+            // =========================================
+            // PAPERS
+            // =========================================
+
+            group.papers.forEach(
+                paper => {
+
+
+                    const enabled =
+                        isPaperEnabled(
+                            paper.id
+                        );
+
+
+                    const item =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    item.className =
+                        "paper-item";
+
+
+                    item.dataset.paperId =
+                        paper.id;
+
+
+                    item.innerHTML = `
+
+                        <div class="paper-info">
+
+                            <div class="paper-icon">
+                                📄
+                            </div>
+
+
+                            <div class="paper-details">
+
+                                <strong>
+                                    ${escapeHTML(
+                                        paper.title
+                                    )}
+                                </strong>
+
+
+                                <span>
+                                    ${escapeHTML(
+                                        paper.description
+                                    )}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="paper-action">
+
+                            <span
+                                class="paper-status ${
+                                    enabled
+                                        ? "active"
+                                        : "disabled"
+                                }"
+                                data-status
+                            >
+
+                                ${
+                                    enabled
+                                        ? "Active"
+                                        : "Disabled"
+                                }
+
+                            </span>
+
+
+                            <label
+                                class="paper-switch-control"
+                            >
+
+                                <input
+                                    type="checkbox"
+                                    class="paper-toggle"
+                                    data-paper-id="${paper.id}"
+                                    ${
+                                        enabled
+                                            ? "checked"
+                                            : ""
+                                    }
+                                >
+
+                                <span
+                                    class="switch-slider"
+                                ></span>
+
+                            </label>
+
+                        </div>
+
+                    `;
+
+
+                    container.appendChild(
+                        item
+                    );
+
+                }
+            );
+
+        }
+    );
 
 
     attachToggleEvents(
@@ -895,48 +982,52 @@ function attachToggleEvents(
         );
 
 
-    toggles.forEach(toggle => {
+    toggles.forEach(
+        toggle => {
 
-        toggle.addEventListener(
-            "change",
-            () => {
-
-                const id =
-                    toggle.dataset.paperId;
+            toggle.addEventListener(
+                "change",
+                () => {
 
 
-                const enabled =
-                    toggle.checked;
+                    const id =
+                        toggle.dataset.paperId;
 
 
-                paperSettings[id] = {
-
-                    enabled,
-
-                    updatedAt:
-                        Date.now()
-
-                };
+                    const enabled =
+                        toggle.checked;
 
 
-                updateStatusUI(
-                    toggle,
-                    enabled
-                );
+                    paperSettings[id] = {
+
+                        enabled:
+                            enabled,
+
+                        updatedAt:
+                            Date.now()
+
+                    };
 
 
-                markUnsaved();
+                    updateStatusUI(
+                        toggle,
+                        enabled
+                    );
 
-            }
-        );
 
-    });
+                    markUnsaved();
+
+                }
+            );
+
+        }
+    );
 
 }
 
 
 // =====================================================
-// UPDATE STATUS UI
+// UPDATE ACTIVE / DISABLED UI
 // =====================================================
 
 function updateStatusUI(
@@ -987,7 +1078,7 @@ function updateStatusUI(
 
 
 // =====================================================
-// SECTION BUTTONS
+// EXPAND / COLLAPSE
 // =====================================================
 
 function setupSectionButtons() {
@@ -998,39 +1089,71 @@ function setupSectionButtons() {
         );
 
 
-    buttons.forEach(button => {
-
-        button.onclick = () => {
-
-            const category =
-                button.dataset.sectionToggle;
+    console.log(
+        "Expand buttons found:",
+        buttons.length
+    );
 
 
-            const section =
-                document.querySelector(
-                    `.paper-section[data-category="${category}"]`
-                );
+    buttons.forEach(
+        button => {
 
 
-            if (!section) {
-                return;
-            }
+            // Remove old event
+
+            button.onclick =
+                null;
 
 
-            const expanded =
-                section.classList.toggle(
-                    "expanded"
-                );
+            button.onclick =
+                function () {
 
 
-            button.textContent =
-                expanded
-                    ? "Collapse"
-                    : "Expand";
+                    const category =
+                        button.dataset.sectionToggle;
 
-        };
 
-    });
+                    const section =
+                        document.querySelector(
+                            `.paper-section[data-category="${category}"]`
+                        );
+
+
+                    if (!section) {
+
+                        console.error(
+                            "Section not found:",
+                            category
+                        );
+
+                        return;
+
+                    }
+
+
+                    const isExpanded =
+                        section.classList.toggle(
+                            "expanded"
+                        );
+
+
+                    button.textContent =
+                        isExpanded
+                            ? "Collapse"
+                            : "Expand";
+
+
+                    console.log(
+                        `${category}:`,
+                        isExpanded
+                            ? "Expanded"
+                            : "Collapsed"
+                    );
+
+                };
+
+        }
+    );
 
 }
 
@@ -1044,6 +1167,7 @@ if (enableAllBtn) {
     enableAllBtn.addEventListener(
         "click",
         () => {
+
 
             const confirmed =
                 confirm(
@@ -1063,7 +1187,8 @@ if (enableAllBtn) {
                         paper.id
                     ] = {
 
-                        enabled: true,
+                        enabled:
+                            true,
 
                         updatedAt:
                             Date.now()
@@ -1095,6 +1220,7 @@ if (disableAllBtn) {
         "click",
         () => {
 
+
             const confirmed =
                 confirm(
                     "Disable ALL papers for students?"
@@ -1113,7 +1239,8 @@ if (disableAllBtn) {
                         paper.id
                     ] = {
 
-                        enabled: false,
+                        enabled:
+                            false,
 
                         updatedAt:
                             Date.now()
@@ -1160,9 +1287,7 @@ function setChangesStatus(
     text
 ) {
 
-    if (
-        changesStatus
-    ) {
+    if (changesStatus) {
 
         changesStatus.textContent =
             text;
@@ -1248,7 +1373,6 @@ async function saveSettings() {
             "Paper settings saved successfully."
         );
 
-
     }
 
     catch (error) {
@@ -1260,7 +1384,8 @@ async function saveSettings() {
 
 
         alert(
-            "Failed to save paper settings."
+            "Failed to save paper settings.\n\n" +
+            error.message
         );
 
 
@@ -1311,6 +1436,7 @@ if (logoutBtn) {
         "click",
         () => {
 
+
             const confirmed =
                 confirm(
                     "Are you sure you want to sign out?"
@@ -1350,7 +1476,7 @@ if (logoutBtn) {
 
 
 // =====================================================
-// PREVENT ACCIDENTAL PAGE LEAVE
+// PREVENT ACCIDENTAL LEAVE
 // =====================================================
 
 window.addEventListener(
@@ -1414,10 +1540,25 @@ loadSettings();
 
 
 console.log(
-    "✅ Paper Settings Loaded"
+    "======================================"
 );
 
 console.log(
-    "Admin Role:",
+    "✅ PAPER SETTINGS JS LOADED"
+);
+
+console.log(
+    "Admin:",
+    adminUsername
+        ? adminUsername.textContent
+        : "unknown"
+);
+
+console.log(
+    "Role:",
     adminRole
+);
+
+console.log(
+    "======================================"
 );
