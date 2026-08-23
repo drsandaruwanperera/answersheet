@@ -23,8 +23,6 @@
 
 <div class="container">
 
-    <!-- HEADER -->
-
     <div class="header">
 
         <h1>
@@ -41,137 +39,36 @@
     </div>
 
 
-    <!-- TERM GRID -->
+    <!-- =========================================
+         TERMS WILL BE LOADED BY JAVASCRIPT
+    ========================================== -->
 
     <div
         class="term-grid"
         id="termGrid"
     >
 
-        <!-- =====================================
-             1ST TERM
-        ====================================== -->
-
-        <div
-            class="term-card"
-            id="termCard1"
-            data-term="1"
-            role="button"
-            tabindex="0"
-        >
-
-            <div class="term-icon">
-                📚
-            </div>
-
-            <h2>
-                1st Term
-            </h2>
-
-            <p>
-                Grade 10 Model Papers
-            </p>
-
-        </div>
-
-
-        <!-- =====================================
-             2ND TERM
-        ====================================== -->
-
-        <div
-            class="term-card"
-            id="termCard2"
-            data-term="2"
-            role="button"
-            tabindex="0"
-        >
-
-            <div class="term-icon">
-                📚
-            </div>
-
-            <h2>
-                2nd Term
-            </h2>
-
-            <p>
-                Grade 10 Model Papers
-            </p>
-
-        </div>
-
-
-        <!-- =====================================
-             3RD TERM
-        ====================================== -->
-
-        <div
-            class="term-card"
-            id="termCard3"
-            data-term="3"
-            role="button"
-            tabindex="0"
-        >
-
-            <div class="term-icon">
-                📚
-            </div>
-
-            <h2>
-                3rd Term
-            </h2>
-
-            <p>
-                Grade 10 Model Papers
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <!-- NO PAPERS MESSAGE -->
-
-    <div
-        id="noTermsMessage"
-        style="
-            display:none;
-            text-align:center;
-            padding:50px 20px;
-        "
-    >
-
         <div
             style="
-                font-size:45px;
-                margin-bottom:15px;
+                grid-column:1/-1;
+                text-align:center;
+                padding:40px;
+                color:#64748b;
             "
         >
-            🔒
+            Loading...
         </div>
-
-        <h2>
-            No Model Papers Available
-        </h2>
-
-        <p>
-            Model papers are currently unavailable.
-            Please check again later.
-        </p>
 
     </div>
 
 </div>
 
 
-<!-- =========================================
-     JAVASCRIPT
-========================================= -->
+<!-- IMPORTANT -->
 
 <script
     type="module"
-    src="grade10-model-papers.js?v=1"
+    src="grade10-model-papers.js?v=20"
 ></script>
 
 
