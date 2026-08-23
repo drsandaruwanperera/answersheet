@@ -5,32 +5,31 @@ import {
 } from "./firebase.js";
 
 
-// =========================================
+// =====================================================
 // GET PROVINCE
-// =========================================
+// =====================================================
 
 const params =
     new URLSearchParams(
         window.location.search
     );
 
-
 const province =
     params.get("province");
 
 
-// =========================================
+// =====================================================
 // PROVINCE DATA
-// =========================================
+// =====================================================
 
 const provinceMap = {
 
-    "central": {
+    central: {
         name: "Central Province",
         paper: "paper01"
     },
 
-    "western": {
+    western: {
         name: "Western Province",
         paper: "paper02"
     },
@@ -40,12 +39,12 @@ const provinceMap = {
         paper: "paper03"
     },
 
-    "southern": {
+    southern: {
         name: "Southern Province",
         paper: "paper04"
     },
 
-    "sabaragamuwa": {
+    sabaragamuwa: {
         name: "Sabaragamuwa Province",
         paper: "paper05"
     }
@@ -53,19 +52,19 @@ const provinceMap = {
 };
 
 
+// =====================================================
+// GET DATA
+// =====================================================
+
 const data =
-    provinceMap[
-        province
-    ];
+    provinceMap[province];
 
 
-// =========================================
-// VALIDATE
-// =========================================
+// =====================================================
+// VALIDATE PROVINCE
+// =====================================================
 
-if (
-    !data
-) {
+if (!data) {
 
     alert(
         "Invalid province."
@@ -78,9 +77,9 @@ if (
 }
 
 
-// =========================================
-// LOGIN
-// =========================================
+// =====================================================
+// LOGIN CHECK
+// =====================================================
 
 if (
     sessionStorage.getItem(
@@ -95,15 +94,14 @@ if (
 }
 
 
-// =========================================
+// =====================================================
 // ELEMENTS
-// =========================================
+// =====================================================
 
 const title =
     document.getElementById(
         "provinceTitle"
     );
-
 
 const container =
     document.getElementById(
@@ -111,13 +109,11 @@ const container =
     );
 
 
-// =========================================
-// TITLE
-// =========================================
+// =====================================================
+// SET TITLE
+// =====================================================
 
-if (
-    title
-) {
+if (title) {
 
     title.textContent =
         data.name;
@@ -125,9 +121,9 @@ if (
 }
 
 
-// =========================================
+// =====================================================
 // STUDENT ID
-// =========================================
+// =====================================================
 
 const studentId =
     sessionStorage.getItem(
@@ -135,15 +131,13 @@ const studentId =
     );
 
 
-// =========================================
-// TRACK PROVINCE PAPER 2
-// =========================================
+// =====================================================
+// TRACK PAPER 2
+// =====================================================
 
-async function trackProvincePaper() {
+async function trackProvincePaper2() {
 
-    if (
-        !studentId
-    ) {
+    if (!studentId) {
 
         console.warn(
             "Student ID not found."
@@ -164,32 +158,25 @@ async function trackProvincePaper() {
             );
 
 
-        const fieldPath =
-            `paperViews.al.province.paper2.${province}`;
-
-
         await updateDoc(
             studentRef,
             {
-                [fieldPath]:
+
+                [`paperViews.al.province.paper2.${province}`]:
                     true
+
             }
         );
 
 
         console.log(
-            "✅ A/L Province Paper 2 tracked:",
-            {
-                province,
-                fieldPath
-            }
+            "✅ Province Paper 2 tracked:",
+            province
         );
 
     }
 
-    catch (
-        error
-    ) {
+    catch (error) {
 
         console.error(
             "Province Paper 2 tracking error:",
@@ -201,13 +188,11 @@ async function trackProvincePaper() {
 }
 
 
-// =========================================
-// SHOW PAPER
-// =========================================
+// =====================================================
+// RENDER PAPER
+// =====================================================
 
-if (
-    container
-) {
+if (container) {
 
     container.innerHTML = `
 
@@ -217,7 +202,16 @@ if (
                 📁 ${data.name}
             </h2>
 
+
+            <p>
+                Province Wise 2nd Paper
+            </p>
+
+
             <div class="button-grid">
+
+
+                <!-- QUESTION PAPER -->
 
                 <button
                     class="paper-btn"
@@ -230,6 +224,8 @@ if (
                 </button>
 
 
+                <!-- ANSWER SCHEME -->
+
                 <button
                     class="answer-btn"
                     id="provinceAnswerBtn"
@@ -240,6 +236,7 @@ if (
 
                 </button>
 
+
             </div>
 
         </div>
@@ -247,9 +244,9 @@ if (
     `;
 
 
-    // =====================================
-    // PDF BUTTON
-    // =====================================
+    // =================================================
+    // QUESTION PAPER BUTTON
+    // =================================================
 
     const paperBtn =
         document.getElementById(
@@ -257,19 +254,27 @@ if (
         );
 
 
-    if (
-        paperBtn
-    ) {
+    if (paperBtn) {
 
         paperBtn.addEventListener(
             "click",
             async () => {
 
-                await trackProvincePaper();
+                await trackProvincePaper2();
+
+
+                const pdfPath =
+                    `papers/past/${data.paper}/question.pdf`;
+
+
+                console.log(
+                    "Opening Paper 2:",
+                    pdfPath
+                );
 
 
                 window.open(
-                    `papers/past/${data.paper}/question.pdf`,
+                    pdfPath,
                     "_blank"
                 );
 
@@ -279,9 +284,9 @@ if (
     }
 
 
-    // =====================================
-    // ANSWER BUTTON
-    // =====================================
+    // =================================================
+    // ANSWER SCHEME BUTTON
+    // =================================================
 
     const answerBtn =
         document.getElementById(
@@ -289,23 +294,35 @@ if (
         );
 
 
-    if (
-        answerBtn
-    ) {
+    if (answerBtn) {
 
         answerBtn.addEventListener(
             "click",
             () => {
 
-                window.location.href =
+                const paperNumber =
+                    data.paper.replace(
+                        "paper",
+                        ""
+                    );
+
+
+                const url =
                     `answer-images.html?` +
                     `paper=${encodeURIComponent(
-                        data.paper.replace(
-                            "paper",
-                            ""
-                        )
+                        paperNumber
                     )}` +
                     `&type=question`;
+
+
+                console.log(
+                    "Opening Answer Scheme:",
+                    url
+                );
+
+
+                window.location.href =
+                    url;
 
             }
         );
@@ -315,10 +332,16 @@ if (
 }
 
 
+// =====================================================
+// CONSOLE
+// =====================================================
+
 console.log(
-    "✅ Province Paper 2 Loaded",
+    "✅ Province Paper 2 Detail Loaded",
     {
         province,
+        provinceName:
+            data?.name,
         paper:
             data?.paper
     }
