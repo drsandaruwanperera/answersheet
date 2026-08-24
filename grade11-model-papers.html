@@ -10,30 +10,37 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Grade 11 TOP Ranking</title>
+    <title>
+        Grade 11 TOP Ranking
+    </title>
 
     <link
         rel="stylesheet"
-        href="grade11-model-papers.css?v=2"
+        href="grade11-model-papers.css?v=10"
     >
 
 </head>
 
+
 <body>
+
 
 <div class="container">
 
-    <!-- ==========================
+
+    <!-- =====================================================
          HEADER
-    =========================== -->
+    ====================================================== -->
 
     <div class="header">
+
 
         <div>
 
             <h1>
                 🏆 Grade 11 TOP Ranking
             </h1>
+
 
             <p>
                 Select a TOP Ranking Term
@@ -49,91 +56,38 @@
             ← Back
         </button>
 
+
     </div>
 
 
-    <!-- ==========================
+
+    <!-- =====================================================
          TERM GRID
-    =========================== -->
+         
+         IMPORTANT:
+         Do NOT put 1st / 2nd / 3rd Term cards manually here.
+         grade11-model-papers.js will create them after
+         checking Firestore.
+    ====================================================== -->
 
-    <div class="term-grid">
+    <div
+        class="term-grid"
+        id="termGrid"
+    ></div>
 
-
-        <!-- ==========================
-             1st Term
-        =========================== -->
-
-        <div
-            class="term-card"
-            onclick="location.href='grade11-term.html?term=1'"
-        >
-
-            <div class="term-icon">
-                🏆
-            </div>
-
-            <h2>
-                1st Term
-            </h2>
-
-            <p>
-                Grade 11 TOP Ranking
-            </p>
-
-        </div>
-
-
-        <!-- ==========================
-             2nd Term
-        =========================== -->
-
-        <div
-            class="term-card"
-            onclick="location.href='grade11-term.html?term=2'"
-        >
-
-            <div class="term-icon">
-                🏆
-            </div>
-
-            <h2>
-                2nd Term
-            </h2>
-
-            <p>
-                Grade 11 TOP Ranking
-            </p>
-
-        </div>
-
-
-        <!-- ==========================
-             3rd Term
-        =========================== -->
-
-        <div
-            class="term-card"
-            onclick="location.href='grade11-term.html?term=3'"
-        >
-
-            <div class="term-icon">
-                🏆
-            </div>
-
-            <h2>
-                3rd Term
-            </h2>
-
-            <p>
-                Grade 11 TOP Ranking
-            </p>
-
-        </div>
-
-
-    </div>
 
 </div>
+
+
+
+<!-- =====================================================
+     JAVASCRIPT
+====================================================== -->
+
+<script
+    type="module"
+    src="grade11-model-papers.js?v=20"
+></script>
 
 
 </body>
