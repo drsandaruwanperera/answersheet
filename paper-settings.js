@@ -1,40 +1,180 @@
-// ============================================================
-// A/L MODEL PAPERS
-// ============================================================
+// =====================================================
+// PAPER SETTINGS - FULL VERSION
+// =====================================================
 
-import {
-    db,
-    doc,
-    getDoc
-} from "./firebase.js";
+import * as firebase from "./firebase.js";
 
 
-// ============================================================
-// LOGIN CHECK
-// ============================================================
+// =====================================================
+// FIREBASE
+// =====================================================
 
-if (
-    sessionStorage.getItem("loggedIn") !== "true"
-) {
-    window.location.replace("index.html");
+const db =
+    firebase.db;
+
+const doc =
+    firebase.doc;
+
+const getDoc =
+    firebase.getDoc;
+
+const setDoc =
+    firebase.setDoc;
+
+const updateDoc =
+    firebase.updateDoc;
+
+
+// =====================================================
+// ADMIN AUTHENTICATION
+// =====================================================
+
+const adminLoggedIn =
+    sessionStorage.getItem(
+        "adminLoggedIn"
+    ) === "true";
+
+
+const rawRole =
+    String(
+        sessionStorage.getItem(
+            "adminRole"
+        ) || ""
+    )
+    .trim()
+    .toLowerCase();
+
+
+// =====================================================
+// NORMALIZE ROLE
+// =====================================================
+
+const adminRole =
+    rawRole.replace(
+        /[\s_-]+/g,
+        ""
+    );
+
+
+// =====================================================
+// ALLOWED ADMIN ROLES
+// =====================================================
+//
+// Paper Management is available to:
+// - superadmin
+// - full
+// - fulladmin
+// - administrator
+// - admin
+//
+// Limited administrators are blocked.
+// =====================================================
+
+const hasPaperManagementAccess =
+    adminRole === "superadmin" ||
+    adminRole === "full" ||
+    adminRole === "fulladmin" ||
+    adminRole === "administrator" ||
+    adminRole === "admin";
+
+
+// =====================================================
+// AUTH CHECK
+// =====================================================
+
+if (!adminLoggedIn) {
+
+    console.warn(
+        "Paper Settings: Admin is not logged in."
+    );
+
+    window.location.replace(
+        "admin-login.html"
+    );
+
+    throw new Error(
+        "ADMIN_LOGIN_REQUIRED"
+    );
+
 }
 
 
-// ============================================================
-// STUDENT ID
-// ============================================================
+// =====================================================
+// ROLE CHECK
+// =====================================================
 
-const studentId =
-    sessionStorage.getItem("studentId");
+if (!hasPaperManagementAccess) {
+
+    console.warn(
+        "Paper Settings: Access denied.",
+        {
+            role: adminRole
+        }
+    );
+
+    alert(
+        "🔒 Access denied. Super Administrator only."
+    );
+
+    window.location.replace(
+        "admin.html"
+    );
+
+    throw new Error(
+        "ADMIN_ACCESS_DENIED"
+    );
+
+}
 
 
-// ============================================================
-// FIRESTORE REFERENCES
-// ============================================================
+// =====================================================
+// DEBUG
+// =====================================================
 
-const studentRef = studentId
-    ? doc(db, "students", studentId)
-    : null;
+console.log(
+    "======================================"
+);
+
+console.log(
+    "📚 PAPER MANAGEMENT"
+);
+
+console.log(
+    "Admin Logged In:",
+    adminLoggedIn
+);
+
+console.log(
+    "Raw Role:",
+    rawRole
+);
+
+console.log(
+    "Normalized Role:",
+    adminRole
+);
+
+console.log(
+    "Paper Management Access:",
+    hasPaperManagementAccess
+);
+
+console.log(
+    "======================================"
+);
+
+
+// =====================================================
+// CONSTANTS
+// =====================================================
+
+const TOTAL_PAPERS =
+    13;
+
+
+// =====================================================
+// FIRESTORE SETTINGS REFERENCE
+// =====================================================
 
 const settingsRef =
     doc(
@@ -44,582 +184,1469 @@ const settingsRef =
     );
 
 
-// ============================================================
-// PAPER ID HELPER
-// ============================================================
+// =====================================================
+// PAPER DEFAULT DATA
+// =====================================================
 
-function getPaperId(number) {
+const defaultPapers = {
 
-    return (
-        "paper" +
-        String(number).padStart(2, "0")
-    );
+    paper01: {
+        title: "Model Paper 01",
+        pages: 12,
+        enabled: true
+    },
 
-}
+    paper02: {
+        title: "Model Paper 02",
+        pages: 12,
+        enabled: true
+    },
+
+    paper03: {
+        title: "Model Paper 03",
+        pages: 11,
+        enabled: true
+    },
+
+    paper04: {
+        title: "Model Paper 04",
+        pages: 11,
+        enabled: true
+    },
+
+    paper05: {
+        title: "Model Paper 05",
+        pages: 13,
+        enabled: true
+    },
+
+    paper06: {
+        title: "Model Paper 06",
+        pages: 19,
+        enabled: true
+    },
+
+    paper07: {
+        title: "Model Paper 07",
+        pages: 18,
+        enabled: true
+    },
+
+    paper08: {
+        title: "Model Paper 08",
+        pages: 18,
+        enabled: true
+    },
+
+    paper09: {
+        title: "Model Paper 09",
+        pages: 15,
+        enabled: true
+    },
+
+    paper10: {
+        title: "Model Paper 10",
+        pages: 9,
+        enabled: true
+    },
+
+    paper11: {
+        title: "Model Paper 11",
+        pages: 10,
+        enabled: true
+    },
+
+    paper12: {
+        title: "Model Paper 12",
+        pages: 10,
+        enabled: true
+    },
+
+    paper13: {
+        title: "Model Paper 13",
+        pages: 10,
+        enabled: true
+    }
+
+};
 
 
-function getSettingId(number) {
+// =====================================================
+// GET PAPER ID
+// =====================================================
 
-    return (
-        "al_model_" +
-        String(number).padStart(2, "0")
-    );
-
-}
-
-
-// ============================================================
-// GET BUTTON
-// ============================================================
-
-function getButton(number) {
-
-    return document.getElementById(
-        getPaperId(number)
-    );
-
-}
-
-
-// ============================================================
-// VIEWED CHECK
-// ============================================================
-
-function isViewed(
-    studentData,
-    paperId
-) {
-
-    return (
-        studentData?.paperViews?.al?.model?.[paperId] === true
-    );
-
-}
-
-
-// ============================================================
-// SETTINGS CHECK
-// ============================================================
-
-function isEnabled(
-    settings,
+function getPaperId(
     number
 ) {
 
-    const settingId =
-        getSettingId(number);
-
-
-    /*
-     * Paper settings.js:
-     *
-     * al_model_01
-     * al_model_02
-     * ...
-     *
-     * New papers are enabled by default.
-     */
-
-    if (
-        !Object.prototype.hasOwnProperty.call(
-            settings,
-            settingId
-        )
-    ) {
-
-        return true;
-
-    }
-
-
     return (
-        settings[settingId]?.enabled === true
+        "paper" +
+        String(
+            number
+        ).padStart(
+            2,
+            "0"
+        )
     );
 
 }
 
 
-// ============================================================
-// UPDATE CARD
-// ============================================================
+// =====================================================
+// ESCAPE HTML
+// =====================================================
 
-function updateCard(
-    number,
-    status
+function escapeHTML(
+    value
 ) {
 
-    const button =
-        getButton(number);
+    return String(
+        value ?? ""
+    )
 
+    .replace(
+        /&/g,
+        "&amp;"
+    )
 
-    if (!button) {
-        return;
-    }
+    .replace(
+        /</g,
+        "&lt;"
+    )
 
+    .replace(
+        />/g,
+        "&gt;"
+    )
 
-    button.classList.remove(
-        "available",
-        "viewed",
-        "disabled"
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+
+    .replace(
+        /'/g,
+        "&#039;"
     );
-
-
-    const statusElement =
-        button.querySelector(
-            ".paper-status"
-        );
-
-
-    // ========================================================
-    // AVAILABLE
-    // ========================================================
-
-    if (
-        status === "available"
-    ) {
-
-        button.classList.add(
-            "available"
-        );
-
-        button.disabled = false;
-
-        if (statusElement) {
-
-            statusElement.textContent =
-                "🟢 Available";
-
-        }
-
-        return;
-    }
-
-
-    // ========================================================
-    // VIEWED
-    // ========================================================
-
-    if (
-        status === "viewed"
-    ) {
-
-        button.classList.add(
-            "viewed"
-        );
-
-        button.disabled = true;
-
-        if (statusElement) {
-
-            statusElement.textContent =
-                "🔵 Viewed";
-
-        }
-
-        return;
-    }
-
-
-    // ========================================================
-    // DISABLED
-    // ========================================================
-
-    button.classList.add(
-        "disabled"
-    );
-
-    button.disabled = true;
-
-    if (statusElement) {
-
-        statusElement.textContent =
-            "🔒 Disabled";
-
-    }
 
 }
 
 
-// ============================================================
-// LOAD PAGE
-// ============================================================
+// =====================================================
+// FIND TABLE BODY
+// =====================================================
 
-async function loadModelPapers() {
+function getTableBody() {
 
-    console.log(
-        "======================================"
-    );
+    const possibleIds = [
 
-    console.log(
-        "A/L MODEL PAPERS"
-    );
+        "paperTableBody",
 
-    console.log(
-        "Student:",
-        studentId
-    );
+        "settingsTableBody",
 
-    console.log(
-        "======================================"
-    );
+        "paperSettingsBody",
+
+        "tableBody",
+
+        "papersTableBody"
+
+    ];
 
 
-    let studentData = {};
-    let settings = {};
+    for (
+        const id of possibleIds
+    ) {
 
-
-    // ========================================================
-    // GET STUDENT
-    // ========================================================
-
-    if (studentRef) {
-
-        try {
-
-            const snapshot =
-                await getDoc(
-                    studentRef
-                );
-
-
-            if (
-                snapshot.exists()
-            ) {
-
-                studentData =
-                    snapshot.data();
-
-            }
-
-        }
-
-        catch (error) {
-
-            console.error(
-                "Student load error:",
-                error
+        const element =
+            document.getElementById(
+                id
             );
+
+
+        if (element) {
+
+            return element;
 
         }
 
     }
 
 
-    // ========================================================
-    // GET PAPER SETTINGS
-    // ========================================================
+    // -------------------------------------------------
+    // Try table selectors
+    // -------------------------------------------------
+
+    const selectors = [
+
+        "#paperTable tbody",
+
+        "#settingsTable tbody",
+
+        "#paperSettingsTable tbody",
+
+        ".settings-table tbody",
+
+        "table tbody"
+
+    ];
+
+
+    for (
+        const selector of selectors
+    ) {
+
+        const element =
+            document.querySelector(
+                selector
+            );
+
+
+        if (element) {
+
+            return element;
+
+        }
+
+    }
+
+
+    return null;
+
+}
+
+
+// =====================================================
+// LOAD SETTINGS
+// =====================================================
+
+async function loadSettings() {
+
+    console.log(
+        "Loading paper settings..."
+    );
+
 
     try {
 
-        const settingsSnapshot =
+        const snapshot =
             await getDoc(
                 settingsRef
             );
 
 
+        let settings = {};
+
+
         if (
-            settingsSnapshot.exists()
+            snapshot.exists()
         ) {
 
             settings =
-                settingsSnapshot.data() || {};
+                snapshot.data() || {};
 
         }
 
-    }
 
+        console.log(
+            "Firestore Paper Settings:",
+            settings
+        );
+
+
+        renderPaperTable(
+            settings
+        );
+
+
+        // ------------------------------------------------
+        // Grade 11 term settings
+        // ------------------------------------------------
+
+        updateTermControls(
+            settings
+        );
+
+
+    }
     catch (error) {
 
         console.error(
-            "Paper settings load error:",
+            "Failed to load paper settings:",
             error
+        );
+
+
+        renderPaperTable(
+            {}
+        );
+
+
+        updateTermControls(
+            {}
         );
 
     }
 
+}
 
-    // ========================================================
-    // UPDATE 01 - 10
-    // ========================================================
+
+// =====================================================
+// RENDER PAPER TABLE
+// =====================================================
+
+function renderPaperTable(
+    settings
+) {
+
+    const tbody =
+        getTableBody();
+
+
+    if (!tbody) {
+
+        console.warn(
+            "Paper settings table body not found. Trying existing rows."
+        );
+
+
+        attachExistingRows(
+            settings
+        );
+
+
+        return;
+
+    }
+
+
+    tbody.innerHTML = "";
+
 
     for (
         let i = 1;
-        i <= 10;
+        i <= TOTAL_PAPERS;
         i++
     ) {
 
         const paperId =
-            getPaperId(i);
-
-
-        const enabled =
-            isEnabled(
-                settings,
+            getPaperId(
                 i
             );
 
 
-        const viewed =
-            isViewed(
-                studentData,
+        const defaultData =
+            defaultPapers[
                 paperId
+            ] || {
+
+                title:
+                    `Model Paper ${String(i).padStart(2, "0")}`,
+
+                pages:
+                    10,
+
+                enabled:
+                    true
+
+            };
+
+
+        const firestoreData =
+            settings[
+                paperId
+            ] || {};
+
+
+        const title =
+            firestoreData.title ??
+            defaultData.title;
+
+
+        const pages =
+            firestoreData.pages ??
+            defaultData.pages;
+
+
+        const enabled =
+            firestoreData.enabled ??
+            firestoreData.default ??
+            defaultData.enabled;
+
+
+        const row =
+            document.createElement(
+                "tr"
             );
 
 
-        // Disabled by admin
+        row.innerHTML = `
 
-        if (!enabled) {
+            <td>
+                ${escapeHTML(
+                    paperId
+                )}
+            </td>
 
-            updateCard(
-                i,
-                "disabled"
-            );
+            <td>
 
-            continue;
+                <input
+                    type="text"
+                    class="paper-title-input"
+                    data-paper="${paperId}"
+                    value="${escapeHTML(
+                        title
+                    )}"
+                >
 
-        }
+            </td>
+
+            <td>
+
+                <input
+                    type="number"
+                    min="1"
+                    class="paper-pages-input"
+                    data-paper="${paperId}"
+                    value="${Number(
+                        pages
+                    )}"
+                >
+
+            </td>
+
+            <td>
+
+                <input
+                    type="checkbox"
+                    class="paper-enabled-input"
+                    data-paper="${paperId}"
+                    ${
+                        enabled === true
+                            ? "checked"
+                            : ""
+                    }
+                >
+
+            </td>
+
+            <td>
+
+                <button
+                    type="button"
+                    class="paper-save-btn"
+                    data-paper="${paperId}"
+                >
+                    💾 Save
+                </button>
+
+            </td>
+
+        `;
 
 
-        // Already viewed
-
-        if (viewed) {
-
-            updateCard(
-                i,
-                "viewed"
-            );
-
-            continue;
-
-        }
-
-
-        // Available
-
-        updateCard(
-            i,
-            "available"
+        tbody.appendChild(
+            row
         );
 
     }
 
 
-    console.log(
-        "✅ A/L Model Paper statuses loaded."
+    attachSaveButtons();
+
+}
+
+
+// =====================================================
+// ATTACH EXISTING TABLE
+// =====================================================
+
+function attachExistingRows(
+    settings
+) {
+
+    const rows =
+        document.querySelectorAll(
+            "table tbody tr"
+        );
+
+
+    rows.forEach(
+        row => {
+
+            const saveButton =
+                row.querySelector(
+                    "button"
+                );
+
+
+            if (!saveButton) {
+                return;
+            }
+
+
+            const firstCell =
+                row.querySelector(
+                    "td"
+                );
+
+
+            if (!firstCell) {
+                return;
+            }
+
+
+            const paperId =
+                firstCell.textContent
+                    .trim()
+                    .toLowerCase();
+
+
+            if (
+                !/^paper\d+$/.test(
+                    paperId
+                )
+            ) {
+
+                return;
+
+            }
+
+
+            saveButton.dataset.paper =
+                paperId;
+
+
+            saveButton.classList.add(
+                "paper-save-btn"
+            );
+
+        }
+    );
+
+
+    attachSaveButtons();
+
+}
+
+
+// =====================================================
+// ATTACH SAVE BUTTONS
+// =====================================================
+
+function attachSaveButtons() {
+
+    const buttons =
+        document.querySelectorAll(
+            ".paper-save-btn"
+        );
+
+
+    buttons.forEach(
+        button => {
+
+            // Avoid duplicate events
+            if (
+                button.dataset.listenerAttached ===
+                "true"
+            ) {
+
+                return;
+
+            }
+
+
+            button.dataset.listenerAttached =
+                "true";
+
+
+            button.addEventListener(
+                "click",
+                async () => {
+
+                    const paperId =
+                        button.dataset.paper;
+
+
+                    if (!paperId) {
+
+                        alert(
+                            "Paper ID not found."
+                        );
+
+                        return;
+
+                    }
+
+
+                    await savePaper(
+                        paperId,
+                        button
+                    );
+
+                }
+            );
+
+        }
     );
 
 }
 
 
-// ============================================================
-// OPEN PAPER
-// ============================================================
+// =====================================================
+// FIND PAPER INPUT
+// =====================================================
 
-async function openPaper(
-    number
+function findPaperInput(
+    paperId,
+    type
 ) {
 
-    const paperId =
-        getPaperId(number);
+    const selectors = [
+
+        `.${type}[data-paper="${paperId}"]`,
+
+        `input[data-paper="${paperId}"][class*="${type}"]`
+
+    ];
 
 
-    console.log(
-        "Opening:",
-        paperId
-    );
+    for (
+        const selector of selectors
+    ) {
+
+        const element =
+            document.querySelector(
+                selector
+            );
 
 
-    // ========================================================
-    // GET CURRENT STUDENT DATA
-    // ========================================================
+        if (element) {
 
-    let studentData = {};
+            return element;
+
+        }
+
+    }
 
 
-    if (studentRef) {
+    // -------------------------------------------------
+    // Existing table row
+    // -------------------------------------------------
+
+    const rows =
+        document.querySelectorAll(
+            "table tbody tr"
+        );
+
+
+    for (
+        const row of rows
+    ) {
+
+        const firstCell =
+            row.querySelector(
+                "td"
+            );
+
+
+        if (
+            !firstCell
+        ) {
+
+            continue;
+
+        }
+
+
+        const id =
+            firstCell.textContent
+                .trim()
+                .toLowerCase();
+
+
+        if (
+            id !==
+            paperId
+        ) {
+
+            continue;
+
+        }
+
+
+        const inputs =
+            row.querySelectorAll(
+                "input"
+            );
+
+
+        if (
+            type ===
+            "paper-title-input"
+        ) {
+
+            return inputs[0];
+
+        }
+
+
+        if (
+            type ===
+            "paper-pages-input"
+        ) {
+
+            return inputs[1];
+
+        }
+
+
+        if (
+            type ===
+            "paper-enabled-input"
+        ) {
+
+            return inputs[2];
+
+        }
+
+    }
+
+
+    return null;
+
+}
+
+
+// =====================================================
+// SAVE PAPER
+// =====================================================
+
+async function savePaper(
+    paperId,
+    button
+) {
+
+    const titleInput =
+        findPaperInput(
+            paperId,
+            "paper-title-input"
+        );
+
+
+    const pagesInput =
+        findPaperInput(
+            paperId,
+            "paper-pages-input"
+        );
+
+
+    const enabledInput =
+        findPaperInput(
+            paperId,
+            "paper-enabled-input"
+        );
+
+
+    const title =
+        titleInput
+            ? titleInput.value.trim()
+            : `Model Paper ${paperId.replace(
+                "paper",
+                ""
+            )}`;
+
+
+    const pages =
+        pagesInput
+            ? Number(
+                pagesInput.value
+            )
+            : 10;
+
+
+    const enabled =
+        enabledInput
+            ? enabledInput.checked
+            : true;
+
+
+    if (!title) {
+
+        alert(
+            "Please enter a paper title."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        !Number.isFinite(
+            pages
+        ) ||
+        pages < 1
+    ) {
+
+        alert(
+            "Please enter a valid number of pages."
+        );
+
+        return;
+
+    }
+
+
+    const oldText =
+        button
+            ? button.textContent
+            : "";
+
+
+    if (button) {
+
+        button.disabled =
+            true;
+
+        button.textContent =
+            "Saving...";
+
+    }
+
+
+    try {
+
+        const updateData = {
+
+            [`${paperId}.title`]:
+                title,
+
+            [`${paperId}.pages`]:
+                pages,
+
+            [`${paperId}.enabled`]:
+                enabled,
+
+            [`${paperId}.default`]:
+                enabled
+
+        };
+
+
+        await updateDoc(
+            settingsRef,
+            updateData
+        );
+
+
+        console.log(
+            "Paper saved:",
+            {
+                paperId,
+                title,
+                pages,
+                enabled
+            }
+        );
+
+
+        if (button) {
+
+            button.textContent =
+                "✅ Saved";
+
+        }
+
+
+        setTimeout(
+            () => {
+
+                if (button) {
+
+                    button.textContent =
+                        oldText ||
+                        "💾 Save";
+
+                    button.disabled =
+                        false;
+
+                }
+
+            },
+            1200
+        );
+
+
+    }
+    catch (error) {
+
+        console.error(
+            "Save Paper Error:",
+            error
+        );
+
+
+        // ------------------------------------------------
+        // If settings document does not exist,
+        // create it.
+        // ------------------------------------------------
 
         try {
 
-            const snapshot =
-                await getDoc(
-                    studentRef
+            const createData = {};
+
+
+            createData[
+                paperId
+            ] = {
+
+                title:
+                    title,
+
+                pages:
+                    pages,
+
+                enabled:
+                    enabled,
+
+                default:
+                    enabled
+
+            };
+
+
+            await setDoc(
+                settingsRef,
+                createData,
+                {
+                    merge:
+                        true
+                }
+            );
+
+
+            if (button) {
+
+                button.textContent =
+                    "✅ Saved";
+
+            }
+
+
+        }
+        catch (
+            secondError
+        ) {
+
+            console.error(
+                "Create Settings Error:",
+                secondError
+            );
+
+
+            alert(
+                "Failed to save paper settings.\n\n" +
+                secondError.message
+            );
+
+        }
+        finally {
+
+            if (button) {
+
+                setTimeout(
+                    () => {
+
+                        button.disabled =
+                            false;
+
+                        button.textContent =
+                            "💾 Save";
+
+                    },
+                    1200
                 );
-
-
-            if (
-                snapshot.exists()
-            ) {
-
-                studentData =
-                    snapshot.data();
 
             }
 
         }
 
-        catch (error) {
+    }
 
-            console.error(
-                "Student verification error:",
-                error
-            );
+}
 
 
-            alert(
-                "Unable to verify your account. Please try again."
-            );
+// =====================================================
+// GRADE 11 TERM SETTINGS
+// =====================================================
+//
+// Supported:
+// grade11_term1_enabled
+// grade11_term2_enabled
+// grade11_term3_enabled
+// =====================================================
+
+function updateTermControls(
+    settings
+) {
+
+    const termMap = {
+
+        grade11_term1_enabled:
+            [
+                "grade11Term1Enabled",
+                "grade11_term1_enabled",
+                "term1Enabled"
+            ],
+
+        grade11_term2_enabled:
+            [
+                "grade11Term2Enabled",
+                "grade11_term2_enabled",
+                "term2Enabled"
+            ],
+
+        grade11_term3_enabled:
+            [
+                "grade11Term3Enabled",
+                "grade11_term3_enabled",
+                "term3Enabled"
+            ]
+
+    };
 
 
-            return;
+    Object.keys(
+        termMap
+    ).forEach(
+        settingKey => {
+
+            const ids =
+                termMap[
+                    settingKey
+                ];
+
+
+            let element =
+                null;
+
+
+            for (
+                const id of ids
+            ) {
+
+                element =
+                    document.getElementById(
+                        id
+                    );
+
+
+                if (element) {
+                    break;
+                }
+
+            }
+
+
+            if (!element) {
+                return;
+            }
+
+
+            const value =
+                settings[
+                    settingKey
+                ];
+
+
+            // Missing = enabled
+            element.checked =
+                value !== false;
 
         }
+    );
 
-    }
-
-
-    // ========================================================
-    // CHECK VIEWED
-    // ========================================================
-
-    if (
-        isViewed(
-            studentData,
-            paperId
-        )
-    ) {
-
-        alert(
-            `Model Paper ${String(number).padStart(2, "0")} has already been viewed.`
-        );
+}
 
 
-        return;
+// =====================================================
+// SAVE TERM SETTING
+// =====================================================
 
-    }
-
-
-    // ========================================================
-    // CHECK ADMIN SETTING
-    // ========================================================
-
-    let settings = {};
-
+async function saveTermSetting(
+    key,
+    value
+) {
 
     try {
 
-        const settingsSnapshot =
-            await getDoc(
-                settingsRef
-            );
+        await setDoc(
+            settingsRef,
+            {
+                [key]:
+                    value
+            },
+            {
+                merge:
+                    true
+            }
+        );
 
 
-        if (
-            settingsSnapshot.exists()
-        ) {
+        console.log(
+            "Term setting saved:",
+            key,
+            value
+        );
 
-            settings =
-                settingsSnapshot.data() || {};
-
-        }
 
     }
-
     catch (error) {
 
         console.error(
-            "Settings verification error:",
+            "Term setting error:",
             error
         );
 
 
         alert(
-            "Unable to verify paper availability."
+            "Failed to save setting.\n\n" +
+            error.message
         );
-
-
-        return;
 
     }
-
-
-    const enabled =
-        isEnabled(
-            settings,
-            number
-        );
-
-
-    if (!enabled) {
-
-        alert(
-            "This paper is currently unavailable."
-        );
-
-
-        return;
-
-    }
-
-
-    // ========================================================
-    // OPEN VIEWER
-    // ========================================================
-
-    const url =
-        "viewer.html" +
-        "?paper=" +
-        encodeURIComponent(
-            paperId
-        ) +
-        "&id=" +
-        encodeURIComponent(
-            studentId || ""
-        ) +
-        "&type=al-model";
-
-
-    console.log(
-        "Viewer URL:",
-        url
-    );
-
-
-    window.location.href =
-        url;
 
 }
 
 
-// ============================================================
-// GLOBAL FUNCTION
-// ============================================================
-//
-// Kept for your existing HTML:
-// onclick="openPaper(1)"
-//
+// =====================================================
+// TERM EVENT LISTENERS
+// =====================================================
 
-window.openPaper =
-    openPaper;
+function setupTermListeners() {
+
+    const termElements = [
+
+        {
+            ids: [
+                "grade11Term1Enabled",
+                "grade11_term1_enabled",
+                "term1Enabled"
+            ],
+            key:
+                "grade11_term1_enabled"
+        },
+
+        {
+            ids: [
+                "grade11Term2Enabled",
+                "grade11_term2_enabled",
+                "term2Enabled"
+            ],
+            key:
+                "grade11_term2_enabled"
+        },
+
+        {
+            ids: [
+                "grade11Term3Enabled",
+                "grade11_term3_enabled",
+                "term3Enabled"
+            ],
+            key:
+                "grade11_term3_enabled"
+        }
+
+    ];
 
 
-// ============================================================
-// INITIAL LOAD
-// ============================================================
+    termElements.forEach(
+        item => {
 
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
+            let element =
+                null;
 
-        loadModelPapers();
+
+            for (
+                const id of item.ids
+            ) {
+
+                element =
+                    document.getElementById(
+                        id
+                    );
+
+
+                if (element) {
+                    break;
+                }
+
+            }
+
+
+            if (!element) {
+                return;
+            }
+
+
+            if (
+                element.dataset.listenerAttached ===
+                "true"
+            ) {
+
+                return;
+
+            }
+
+
+            element.dataset.listenerAttached =
+                "true";
+
+
+            element.addEventListener(
+                "change",
+                async () => {
+
+                    await saveTermSetting(
+                        item.key,
+                        element.checked
+                    );
+
+                }
+            );
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// SELECT ALL / RESET BUTTONS
+// =====================================================
+
+function setupGlobalButtons() {
+
+    const selectAll =
+        document.getElementById(
+            "selectAll"
+        );
+
+
+    const removeAll =
+        document.getElementById(
+            "removeAll"
+        );
+
+
+    if (selectAll) {
+
+        selectAll.addEventListener(
+            "click",
+            async () => {
+
+                await setAllPapers(
+                    true
+                );
+
+            }
+        );
 
     }
-);
 
 
-// ============================================================
-// CONSOLE
-// ============================================================
+    if (removeAll) {
 
-console.log(
-    "🟢 A/L Model Papers JS loaded."
-);
+        removeAll.addEventListener(
+            "click",
+            async () => {
+
+                await setAllPapers(
+                    false
+                );
+
+            }
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// SET ALL PAPERS
+// =====================================================
+
+async function setAllPapers(
+    enabled
+) {
+
+    const updateData = {};
+
+
+    for (
+        let i = 1;
+        i <= TOTAL_PAPERS;
+        i++
+    ) {
+
+        const paperId =
+            getPaperId(
+                i
+            );
+
+
+        updateData[
+            `${paperId}.enabled`
+        ] =
+            enabled;
+
+
+        updateData[
+            `${paperId}.default`
+        ] =
+            enabled;
+
+    }
+
+
+    try {
+
+        await setDoc(
+            settingsRef,
+            updateData,
+            {
+                merge:
+                    true
+            }
+        );
+
+
+        alert(
+            enabled
+                ? "All papers enabled."
+                : "All papers disabled."
+        );
+
+
+        await loadSettings();
+
+    }
+    catch (error) {
+
+        console.error(
+            "Set All Papers Error:",
+            error
+        );
+
+
+        alert(
+            "Failed to update papers.\n\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// BACK BUTTON
+// =====================================================
+
+function setupBackButton() {
+
+    const buttons =
+        document.querySelectorAll(
+            "button, a"
+        );
+
+
+    buttons.forEach(
+        element => {
+
+            const text =
+                element.textContent
+                    .trim()
+                    .toLowerCase();
+
+
+            if (
+                text.includes(
+                    "back to admin"
+                ) ||
+                text === "← back" ||
+                text === "back"
+            ) {
+
+                if (
+                    element.dataset.paperBackAttached ===
+                    "true"
+                ) {
+
+                    return;
+
+                }
+
+
+                element.dataset.paperBackAttached =
+                    "true";
+
+
+                element.addEventListener(
+                    "click",
+                    event => {
+
+                        event.preventDefault();
+
+
+                        window.location.href =
+                            "admin.html";
+
+                    }
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// INITIALIZE
+// =====================================================
+
+async function initialize() {
+
+    console.log(
+        "📚 Initializing Paper Management..."
+    );
+
+
+    setupTermListeners();
+
+    setupGlobalButtons();
+
+    setupBackButton();
+
+
+    await loadSettings();
+
+
+    setupTermListeners();
+
+
+    console.log(
+        "✅ Paper Management Ready"
+    );
+
+}
+
+
+// =====================================================
+// START
+// =====================================================
+
+initialize();
