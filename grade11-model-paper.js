@@ -1,6 +1,6 @@
-// =========================================
+// =====================================================
 // FIREBASE
-// =========================================
+// =====================================================
 
 import {
     db,
@@ -9,17 +9,17 @@ import {
 } from "./firebase.js";
 
 
-// =========================================
+// =====================================================
 // ELEMENT
-// =========================================
+// =====================================================
 
 const termGrid =
     document.getElementById("termGrid");
 
 
-// =========================================
-// TERMS
-// =========================================
+// =====================================================
+// TERM DATA
+// =====================================================
 
 const TERMS = [
 
@@ -44,9 +44,26 @@ const TERMS = [
 ];
 
 
-// =========================================
+// =====================================================
+// CHECK ELEMENT
+// =====================================================
+
+if (!termGrid) {
+
+    console.error(
+        "❌ termGrid not found."
+    );
+
+    throw new Error(
+        "termGrid element not found."
+    );
+
+}
+
+
+// =====================================================
 // ESCAPE HTML
-// =========================================
+// =====================================================
 
 function escapeHTML(value) {
 
@@ -60,11 +77,11 @@ function escapeHTML(value) {
 }
 
 
-// =========================================
-// GET FIRESTORE SETTINGS
-// =========================================
+// =====================================================
+// FIRESTORE SETTINGS
+// =====================================================
 
-async function getPaperSettings() {
+async function getSettings() {
 
     const settingsRef =
         doc(
@@ -83,7 +100,7 @@ async function getPaperSettings() {
     if (!snapshot.exists()) {
 
         console.log(
-            "paperSettings/settings does not exist."
+            "⚠️ Settings document not found."
         );
 
         return {};
@@ -91,41 +108,47 @@ async function getPaperSettings() {
     }
 
 
-    const settings =
+    const data =
         snapshot.data() || {};
 
 
     console.log(
-        "🔥 Grade 11 settings:",
-        settings
+        "🔥 Firestore Settings:",
+        data
     );
 
 
-    return settings;
+    return data;
 
 }
 
 
-// =========================================
-// CHECK TERM
-// =========================================
+// =====================================================
+// CHECK TERM STATUS
+// =====================================================
 
 function isTermEnabled(
     settings,
     termNumber
 ) {
 
-    const settingId =
+    const field =
         `grade11_term${termNumber}_enabled`;
 
 
-    // If setting does not exist,
-    // active by default.
+    console.log(
+        `Checking ${field}:`,
+        settings[field]
+    );
+
+
+    // If field doesn't exist,
+    // enable by default.
 
     if (
         !Object.prototype.hasOwnProperty.call(
             settings,
-            settingId
+            field
         )
     ) {
 
@@ -134,16 +157,14 @@ function isTermEnabled(
     }
 
 
-    return (
-        settings[settingId] === true
-    );
+    return settings[field] === true;
 
 }
 
 
-// =========================================
+// =====================================================
 // CREATE TERM CARD
-// =========================================
+// =====================================================
 
 function createTermCard(term) {
 
@@ -165,9 +186,11 @@ function createTermCard(term) {
             🏆
         </div>
 
+
         <h2>
             ${escapeHTML(term.title)}
         </h2>
+
 
         <p>
             ${escapeHTML(term.description)}
@@ -194,9 +217,9 @@ function createTermCard(term) {
 }
 
 
-// =========================================
-// SHOW EMPTY
-// =========================================
+// =====================================================
+// SHOW NO TERMS
+// =====================================================
 
 function showNoTerms() {
 
@@ -204,11 +227,12 @@ function showNoTerms() {
 
         <div
             style="
-                grid-column:1/-1;
-                background:white;
+                width:100%;
+                background:#ffffff;
                 border-radius:20px;
                 padding:50px 25px;
                 text-align:center;
+                box-sizing:border-box;
                 box-shadow:0 10px 30px rgba(0,0,0,.08);
             "
         >
@@ -222,6 +246,7 @@ function showNoTerms() {
                 🔒
             </div>
 
+
             <h2
                 style="
                     margin:0 0 10px;
@@ -230,6 +255,7 @@ function showNoTerms() {
             >
                 TOP Ranking Papers Unavailable
             </h2>
+
 
             <p
                 style="
@@ -247,14 +273,14 @@ function showNoTerms() {
 }
 
 
-// =========================================
+// =====================================================
 // SHOW ERROR
-// =========================================
+// =====================================================
 
 function showError(error) {
 
     console.error(
-        "Grade 11 TOP Ranking Error:",
+        "❌ Grade 11 TOP Ranking Error:",
         error
     );
 
@@ -263,28 +289,42 @@ function showError(error) {
 
         <div
             style="
-                grid-column:1/-1;
-                background:white;
+                width:100%;
+                background:#ffffff;
                 border-radius:20px;
                 padding:40px;
                 text-align:center;
+                box-sizing:border-box;
             "
         >
 
-            <div style="font-size:45px;">
+            <div
+                style="
+                    font-size:45px;
+                    margin-bottom:15px;
+                "
+            >
                 ⚠️
             </div>
 
+
             <h2>
-                Unable to Load TOP Ranking Papers
+                Unable to Load TOP Ranking
             </h2>
 
-            <p style="color:#64748b;">
+
+            <p
+                style="
+                    color:#64748b;
+                    margin-bottom:20px;
+                "
+            >
                 ${escapeHTML(
                     error?.message ||
                     "Unknown error"
                 )}
             </p>
+
 
             <button
                 type="button"
@@ -309,115 +349,119 @@ function showError(error) {
 }
 
 
-// =========================================
+// =====================================================
 // LOAD TERMS
-// =========================================
+// =====================================================
 
 async function loadTerms() {
 
+    console.log(
+        "===================================="
+    );
+
+    console.log(
+        "🏆 GRADE 11 TOP RANKING START"
+    );
+
+    console.log(
+        "===================================="
+    );
+
+
+    // =================================================
+    // LOADING
+    // =================================================
+
+    termGrid.innerHTML = `
+
+        <div
+            style="
+                grid-column:1/-1;
+                text-align:center;
+                padding:40px;
+                color:#64748b;
+            "
+        >
+            Loading...
+        </div>
+
+    `;
+
+
     try {
 
-        if (!termGrid) {
-
-            throw new Error(
-                "termGrid element not found."
-            );
-
-        }
-
-
-        // =====================================
-        // LOADING
-        // =====================================
-
-        termGrid.innerHTML = `
-
-            <div
-                style="
-                    grid-column:1/-1;
-                    text-align:center;
-                    padding:40px;
-                    color:#64748b;
-                "
-            >
-                Loading...
-            </div>
-
-        `;
-
-
-        // =====================================
-        // FIRESTORE
-        // =====================================
+        // =============================================
+        // GET SETTINGS
+        // =============================================
 
         const settings =
-            await getPaperSettings();
+            await getSettings();
 
 
-        // =====================================
-        // CLEAR
-        // =====================================
+        // =============================================
+        // CLEAR GRID
+        // =============================================
 
         termGrid.innerHTML =
             "";
 
 
-        let visibleCount =
+        let visibleTerms =
             0;
 
 
-        // =====================================
-        // TERMS
-        // =====================================
+        // =============================================
+        // CREATE ACTIVE TERMS
+        // =============================================
 
-        TERMS.forEach(
-            term => {
+        for (
+            const term of TERMS
+        ) {
 
-                const enabled =
-                    isTermEnabled(
-                        settings,
-                        term.number
-                    );
-
-
-                console.log(
-                    `${term.title}:`,
-                    enabled
-                        ? "ACTIVE"
-                        : "DISABLED"
+            const enabled =
+                isTermEnabled(
+                    settings,
+                    term.number
                 );
 
 
-                if (!enabled) {
-
-                    return;
-
-                }
-
-
-                const card =
-                    createTermCard(
-                        term
-                    );
+            console.log(
+                term.title,
+                enabled
+                    ? "✅ ACTIVE"
+                    : "❌ DISABLED"
+            );
 
 
-                termGrid.appendChild(
-                    card
-                );
+            if (!enabled) {
 
-
-                visibleCount++;
+                continue;
 
             }
-        );
 
 
-        // =====================================
-        // NONE
-        // =====================================
+            const card =
+                createTermCard(
+                    term
+                );
+
+
+            termGrid.appendChild(
+                card
+            );
+
+
+            visibleTerms++;
+
+        }
+
+
+        // =============================================
+        // NO ACTIVE TERMS
+        // =============================================
 
         if (
-            visibleCount === 0
+            visibleTerms === 0
         ) {
 
             showNoTerms();
@@ -426,8 +470,13 @@ async function loadTerms() {
 
 
         console.log(
-            "✅ Visible Grade 11 TOP Ranking Terms:",
-            visibleCount
+            "Visible terms:",
+            visibleTerms
+        );
+
+
+        console.log(
+            "🏆 TOP RANKING COMPLETE"
         );
 
     }
@@ -443,13 +492,8 @@ async function loadTerms() {
 }
 
 
-// =========================================
+// =====================================================
 // START
-// =========================================
+// =====================================================
 
 loadTerms();
-
-
-console.log(
-    "🏆 Grade 11 TOP Ranking Papers Loaded"
-);
