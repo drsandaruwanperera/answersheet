@@ -12,26 +12,659 @@
 
     <title>Model Paper</title>
 
-    <link
-        rel="stylesheet"
-        href="viewer.css"
-    >
+    <link rel="icon" href="data:,">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        html,
+        body {
+
+            margin: 0;
+            padding: 0;
+
+            width: 100%;
+            height: 100%;
+
+            font-family:
+                Inter,
+                "Segoe UI",
+                Arial,
+                sans-serif;
+
+            background:
+                #f4f7fb;
+
+            color:
+                #0f172a;
+
+        }
+
+
+        body {
+            overflow: hidden;
+        }
+
+
+        /* =================================================
+           HEADER
+        ================================================= */
+
+        .header {
+
+            height: 70px;
+
+            width: 100%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding:
+                0 24px;
+
+            background:
+                #ffffff;
+
+            border-bottom:
+                1px solid #e2e8f0;
+
+            box-shadow:
+                0 4px 18px
+                rgba(15, 23, 42, 0.07);
+
+            position:
+                relative;
+
+            z-index: 20;
+
+        }
+
+
+        .title-area {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            min-width: 0;
+
+        }
+
+
+        .title-icon {
+
+            width: 42px;
+
+            height: 42px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 12px;
+
+            background:
+                #f0ebff;
+
+            font-size:
+                22px;
+
+            flex-shrink: 0;
+
+        }
+
+
+        #paperTitle {
+
+            font-size:
+                18px;
+
+            font-weight:
+                800;
+
+            color:
+                #0f172a;
+
+            white-space:
+                nowrap;
+
+            overflow:
+                hidden;
+
+            text-overflow:
+                ellipsis;
+
+        }
+
+
+        /* =================================================
+           BACK BUTTON
+        ================================================= */
+
+        .back-button {
+
+            height: 42px;
+
+            padding:
+                0 18px;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border: 0;
+
+            border-radius: 11px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6d35f2,
+                    #7c3aed
+                );
+
+            color:
+                #ffffff;
+
+            font-family:
+                inherit;
+
+            font-size:
+                13px;
+
+            font-weight:
+                750;
+
+            cursor:
+                pointer;
+
+            box-shadow:
+                0 5px 14px
+                rgba(109, 53, 242, 0.18);
+
+            transition:
+                transform .18s ease,
+                box-shadow .18s ease;
+
+            flex-shrink: 0;
+
+        }
+
+
+        .back-button:hover {
+
+            transform:
+                translateY(-1px);
+
+            box-shadow:
+                0 8px 20px
+                rgba(109, 53, 242, 0.25);
+
+        }
+
+
+        .back-button:active {
+
+            transform:
+                translateY(0);
+
+        }
+
+
+        /* =================================================
+           VIEWER
+        ================================================= */
+
+        .viewer {
+
+            width: 100%;
+
+            height:
+                calc(100vh - 70px);
+
+            overflow-y: auto;
+
+            overflow-x: hidden;
+
+            background:
+                #e5e7eb;
+
+            padding:
+                24px;
+
+        }
+
+
+        /* =================================================
+           PAGES
+        ================================================= */
+
+        .pages-container {
+
+            width:
+                min(900px, 100%);
+
+            margin:
+                0 auto;
+
+        }
+
+
+        .paper-page {
+
+            display: block;
+
+            width: 100%;
+
+            height: auto;
+
+            margin:
+                0 auto 22px;
+
+            background:
+                #ffffff;
+
+            border-radius:
+                4px;
+
+            box-shadow:
+                0 8px 25px
+                rgba(15, 23, 42, 0.12);
+
+            user-select: none;
+
+            -webkit-user-select: none;
+
+            -webkit-user-drag: none;
+
+        }
+
+
+        /* =================================================
+           PAGE NUMBER
+        ================================================= */
+
+        .page-wrapper {
+
+            position:
+                relative;
+
+            margin-bottom:
+                22px;
+
+        }
+
+
+        .page-number {
+
+            position:
+                absolute;
+
+            top:
+                10px;
+
+            right:
+                10px;
+
+            padding:
+                5px 9px;
+
+            border-radius:
+                8px;
+
+            background:
+                rgba(15, 23, 42, 0.72);
+
+            color:
+                #ffffff;
+
+            font-size:
+                11px;
+
+            font-weight:
+                700;
+
+            z-index:
+                2;
+
+        }
+
+
+        /* =================================================
+           LOADING
+        ================================================= */
+
+        .loading {
+
+            min-height:
+                calc(100vh - 118px);
+
+            display:
+                flex;
+
+            flex-direction:
+                column;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            gap:
+                15px;
+
+            color:
+                #64748b;
+
+        }
+
+
+        .loader {
+
+            width:
+                48px;
+
+            height:
+                48px;
+
+            border:
+                4px solid #e2e8f0;
+
+            border-top-color:
+                #6d35f2;
+
+            border-radius:
+                50%;
+
+            animation:
+                spin .8s linear infinite;
+
+        }
+
+
+        @keyframes spin {
+
+            to {
+
+                transform:
+                    rotate(360deg);
+
+            }
+
+        }
+
+
+        .loading-text {
+
+            font-size:
+                14px;
+
+            font-weight:
+                600;
+
+        }
+
+
+        /* =================================================
+           ERROR
+        ================================================= */
+
+        .error {
+
+            min-height:
+                calc(100vh - 70px);
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            padding:
+                30px;
+
+        }
+
+
+        .error-card {
+
+            width:
+                min(520px, 100%);
+
+            padding:
+                42px 30px;
+
+            text-align:
+                center;
+
+            background:
+                #ffffff;
+
+            border:
+                1px solid #e2e8f0;
+
+            border-radius:
+                20px;
+
+            box-shadow:
+                0 15px 40px
+                rgba(15, 23, 42, 0.08);
+
+        }
+
+
+        .error-icon {
+
+            font-size:
+                48px;
+
+            margin-bottom:
+                15px;
+
+        }
+
+
+        .error-card h2 {
+
+            margin:
+                0 0 10px;
+
+            font-size:
+                22px;
+
+        }
+
+
+        .error-card p {
+
+            margin:
+                0 0 22px;
+
+            color:
+                #64748b;
+
+            line-height:
+                1.6;
+
+        }
+
+
+        .error-button {
+
+            height:
+                42px;
+
+            padding:
+                0 20px;
+
+            border:
+                0;
+
+            border-radius:
+                10px;
+
+            background:
+                #6d35f2;
+
+            color:
+                #ffffff;
+
+            font-family:
+                inherit;
+
+            font-weight:
+                700;
+
+            cursor:
+                pointer;
+
+        }
+
+
+        /* =================================================
+           MOBILE
+        ================================================= */
+
+        @media (
+            max-width: 600px
+        ) {
+
+            .header {
+
+                height:
+                    62px;
+
+                padding:
+                    0 12px;
+
+            }
+
+
+            .title-icon {
+
+                width:
+                    36px;
+
+                height:
+                    36px;
+
+                font-size:
+                    19px;
+
+            }
+
+
+            #paperTitle {
+
+                font-size:
+                    14px;
+
+            }
+
+
+            .back-button {
+
+                height:
+                    36px;
+
+                padding:
+                    0 13px;
+
+                font-size:
+                    12px;
+
+            }
+
+
+            .viewer {
+
+                height:
+                    calc(100vh - 62px);
+
+                padding:
+                    10px;
+
+            }
+
+
+            .pages-container {
+
+                width:
+                    100%;
+
+            }
+
+
+            .paper-page {
+
+                margin-bottom:
+                    12px;
+
+            }
+
+
+            .page-number {
+
+                top:
+                    6px;
+
+                right:
+                    6px;
+
+                font-size:
+                    10px;
+
+                padding:
+                    4px 7px;
+
+            }
+
+        }
+
+    </style>
 
 </head>
 
+
 <body>
 
-<header class="viewer-header">
 
-    <div class="viewer-title">
+<!-- =====================================================
+     HEADER
+===================================================== -->
 
-        <div class="viewer-title-icon">
+<header class="header">
+
+
+    <div class="title-area">
+
+
+        <div class="title-icon">
             📘
         </div>
+
 
         <div id="paperTitle">
             Model Paper
         </div>
+
 
     </div>
 
@@ -44,20 +677,26 @@
         ← Back
     </button>
 
+
 </header>
 
+
+<!-- =====================================================
+     VIEWER
+===================================================== -->
 
 <main
     id="viewer"
     class="viewer"
 >
 
+
     <div
         id="loading"
         class="loading"
     >
 
-        <div class="loading-icon"></div>
+        <div class="loader"></div>
 
         <div class="loading-text">
             Loading Model Paper...
@@ -65,20 +704,15 @@
 
     </div>
 
+
 </main>
 
 
-<script type="module">
-
-import {
-    db,
-    doc,
-    getDoc
-} from "./firebase.js";
+<script>
 
 
 // =====================================================
-// URL
+// URL PARAMETERS
 // =====================================================
 
 const params =
@@ -88,18 +722,24 @@ const params =
 
 
 const paper =
-    params.get("paper");
+    params.get(
+        "paper"
+    );
 
 
 const studentId =
-    params.get("id") ||
+    params.get(
+        "id"
+    ) ||
     sessionStorage.getItem(
         "studentId"
     );
 
 
 const type =
-    params.get("type") ||
+    params.get(
+        "type"
+    ) ||
     "al-model";
 
 
@@ -126,14 +766,16 @@ const backButton =
 
 
 // =====================================================
-// BACK
+// BACK BUTTON
 // =====================================================
 
-if (backButton) {
+if (
+    backButton
+) {
 
     backButton.addEventListener(
         "click",
-        () => {
+        function () {
 
             history.back();
 
@@ -144,10 +786,12 @@ if (backButton) {
 
 
 // =====================================================
-// VALIDATE
+// VALIDATE PAPER
 // =====================================================
 
-if (!paper) {
+if (
+    !paper
+) {
 
     showError(
         "No model paper was selected."
@@ -165,282 +809,294 @@ else {
 // LOAD PAPER
 // =====================================================
 
-async function loadPaper() {
-
-    try {
-
-        const match =
-            /^paper(\d{2})$/i.exec(
-                paper
-            );
+function loadPaper() {
 
 
-        if (!match) {
+    // =================================================
+    // VALIDATE PAPER NUMBER
+    // =================================================
 
-            throw new Error(
-                "Invalid paper number."
-            );
-
-        }
-
-
-        const number =
-            match[1];
-
-
-        // =============================================
-        // TITLE
-        // =============================================
-
-        if (paperTitle) {
-
-            paperTitle.textContent =
-                `A/L Model Paper ${number}`;
-
-        }
-
-
-        // =============================================
-        // GET STUDENT
-        // =============================================
-
-        let studentData = {};
-
-
-        if (studentId) {
-
-            const studentRef =
-                doc(
-                    db,
-                    "students",
-                    studentId
-                );
-
-
-            const snapshot =
-                await getDoc(
-                    studentRef
-                );
-
-
-            if (
-                snapshot.exists()
-            ) {
-
-                studentData =
-                    snapshot.data();
-
-            }
-
-        }
-
-
-        console.log(
-            "======================================"
-        );
-
-        console.log(
-            "A/L MODEL PAPER VIEWER"
-        );
-
-        console.log(
-            "Paper:",
+    const match =
+        /^paper(\d{2})$/i.exec(
             paper
         );
 
-        console.log(
-            "Student:",
-            studentId
-        );
 
-        console.log(
-            "Type:",
-            type
-        );
-
-        console.log(
-            "======================================"
-        );
-
-
-        // =============================================
-        // PAPER URL
-        // =============================================
-        //
-        // USE EXISTING PDF STRUCTURE
-        //
-        // =============================================
-
-        const candidates = [
-
-            `papers/al/model/paper${number}.pdf`,
-
-            `papers/al/paper${number}.pdf`,
-
-            `papers/model/paper${number}.pdf`,
-
-            `pdfs/al/model/paper${number}.pdf`,
-
-            `pdfs/al/paper${number}.pdf`,
-
-            `pdfs/model/paper${number}.pdf`
-
-        ];
-
-
-        const pdfPath =
-            await findWorkingPDF(
-                candidates
-            );
-
-
-        if (!pdfPath) {
-
-            throw new Error(
-                "Model Paper PDF was not found. Please check the PDF location in GitHub."
-            );
-
-        }
-
-
-        console.log(
-            "✅ PDF FOUND:",
-            pdfPath
-        );
-
-
-        // =============================================
-        // CREATE VIEWER
-        // =============================================
-
-        const iframe =
-            document.createElement(
-                "iframe"
-            );
-
-
-        iframe.className =
-            "pdf-frame";
-
-
-        iframe.title =
-            `A/L Model Paper ${number}`;
-
-
-        iframe.src =
-            pdfPath +
-            "#toolbar=0&navpanes=0&scrollbar=1";
-
-
-        iframe.setAttribute(
-            "allowfullscreen",
-            ""
-        );
-
-
-        iframe.addEventListener(
-            "load",
-            () => {
-
-                console.log(
-                    "✅ Model Paper opened"
-                );
-
-            }
-        );
-
-
-        viewer.innerHTML = "";
-
-        viewer.appendChild(
-            iframe
-        );
-
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "A/L Model Paper error:",
-            error
-        );
-
-
-        showError(
-            error.message
-        );
-
-    }
-
-}
-
-
-// =====================================================
-// FIND WORKING PDF
-// =====================================================
-
-async function findWorkingPDF(
-    paths
-) {
-
-    for (
-        const path of paths
+    if (
+        !match
     ) {
 
-        try {
+        showError(
+            "Invalid model paper number."
+        );
 
-            console.log(
-                "Checking:",
-                path
-            );
-
-
-            const response =
-                await fetch(
-                    path,
-                    {
-                        method: "HEAD"
-                    }
-                );
-
-
-            if (
-                response.ok
-            ) {
-
-                return path;
-
-            }
-
-        }
-
-        catch (
-            error
-        ) {
-
-            console.warn(
-                "Path check failed:",
-                path
-            );
-
-        }
+        return;
 
     }
 
 
-    return null;
+    const number =
+        match[1];
+
+
+    // =================================================
+    // TITLE
+    // =================================================
+
+    if (
+        paperTitle
+    ) {
+
+        paperTitle.textContent =
+            `A/L Model Paper ${number}`;
+
+    }
+
+
+    // =================================================
+    // PAGE COUNT
+    // =================================================
+    //
+    // paper01 currently has 12 JPG pages.
+    //
+    // The same structure is used for the
+    // other papers.
+    //
+    // =================================================
+
+    const pageCount =
+        12;
+
+
+    // =================================================
+    // CREATE PAGE CONTAINER
+    // =================================================
+
+    const pagesContainer =
+        document.createElement(
+            "div"
+        );
+
+
+    pagesContainer.className =
+        "pages-container";
+
+
+    // =================================================
+    // CREATE ALL PAGES
+    // =================================================
+
+    for (
+        let i = 1;
+        i <= pageCount;
+        i++
+    ) {
+
+
+        const pageNumber =
+            String(
+                i
+            ).padStart(
+                2,
+                "0"
+            );
+
+
+        // =============================================
+        // WRAPPER
+        // =============================================
+
+        const pageWrapper =
+            document.createElement(
+                "div"
+            );
+
+
+        pageWrapper.className =
+            "page-wrapper";
+
+
+        // =============================================
+        // PAGE NUMBER
+        // =============================================
+
+        const pageLabel =
+            document.createElement(
+                "div"
+            );
+
+
+        pageLabel.className =
+            "page-number";
+
+
+        pageLabel.textContent =
+            `Page ${i}`;
+
+
+        // =============================================
+        // IMAGE
+        // =============================================
+
+        const image =
+            document.createElement(
+                "img"
+            );
+
+
+        image.className =
+            "paper-page";
+
+
+        image.alt =
+            `A/L Model Paper ${number} - Page ${i}`;
+
+
+        image.loading =
+            i === 1
+                ? "eager"
+                : "lazy";
+
+
+        image.decoding =
+            "async";
+
+
+        image.draggable =
+            false;
+
+
+        // =============================================
+        // EXACT GITHUB PATH
+        // =============================================
+
+        image.src =
+            `papers/paper${number}/paper${number}_Page_${pageNumber}.jpg`;
+
+
+        // =============================================
+        // IMAGE ERROR
+        // =============================================
+
+        image.addEventListener(
+            "error",
+            function () {
+
+                console.error(
+                    "Page not found:",
+                    image.src
+                );
+
+
+                pageWrapper.remove();
+
+
+                // If first page does not exist,
+                // show error.
+
+                if (
+                    i === 1
+                ) {
+
+                    showError(
+                        `Model Paper ${number} could not be found.`
+                    );
+
+                }
+
+            }
+        );
+
+
+        // =============================================
+        // ADD
+        // =============================================
+
+        pageWrapper.appendChild(
+            pageLabel
+        );
+
+
+        pageWrapper.appendChild(
+            image
+        );
+
+
+        pagesContainer.appendChild(
+            pageWrapper
+        );
+
+    }
+
+
+    // =================================================
+    // DISPLAY
+    // =================================================
+
+    viewer.innerHTML = "";
+
+
+    viewer.appendChild(
+        pagesContainer
+    );
+
+
+    // =================================================
+    // CONSOLE
+    // =================================================
+
+    console.log(
+        "======================================"
+    );
+
+    console.log(
+        "A/L MODEL PAPER VIEWER"
+    );
+
+    console.log(
+        "======================================"
+    );
+
+    console.log(
+        "Paper:",
+        paper
+    );
+
+    console.log(
+        "Student:",
+        studentId
+    );
+
+    console.log(
+        "Type:",
+        type
+    );
+
+    console.log(
+        "Pages:",
+        pageCount
+    );
+
+    console.log(
+        "First page:",
+        `papers/paper${number}/paper${number}_Page_01.jpg`
+    );
+
+    console.log(
+        "======================================"
+    );
 
 }
 
 
 // =====================================================
-// ERROR
+// ERROR SCREEN
 // =====================================================
 
 function showError(
     message
 ) {
+
 
     viewer.className =
         "viewer error";
@@ -450,42 +1106,49 @@ function showError(
 
         <div class="error-card">
 
+
             <div class="error-icon">
                 ⚠️
             </div>
+
 
             <h2>
                 Unable to Open Model Paper
             </h2>
 
+
             <p>
                 ${message}
             </p>
 
+
             <button
                 type="button"
                 class="error-button"
-                id="errorBack"
+                id="errorBackButton"
             >
                 ← Go Back
             </button>
+
 
         </div>
 
     `;
 
 
-    const errorBack =
+    const errorBackButton =
         document.getElementById(
-            "errorBack"
+            "errorBackButton"
         );
 
 
-    if (errorBack) {
+    if (
+        errorBackButton
+    ) {
 
-        errorBack.addEventListener(
+        errorBackButton.addEventListener(
             "click",
-            () => {
+            function () {
 
                 history.back();
 
@@ -498,12 +1161,12 @@ function showError(
 
 
 // =====================================================
-// SECURITY
+// DISABLE RIGHT CLICK
 // =====================================================
 
 document.addEventListener(
     "contextmenu",
-    event => {
+    function (event) {
 
         event.preventDefault();
 
@@ -512,9 +1175,14 @@ document.addEventListener(
 );
 
 
+// =====================================================
+// DISABLE BASIC SHORTCUTS
+// =====================================================
+
 document.addEventListener(
     "keydown",
-    event => {
+    function (event) {
+
 
         const key =
             String(
@@ -522,17 +1190,93 @@ document.addEventListener(
             ).toLowerCase();
 
 
+        // Ctrl + P
         if (
             event.ctrlKey &&
-            (
-                key === "p" ||
-                key === "s"
-            )
+            key === "p"
         ) {
 
             event.preventDefault();
 
             event.stopPropagation();
+
+            return false;
+
+        }
+
+
+        // Ctrl + S
+        if (
+            event.ctrlKey &&
+            key === "s"
+        ) {
+
+            event.preventDefault();
+
+            event.stopPropagation();
+
+            return false;
+
+        }
+
+
+        // Ctrl + U
+        if (
+            event.ctrlKey &&
+            key === "u"
+        ) {
+
+            event.preventDefault();
+
+            event.stopPropagation();
+
+            return false;
+
+        }
+
+
+        // Ctrl + Shift + I
+        if (
+            event.ctrlKey &&
+            event.shiftKey &&
+            key === "i"
+        ) {
+
+            event.preventDefault();
+
+            event.stopPropagation();
+
+            return false;
+
+        }
+
+
+        // Ctrl + Shift + J
+        if (
+            event.ctrlKey &&
+            event.shiftKey &&
+            key === "j"
+        ) {
+
+            event.preventDefault();
+
+            event.stopPropagation();
+
+            return false;
+
+        }
+
+
+        // F12
+        if (
+            event.key === "F12"
+        ) {
+
+            event.preventDefault();
+
+            event.stopPropagation();
+
+            return false;
 
         }
 
@@ -540,7 +1284,58 @@ document.addEventListener(
     true
 );
 
+
+// =====================================================
+// DISABLE IMAGE DRAG
+// =====================================================
+
+document.addEventListener(
+    "dragstart",
+    function (event) {
+
+        if (
+            event.target &&
+            event.target.tagName === "IMG"
+        ) {
+
+            event.preventDefault();
+
+        }
+
+    },
+    true
+);
+
+
+// =====================================================
+// PREVENT PRINT
+// =====================================================
+
+const printStyle =
+    document.createElement(
+        "style"
+    );
+
+
+printStyle.textContent = `
+
+    @media print {
+
+        body {
+            display: none !important;
+        }
+
+    }
+
+`;
+
+
+document.head.appendChild(
+    printStyle
+);
+
 </script>
+
 
 </body>
 
