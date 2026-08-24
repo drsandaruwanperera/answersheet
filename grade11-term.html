@@ -14,7 +14,7 @@
 
     <link
         rel="stylesheet"
-        href="grade11-term.css"
+        href="grade11-term.css?v=21"
     >
 
 </head>
@@ -37,7 +37,11 @@
 
         </div>
 
-        <button onclick="history.back()">
+
+        <button
+            type="button"
+            onclick="history.back()"
+        >
             ← Back
         </button>
 
@@ -52,7 +56,14 @@
 </div>
 
 
-<script src="grade11-term.js"></script>
+<!-- IMPORTANT:
+     grade11-term.js must be a module
+     because it uses Firebase. -->
+
+<script
+    type="module"
+    src="grade11-term.js?v=21"
+></script>
 
 </body>
 
