@@ -24,11 +24,9 @@
         body {
 
             margin: 0;
-
             padding: 0;
 
             width: 100%;
-
             height: 100%;
 
             font-family:
@@ -37,11 +35,9 @@
                 Arial,
                 sans-serif;
 
-            background:
-                #f4f7fb;
+            background: #eef2f7;
 
-            color:
-                #0f172a;
+            color: #0f172a;
 
             overflow: hidden;
 
@@ -56,38 +52,29 @@
 
             height: 70px;
 
-            width: 100%;
-
             display: flex;
 
             align-items: center;
 
             justify-content: space-between;
 
-            padding:
-                0 24px;
+            padding: 0 24px;
 
-            background:
-                #ffffff;
+            background: #ffffff;
 
             border-bottom:
                 1px solid #e2e8f0;
 
             box-shadow:
                 0 4px 18px
-                rgba(15, 23, 42, 0.07);
+                rgba(15, 23, 42, 0.08);
 
-            position:
-                relative;
+            position: relative;
 
-            z-index: 10;
+            z-index: 100;
 
         }
 
-
-        /* =================================================
-           TITLE
-        ================================================= */
 
         .viewer-title {
 
@@ -95,7 +82,7 @@
 
             align-items: center;
 
-            gap: 10px;
+            gap: 12px;
 
             min-width: 0;
 
@@ -105,22 +92,18 @@
         .viewer-title-icon {
 
             width: 42px;
-
             height: 42px;
 
             display: flex;
 
             align-items: center;
-
             justify-content: center;
 
             border-radius: 12px;
 
-            background:
-                #f0ebff;
+            background: #f0ebff;
 
-            font-size:
-                22px;
+            font-size: 22px;
 
             flex-shrink: 0;
 
@@ -129,23 +112,15 @@
 
         #answerTitle {
 
-            font-size:
-                18px;
+            font-size: 18px;
 
-            font-weight:
-                800;
+            font-weight: 800;
 
-            color:
-                #0f172a;
+            white-space: nowrap;
 
-            white-space:
-                nowrap;
+            overflow: hidden;
 
-            overflow:
-                hidden;
-
-            text-overflow:
-                ellipsis;
+            text-overflow: ellipsis;
 
         }
 
@@ -158,14 +133,7 @@
 
             height: 42px;
 
-            padding:
-                0 18px;
-
-            display: inline-flex;
-
-            align-items: center;
-
-            justify-content: center;
+            padding: 0 18px;
 
             border: 0;
 
@@ -178,30 +146,23 @@
                     #7c3aed
                 );
 
-            color:
-                #ffffff;
+            color: #ffffff;
 
-            font-family:
-                inherit;
+            font-family: inherit;
 
-            font-size:
-                13px;
+            font-size: 13px;
 
-            font-weight:
-                750;
+            font-weight: 750;
 
-            cursor:
-                pointer;
+            cursor: pointer;
 
             box-shadow:
                 0 5px 14px
-                rgba(109, 53, 242, 0.18);
+                rgba(109, 53, 242, 0.20);
 
             transition:
                 transform .18s ease,
                 box-shadow .18s ease;
-
-            flex-shrink: 0;
 
         }
 
@@ -213,21 +174,13 @@
 
             box-shadow:
                 0 8px 20px
-                rgba(109, 53, 242, 0.25);
-
-        }
-
-
-        .back-button:active {
-
-            transform:
-                translateY(0);
+                rgba(109, 53, 242, 0.28);
 
         }
 
 
         /* =================================================
-           PDF VIEWER
+           PDF AREA
         ================================================= */
 
         .viewer {
@@ -237,24 +190,67 @@
             height:
                 calc(100vh - 70px);
 
+            overflow-y: auto;
+
+            overflow-x: hidden;
+
+            padding: 28px 20px 50px;
+
             background:
-                #e5e7eb;
+                #eef2f7;
+
+            user-select: none;
+
+            -webkit-user-select: none;
 
         }
 
 
-        #answerFrame {
+        /* =================================================
+           PDF PAGES
+        ================================================= */
 
-            display: block;
+        #pdfContainer {
 
             width: 100%;
 
-            height: 100%;
+            display: flex;
 
-            border: 0;
+            flex-direction: column;
 
-            background:
-                #ffffff;
+            align-items: center;
+
+            gap: 24px;
+
+        }
+
+
+        .pdf-page {
+
+            position: relative;
+
+            background: #ffffff;
+
+            box-shadow:
+                0 8px 30px
+                rgba(15, 23, 42, 0.14);
+
+            overflow: hidden;
+
+            user-select: none;
+
+            -webkit-user-select: none;
+
+        }
+
+
+        .pdf-page canvas {
+
+            display: block;
+
+            max-width: 100%;
+
+            height: auto;
 
         }
 
@@ -265,9 +261,8 @@
 
         .loading {
 
-            width: 100%;
-
-            height: 100%;
+            min-height:
+                calc(100vh - 150px);
 
             display: flex;
 
@@ -277,15 +272,14 @@
 
             justify-content: center;
 
-            gap: 14px;
+            gap: 15px;
 
-            color:
-                #64748b;
+            color: #64748b;
 
         }
 
 
-        .loading-icon {
+        .loading-spinner {
 
             width: 52px;
 
@@ -319,11 +313,9 @@
 
         .loading-text {
 
-            font-size:
-                14px;
+            font-size: 14px;
 
-            font-weight:
-                600;
+            font-weight: 650;
 
         }
 
@@ -334,9 +326,8 @@
 
         .error-screen {
 
-            width: 100%;
-
-            height: 100%;
+            min-height:
+                calc(100vh - 70px);
 
             display: flex;
 
@@ -344,8 +335,7 @@
 
             justify-content: center;
 
-            padding:
-                30px;
+            padding: 30px;
 
         }
 
@@ -355,20 +345,16 @@
             width:
                 min(520px, 100%);
 
-            padding:
-                40px 30px;
+            padding: 40px 30px;
 
-            text-align:
-                center;
-
-            background:
-                #ffffff;
+            background: #ffffff;
 
             border:
                 1px solid #e2e8f0;
 
-            border-radius:
-                20px;
+            border-radius: 20px;
+
+            text-align: center;
 
             box-shadow:
                 0 14px 40px
@@ -379,11 +365,9 @@
 
         .error-icon {
 
-            font-size:
-                48px;
+            font-size: 48px;
 
-            margin-bottom:
-                15px;
+            margin-bottom: 15px;
 
         }
 
@@ -393,9 +377,6 @@
             margin:
                 0 0 10px;
 
-            font-size:
-                22px;
-
         }
 
 
@@ -404,43 +385,32 @@
             margin:
                 0 0 22px;
 
-            color:
-                #64748b;
+            color: #64748b;
 
-            line-height:
-                1.6;
+            line-height: 1.6;
 
         }
 
 
         .error-back {
 
-            height:
-                42px;
+            height: 42px;
 
-            padding:
-                0 20px;
+            padding: 0 20px;
 
-            border:
-                0;
+            border: 0;
 
-            border-radius:
-                10px;
+            border-radius: 10px;
 
-            background:
-                #6d35f2;
+            background: #6d35f2;
 
-            color:
-                #ffffff;
+            color: #ffffff;
 
-            font-family:
-                inherit;
+            font-family: inherit;
 
-            font-weight:
-                700;
+            font-weight: 700;
 
-            cursor:
-                pointer;
+            cursor: pointer;
 
         }
 
@@ -453,47 +423,38 @@
 
             .viewer-header {
 
-                height:
-                    62px;
+                height: 62px;
 
-                padding:
-                    0 12px;
+                padding: 0 12px;
 
             }
 
 
             .viewer-title-icon {
 
-                width:
-                    36px;
+                width: 36px;
 
-                height:
-                    36px;
+                height: 36px;
 
-                font-size:
-                    19px;
+                font-size: 19px;
 
             }
 
 
             #answerTitle {
 
-                font-size:
-                    14px;
+                font-size: 14px;
 
             }
 
 
             .back-button {
 
-                height:
-                    36px;
+                height: 36px;
 
-                padding:
-                    0 13px;
+                padding: 0 13px;
 
-                font-size:
-                    12px;
+                font-size: 12px;
 
             }
 
@@ -502,6 +463,16 @@
 
                 height:
                     calc(100vh - 62px);
+
+                padding:
+                    15px 8px 30px;
+
+            }
+
+
+            #pdfContainer {
+
+                gap: 14px;
 
             }
 
@@ -561,7 +532,7 @@
         class="loading"
     >
 
-        <div class="loading-icon"></div>
+        <div class="loading-spinner"></div>
 
         <div class="loading-text">
             Loading Answer...
@@ -569,14 +540,34 @@
 
     </div>
 
+
+    <div
+        id="pdfContainer"
+    ></div>
+
 </main>
 
 
-<script>
+<!-- =====================================================
+     PDF.JS
+===================================================== -->
+
+<script type="module">
+
+import * as pdfjsLib from
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs";
 
 
 // =====================================================
-// GET URL PARAMETERS
+// PDF.JS WORKER
+// =====================================================
+
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
+
+
+// =====================================================
+// URL PARAMETERS
 // =====================================================
 
 const params =
@@ -604,6 +595,18 @@ const viewer =
     );
 
 
+const loading =
+    document.getElementById(
+        "loading"
+    );
+
+
+const pdfContainer =
+    document.getElementById(
+        "pdfContainer"
+    );
+
+
 const answerTitle =
     document.getElementById(
         "answerTitle"
@@ -617,7 +620,7 @@ const backButton =
 
 
 // =====================================================
-// SET TITLE
+// TITLE
 // =====================================================
 
 if (answerTitle) {
@@ -629,7 +632,7 @@ if (answerTitle) {
 
 
 // =====================================================
-// BACK BUTTON
+// BACK
 // =====================================================
 
 if (backButton) {
@@ -647,189 +650,34 @@ if (backButton) {
 
 
 // =====================================================
-// VALIDATE FILE
+// BLOCK RIGHT CLICK
 // =====================================================
 
-if (
-    !file ||
-    file.trim() === ""
-) {
-
-    showError(
-        "No answer file was provided."
-    );
-
-}
-
-else {
-
-    loadAnswer(
-        file
-    );
-
-}
-
-
-// =====================================================
-// LOAD ANSWER
-// =====================================================
-
-function loadAnswer(
-    filePath
-) {
-
-    console.log(
-        "================================"
-    );
-
-    console.log(
-        "Grade 11 Answer Viewer"
-    );
-
-    console.log(
-        "File:",
-        filePath
-    );
-
-    console.log(
-        "Title:",
-        title
-    );
-
-    console.log(
-        "================================"
-    );
-
-
-    const iframe =
-        document.createElement(
-            "iframe"
-        );
-
-
-    iframe.id =
-        "answerFrame";
-
-
-    iframe.title =
-        title;
-
-
-    iframe.setAttribute(
-        "allowfullscreen",
-        ""
-    );
-
-
-    /*
-     * Browser PDF viewer.
-     *
-     * toolbar=0 attempts to hide
-     * the normal PDF toolbar where
-     * the browser supports it.
-     */
-
-    iframe.src =
-        filePath +
-        "#toolbar=0&navpanes=0&scrollbar=1";
-
-
-    iframe.addEventListener(
-        "load",
-        function () {
-
-            console.log(
-                "✅ Answer loaded"
-            );
-
-        }
-    );
-
-
-    iframe.addEventListener(
-        "error",
-        function () {
-
-            showError(
-                "Unable to load the answer file."
-            );
-
-        }
-    );
-
-
-    viewer.innerHTML = "";
-
-    viewer.appendChild(
-        iframe
-    );
-
-}
-
-
-// =====================================================
-// ERROR
-// =====================================================
-
-function showError(
-    message
-) {
-
-    viewer.className =
-        "error-screen";
-
-
-    viewer.innerHTML = `
-
-        <div class="error-card">
-
-            <div class="error-icon">
-                ⚠️
-            </div>
-
-            <h2>
-                Unable to Open Answer
-            </h2>
-
-            <p>
-                ${message}
-            </p>
-
-            <button
-                type="button"
-                class="error-back"
-                onclick="history.back()"
-            >
-                ← Go Back
-            </button>
-
-        </div>
-
-    `;
-
-}
-// =====================================================
-// DISABLE PRINT / SAVE / RIGHT CLICK
-// =====================================================
-
-// Disable right-click
 document.addEventListener(
     "contextmenu",
     function (event) {
 
         event.preventDefault();
 
-    }
+        return false;
+
+    },
+    true
 );
 
 
-// Disable keyboard shortcuts
+// =====================================================
+// BLOCK SHORTCUTS
+// =====================================================
+
 document.addEventListener(
     "keydown",
     function (event) {
 
         const key =
-            event.key.toLowerCase();
+            String(
+                event.key
+            ).toLowerCase();
 
 
         // Ctrl + P
@@ -893,6 +741,20 @@ document.addEventListener(
         }
 
 
+        // F12
+        if (
+            event.key === "F12"
+        ) {
+
+            event.preventDefault();
+
+            event.stopPropagation();
+
+            return false;
+
+        }
+
+
         // Ctrl + Shift + I
         if (
             event.ctrlKey &&
@@ -924,19 +786,20 @@ document.addEventListener(
 
         }
 
+    },
+    true
+);
 
-        // F12
-        if (
-            event.key === "F12"
-        ) {
 
-            event.preventDefault();
+// =====================================================
+// BLOCK DRAG
+// =====================================================
 
-            event.stopPropagation();
+document.addEventListener(
+    "dragstart",
+    function (event) {
 
-            return false;
-
-        }
+        event.preventDefault();
 
     },
     true
@@ -944,23 +807,37 @@ document.addEventListener(
 
 
 // =====================================================
-// DISABLE PRINT
+// BLOCK COPY
 // =====================================================
 
-window.addEventListener(
-    "beforeprint",
-    function () {
+document.addEventListener(
+    "copy",
+    function (event) {
 
-        document.body.classList.add(
-            "printing-blocked"
-        );
+        event.preventDefault();
 
-    }
+    },
+    true
 );
 
 
 // =====================================================
-// PRINT CSS BLOCK
+// BLOCK CUT
+// =====================================================
+
+document.addEventListener(
+    "cut",
+    function (event) {
+
+        event.preventDefault();
+
+    },
+    true
+);
+
+
+// =====================================================
+// PRINT BLOCK
 // =====================================================
 
 const printStyle =
@@ -973,8 +850,11 @@ printStyle.textContent = `
 
     @media print {
 
+        html,
         body {
+
             display: none !important;
+
         }
 
     }
@@ -985,7 +865,350 @@ printStyle.textContent = `
 document.head.appendChild(
     printStyle
 );
-    
+
+
+// =====================================================
+// VALIDATE FILE
+// =====================================================
+
+if (
+    !file ||
+    file.trim() === ""
+) {
+
+    showError(
+        "No answer file was provided."
+    );
+
+}
+
+else {
+
+    loadPDF(
+        file
+    );
+
+}
+
+
+// =====================================================
+// LOAD PDF
+// =====================================================
+
+async function loadPDF(
+    filePath
+) {
+
+    try {
+
+        console.log(
+            "================================"
+        );
+
+        console.log(
+            "Grade 11 Answer Viewer"
+        );
+
+        console.log(
+            "PDF:",
+            filePath
+        );
+
+        console.log(
+            "Title:",
+            title
+        );
+
+        console.log(
+            "================================"
+        );
+
+
+        // ---------------------------------------------
+        // LOAD PDF
+        // ---------------------------------------------
+
+        const loadingTask =
+            pdfjsLib.getDocument({
+                url: filePath
+            });
+
+
+        const pdf =
+            await loadingTask.promise;
+
+
+        console.log(
+            "PDF loaded:",
+            pdf.numPages,
+            "pages"
+        );
+
+
+        // ---------------------------------------------
+        // REMOVE LOADING
+        // ---------------------------------------------
+
+        if (loading) {
+
+            loading.remove();
+
+        }
+
+
+        // ---------------------------------------------
+        // RENDER ALL PAGES
+        // ---------------------------------------------
+
+        for (
+            let pageNumber = 1;
+            pageNumber <= pdf.numPages;
+            pageNumber++
+        ) {
+
+            await renderPage(
+                pdf,
+                pageNumber
+            );
+
+        }
+
+
+        console.log(
+            "✅ All pages rendered"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "PDF loading error:",
+            error
+        );
+
+
+        showError(
+            "Unable to load this answer. Please check the PDF file and try again."
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// RENDER PAGE
+// =====================================================
+
+async function renderPage(
+    pdf,
+    pageNumber
+) {
+
+    const page =
+        await pdf.getPage(
+            pageNumber
+        );
+
+
+    // ---------------------------------------------
+    // PAGE SCALE
+    // ---------------------------------------------
+
+    const baseViewport =
+        page.getViewport({
+            scale: 1
+        });
+
+
+    const availableWidth =
+        Math.max(
+            300,
+            viewer.clientWidth -
+            40
+        );
+
+
+    const scale =
+        Math.min(
+            1.8,
+            availableWidth /
+            baseViewport.width
+        );
+
+
+    const viewport =
+        page.getViewport({
+            scale: scale
+        });
+
+
+    // ---------------------------------------------
+    // PAGE WRAPPER
+    // ---------------------------------------------
+
+    const pageWrapper =
+        document.createElement(
+            "div"
+        );
+
+
+    pageWrapper.className =
+        "pdf-page";
+
+
+    pageWrapper.dataset.page =
+        pageNumber;
+
+
+    pageWrapper.style.width =
+        `${viewport.width}px`;
+
+
+    pageWrapper.style.height =
+        `${viewport.height}px`;
+
+
+    // ---------------------------------------------
+    // CANVAS
+    // ---------------------------------------------
+
+    const canvas =
+        document.createElement(
+            "canvas"
+        );
+
+
+    const context =
+        canvas.getContext(
+            "2d",
+            {
+                alpha: false
+            }
+        );
+
+
+    const outputScale =
+        window.devicePixelRatio ||
+        1;
+
+
+    canvas.width =
+        Math.floor(
+            viewport.width *
+            outputScale
+        );
+
+
+    canvas.height =
+        Math.floor(
+            viewport.height *
+            outputScale
+        );
+
+
+    canvas.style.width =
+        `${viewport.width}px`;
+
+
+    canvas.style.height =
+        `${viewport.height}px`;
+
+
+    // ---------------------------------------------
+    // RENDER
+    // ---------------------------------------------
+
+    const renderContext = {
+
+        canvasContext:
+            context,
+
+        viewport:
+            viewport,
+
+        transform:
+            outputScale !== 1
+                ? [
+                    outputScale,
+                    0,
+                    0,
+                    outputScale,
+                    0,
+                    0
+                ]
+                : null
+
+    };
+
+
+    pageWrapper.appendChild(
+        canvas
+    );
+
+
+    pdfContainer.appendChild(
+        pageWrapper
+    );
+
+
+    await page.render(
+        renderContext
+    ).promise;
+
+}
+
+
+// =====================================================
+// ERROR
+// =====================================================
+
+function showError(
+    message
+) {
+
+    if (loading) {
+
+        loading.remove();
+
+    }
+
+
+    viewer.className =
+        "error-screen";
+
+
+    viewer.innerHTML = `
+
+        <div class="error-card">
+
+            <div class="error-icon">
+                ⚠️
+            </div>
+
+            <h2>
+                Unable to Open Answer
+            </h2>
+
+            <p>
+                ${message}
+            </p>
+
+            <button
+                type="button"
+                class="error-back"
+                onclick="history.back()"
+            >
+                ← Go Back
+            </button>
+
+        </div>
+
+    `;
+
+}
+
 </script>
 
 
