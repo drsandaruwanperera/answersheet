@@ -5,9 +5,9 @@ import {
 } from "./firebase.js";
 
 
-// =========================================
-// CHECK LOGIN
-// =========================================
+// =====================================================
+// LOGIN CHECK
+// =====================================================
 
 if (
     sessionStorage.getItem("loggedIn") !== "true"
@@ -20,9 +20,9 @@ if (
 }
 
 
-// =========================================
-// GET STUDENT ID
-// =========================================
+// =====================================================
+// STUDENT ID
+// =====================================================
 
 const params =
     new URLSearchParams(
@@ -49,9 +49,9 @@ if (
 }
 
 
-// =========================================
+// =====================================================
 // LOAD MODEL PAPERS
-// =========================================
+// =====================================================
 
 async function loadModelPapers() {
 
@@ -63,11 +63,9 @@ async function loadModelPapers() {
             "Student ID not found. Please login again."
         );
 
-
         window.location.replace(
             "index.html"
         );
-
 
         return;
 
@@ -76,9 +74,9 @@ async function loadModelPapers() {
 
     try {
 
-        // =====================================
-        // STUDENT
-        // =====================================
+        // =================================================
+        // GET STUDENT
+        // =================================================
 
         const studentRef =
             doc(
@@ -102,11 +100,9 @@ async function loadModelPapers() {
                 "Student account not found."
             );
 
-
             window.location.replace(
                 "index.html"
             );
-
 
             return;
 
@@ -117,9 +113,32 @@ async function loadModelPapers() {
             snap.data();
 
 
-        // =====================================
+        console.log(
+            "======================================"
+        );
+
+        console.log(
+            "A/L MODEL PAPERS"
+        );
+
+        console.log(
+            "Student:",
+            studentId
+        );
+
+        console.log(
+            "Student data:",
+            data
+        );
+
+        console.log(
+            "======================================"
+        );
+
+
+        // =================================================
         // PAPERS 01 - 10
-        // =====================================
+        // =================================================
 
         for (
             let i = 1;
@@ -156,80 +175,106 @@ async function loadModelPapers() {
                 !btn
             ) {
 
+                console.warn(
+                    "Button not found:",
+                    permissionField
+                );
+
                 continue;
 
             }
 
 
-            // =================================
-            // NO PERMISSION
-            // =================================
+            // =================================================
+            // IMPORTANT
+            // =================================================
+            //
+            // Missing paper permission = AVAILABLE
+            //
+            // false = HIDDEN
+            // true = AVAILABLE
+            //
+            // This prevents old A/L student records
+            // from hiding every paper.
+            // =================================================
+
+            const enabled =
+                Object.prototype.hasOwnProperty.call(
+                    data,
+                    permissionField
+                )
+                    ? data[
+                        permissionField
+                    ] === true
+                    : true;
+
+
+            // =================================================
+            // HIDDEN
+            // =================================================
 
             if (
-                data[
-                    permissionField
-                ] !== true
+                !enabled
             ) {
 
                 btn.style.display =
                     "none";
 
-
                 continue;
 
             }
 
 
-            // =================================
-            // SHOW PAPER
-            // =================================
+            // =================================================
+            // SHOW
+            // =================================================
 
             btn.style.display =
-                "block";
+                "flex";
 
 
-            // =================================
-            // ALREADY VIEWED
-            // =================================
+            btn.disabled =
+                false;
 
-            if (
-                data[
-                    viewedField
-                ] === true
-            ) {
-
-                btn.className =
-                    "viewed";
-
-
-                btn.innerHTML = `
-                    📘 Model Paper ${number}
-                    <small>🔒 Viewed</small>
-                `;
-
-
-                btn.onclick =
-                    null;
-
-
-                continue;
-
-            }
-
-
-            // =================================
-            // AVAILABLE
-            // =================================
 
             btn.className =
                 "available";
 
 
-            btn.innerHTML = `
-                📘 Model Paper ${number}
-                <small>🟢 Available</small>
-            `;
+            // =================================================
+            // VIEWED STATUS
+            // =================================================
 
+            const viewed =
+                data[
+                    viewedField
+                ] === true;
+
+
+            if (
+                viewed
+            ) {
+
+                btn.innerHTML = `
+                    📘 Model Paper ${number}
+                    <small>🔵 Viewed</small>
+                `;
+
+            }
+
+            else {
+
+                btn.innerHTML = `
+                    📘 Model Paper ${number}
+                    <small>🟢 Available</small>
+                `;
+
+            }
+
+
+            // =================================================
+            // CLICK
+            // =================================================
 
             btn.onclick =
                 () => {
@@ -240,7 +285,21 @@ async function loadModelPapers() {
 
                 };
 
+
+            console.log(
+                `Paper ${number}:`,
+                {
+                    enabled,
+                    viewed
+                }
+            );
+
         }
+
+
+        console.log(
+            "✅ A/L Model Papers loaded"
+        );
 
     }
 
@@ -263,9 +322,9 @@ async function loadModelPapers() {
 }
 
 
-// =========================================
+// =====================================================
 // OPEN PAPER
-// =========================================
+// =====================================================
 
 function openPaper(
     paperNumber
@@ -279,11 +338,9 @@ function openPaper(
             "Student ID not found. Please login again."
         );
 
-
         window.location.replace(
             "index.html"
         );
-
 
         return;
 
@@ -304,18 +361,15 @@ function openPaper(
         number;
 
 
-    // =====================================
-    // A/L MODEL PAPER
-    // =====================================
-    //
-    // viewer.js will save:
-    //
-    // paperViews
-    //   al
-    //     model
-    //       paper01: true
-    //
-    // =====================================
+    console.log(
+        "Opening A/L Model Paper:",
+        paper
+    );
+
+
+    // =================================================
+    // VIEWER
+    // =================================================
 
     const url =
         "viewer.html?" +
@@ -330,23 +384,22 @@ function openPaper(
         "&type=al-model";
 
 
-    window.location.replace(
-        url
-    );
+    window.location.href =
+        url;
 
 }
 
 
-// =========================================
-// MAKE AVAILABLE
-// =========================================
+// =====================================================
+// GLOBAL FUNCTION
+// =====================================================
 
 window.openPaper =
     openPaper;
 
 
-// =========================================
+// =====================================================
 // START
-// =========================================
+// =====================================================
 
 loadModelPapers();
