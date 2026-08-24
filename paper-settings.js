@@ -722,8 +722,9 @@ function renderAll() {
 
     renderAL();
 
-}
+    setupSectionButtons();
 
+}
 
 // =====================================================
 // GENERIC PAPER ROW
@@ -1437,7 +1438,67 @@ if (enableAllBtn) {
     );
 
 }
+// =====================================================
+// EXPAND / COLLAPSE SECTION BUTTONS
+// =====================================================
 
+function setupSectionButtons() {
+
+    const buttons =
+        document.querySelectorAll(
+            "[data-section-toggle]"
+        );
+
+
+    buttons.forEach(
+        button => {
+
+            // Remove old handler
+            button.onclick = null;
+
+
+            button.onclick =
+                function () {
+
+                    const category =
+                        button.dataset.sectionToggle;
+
+
+                    const section =
+                        document.querySelector(
+                            `.paper-section[data-category="${category}"]`
+                        );
+
+
+                    if (!section) {
+
+                        console.error(
+                            "Section not found:",
+                            category
+                        );
+
+                        return;
+
+                    }
+
+
+                    const expanded =
+                        section.classList.toggle(
+                            "expanded"
+                        );
+
+
+                    button.textContent =
+                        expanded
+                            ? "Collapse"
+                            : "Expand";
+
+                };
+
+        }
+    );
+
+}
 
 // =====================================================
 // DISABLE ALL
