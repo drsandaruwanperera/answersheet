@@ -808,7 +808,184 @@ function showError(
     `;
 
 }
+// =====================================================
+// DISABLE PRINT / SAVE / RIGHT CLICK
+// =====================================================
 
+// Disable right-click
+document.addEventListener(
+    "contextmenu",
+    function (event) {
+
+        event.preventDefault();
+
+    }
+);
+
+
+// Disable keyboard shortcuts
+document.addEventListener(
+    "keydown",
+    function (event) {
+
+        const key =
+            event.key.toLowerCase();
+
+
+        // Ctrl + P
+        if (
+            event.ctrlKey &&
+            key === "p"
+        ) {
+
+            event.preventDefault();
+
+            event.stopPropagation();
+
+            return false;
+
+        }
+
+
+        // Ctrl + S
+        if (
+            event.ctrlKey &&
+            key === "s"
+        ) {
+
+            event.preventDefault();
+
+            event.stopPropagation();
+
+            return false;
+
+        }
+
+
+        // Ctrl + Shift + S
+        if (
+            event.ctrlKey &&
+            event.shiftKey &&
+            key === "s"
+        ) {
+
+            event.preventDefault();
+
+            event.stopPropagation();
+
+            return false;
+
+        }
+
+
+        // Ctrl + U
+        if (
+            event.ctrlKey &&
+            key === "u"
+        ) {
+
+            event.preventDefault();
+
+            event.stopPropagation();
+
+            return false;
+
+        }
+
+
+        // Ctrl + Shift + I
+        if (
+            event.ctrlKey &&
+            event.shiftKey &&
+            key === "i"
+        ) {
+
+            event.preventDefault();
+
+            event.stopPropagation();
+
+            return false;
+
+        }
+
+
+        // Ctrl + Shift + J
+        if (
+            event.ctrlKey &&
+            event.shiftKey &&
+            key === "j"
+        ) {
+
+            event.preventDefault();
+
+            event.stopPropagation();
+
+            return false;
+
+        }
+
+
+        // F12
+        if (
+            event.key === "F12"
+        ) {
+
+            event.preventDefault();
+
+            event.stopPropagation();
+
+            return false;
+
+        }
+
+    },
+    true
+);
+
+
+// =====================================================
+// DISABLE PRINT
+// =====================================================
+
+window.addEventListener(
+    "beforeprint",
+    function () {
+
+        document.body.classList.add(
+            "printing-blocked"
+        );
+
+    }
+);
+
+
+// =====================================================
+// PRINT CSS BLOCK
+// =====================================================
+
+const printStyle =
+    document.createElement(
+        "style"
+    );
+
+
+printStyle.textContent = `
+
+    @media print {
+
+        body {
+            display: none !important;
+        }
+
+    }
+
+`;
+
+
+document.head.appendChild(
+    printStyle
+);
+    
 </script>
 
 
