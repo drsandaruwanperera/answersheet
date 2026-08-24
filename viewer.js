@@ -1,645 +1,331 @@
+// ============================================================
+// A/L MODEL PAPER IMAGE VIEWER
+// viewer.js
+// ============================================================
+
 import {
     db,
     doc,
-    getDoc,
     updateDoc
 } from "./firebase.js";
 
-
-// =========================================
-// CHECK LOGIN
-// =========================================
-
-if (
-    sessionStorage.getItem("loggedIn") !== "true"
-) {
-
-    window.location.replace(
-        "index.html"
-    );
-
-    throw new Error("Not logged in");
-}
+"use strict";
 
 
-// =========================================
+// ============================================================
+// CONFIGURATION
+// ============================================================
+
+const MAX_PAGES = 100;
+
+const IMAGE_EXTENSIONS = [
+    "jpg",
+    "jpeg",
+    "png",
+    "webp"
+];
+
+
+// ============================================================
+// DOM ELEMENTS
+// ============================================================
+
+const backButton =
+    document.getElementById("backButton");
+
+const errorBackButton =
+    document.getElementById("errorBackButton");
+
+const paperTitle =
+    document.getElementById("paperTitle");
+
+const paperType =
+    document.getElementById("paperType");
+
+const pageCount =
+    document.getElementById("pageCount");
+
+const loading =
+    document.getElementById("loading");
+
+const errorContainer =
+    document.getElementById("error");
+
+const errorMessage =
+    document.getElementById("errorMessage");
+
+const paperViewer =
+    document.getElementById("paperViewer");
+
+const pagesContainer =
+    document.getElementById("pagesContainer");
+
+
+// ============================================================
 // URL PARAMETERS
-// =========================================
+// ============================================================
 
 const params =
     new URLSearchParams(
         window.location.search
     );
 
-
 const paper =
     params.get("paper");
-
 
 const studentId =
     params.get("id") ||
     sessionStorage.getItem("studentId");
 
-
-const paperType =
-    params.get("type") ||
-    "";
+const type =
+    params.get("type");
 
 
-const term =
-    params.get("term") ||
-    "";
+// ============================================================
+// INITIALIZE
+// ============================================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    initializeViewer
+);
 
 
-const viewer =
-    document.getElementById(
-        "viewer"
+// ============================================================
+// INITIALIZE VIEWER
+// ============================================================
+
+async function initializeViewer() {
+
+    console.log(
+        "===================================="
+    );
+
+    console.log(
+        "A/L PAPER VIEWER"
+    );
+
+    console.log(
+        "Paper:",
+        paper
+    );
+
+    console.log(
+        "Student ID:",
+        studentId
+    );
+
+    console.log(
+        "Type:",
+        type
+    );
+
+    console.log(
+        "===================================="
     );
 
 
-// =========================================
-// PAPER FORMAT
-// =========================================
+    // --------------------------------------------------------
+    // VALIDATE PAPER
+    // --------------------------------------------------------
 
-const paperPattern =
-    /^paper(0[1-9]|10)$/;
+    if (!paper) {
 
+        showError(
+            "No paper was specified."
+        );
 
-// =========================================
-// TRACKING
-// =========================================
-
-function getTrackingInfo() {
-
-    if (
-        paperType ===
-        "grade10-model"
-    ) {
-
-        return {
-            category: "grade10",
-            type: "model"
-        };
-
-    }
-
-
-    if (
-        paperType ===
-        "grade11-model"
-    ) {
-
-        return {
-            category: "grade11",
-            type: "model"
-        };
-
-    }
-
-
-    if (
-        paperType ===
-        "al-model"
-    ) {
-
-        return {
-            category: "al",
-            type: "model"
-        };
-
-    }
-
-
-    return null;
-
-}
-
-
-// =========================================
-// SAVE CATEGORY VIEW
-// =========================================
-
-async function savePaperView(
-    studentRef
-) {
-
-    const tracking =
-        getTrackingInfo();
-
-
-    if (!tracking) {
         return;
     }
 
 
-    // =====================================
-    // GRADE 10 / 11
-    // =====================================
+    // --------------------------------------------------------
+    // A/L MODEL PAPER
+    // --------------------------------------------------------
 
     if (
-        tracking.category === "grade10" ||
-        tracking.category === "grade11"
+        type === "al-model" ||
+        /^paper\d+$/i.test(paper)
     ) {
 
-        if (
-            !["1", "2", "3"].includes(term)
-        ) {
-
-            console.warn(
-                "Invalid term:",
-                term
-            );
-
-            return;
-
-        }
-
-
-        const fieldPath =
-            `paperViews.${tracking.category}.model.term${term}.${paper}`;
-
-
-        await updateDoc(
-            studentRef,
-            {
-                [fieldPath]: true
-            }
-        );
-
+        await loadALModelPaper();
 
         return;
-
     }
 
 
-    // =====================================
-    // A/L
-    // =====================================
+    // --------------------------------------------------------
+    // UNKNOWN TYPE
+    // --------------------------------------------------------
 
-    if (
-        tracking.category === "al"
-    ) {
-
-        const fieldPath =
-            `paperViews.al.model.${paper}`;
-
-
-        await updateDoc(
-            studentRef,
-            {
-                [fieldPath]: true
-            }
-        );
-
-    }
-
+    showError(
+        "Unsupported paper type."
+    );
 }
 
 
-// =========================================
-// GET PAPER PAGE COUNT
-// =========================================
-//
-// IMPORTANT:
-// Page count comes from:
-//
-// papers
-//   paper05
-//      pages: 13
-//
-// NOT from:
-//
-// students
-//   paper05Pages
-//
-// =========================================
+// ============================================================
+// LOAD A/L MODEL PAPER
+// ============================================================
 
-async function getPaperPageCount() {
+async function loadALModelPaper() {
 
-    const paperRef =
-        doc(
-            db,
-            "papers",
+    const normalizedPaper =
+        normalizePaperId(
             paper
         );
 
 
-    const paperSnap =
-        await getDoc(
-            paperRef
-        );
+    // --------------------------------------------------------
+    // VALIDATE PAPER ID
+    // --------------------------------------------------------
 
+    if (!normalizedPaper) {
 
-    if (
-        !paperSnap.exists()
-    ) {
-
-        console.warn(
-            "Paper settings not found:",
-            paper
-        );
-
-        // Safe fallback
-        return 10;
-
-    }
-
-
-    const paperData =
-        paperSnap.data();
-
-
-    const pages =
-        Number(
-            paperData.pages
-        );
-
-
-    if (
-        !Number.isInteger(pages) ||
-        pages < 1
-    ) {
-
-        console.warn(
-            "Invalid page count:",
-            pages
-        );
-
-        return 10;
-
-    }
-
-
-    return pages;
-
-}
-
-
-// =========================================
-// LOAD PAPER
-// =========================================
-
-async function loadPaper() {
-
-    if (
-        !paper ||
-        !studentId
-    ) {
-
-        alert(
-            "Invalid paper request."
-        );
-
-        window.location.replace(
-            "dashboard.html"
+        showError(
+            "Invalid paper ID."
         );
 
         return;
-
     }
 
 
-    if (
-        !paperPattern.test(paper)
-    ) {
+    // --------------------------------------------------------
+    // GET PAPER NUMBER
+    // --------------------------------------------------------
 
-        alert(
-            "Invalid paper."
+    const match =
+        normalizedPaper.match(
+            /^paper(\d+)$/i
         );
 
-        window.location.replace(
-            "dashboard.html"
+
+    if (!match) {
+
+        showError(
+            "Invalid paper ID."
         );
 
         return;
+    }
+
+
+    const paperNumber =
+        parseInt(
+            match[1],
+            10
+        );
+
+
+    // --------------------------------------------------------
+    // FOLDER NAME
+    // --------------------------------------------------------
+
+    const folderName =
+        `paper${String(
+            paperNumber
+        ).padStart(
+            2,
+            "0"
+        )}`;
+
+
+    // --------------------------------------------------------
+    // BASE PATH
+    // --------------------------------------------------------
+
+    const basePath =
+        `papers/${folderName}/`;
+
+
+    // --------------------------------------------------------
+    // FILE PREFIX
+    // --------------------------------------------------------
+
+    const filePrefix =
+        folderName;
+
+
+    // --------------------------------------------------------
+    // TITLE
+    // --------------------------------------------------------
+
+    if (paperType) {
+
+        paperType.textContent =
+            "A/L MODEL PAPER";
 
     }
+
+
+    if (paperTitle) {
+
+        paperTitle.textContent =
+            `Model Paper ${String(
+                paperNumber
+            ).padStart(
+                2,
+                "0"
+            )}`;
+
+    }
+
+
+    // --------------------------------------------------------
+    // SHOW LOADING
+    // --------------------------------------------------------
+
+    showLoading();
 
 
     try {
 
-        // =================================
-        // STUDENT
-        // =================================
+        // ----------------------------------------------------
+        // FIND ALL JPG PAGES
+        // ----------------------------------------------------
 
-        const studentRef =
-            doc(
-                db,
-                "students",
-                studentId
+        const loadedPages =
+            await findPaperPages(
+                basePath,
+                filePrefix
             );
 
 
-        const studentSnap =
-            await getDoc(
-                studentRef
-            );
-
+        // ----------------------------------------------------
+        // NO PAGES
+        // ----------------------------------------------------
 
         if (
-            !studentSnap.exists()
+            loadedPages.length === 0
         ) {
 
-            alert(
-                "Student not found."
-            );
-
-            window.location.replace(
-                "index.html"
+            showError(
+                `No pages were found for ${folderName}.`
             );
 
             return;
-
         }
 
 
-        const studentData =
-            studentSnap.data();
+        // ----------------------------------------------------
+        // RENDER PAGES
+        // ----------------------------------------------------
 
-
-        // =================================
-        // PERMISSION
-        // =================================
-
-        if (
-            studentData[paper] !== true
-        ) {
-
-            alert(
-                "You do not have permission to view this paper."
-            );
-
-            window.location.replace(
-                "dashboard.html"
-            );
-
-            return;
-
-        }
-
-
-        // =================================
-        // ALREADY VIEWED
-        // =================================
-
-        const viewedField =
-            paper + "Viewed";
-
-
-        if (
-            studentData[viewedField] === true
-        ) {
-
-            alert(
-                "This paper has already been viewed."
-            );
-
-            window.location.replace(
-                "dashboard.html"
-            );
-
-            return;
-
-        }
-
-
-        // =================================
-        // GET REAL PAGE COUNT
-        // =================================
-
-        const totalPages =
-            await getPaperPageCount();
-
-
-        console.log(
-            "================================"
-        );
-
-        console.log(
-            "Student:",
-            studentId
-        );
-
-        console.log(
-            "Paper:",
-            paper
-        );
-
-        console.log(
-            "Paper Type:",
-            paperType
-        );
-
-        console.log(
-            "Total Pages:",
-            totalPages
-        );
-
-        console.log(
-            "================================"
+        renderPages(
+            loadedPages
         );
 
 
-        // =================================
-        // MARK VIEWED
-        // =================================
+        // ----------------------------------------------------
+        // IMPORTANT:
+        // MARK AS VIEWED ONLY AFTER
+        // THE PAPER FILES WERE FOUND.
+        // ----------------------------------------------------
 
-        await updateDoc(
-            studentRef,
-            {
-                [viewedField]: true
-            }
-        );
+        await markModelPaperAsViewed();
 
 
-        // =================================
-        // CATEGORY TRACKING
-        // =================================
-
-        try {
-
-            await savePaperView(
-                studentRef
-            );
-
-        }
-
-        catch (trackingError) {
-
-            console.error(
-                "Category tracking error:",
-                trackingError
-            );
-
-        }
-
-
-        // =================================
-        // CLEAR VIEWER
-        // =================================
-
-        if (viewer) {
-
-            viewer.innerHTML = "";
-
-        }
-
-
-        // =================================
-        // CREATE ALL PAGES
-        // =================================
-
-        for (
-            let i = 1;
-            i <= totalPages;
-            i++
-        ) {
-
-            const pageNumber =
-                String(i).padStart(
-                    2,
-                    "0"
-                );
-
-
-            // =============================
-            // PAGE CONTAINER
-            // =============================
-
-            const page =
-                document.createElement(
-                    "div"
-                );
-
-
-            page.className =
-                "page";
-
-
-            // =============================
-            // IMAGE
-            // =============================
-
-            const img =
-                document.createElement(
-                    "img"
-                );
-
-
-            img.src =
-                `papers/${paper}/${paper}_Page_${pageNumber}.jpg`;
-
-
-            img.alt =
-                `${paper} Page ${i}`;
-
-
-            img.draggable =
-                false;
-
-
-            // =============================
-            // IMAGE ERROR
-            // =============================
-
-            img.onerror =
-                () => {
-
-                    console.error(
-                        "Image not found:",
-                        img.src
-                    );
-
-
-                    img.style.display =
-                        "none";
-
-
-                    const errorMessage =
-                        document.createElement(
-                            "div"
-                        );
-
-
-                    errorMessage.className =
-                        "page-error";
-
-
-                    errorMessage.textContent =
-                        `Page ${i} could not be loaded.`;
-
-
-                    page.appendChild(
-                        errorMessage
-                    );
-
-                };
-
-
-            // =============================
-            // WATERMARK
-            // =============================
-
-            const watermark =
-                document.createElement(
-                    "div"
-                );
-
-
-            watermark.className =
-                "watermark";
-
-
-            for (
-                let w = 0;
-                w < 20;
-                w++
-            ) {
-
-                const mark =
-                    document.createElement(
-                        "span"
-                    );
-
-
-                mark.textContent =
-                    studentId;
-
-
-                watermark.appendChild(
-                    mark
-                );
-
-            }
-
-
-            // =============================
-            // ADD
-            // =============================
-
-            page.appendChild(
-                img
-            );
-
-
-            page.appendChild(
-                watermark
-            );
-
-
-            if (viewer) {
-
-                viewer.appendChild(
-                    page
-                );
-
-            }
-
-        }
-
-    }
-
-    catch (error) {
+    } catch (error) {
 
         console.error(
             "Paper loading error:",
@@ -647,78 +333,1068 @@ async function loadPaper() {
         );
 
 
-        alert(
-            "Failed to load paper. Please try again."
+        showError(
+            "The paper could not be loaded. Please check the paper files."
+        );
+    }
+}
+
+
+// ============================================================
+// NORMALIZE PAPER ID
+// ============================================================
+
+function normalizePaperId(
+    value
+) {
+
+    if (!value) {
+        return null;
+    }
+
+
+    const clean =
+        String(value)
+            .trim()
+            .toLowerCase();
+
+
+    const match =
+        clean.match(
+            /^paper(\d+)$/
+        );
+
+
+    if (!match) {
+        return null;
+    }
+
+
+    const number =
+        parseInt(
+            match[1],
+            10
+        );
+
+
+    if (
+        !Number.isInteger(number) ||
+        number < 1
+    ) {
+
+        return null;
+    }
+
+
+    return (
+        `paper${String(
+            number
+        ).padStart(
+            2,
+            "0"
+        )}`
+    );
+}
+
+
+// ============================================================
+// FIND PAPER PAGES
+// ============================================================
+
+async function findPaperPages(
+    basePath,
+    filePrefix
+) {
+
+    const pages = [];
+
+
+    /*
+     * Expected structure:
+     *
+     * papers/
+     * ├── paper01/
+     * │   ├── paper01_Page_01.jpg
+     * │   ├── paper01_Page_02.jpg
+     * │   └── ...
+     * │
+     * ├── paper02/
+     * │   ├── paper02_Page_01.jpg
+     * │   └── ...
+     */
+
+
+    for (
+        let pageNumber = 1;
+        pageNumber <= MAX_PAGES;
+        pageNumber++
+    ) {
+
+        const pageText =
+            String(
+                pageNumber
+            ).padStart(
+                2,
+                "0"
+            );
+
+
+        let found =
+            false;
+
+
+        for (
+            const extension
+            of IMAGE_EXTENSIONS
+        ) {
+
+            const fileName =
+                `${filePrefix}_Page_${pageText}.${extension}`;
+
+
+            const imagePath =
+                `${basePath}${fileName}`;
+
+
+            const exists =
+                await imageExists(
+                    imagePath
+                );
+
+
+            if (exists) {
+
+                pages.push({
+
+                    number:
+                        pageNumber,
+
+                    url:
+                        imagePath,
+
+                    fileName:
+                        fileName
+
+                });
+
+
+                found =
+                    true;
+
+
+                break;
+            }
+
+        }
+
+
+        /*
+         * Pages are expected to be sequential.
+         *
+         * Example:
+         * Page_01
+         * Page_02
+         * Page_03
+         *
+         * If a page is missing, stop searching.
+         */
+
+        if (!found) {
+
+            break;
+        }
+    }
+
+
+    return pages;
+}
+
+
+// ============================================================
+// CHECK WHETHER IMAGE EXISTS
+// ============================================================
+
+function imageExists(
+    url
+) {
+
+    return new Promise(
+        (resolve) => {
+
+            const img =
+                new Image();
+
+
+            let finished =
+                false;
+
+
+            const finish =
+                (result) => {
+
+                    if (finished) {
+                        return;
+                    }
+
+
+                    finished =
+                        true;
+
+
+                    resolve(
+                        result
+                    );
+                };
+
+
+            img.onload =
+                () => {
+
+                    finish(
+                        true
+                    );
+
+                };
+
+
+            img.onerror =
+                () => {
+
+                    finish(
+                        false
+                    );
+
+                };
+
+
+            /*
+             * Cache-busting query is used only
+             * for checking the file.
+             *
+             * It does NOT change the actual
+             * image path.
+             */
+
+            img.src =
+                `${url}?check=${Date.now()}`;
+
+        }
+    );
+}
+
+
+// ============================================================
+// RENDER PAGES
+// ============================================================
+
+function renderPages(
+    pages
+) {
+
+    if (!pagesContainer) {
+        return;
+    }
+
+
+    pagesContainer.innerHTML =
+        "";
+
+
+    // --------------------------------------------------------
+    // PAGE COUNT
+    // --------------------------------------------------------
+
+    if (pageCount) {
+
+        pageCount.textContent =
+            `${pages.length} Pages`;
+
+    }
+
+
+    // --------------------------------------------------------
+    // CREATE EACH PAGE
+    // --------------------------------------------------------
+
+    pages.forEach(
+        (page, index) => {
+
+            // ----------------------------------------------
+            // PAGE SECTION
+            // ----------------------------------------------
+
+            const pageWrapper =
+                document.createElement(
+                    "section"
+                );
+
+
+            pageWrapper.className =
+                "paper-page";
+
+
+            pageWrapper.dataset.page =
+                String(
+                    page.number
+                );
+
+
+            // ----------------------------------------------
+            // PAGE LABEL
+            // ----------------------------------------------
+
+            const pageHeader =
+                document.createElement(
+                    "div"
+                );
+
+
+            pageHeader.className =
+                "page-label";
+
+
+            pageHeader.textContent =
+                `Page ${
+                    index + 1
+                } of ${
+                    pages.length
+                }`;
+
+
+            // ----------------------------------------------
+            // IMAGE WRAPPER
+            // ----------------------------------------------
+
+            const imageWrapper =
+                document.createElement(
+                    "div"
+                );
+
+
+            imageWrapper.className =
+                "image-wrapper";
+
+
+            // ----------------------------------------------
+            // IMAGE
+            // ----------------------------------------------
+
+            const image =
+                document.createElement(
+                    "img"
+                );
+
+
+            image.className =
+                "paper-image";
+
+
+            image.alt =
+                `Model Paper Page ${page.number}`;
+
+
+            /*
+             * First image loads immediately.
+             *
+             * Remaining pages use lazy loading.
+             */
+
+            image.loading =
+                index === 0
+                    ? "eager"
+                    : "lazy";
+
+
+            image.decoding =
+                "async";
+
+
+            image.draggable =
+                false;
+
+
+            image.setAttribute(
+                "draggable",
+                "false"
+            );
+
+
+            image.src =
+                page.url;
+
+
+            // ----------------------------------------------
+            // IMAGE ERROR
+            // ----------------------------------------------
+
+            image.onerror =
+                () => {
+
+                    imageWrapper.innerHTML =
+                        "";
+
+
+                    const error =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    error.className =
+                        "page-image-error";
+
+
+                    error.textContent =
+                        `Page ${page.number} could not be loaded.`;
+
+
+                    imageWrapper.appendChild(
+                        error
+                    );
+
+                };
+
+
+            // ----------------------------------------------
+            // APPEND IMAGE
+            // ----------------------------------------------
+
+            imageWrapper.appendChild(
+                image
+            );
+
+
+            // ----------------------------------------------
+            // APPEND PAGE
+            // ----------------------------------------------
+
+            pageWrapper.appendChild(
+                pageHeader
+            );
+
+
+            pageWrapper.appendChild(
+                imageWrapper
+            );
+
+
+            pagesContainer.appendChild(
+                pageWrapper
+            );
+
+        }
+    );
+
+
+    // --------------------------------------------------------
+    // SHOW VIEWER
+    // --------------------------------------------------------
+
+    showViewer();
+}
+
+
+// ============================================================
+// MARK MODEL PAPER AS VIEWED
+// ============================================================
+
+async function markModelPaperAsViewed() {
+
+    // --------------------------------------------------------
+    // GET STUDENT ID
+    // --------------------------------------------------------
+
+    const currentStudentId =
+        studentId ||
+        sessionStorage.getItem(
+            "studentId"
+        );
+
+
+    // --------------------------------------------------------
+    // GET PAPER ID
+    // --------------------------------------------------------
+
+    const currentPaper =
+        normalizePaperId(
+            paper
+        );
+
+
+    // --------------------------------------------------------
+    // VALIDATION
+    // --------------------------------------------------------
+
+    if (
+        !currentStudentId
+    ) {
+
+        console.warn(
+            "Student ID not found. Paper cannot be marked as viewed."
+        );
+
+        return;
+    }
+
+
+    if (
+        !currentPaper
+    ) {
+
+        console.warn(
+            "Paper ID not found. Paper cannot be marked as viewed."
+        );
+
+        return;
+    }
+
+
+    // --------------------------------------------------------
+    // FIRESTORE
+    // --------------------------------------------------------
+
+    try {
+
+        const studentRef =
+            doc(
+                db,
+                "students",
+                currentStudentId
+            );
+
+
+        /*
+         * Firestore path:
+         *
+         * students/{studentId}
+         *
+         * paperViews.al.model.paper01
+         *
+         */
+
+        const fieldPath =
+            `paperViews.al.model.${currentPaper}`;
+
+
+        await updateDoc(
+            studentRef,
+            {
+
+                [fieldPath]:
+                    true
+
+            }
+        );
+
+
+        console.log(
+            "===================================="
+        );
+
+
+        console.log(
+            "✅ MODEL PAPER MARKED AS VIEWED"
+        );
+
+
+        console.log(
+            "Student:",
+            currentStudentId
+        );
+
+
+        console.log(
+            "Paper:",
+            currentPaper
+        );
+
+
+        console.log(
+            "Firestore field:",
+            fieldPath
+        );
+
+
+        console.log(
+            "===================================="
+        );
+
+
+    } catch (error) {
+
+        /*
+         * Important:
+         *
+         * The paper itself has already loaded.
+         * Therefore we do NOT show an error page
+         * just because Firestore tracking failed.
+         */
+
+        console.error(
+            "Failed to mark model paper as viewed:",
+            error
         );
 
     }
+}
+
+
+// ============================================================
+// SHOW LOADING
+// ============================================================
+
+function showLoading() {
+
+    if (loading) {
+
+        loading.style.display =
+            "flex";
+
+    }
+
+
+    if (errorContainer) {
+
+        errorContainer.style.display =
+            "none";
+
+    }
+
+
+    if (paperViewer) {
+
+        paperViewer.style.display =
+            "none";
+
+    }
+}
+
+
+// ============================================================
+// SHOW VIEWER
+// ============================================================
+
+function showViewer() {
+
+    if (loading) {
+
+        loading.style.display =
+            "none";
+
+    }
+
+
+    if (errorContainer) {
+
+        errorContainer.style.display =
+            "none";
+
+    }
+
+
+    if (paperViewer) {
+
+        paperViewer.style.display =
+            "block";
+
+    }
+}
+
+
+// ============================================================
+// SHOW ERROR
+// ============================================================
+
+function showError(
+    message
+) {
+
+    if (loading) {
+
+        loading.style.display =
+            "none";
+
+    }
+
+
+    if (paperViewer) {
+
+        paperViewer.style.display =
+            "none";
+
+    }
+
+
+    if (errorContainer) {
+
+        errorContainer.style.display =
+            "flex";
+
+    }
+
+
+    if (errorMessage) {
+
+        errorMessage.textContent =
+            message;
+
+    }
+}
+
+
+// ============================================================
+// BACK BUTTON
+// ============================================================
+
+function goBack() {
+
+    /*
+     * Prefer browser history when the user came
+     * from the model paper page.
+     */
+
+    if (
+        document.referrer &&
+        document.referrer.includes(
+            window.location.hostname
+        )
+    ) {
+
+        window.history.back();
+
+        return;
+    }
+
+
+    /*
+     * Fallback.
+     */
+
+    window.location.href =
+        "model-papers.html";
+}
+
+
+if (backButton) {
+
+    backButton.addEventListener(
+        "click",
+        goBack
+    );
 
 }
 
 
-// =========================================
-// START
-// =========================================
+if (errorBackButton) {
 
-loadPaper();
+    errorBackButton.addEventListener(
+        "click",
+        goBack
+    );
+
+}
 
 
-// =========================================
-// SECURITY
-// =========================================
+// ============================================================
+// BASIC CONTENT PROTECTION
+// ============================================================
+
+
+// ------------------------------------------------------------
+// DISABLE RIGHT CLICK
+// ------------------------------------------------------------
 
 document.addEventListener(
     "contextmenu",
-    event => {
+    function(event) {
+
         event.preventDefault();
-    }
+
+        return false;
+
+    },
+    true
 );
 
+
+// ------------------------------------------------------------
+// DISABLE DRAGGING
+// ------------------------------------------------------------
 
 document.addEventListener(
     "dragstart",
-    event => {
-        event.preventDefault();
-    }
+    function(event) {
+
+        if (
+            event.target &&
+            event.target.tagName === "IMG"
+        ) {
+
+            event.preventDefault();
+
+            return false;
+
+        }
+
+    },
+    true
 );
 
+
+// ------------------------------------------------------------
+// DISABLE IMAGE SELECTION
+// ------------------------------------------------------------
 
 document.addEventListener(
-    "copy",
-    event => {
-        event.preventDefault();
-    }
+    "selectstart",
+    function(event) {
+
+        if (
+            event.target &&
+            event.target.tagName === "IMG"
+        ) {
+
+            event.preventDefault();
+
+            return false;
+
+        }
+
+    },
+    true
 );
 
 
-document.addEventListener(
-    "cut",
-    event => {
-        event.preventDefault();
-    }
-);
-
+// ============================================================
+// KEYBOARD PROTECTION
+// ============================================================
 
 document.addEventListener(
     "keydown",
-    event => {
+    function(event) {
+
+        const key =
+            String(
+                event.key || ""
+            ).toLowerCase();
+
+
+        // ----------------------------------------------------
+        // F12
+        // ----------------------------------------------------
 
         if (
-            event.ctrlKey ||
-            event.metaKey
+            event.key === "F12"
         ) {
 
-            const key =
-                event.key.toLowerCase();
+            event.preventDefault();
+            event.stopPropagation();
 
+            return false;
+        }
+
+
+        // ----------------------------------------------------
+        // CTRL + P
+        // ----------------------------------------------------
+
+        if (
+            event.ctrlKey &&
+            key === "p"
+        ) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            return false;
+        }
+
+
+        // ----------------------------------------------------
+        // CTRL + S
+        // ----------------------------------------------------
+
+        if (
+            event.ctrlKey &&
+            key === "s"
+        ) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            return false;
+        }
+
+
+        // ----------------------------------------------------
+        // CTRL + SHIFT + S
+        // ----------------------------------------------------
+
+        if (
+            event.ctrlKey &&
+            event.shiftKey &&
+            key === "s"
+        ) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            return false;
+        }
+
+
+        // ----------------------------------------------------
+        // CTRL + U
+        // ----------------------------------------------------
+
+        if (
+            event.ctrlKey &&
+            key === "u"
+        ) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            return false;
+        }
+
+
+        // ----------------------------------------------------
+        // CTRL + SHIFT + I
+        // ----------------------------------------------------
+
+        if (
+            event.ctrlKey &&
+            event.shiftKey &&
+            key === "i"
+        ) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            return false;
+        }
+
+
+        // ----------------------------------------------------
+        // CTRL + SHIFT + J
+        // ----------------------------------------------------
+
+        if (
+            event.ctrlKey &&
+            event.shiftKey &&
+            key === "j"
+        ) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            return false;
+        }
+
+
+        // ----------------------------------------------------
+        // CTRL + SHIFT + C
+        // ----------------------------------------------------
+
+        if (
+            event.ctrlKey &&
+            event.shiftKey &&
+            key === "c"
+        ) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            return false;
+        }
+
+
+        // ----------------------------------------------------
+        // MAC COMMAND SHORTCUTS
+        // ----------------------------------------------------
+
+        if (
+            event.metaKey &&
+            (
+                key === "p" ||
+                key === "s" ||
+                key === "u"
+            )
+        ) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            return false;
+        }
+
+    },
+    true
+);
+
+
+// ============================================================
+// PREVENT PRINT USING PRINT EVENT
+// ============================================================
+
+window.addEventListener(
+    "beforeprint",
+    function() {
+
+        console.warn(
+            "Printing is disabled for this viewer."
+        );
+
+    }
+);
+
+
+// ============================================================
+// PREVENT PRINT MEDIA CONTENT
+// ============================================================
+
+const printStyle =
+    document.createElement(
+        "style"
+    );
+
+
+printStyle.textContent = `
+    @media print {
+        body {
+            display: none !important;
+        }
+    }
+`;
+
+
+document.head.appendChild(
+    printStyle
+);
+
+
+// ============================================================
+// EXTRA IMAGE PROTECTION
+// ============================================================
+
+document.addEventListener(
+    "mousedown",
+    function(event) {
+
+        if (
+            event.target &&
+            event.target.tagName === "IMG"
+        ) {
+
+            /*
+             * Prevent middle-click and
+             * right-click actions on images.
+             */
 
             if (
-                key === "s" ||
-                key === "p" ||
-                key === "c" ||
-                key === "x" ||
-                key === "u" ||
-                key === "a"
+                event.button === 1 ||
+                event.button === 2
             ) {
 
                 event.preventDefault();
@@ -727,14 +1403,74 @@ document.addEventListener(
 
         }
 
+    },
+    true
+);
+
+
+// ============================================================
+// DISABLE COPY
+// ============================================================
+
+document.addEventListener(
+    "copy",
+    function(event) {
+
+        event.preventDefault();
+
+    },
+    true
+);
+
+
+// ============================================================
+// DISABLE CUT
+// ============================================================
+
+document.addEventListener(
+    "cut",
+    function(event) {
+
+        event.preventDefault();
+
+    },
+    true
+);
+
+
+// ============================================================
+// DISABLE SAVE/PRINT CONTEXT ACTIONS
+// ============================================================
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        /*
+         * Ctrl + Shift + P
+         */
 
         if (
-            event.key === "F12"
+            event.ctrlKey &&
+            event.shiftKey &&
+            event.key.toLowerCase() === "p"
         ) {
 
             event.preventDefault();
+            event.stopPropagation();
 
+            return false;
         }
 
-    }
+    },
+    true
+);
+
+
+// ============================================================
+// CONSOLE
+// ============================================================
+
+console.log(
+    "🟢 A/L Model Paper Viewer Active"
 );
