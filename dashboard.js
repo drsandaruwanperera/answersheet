@@ -34,6 +34,7 @@ const studentId =
         "studentId"
     );
 
+
 const storedGrade =
     sessionStorage.getItem(
         "studentGrade"
@@ -49,50 +50,60 @@ const studentIdElement =
         "studentId"
     );
 
+
 const studentGradeElement =
     document.getElementById(
         "studentGrade"
     );
+
 
 const studentNameElement =
     document.getElementById(
         "studentName"
     );
 
+
 const greetingElement =
     document.getElementById(
         "greeting"
     );
+
 
 const gradeLabelElement =
     document.getElementById(
         "gradeLabel"
     );
 
+
 const statusElement =
     document.getElementById(
         "onlineStatus"
     );
+
 
 const totalPapersElement =
     document.getElementById(
         "totalPapers"
     );
 
+
 const viewedPapersElement =
     document.getElementById(
         "viewedPapers"
     );
+
 
 const progressElement =
     document.getElementById(
         "progressValue"
     );
 
+
 const modelPapersCard =
     document.getElementById(
         "modelPapersCard"
     );
+
 
 const pastPapersCard =
     document.getElementById(
@@ -101,7 +112,7 @@ const pastPapersCard =
 
 
 // =====================================================
-// MATERIAL CARD TEXT ELEMENTS
+// MATERIAL CARD TEXT
 // =====================================================
 
 const modelPapersTitle =
@@ -109,15 +120,18 @@ const modelPapersTitle =
         "modelPapersTitle"
     );
 
+
 const modelPapersDescription =
     document.getElementById(
         "modelPapersDescription"
     );
 
+
 const pastPapersTitle =
     document.getElementById(
         "pastPapersTitle"
     );
+
 
 const pastPapersDescription =
     document.getElementById(
@@ -145,23 +159,38 @@ if (studentId) {
 
 
 // =====================================================
-// GRADE HELPER
+// GRADE TYPE
 // =====================================================
 
 function getGradeType(value) {
 
-    const grade =
+    const originalValue =
         String(
             value || ""
         )
-        .toLowerCase()
         .trim();
 
 
+    const grade =
+        originalValue
+            .toLowerCase()
+            .trim()
+            .replace(/\s+/g, "");
+
+
+    console.log(
+        "Checking grade value:",
+        originalValue
+    );
+
+
+    // =================================================
+    // GRADE 10
+    // =================================================
+
     if (
         grade === "10" ||
-        grade === "grade10" ||
-        grade === "grade 10"
+        grade === "grade10"
     ) {
 
         return "grade10";
@@ -169,10 +198,13 @@ function getGradeType(value) {
     }
 
 
+    // =================================================
+    // GRADE 11
+    // =================================================
+
     if (
         grade === "11" ||
-        grade === "grade11" ||
-        grade === "grade 11"
+        grade === "grade11"
     ) {
 
         return "grade11";
@@ -180,11 +212,18 @@ function getGradeType(value) {
     }
 
 
+    // =================================================
+    // A/L
+    // =================================================
+
     if (
         grade === "al" ||
         grade === "a/l" ||
+        grade === "a.l" ||
         grade === "advanced" ||
-        grade === "advancedlevel"
+        grade === "advancedlevel" ||
+        grade === "advancedlevelstudent" ||
+        grade === "advancedlevelstudent"
     ) {
 
         return "al";
@@ -192,7 +231,31 @@ function getGradeType(value) {
     }
 
 
-    return "grade11";
+    // =================================================
+    // OTHER POSSIBLE A/L VALUES
+    // =================================================
+
+    if (
+        grade.includes("advancedlevel") ||
+        grade.includes("alevel")
+    ) {
+
+        return "al";
+
+    }
+
+
+    // =================================================
+    // UNKNOWN
+    // =================================================
+
+    console.warn(
+        "⚠️ Unknown student grade:",
+        originalValue
+    );
+
+
+    return "unknown";
 
 }
 
@@ -223,18 +286,31 @@ function getGradeDisplay(
     }
 
 
-    return "Advanced Level";
+    if (
+        type === "al"
+    ) {
+
+        return "Advanced Level";
+
+    }
+
+
+    return "Student";
 
 }
 
 
 // =====================================================
-// GRADE DASHBOARD DATA
+// DASHBOARD DATA
 // =====================================================
 
 function getDashboardData(
     type
 ) {
+
+    // =================================================
+    // GRADE 10
+    // =================================================
 
     if (
         type === "grade10"
@@ -256,6 +332,34 @@ function getDashboardData(
     }
 
 
+    // =================================================
+    // GRADE 11
+    // =================================================
+
+    if (
+        type === "grade11"
+    ) {
+
+        return {
+
+            grade:
+                "Grade 11",
+
+            model:
+                "grade11-model-papers.html",
+
+            past:
+                "grade11-past-paper.html"
+
+        };
+
+    }
+
+
+    // =================================================
+    // A/L
+    // =================================================
+
     if (
         type === "al"
     ) {
@@ -276,254 +380,22 @@ function getDashboardData(
     }
 
 
+    // =================================================
+    // UNKNOWN
+    // =================================================
+
     return {
 
         grade:
-            "Grade 11",
+            "Student",
 
         model:
-            "grade11-model-papers.html",
+            null,
 
         past:
-            "grade11-past-paper.html"
+            null
 
     };
-
-}
-
-
-// =====================================================
-// PAST PAPER SETTING FIELD
-// =====================================================
-
-function getPastPaperSettingField(
-    type
-) {
-
-    if (
-        type === "grade10"
-    ) {
-
-        return "grade10_past_enabled";
-
-    }
-
-
-    if (
-        type === "grade11"
-    ) {
-
-        return "grade11_past_enabled";
-
-    }
-
-
-    if (
-        type === "al"
-    ) {
-
-        return "al_past_enabled";
-
-    }
-
-
-    return null;
-
-}
-
-
-// =====================================================
-// CHECK PAST PAPERS ENABLED
-// =====================================================
-
-function isPastPapersEnabled(
-    type,
-    settings
-) {
-
-    const field =
-        getPastPaperSettingField(
-            type
-        );
-
-
-    // No matching setting field
-    // = enabled by default
-
-    if (
-        !field
-    ) {
-
-        return true;
-
-    }
-
-
-    // Field does not exist
-    // = enabled by default
-
-    if (
-        !Object.prototype.hasOwnProperty.call(
-            settings,
-            field
-        )
-    ) {
-
-        return true;
-
-    }
-
-
-    return (
-        settings[field] === true
-    );
-
-}
-
-
-// =====================================================
-// UPDATE PAST PAPERS VISIBILITY
-// =====================================================
-
-function updatePastPapersVisibility(
-    type,
-    settings
-) {
-
-    if (
-        !pastPapersCard
-    ) {
-
-        console.error(
-            "pastPapersCard not found."
-        );
-
-        return;
-
-    }
-
-
-    const enabled =
-        isPastPapersEnabled(
-            type,
-            settings
-        );
-
-
-    console.log(
-        "Past Papers setting:",
-        getPastPaperSettingField(type),
-        enabled
-    );
-
-
-    if (
-        enabled
-    ) {
-
-        // =================================================
-        // SHOW
-        // =================================================
-
-        pastPapersCard.style.display =
-            "";
-
-
-        pastPapersCard.removeAttribute(
-            "aria-hidden"
-        );
-
-
-        pastPapersCard.removeAttribute(
-            "data-disabled"
-        );
-
-    }
-
-    else {
-
-        // =================================================
-        // HIDE
-        // =================================================
-
-        pastPapersCard.style.display =
-            "none";
-
-
-        pastPapersCard.setAttribute(
-            "aria-hidden",
-            "true"
-        );
-
-
-        pastPapersCard.setAttribute(
-            "data-disabled",
-            "true"
-        );
-
-
-        // Remove click handlers
-
-        pastPapersCard.onclick =
-            null;
-
-        pastPapersCard.onkeydown =
-            null;
-
-    }
-
-
-    // =================================================
-    // SIDEBAR PAST PAPERS LINK
-    // =================================================
-
-    const pastPapersNav =
-        document.getElementById(
-            "pastPapersNav"
-        );
-
-
-    if (
-        pastPapersNav
-    ) {
-
-        if (
-            enabled
-        ) {
-
-            pastPapersNav.style.display =
-                "";
-
-            pastPapersNav.removeAttribute(
-                "aria-hidden"
-            );
-
-        }
-
-        else {
-
-            pastPapersNav.style.display =
-                "none";
-
-            pastPapersNav.setAttribute(
-                "aria-hidden",
-                "true"
-            );
-
-        }
-
-    }
-
-
-    // =================================================
-    // LOG
-    // =================================================
-
-    console.log(
-        enabled
-            ? "✅ Past Papers ENABLED"
-            : "🔒 Past Papers DISABLED"
-    );
 
 }
 
@@ -623,11 +495,10 @@ function updateMaterialText(
             modelLink
         ) {
 
-            modelLink.innerHTML =
-                `
-                    Explore Model Papers
-                    <span>→</span>
-                `;
+            modelLink.innerHTML = `
+                Explore Model Papers
+                <span>→</span>
+            `;
 
         }
 
@@ -651,6 +522,26 @@ function updateMaterialText(
 
         }
 
+
+        const pastLink =
+            document.querySelector(
+                "#pastPapersCard .material-link"
+            );
+
+
+        if (
+            pastLink
+        ) {
+
+            pastLink.innerHTML = `
+                Explore Past Papers
+                <span>→</span>
+            `;
+
+        }
+
+        return;
+
     }
 
 
@@ -658,7 +549,7 @@ function updateMaterialText(
     // GRADE 11
     // =================================================
 
-    else if (
+    if (
         type === "grade11"
     ) {
 
@@ -692,11 +583,10 @@ function updateMaterialText(
             modelLink
         ) {
 
-            modelLink.innerHTML =
-                `
-                    Explore TOP Ranking
-                    <span>→</span>
-                `;
+            modelLink.innerHTML = `
+                Explore TOP Ranking
+                <span>→</span>
+            `;
 
         }
 
@@ -720,6 +610,26 @@ function updateMaterialText(
 
         }
 
+
+        const pastLink =
+            document.querySelector(
+                "#pastPapersCard .material-link"
+            );
+
+
+        if (
+            pastLink
+        ) {
+
+            pastLink.innerHTML = `
+                Explore Papers
+                <span>→</span>
+            `;
+
+        }
+
+        return;
+
     }
 
 
@@ -727,7 +637,7 @@ function updateMaterialText(
     // A/L
     // =================================================
 
-    else if (
+    if (
         type === "al"
     ) {
 
@@ -761,11 +671,10 @@ function updateMaterialText(
             modelLink
         ) {
 
-            modelLink.innerHTML =
-                `
-                    Explore Model Papers
-                    <span>→</span>
-                `;
+            modelLink.innerHTML = `
+                Explore Model Papers
+                <span>→</span>
+            `;
 
         }
 
@@ -788,6 +697,26 @@ function updateMaterialText(
                 "Provincial Examination Papers";
 
         }
+
+
+        const pastLink =
+            document.querySelector(
+                "#pastPapersCard .material-link"
+            );
+
+
+        if (
+            pastLink
+        ) {
+
+            pastLink.innerHTML = `
+                Explore Papers
+                <span>→</span>
+            `;
+
+        }
+
+        return;
 
     }
 
@@ -815,8 +744,13 @@ function setupModelCard(
     }
 
 
-    let modelUrl = null;
+    let modelUrl =
+        null;
 
+
+    // =================================================
+    // URL BY GRADE
+    // =================================================
 
     if (
         type === "grade10"
@@ -852,12 +786,45 @@ function setupModelCard(
     );
 
 
-    modelPapersCard.onclick =
-        null;
+    // =================================================
+    // UNKNOWN
+    // =================================================
 
-    modelPapersCard.onkeydown =
-        null;
+    if (
+        !modelUrl
+    ) {
 
+        modelPapersCard.style.cursor =
+            "default";
+
+        return;
+
+    }
+
+
+    // =================================================
+    // MAKE CLICKABLE
+    // =================================================
+
+    modelPapersCard.style.cursor =
+        "pointer";
+
+
+    modelPapersCard.setAttribute(
+        "role",
+        "button"
+    );
+
+
+    modelPapersCard.setAttribute(
+        "tabindex",
+        "0"
+    );
+
+
+    // =================================================
+    // CARD CLICK
+    // =================================================
 
     modelPapersCard.onclick =
         function(event) {
@@ -867,18 +834,10 @@ function setupModelCard(
             event.stopPropagation();
 
 
-            if (
-                !modelUrl
-            ) {
-
-                console.error(
-                    "Model URL not found for:",
-                    type
-                );
-
-                return;
-
-            }
+            console.log(
+                "Opening model papers:",
+                modelUrl
+            );
 
 
             window.location.href =
@@ -886,6 +845,10 @@ function setupModelCard(
 
         };
 
+
+    // =================================================
+    // KEYBOARD
+    // =================================================
 
     modelPapersCard.onkeydown =
         function(event) {
@@ -898,19 +861,17 @@ function setupModelCard(
                 event.preventDefault();
 
 
-                if (
-                    modelUrl
-                ) {
-
-                    window.location.href =
-                        modelUrl;
-
-                }
+                window.location.href =
+                    modelUrl;
 
             }
 
         };
 
+
+    // =================================================
+    // INNER LINK
+    // =================================================
 
     const modelLink =
         modelPapersCard.querySelector(
@@ -922,6 +883,10 @@ function setupModelCard(
         modelLink
     ) {
 
+        modelLink.href =
+            modelUrl;
+
+
         modelLink.onclick =
             function(event) {
 
@@ -930,14 +895,8 @@ function setupModelCard(
                 event.stopPropagation();
 
 
-                if (
-                    modelUrl
-                ) {
-
-                    window.location.href =
-                        modelUrl;
-
-                }
+                window.location.href =
+                    modelUrl;
 
             };
 
@@ -958,13 +917,22 @@ function setupPastCard(
         !pastPapersCard
     ) {
 
+        console.error(
+            "pastPapersCard not found."
+        );
+
         return;
 
     }
 
 
-    let pastUrl = null;
+    let pastUrl =
+        null;
 
+
+    // =================================================
+    // URL BY GRADE
+    // =================================================
 
     if (
         type === "grade10"
@@ -994,6 +962,48 @@ function setupPastCard(
     }
 
 
+    console.log(
+        "Past papers URL:",
+        pastUrl
+    );
+
+
+    // =================================================
+    // UNKNOWN
+    // =================================================
+
+    if (
+        !pastUrl
+    ) {
+
+        pastPapersCard.style.cursor =
+            "default";
+
+        return;
+
+    }
+
+
+    // =================================================
+    // MAKE CLICKABLE
+    // =================================================
+
+    pastPapersCard.style.cursor =
+        "pointer";
+
+
+    pastPapersCard.setAttribute(
+        "role",
+        "button"
+    );
+
+
+    pastPapersCard.setAttribute(
+        "tabindex",
+        "0"
+    );
+
+
     // =================================================
     // CARD CLICK
     // =================================================
@@ -1006,25 +1016,10 @@ function setupPastCard(
             event.stopPropagation();
 
 
-            // Do not open if hidden/disabled
-
-            if (
-                pastPapersCard.style.display ===
-                "none"
-            ) {
-
-                return;
-
-            }
-
-
-            if (
-                !pastUrl
-            ) {
-
-                return;
-
-            }
+            console.log(
+                "Opening past papers:",
+                pastUrl
+            );
 
 
             window.location.href =
@@ -1048,24 +1043,8 @@ function setupPastCard(
                 event.preventDefault();
 
 
-                if (
-                    pastPapersCard.style.display ===
-                    "none"
-                ) {
-
-                    return;
-
-                }
-
-
-                if (
-                    pastUrl
-                ) {
-
-                    window.location.href =
-                        pastUrl;
-
-                }
+                window.location.href =
+                    pastUrl;
 
             }
 
@@ -1086,6 +1065,10 @@ function setupPastCard(
         pastLink
     ) {
 
+        pastLink.href =
+            pastUrl;
+
+
         pastLink.onclick =
             function(event) {
 
@@ -1094,123 +1077,10 @@ function setupPastCard(
                 event.stopPropagation();
 
 
-                if (
-                    pastPapersCard.style.display ===
-                    "none"
-                ) {
-
-                    return;
-
-                }
-
-
-                if (
-                    pastUrl
-                ) {
-
-                    window.location.href =
-                        pastUrl;
-
-                }
+                window.location.href =
+                    pastUrl;
 
             };
-
-    }
-
-}
-
-
-// =====================================================
-// LOAD PAPER SETTINGS
-// =====================================================
-
-async function loadPaperSettings(
-    type
-) {
-
-    try {
-
-        const settingsRef =
-            doc(
-                db,
-                "paperSettings",
-                "settings"
-            );
-
-
-        const snapshot =
-            await getDoc(
-                settingsRef
-            );
-
-
-        const settings =
-            snapshot.exists()
-                ? snapshot.data()
-                : {};
-
-
-        console.log(
-            "===================================="
-        );
-
-        console.log(
-            "📚 PAPER SETTINGS LOADED"
-        );
-
-        console.log(
-            "Grade Type:",
-            type
-        );
-
-        console.log(
-            "Settings:",
-            settings
-        );
-
-        console.log(
-            "Past Field:",
-            getPastPaperSettingField(
-                type
-            )
-        );
-
-        console.log(
-            "Past Enabled:",
-            isPastPapersEnabled(
-                type,
-                settings
-            )
-        );
-
-        console.log(
-            "===================================="
-        );
-
-
-        updatePastPapersVisibility(
-            type,
-            settings
-        );
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "Failed to load paper settings:",
-            error
-        );
-
-
-        // If settings cannot be loaded,
-        // keep Past Papers visible
-        // rather than hiding unexpectedly.
-
-        updatePastPapersVisibility(
-            type,
-            {}
-        );
 
     }
 
@@ -1262,16 +1132,73 @@ async function loadStudent() {
 
 
         // =================================================
-        // DETECT GRADE
+        // DETECT STUDENT TYPE
         // =================================================
+
+        /*
+         * Priority:
+         *
+         * 1. Firebase studentType
+         * 2. Firebase grade
+         * 3. Session studentGrade
+         */
+
+        const rawStudentType =
+            data.studentType ||
+            data.grade ||
+            storedGrade ||
+            "";
+
 
         const type =
             getGradeType(
-                data.studentType ||
-                storedGrade ||
-                data.grade
+                rawStudentType
             );
 
+
+        console.log(
+            "===================================="
+        );
+
+
+        console.log(
+            "Firebase studentType:",
+            data.studentType
+        );
+
+
+        console.log(
+            "Firebase grade:",
+            data.grade
+        );
+
+
+        console.log(
+            "Session studentGrade:",
+            storedGrade
+        );
+
+
+        console.log(
+            "Raw student type:",
+            rawStudentType
+        );
+
+
+        console.log(
+            "Detected student type:",
+            type
+        );
+
+
+        console.log(
+            "===================================="
+        );
+
+
+        // =================================================
+        // DASHBOARD DATA
+        // =================================================
 
         const gradeInfo =
             getDashboardData(
@@ -1365,41 +1292,9 @@ async function loadStudent() {
         );
 
 
-        // =================================================
-        // LOAD PAST PAPER ENABLE/DISABLE
-        // =================================================
-
-        await loadPaperSettings(
+        setupPastCard(
             type
         );
-
-
-        // =================================================
-        // SETUP PAST CARD
-        // =================================================
-
-        /*
-         * IMPORTANT:
-         *
-         * loadPaperSettings() runs before setupPastCard().
-         *
-         * If Past Papers are disabled,
-         * updatePastPapersVisibility() hides the card.
-         *
-         * setupPastCard() still prepares the click
-         * handler, but the card remains hidden.
-         */
-
-        if (
-            pastPapersCard &&
-            pastPapersCard.style.display !== "none"
-        ) {
-
-            setupPastCard(
-                type
-            );
-
-        }
 
 
         // =================================================
@@ -1408,6 +1303,7 @@ async function loadStudent() {
 
         let totalPapers =
             0;
+
 
         let viewedPapers =
             0;
@@ -1421,7 +1317,9 @@ async function loadStudent() {
 
             const field =
                 "paper" +
-                String(i).padStart(
+                String(
+                    i
+                ).padStart(
                     2,
                     "0"
                 ) +
@@ -1429,11 +1327,10 @@ async function loadStudent() {
 
 
             if (
-                Object.prototype.hasOwnProperty
-                    .call(
-                        data,
-                        field
-                    )
+                Object.prototype.hasOwnProperty.call(
+                    data,
+                    field
+                )
             ) {
 
                 totalPapers++;
@@ -1472,13 +1369,18 @@ async function loadStudent() {
         }
 
 
+        // =================================================
+        // PROGRESS
+        // =================================================
+
         const progress =
             totalPapers > 0
                 ? Math.round(
                     (
                         viewedPapers /
                         totalPapers
-                    ) * 100
+                    ) *
+                    100
                 )
                 : 0;
 
@@ -1493,38 +1395,55 @@ async function loadStudent() {
         }
 
 
+        // =================================================
+        // FINAL CONSOLE
+        // =================================================
+
         console.log(
             "===================================="
         );
 
+
         console.log(
             "✅ STUDENT DASHBOARD LOADED"
         );
+
 
         console.log(
             "Student ID:",
             studentId
         );
 
+
+        console.log(
+            "Student Name:",
+            studentName
+        );
+
+
         console.log(
             "Grade Type:",
             type
         );
+
 
         console.log(
             "Grade:",
             gradeInfo.grade
         );
 
+
         console.log(
             "Model URL:",
             gradeInfo.model
         );
 
+
         console.log(
             "Past URL:",
             gradeInfo.past
         );
+
 
         console.log(
             "===================================="
@@ -1677,6 +1596,7 @@ const idleChecker =
                     heartbeat
                 );
 
+
                 clearInterval(
                     idleChecker
                 );
@@ -1714,9 +1634,11 @@ const idleChecker =
                     "loggedIn"
                 );
 
+
                 sessionStorage.removeItem(
                     "studentId"
                 );
+
 
                 sessionStorage.removeItem(
                     "studentGrade"
@@ -1800,6 +1722,7 @@ if (
                 heartbeat
             );
 
+
             clearInterval(
                 idleChecker
             );
@@ -1837,9 +1760,11 @@ if (
                 "loggedIn"
             );
 
+
             sessionStorage.removeItem(
                 "studentId"
             );
+
 
             sessionStorage.removeItem(
                 "studentGrade"
@@ -1861,6 +1786,17 @@ if (
 // =====================================================
 
 console.log(
-    "🟢 Dynamic Student Dashboard Active:",
+    "🟢 Dynamic Student Dashboard Active"
+);
+
+
+console.log(
+    "Student ID:",
     studentId
+);
+
+
+console.log(
+    "Stored Grade:",
+    storedGrade
 );
