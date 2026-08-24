@@ -10,30 +10,20 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>
-        Grade 11 TOP Ranking
-    </title>
+    <title>Grade 11 TOP Ranking</title>
 
     <link
         rel="stylesheet"
-        href="grade11-model-papers.css?v=10"
+        href="grade11-model-papers.css?v=20"
     >
 
 </head>
 
-
 <body>
-
 
 <div class="container">
 
-
-    <!-- =====================================================
-         HEADER
-    ====================================================== -->
-
     <div class="header">
-
 
         <div>
 
@@ -41,13 +31,11 @@
                 🏆 Grade 11 TOP Ranking
             </h1>
 
-
             <p>
                 Select a TOP Ranking Term
             </p>
 
         </div>
-
 
         <button
             type="button"
@@ -56,39 +44,267 @@
             ← Back
         </button>
 
-
     </div>
 
-
-
-    <!-- =====================================================
-         TERM GRID
-         
-         IMPORTANT:
-         Do NOT put 1st / 2nd / 3rd Term cards manually here.
-         grade11-model-papers.js will create them after
-         checking Firestore.
-    ====================================================== -->
 
     <div
         class="term-grid"
         id="termGrid"
     ></div>
 
-
 </div>
 
 
+<script type="module">
 
-<!-- =====================================================
-     JAVASCRIPT
-====================================================== -->
+import {
+    db,
+    doc,
+    getDoc
+} from "./firebase.js";
 
-<script
-    type="module"
-    src="grade11-model-papers.js?v=20"
-></script>
 
+const termGrid =
+    document.getElementById("termGrid");
+
+
+const terms = [
+
+    {
+        number: "1",
+        title: "1st Term"
+    },
+
+    {
+        number: "2",
+        title: "2nd Term"
+    },
+
+    {
+        number: "3",
+        title: "3rd Term"
+    }
+
+];
+
+
+async function loadTerms() {
+
+    try {
+
+        termGrid.innerHTML = `
+            <div style="
+                grid-column:1/-1;
+                text-align:center;
+                padding:40px;
+                color:#64748b;
+            ">
+                Loading...
+            </div>
+        `;
+
+
+        const settingsRef =
+            doc(
+                db,
+                "paperSettings",
+                "settings"
+            );
+
+
+        const snapshot =
+            await getDoc(
+                settingsRef
+            );
+
+
+        const settings =
+            snapshot.exists()
+                ? snapshot.data()
+                : {};
+
+
+        console.log(
+            "GRADE 11 SETTINGS:",
+            settings
+        );
+
+
+        termGrid.innerHTML = "";
+
+
+        let count = 0;
+
+
+        terms.forEach(term => {
+
+            const field =
+                `grade11_term${term.number}_enabled`;
+
+
+            /*
+             * Existing setting:
+             * false = disabled
+             * true  = enabled
+             *
+             * Missing setting = enabled
+             */
+
+            const enabled =
+                Object.prototype.hasOwnProperty.call(
+                    settings,
+                    field
+                )
+                    ? settings[field] === true
+                    : true;
+
+
+            console.log(
+                field,
+                enabled
+            );
+
+
+            if (!enabled) {
+
+                return;
+
+            }
+
+
+            const card =
+                document.createElement("div");
+
+
+            card.className =
+                "term-card";
+
+
+            card.style.cursor =
+                "pointer";
+
+
+            card.innerHTML = `
+
+                <div class="term-icon">
+                    🏆
+                </div>
+
+                <h2>
+                    ${term.title}
+                </h2>
+
+                <p>
+                    Grade 11 TOP Ranking Papers
+                </p>
+
+            `;
+
+
+            card.onclick = () => {
+
+                window.location.href =
+                    `grade11-term.html?term=${term.number}`;
+
+            };
+
+
+            termGrid.appendChild(card);
+
+
+            count++;
+
+        });
+
+
+        if (count === 0) {
+
+            termGrid.innerHTML = `
+
+                <div style="
+                    grid-column:1/-1;
+                    background:white;
+                    border-radius:20px;
+                    padding:50px 25px;
+                    text-align:center;
+                    box-shadow:0 10px 30px rgba(0,0,0,.08);
+                ">
+
+                    <div style="
+                        font-size:50px;
+                        margin-bottom:15px;
+                    ">
+                        🔒
+                    </div>
+
+                    <h2>
+                        TOP Ranking Papers Unavailable
+                    </h2>
+
+                    <p style="
+                        color:#64748b;
+                    ">
+                        TOP Ranking Papers are currently unavailable.
+                    </p>
+
+                </div>
+
+            `;
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "TOP Ranking load error:",
+            error
+        );
+
+
+        termGrid.innerHTML = `
+
+            <div style="
+                grid-column:1/-1;
+                text-align:center;
+                padding:40px;
+            ">
+
+                <h2>
+                    ⚠️ Unable to Load
+                </h2>
+
+                <p>
+                    ${error.message}
+                </p>
+
+                <button
+                    onclick="location.reload()"
+                    style="
+                        padding:12px 20px;
+                        border:0;
+                        border-radius:10px;
+                        background:#6d35f2;
+                        color:white;
+                        cursor:pointer;
+                    "
+                >
+                    🔄 Try Again
+                </button>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+loadTerms();
+
+</script>
 
 </body>
 
