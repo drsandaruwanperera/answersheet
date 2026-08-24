@@ -293,6 +293,242 @@ function getDashboardData(
 
 
 // =====================================================
+// PAST PAPER SETTING FIELD
+// =====================================================
+
+function getPastPaperSettingField(
+    type
+) {
+
+    if (
+        type === "grade10"
+    ) {
+
+        return "grade10_past_enabled";
+
+    }
+
+
+    if (
+        type === "grade11"
+    ) {
+
+        return "grade11_past_enabled";
+
+    }
+
+
+    if (
+        type === "al"
+    ) {
+
+        return "al_past_enabled";
+
+    }
+
+
+    return null;
+
+}
+
+
+// =====================================================
+// CHECK PAST PAPERS ENABLED
+// =====================================================
+
+function isPastPapersEnabled(
+    type,
+    settings
+) {
+
+    const field =
+        getPastPaperSettingField(
+            type
+        );
+
+
+    // No matching setting field
+    // = enabled by default
+
+    if (
+        !field
+    ) {
+
+        return true;
+
+    }
+
+
+    // Field does not exist
+    // = enabled by default
+
+    if (
+        !Object.prototype.hasOwnProperty.call(
+            settings,
+            field
+        )
+    ) {
+
+        return true;
+
+    }
+
+
+    return (
+        settings[field] === true
+    );
+
+}
+
+
+// =====================================================
+// UPDATE PAST PAPERS VISIBILITY
+// =====================================================
+
+function updatePastPapersVisibility(
+    type,
+    settings
+) {
+
+    if (
+        !pastPapersCard
+    ) {
+
+        console.error(
+            "pastPapersCard not found."
+        );
+
+        return;
+
+    }
+
+
+    const enabled =
+        isPastPapersEnabled(
+            type,
+            settings
+        );
+
+
+    console.log(
+        "Past Papers setting:",
+        getPastPaperSettingField(type),
+        enabled
+    );
+
+
+    if (
+        enabled
+    ) {
+
+        // =================================================
+        // SHOW
+        // =================================================
+
+        pastPapersCard.style.display =
+            "";
+
+
+        pastPapersCard.removeAttribute(
+            "aria-hidden"
+        );
+
+
+        pastPapersCard.removeAttribute(
+            "data-disabled"
+        );
+
+    }
+
+    else {
+
+        // =================================================
+        // HIDE
+        // =================================================
+
+        pastPapersCard.style.display =
+            "none";
+
+
+        pastPapersCard.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+
+        pastPapersCard.setAttribute(
+            "data-disabled",
+            "true"
+        );
+
+
+        // Remove click handlers
+
+        pastPapersCard.onclick =
+            null;
+
+        pastPapersCard.onkeydown =
+            null;
+
+    }
+
+
+    // =================================================
+    // SIDEBAR PAST PAPERS LINK
+    // =================================================
+
+    const pastPapersNav =
+        document.getElementById(
+            "pastPapersNav"
+        );
+
+
+    if (
+        pastPapersNav
+    ) {
+
+        if (
+            enabled
+        ) {
+
+            pastPapersNav.style.display =
+                "";
+
+            pastPapersNav.removeAttribute(
+                "aria-hidden"
+            );
+
+        }
+
+        else {
+
+            pastPapersNav.style.display =
+                "none";
+
+            pastPapersNav.setAttribute(
+                "aria-hidden",
+                "true"
+            );
+
+        }
+
+    }
+
+
+    // =================================================
+    // LOG
+    // =================================================
+
+    console.log(
+        enabled
+            ? "✅ Past Papers ENABLED"
+            : "🔒 Past Papers DISABLED"
+    );
+
+}
+
+
+// =====================================================
 // GREETING
 // =====================================================
 
@@ -579,10 +815,6 @@ function setupModelCard(
     }
 
 
-    // =================================================
-    // CORRECT URL
-    // =================================================
-
     let modelUrl = null;
 
 
@@ -620,10 +852,6 @@ function setupModelCard(
     );
 
 
-    // =================================================
-    // REMOVE OLD EVENTS
-    // =================================================
-
     modelPapersCard.onclick =
         null;
 
@@ -631,22 +859,12 @@ function setupModelCard(
         null;
 
 
-    // =================================================
-    // CARD CLICK
-    // =================================================
-
     modelPapersCard.onclick =
         function(event) {
 
             event.preventDefault();
 
             event.stopPropagation();
-
-
-            console.log(
-                "Model card clicked:",
-                modelUrl
-            );
 
 
             if (
@@ -668,10 +886,6 @@ function setupModelCard(
 
         };
 
-
-    // =================================================
-    // KEYBOARD
-    // =================================================
 
     modelPapersCard.onkeydown =
         function(event) {
@@ -697,10 +911,6 @@ function setupModelCard(
 
         };
 
-
-    // =================================================
-    // INNER LINK CLICK
-    // =================================================
 
     const modelLink =
         modelPapersCard.querySelector(
@@ -784,12 +994,28 @@ function setupPastCard(
     }
 
 
+    // =================================================
+    // CARD CLICK
+    // =================================================
+
     pastPapersCard.onclick =
         function(event) {
 
             event.preventDefault();
 
             event.stopPropagation();
+
+
+            // Do not open if hidden/disabled
+
+            if (
+                pastPapersCard.style.display ===
+                "none"
+            ) {
+
+                return;
+
+            }
 
 
             if (
@@ -807,6 +1033,10 @@ function setupPastCard(
         };
 
 
+    // =================================================
+    // KEYBOARD
+    // =================================================
+
     pastPapersCard.onkeydown =
         function(event) {
 
@@ -816,6 +1046,16 @@ function setupPastCard(
             ) {
 
                 event.preventDefault();
+
+
+                if (
+                    pastPapersCard.style.display ===
+                    "none"
+                ) {
+
+                    return;
+
+                }
 
 
                 if (
@@ -831,6 +1071,10 @@ function setupPastCard(
 
         };
 
+
+    // =================================================
+    // INNER LINK
+    // =================================================
 
     const pastLink =
         pastPapersCard.querySelector(
@@ -851,6 +1095,16 @@ function setupPastCard(
 
 
                 if (
+                    pastPapersCard.style.display ===
+                    "none"
+                ) {
+
+                    return;
+
+                }
+
+
+                if (
                     pastUrl
                 ) {
 
@@ -860,6 +1114,103 @@ function setupPastCard(
                 }
 
             };
+
+    }
+
+}
+
+
+// =====================================================
+// LOAD PAPER SETTINGS
+// =====================================================
+
+async function loadPaperSettings(
+    type
+) {
+
+    try {
+
+        const settingsRef =
+            doc(
+                db,
+                "paperSettings",
+                "settings"
+            );
+
+
+        const snapshot =
+            await getDoc(
+                settingsRef
+            );
+
+
+        const settings =
+            snapshot.exists()
+                ? snapshot.data()
+                : {};
+
+
+        console.log(
+            "===================================="
+        );
+
+        console.log(
+            "📚 PAPER SETTINGS LOADED"
+        );
+
+        console.log(
+            "Grade Type:",
+            type
+        );
+
+        console.log(
+            "Settings:",
+            settings
+        );
+
+        console.log(
+            "Past Field:",
+            getPastPaperSettingField(
+                type
+            )
+        );
+
+        console.log(
+            "Past Enabled:",
+            isPastPapersEnabled(
+                type,
+                settings
+            )
+        );
+
+        console.log(
+            "===================================="
+        );
+
+
+        updatePastPapersVisibility(
+            type,
+            settings
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Failed to load paper settings:",
+            error
+        );
+
+
+        // If settings cannot be loaded,
+        // keep Past Papers visible
+        // rather than hiding unexpectedly.
+
+        updatePastPapersVisibility(
+            type,
+            {}
+        );
 
     }
 
@@ -1014,9 +1365,41 @@ async function loadStudent() {
         );
 
 
-        setupPastCard(
+        // =================================================
+        // LOAD PAST PAPER ENABLE/DISABLE
+        // =================================================
+
+        await loadPaperSettings(
             type
         );
+
+
+        // =================================================
+        // SETUP PAST CARD
+        // =================================================
+
+        /*
+         * IMPORTANT:
+         *
+         * loadPaperSettings() runs before setupPastCard().
+         *
+         * If Past Papers are disabled,
+         * updatePastPapersVisibility() hides the card.
+         *
+         * setupPastCard() still prepares the click
+         * handler, but the card remains hidden.
+         */
+
+        if (
+            pastPapersCard &&
+            pastPapersCard.style.display !== "none"
+        ) {
+
+            setupPastCard(
+                type
+            );
+
+        }
 
 
         // =================================================
