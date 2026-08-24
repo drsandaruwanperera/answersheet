@@ -1,17 +1,17 @@
 // ============================================================
 // A/L MODEL PAPER VIEWER
+// viewer.js
 // ============================================================
 
 import {
     db,
     doc,
-    getDoc,
     updateDoc
 } from "./firebase.js";
 
 
 // ============================================================
-// LOGIN
+// LOGIN CHECK
 // ============================================================
 
 if (
@@ -22,13 +22,14 @@ if (
 
 
 // ============================================================
-// URL
+// URL PARAMETERS
 // ============================================================
 
 const params =
     new URLSearchParams(
         window.location.search
     );
+
 
 const paper =
     String(
@@ -37,23 +38,31 @@ const paper =
     .trim()
     .toLowerCase();
 
+
 const studentId =
     params.get("id") ||
     sessionStorage.getItem("studentId");
 
+
 const type =
-    params.get("type") || "";
+    String(
+        params.get("type") || ""
+    )
+    .trim()
+    .toLowerCase();
 
 
 // ============================================================
-// VALIDATE
+// VALIDATE PAPER
 // ============================================================
 
 if (
     !/^paper\d+$/i.test(paper)
 ) {
 
-    alert("Invalid paper.");
+    alert(
+        "Invalid paper."
+    );
 
     window.location.replace(
         "model-papers.html"
@@ -78,6 +87,7 @@ const paperNumber =
         10
     );
 
+
 const formattedNumber =
     String(
         paperNumber
@@ -90,8 +100,12 @@ const formattedNumber =
 // ============================================================
 // PAGE COUNTS
 // ============================================================
+// IMPORTANT
 //
-// CURRENT ACTUAL MODEL PAPER PAGE COUNTS
+// These are the actual page counts of your
+// A/L Model Papers.
+//
+// Paper 06 = 19 pages.
 //
 
 const PAGE_COUNTS = {
@@ -119,6 +133,10 @@ const PAGE_COUNTS = {
 };
 
 
+// ============================================================
+// GET TOTAL PAGES
+// ============================================================
+
 const totalPages =
     PAGE_COUNTS[
         paper
@@ -134,6 +152,7 @@ const titleElement =
         "paperTitle"
     );
 
+
 const pagesContainer =
     document.getElementById(
         "pagesContainer"
@@ -141,10 +160,28 @@ const pagesContainer =
 
 
 // ============================================================
+// CHECK PAGE COUNT
+// ============================================================
+
+if (
+    !totalPages
+) {
+
+    console.error(
+        "❌ No page count configured for:",
+        paper
+    );
+
+}
+
+
+// ============================================================
 // TITLE
 // ============================================================
 
-if (titleElement) {
+if (
+    titleElement
+) {
 
     titleElement.textContent =
         `Model Paper ${formattedNumber}`;
@@ -153,7 +190,7 @@ if (titleElement) {
 
 
 // ============================================================
-// BACK
+// BACK BUTTON
 // ============================================================
 
 function goBack() {
@@ -163,17 +200,20 @@ function goBack() {
 
 }
 
+
 window.goBack =
     goBack;
 
 
 // ============================================================
-// LOAD PAGES
+// LOAD PAPER PAGES
 // ============================================================
 
-function loadPages() {
+function loadPaperPages() {
 
-    if (!pagesContainer) {
+    if (
+        !pagesContainer
+    ) {
 
         console.error(
             "❌ pagesContainer not found."
@@ -184,7 +224,8 @@ function loadPages() {
     }
 
 
-    pagesContainer.innerHTML = "";
+    pagesContainer.innerHTML =
+        "";
 
 
     if (
@@ -192,9 +233,22 @@ function loadPages() {
     ) {
 
         pagesContainer.innerHTML = `
-            <div class="page-error">
+
+            <div
+                style="
+                    padding:40px;
+                    text-align:center;
+                    background:#ffffff;
+                    border-radius:12px;
+                    color:#dc2626;
+                    font-weight:600;
+                "
+            >
+
                 Paper page count not configured.
+
             </div>
+
         `;
 
         return;
@@ -207,7 +261,7 @@ function loadPages() {
     );
 
     console.log(
-        "A/L MODEL PAPER VIEWER"
+        "🔥 NEW VIEWER VERSION 19"
     );
 
     console.log(
@@ -236,7 +290,7 @@ function loadPages() {
 
 
     // ========================================================
-    // CREATE ALL PAGES
+    // CREATE EVERY PAGE
     // ========================================================
 
     for (
@@ -254,43 +308,110 @@ function loadPages() {
             );
 
 
+        // ----------------------------------------------------
+        // EXACT JPG PATH
+        // ----------------------------------------------------
+
         const imagePath =
             `papers/${paper}/${paper}_Page_${pageNumber}.jpg`;
 
 
         console.log(
-            `Page ${i}: ${imagePath}`
+            `Page ${i}:`,
+            imagePath
         );
 
 
         // ----------------------------------------------------
-        // WRAPPER
+        // PAGE WRAPPER
         // ----------------------------------------------------
 
-        const wrapper =
+        const pageWrapper =
             document.createElement(
                 "div"
             );
 
-        wrapper.className =
+
+        pageWrapper.className =
             "paper-page";
+
+
+        pageWrapper.style.width =
+            "100%";
+
+
+        pageWrapper.style.maxWidth =
+            "1000px";
+
+
+        pageWrapper.style.margin =
+            "0 auto 25px";
+
+
+        pageWrapper.style.background =
+            "#ffffff";
+
+
+        pageWrapper.style.padding =
+            "10px";
+
+
+        pageWrapper.style.borderRadius =
+            "8px";
+
+
+        pageWrapper.style.boxShadow =
+            "0 4px 18px rgba(0,0,0,.10)";
 
 
         // ----------------------------------------------------
         // PAGE LABEL
         // ----------------------------------------------------
 
-        const label =
+        const pageLabel =
             document.createElement(
                 "div"
             );
 
-        label.className =
+
+        pageLabel.className =
             "page-number";
 
 
-        label.textContent =
+        pageLabel.textContent =
             `Page ${i} / ${totalPages}`;
+
+
+        pageLabel.style.textAlign =
+            "center";
+
+
+        pageLabel.style.padding =
+            "8px";
+
+
+        pageLabel.style.marginBottom =
+            "8px";
+
+
+        pageLabel.style.fontSize =
+            "12px";
+
+
+        pageLabel.style.fontWeight =
+            "600";
+
+
+        pageLabel.style.color =
+            "#64748b";
+
+
+        pageLabel.style.background =
+            "#f8fafc";
+
+
+        pageLabel.style.borderRadius =
+            "6px";
 
 
         // ----------------------------------------------------
@@ -308,7 +429,7 @@ function loadPages() {
 
 
         image.alt =
-            `Model Paper ${formattedNumber} - Page ${i}`;
+            `Model Paper ${formattedNumber} Page ${i}`;
 
 
         image.loading =
@@ -323,15 +444,43 @@ function loadPages() {
             false;
 
 
+        image.style.display =
+            "block";
+
+
+        image.style.width =
+            "100%";
+
+
+        image.style.height =
+            "auto";
+
+
+        image.style.maxWidth =
+            "100%";
+
+
+        image.style.margin =
+            "0 auto";
+
+
+        image.style.userSelect =
+            "none";
+
+
+        image.style.webkitUserDrag =
+            "none";
+
+
         // ----------------------------------------------------
-        // IMAGE SUCCESS
+        // IMAGE LOADED
         // ----------------------------------------------------
 
         image.onload =
-            () => {
+            function() {
 
                 console.log(
-                    `✅ Page ${i} loaded`
+                    `✅ Page ${i} loaded successfully`
                 );
 
             };
@@ -342,23 +491,51 @@ function loadPages() {
         // ----------------------------------------------------
 
         image.onerror =
-            () => {
+            function() {
 
                 console.error(
-                    `❌ Page ${i} NOT FOUND:`,
+                    `❌ Page ${i} FAILED TO LOAD`
+                );
+
+                console.error(
+                    "Path:",
                     imagePath
                 );
 
 
-                wrapper.innerHTML = `
+                pageWrapper.innerHTML = `
 
-                    <div class="page-error">
+                    <div
+                        style="
+                            min-height:220px;
+                            display:flex;
+                            flex-direction:column;
+                            align-items:center;
+                            justify-content:center;
+                            text-align:center;
+                            gap:8px;
+                            padding:30px;
+                            border:2px dashed #cbd5e1;
+                            border-radius:8px;
+                            background:#f8fafc;
+                        "
+                    >
 
-                        <strong>
+                        <strong
+                            style="
+                                color:#dc2626;
+                                font-size:16px;
+                            "
+                        >
                             Page ${i} could not be loaded
                         </strong>
 
-                        <small>
+                        <small
+                            style="
+                                color:#64748b;
+                                word-break:break-all;
+                            "
+                        >
                             ${imagePath}
                         </small>
 
@@ -369,38 +546,46 @@ function loadPages() {
             };
 
 
-        wrapper.appendChild(
-            label
+        // ----------------------------------------------------
+        // APPEND
+        // ----------------------------------------------------
+
+        pageWrapper.appendChild(
+            pageLabel
         );
 
-        wrapper.appendChild(
+
+        pageWrapper.appendChild(
             image
         );
 
+
         pagesContainer.appendChild(
-            wrapper
+            pageWrapper
         );
 
     }
 
 
     console.log(
-        `✅ Created ${totalPages} page containers.`
+        `✅ CREATED ${totalPages} PAGE CONTAINERS`
     );
 
 }
 
 
 // ============================================================
-// MARK VIEWED
+// MARK PAPER AS VIEWED
 // ============================================================
 
-async function markAsViewed() {
+async function markPaperAsViewed() {
 
-    if (!studentId) {
+    if (
+        !studentId
+    ) {
 
         console.warn(
-            "Student ID not found."
+            "⚠️ Student ID not found."
         );
 
         return;
@@ -431,16 +616,40 @@ async function markAsViewed() {
 
 
         console.log(
-            "✅ Marked as viewed:",
+            "======================================"
+        );
+
+        console.log(
+            "✅ PAPER VIEWED"
+        );
+
+        console.log(
+            "Student:",
+            studentId
+        );
+
+        console.log(
+            "Paper:",
+            paper
+        );
+
+        console.log(
+            "Firestore field:",
             fieldPath
+        );
+
+        console.log(
+            "======================================"
         );
 
     }
 
-    catch (error) {
+    catch (
+        error
+    ) {
 
         console.error(
-            "❌ View tracking error:",
+            "❌ Failed to mark paper as viewed:",
             error
         );
 
@@ -450,12 +659,12 @@ async function markAsViewed() {
 
 
 // ============================================================
-// RIGHT CLICK
+// RIGHT CLICK BLOCK
 // ============================================================
 
 document.addEventListener(
     "contextmenu",
-    event => {
+    function(event) {
 
         event.preventDefault();
 
@@ -465,15 +674,16 @@ document.addEventListener(
 
 
 // ============================================================
-// DRAG
+// IMAGE DRAG BLOCK
 // ============================================================
 
 document.addEventListener(
     "dragstart",
-    event => {
+    function(event) {
 
         if (
-            event.target?.tagName === "IMG"
+            event.target &&
+            event.target.tagName === "IMG"
         ) {
 
             event.preventDefault();
@@ -486,12 +696,27 @@ document.addEventListener(
 
 
 // ============================================================
-// KEYBOARD PROTECTION
+// COPY BLOCK
+// ============================================================
+
+document.addEventListener(
+    "copy",
+    function(event) {
+
+        event.preventDefault();
+
+    },
+    true
+);
+
+
+// ============================================================
+// KEYBOARD BLOCK
 // ============================================================
 
 document.addEventListener(
     "keydown",
-    event => {
+    function(event) {
 
         const key =
             String(
@@ -598,6 +823,21 @@ document.addEventListener(
 
         }
 
+
+        // Ctrl + Shift + C
+
+        if (
+            event.ctrlKey &&
+            event.shiftKey &&
+            key === "c"
+        ) {
+
+            event.preventDefault();
+
+            return;
+
+        }
+
     },
     true
 );
@@ -607,20 +847,75 @@ document.addEventListener(
 // INITIALIZE
 // ============================================================
 
-document.addEventListener(
-    "DOMContentLoaded",
-    async () => {
+async function initializeViewer() {
 
-        loadPages();
+    console.log(
+        "======================================"
+    );
 
-        await markAsViewed();
+    console.log(
+        "🟢 INITIALIZING NEW VIEWER"
+    );
 
-    }
-);
+    console.log(
+        "Paper:",
+        paper
+    );
 
+    console.log(
+        "Total Pages:",
+        totalPages
+    );
+
+    console.log(
+        "======================================"
+    );
+
+
+    // --------------------------------------------------------
+    // LOAD ALL PAGES
+    // --------------------------------------------------------
+
+    loadPaperPages();
+
+
+    // --------------------------------------------------------
+    // MARK VIEWED
+    // --------------------------------------------------------
+
+    await markPaperAsViewed();
+
+}
+
+
+// ============================================================
+// START
+// ============================================================
+
+if (
+    document.readyState === "loading"
+) {
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        initializeViewer
+    );
+
+}
+
+else {
+
+    initializeViewer();
+
+}
+
+
+// ============================================================
+// FINAL CONSOLE
+// ============================================================
 
 console.log(
-    "🟢 NEW VIEWER JS LOADED"
+    "🔥🔥🔥 NEW VIEWER.JS LOADED 🔥🔥🔥"
 );
 
 console.log(
@@ -629,6 +924,6 @@ console.log(
 );
 
 console.log(
-    "Total Pages:",
+    "TOTAL PAGES:",
     totalPages
 );
