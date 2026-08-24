@@ -101,7 +101,7 @@ const pastPapersCard =
 
 
 // =====================================================
-// MATERIAL CARD TEXT ELEMENTS
+// MATERIAL CARD TEXT
 // =====================================================
 
 const modelPapersTitle =
@@ -132,7 +132,9 @@ const pastPapersDescription =
 let studentRef = null;
 
 
-if (studentId) {
+if (
+    studentId
+) {
 
     studentRef =
         doc(
@@ -148,7 +150,9 @@ if (studentId) {
 // GRADE HELPER
 // =====================================================
 
-function getGradeType(value) {
+function getGradeType(
+    value
+) {
 
     const grade =
         String(
@@ -264,9 +268,17 @@ function getDashboardData(
 
     // =================================================
     // A/L
+    // =================================================
+    //
     // IMPORTANT:
-    // Existing file is model-papers.html
-    // NOT al-model-papers.html
+    // Existing file is:
+    //
+    // model-papers.html
+    //
+    // NOT:
+    //
+    // al-model-papers.html
+    //
     // =================================================
 
     if (
@@ -405,11 +417,10 @@ function updateMaterialText(
             modelLink
         ) {
 
-            modelLink.innerHTML =
-                `
-                    Explore Model Papers
-                    <span>→</span>
-                `;
+            modelLink.innerHTML = `
+                Explore Model Papers
+                <span>→</span>
+            `;
 
         }
 
@@ -474,11 +485,10 @@ function updateMaterialText(
             modelLink
         ) {
 
-            modelLink.innerHTML =
-                `
-                    Explore TOP Ranking
-                    <span>→</span>
-                `;
+            modelLink.innerHTML = `
+                Explore TOP Ranking
+                <span>→</span>
+            `;
 
         }
 
@@ -543,11 +553,10 @@ function updateMaterialText(
             modelLink
         ) {
 
-            modelLink.innerHTML =
-                `
-                    Explore Model Papers
-                    <span>→</span>
-                `;
+            modelLink.innerHTML = `
+                Explore Model Papers
+                <span>→</span>
+            `;
 
         }
 
@@ -597,13 +606,16 @@ function setupModelCard(
     }
 
 
-    let modelUrl =
-        null;
-
-
     // =================================================
+    // CORRECT URL
+    // =================================================
+
+    let modelUrl = null;
+
+
+    // -------------------------------------------------
     // GRADE 10
-    // =================================================
+    // -------------------------------------------------
 
     if (
         type === "grade10"
@@ -615,9 +627,9 @@ function setupModelCard(
     }
 
 
-    // =================================================
+    // -------------------------------------------------
     // GRADE 11
-    // =================================================
+    // -------------------------------------------------
 
     else if (
         type === "grade11"
@@ -629,11 +641,14 @@ function setupModelCard(
     }
 
 
-    // =================================================
+    // -------------------------------------------------
     // A/L
+    // -------------------------------------------------
+    //
     // IMPORTANT:
-    // Existing file = model-papers.html
-    // =================================================
+    // Use existing model-papers.html
+    //
+    // -------------------------------------------------
 
     else if (
         type === "al"
@@ -674,6 +689,12 @@ function setupModelCard(
             event.stopPropagation();
 
 
+            console.log(
+                "Model card clicked:",
+                modelUrl
+            );
+
+
             if (
                 !modelUrl
             ) {
@@ -686,12 +707,6 @@ function setupModelCard(
                 return;
 
             }
-
-
-            console.log(
-                "Opening model papers:",
-                modelUrl
-            );
 
 
             window.location.href =
@@ -784,9 +799,12 @@ function setupPastCard(
     }
 
 
-    let pastUrl =
-        null;
+    let pastUrl = null;
 
+
+    // =================================================
+    // GRADE 10
+    // =================================================
 
     if (
         type === "grade10"
@@ -798,6 +816,10 @@ function setupPastCard(
     }
 
 
+    // =================================================
+    // GRADE 11
+    // =================================================
+
     else if (
         type === "grade11"
     ) {
@@ -808,6 +830,10 @@ function setupPastCard(
     }
 
 
+    // =================================================
+    // A/L
+    // =================================================
+
     else if (
         type === "al"
     ) {
@@ -817,6 +843,10 @@ function setupPastCard(
 
     }
 
+
+    // =================================================
+    // CARD CLICK
+    // =================================================
 
     pastPapersCard.onclick =
         function(event) {
@@ -840,6 +870,10 @@ function setupPastCard(
 
         };
 
+
+    // =================================================
+    // KEYBOARD
+    // =================================================
 
     pastPapersCard.onkeydown =
         function(event) {
@@ -865,6 +899,10 @@ function setupPastCard(
 
         };
 
+
+    // =================================================
+    // INNER LINK
+    // =================================================
 
     const pastLink =
         pastPapersCard.querySelector(
@@ -1012,7 +1050,7 @@ async function loadStudent() {
 
 
         // =================================================
-        // NAME
+        // STUDENT NAME
         // =================================================
 
         if (
@@ -1086,11 +1124,10 @@ async function loadStudent() {
 
 
             if (
-                Object.prototype.hasOwnProperty
-                    .call(
-                        data,
-                        field
-                    )
+                Object.prototype.hasOwnProperty.call(
+                    data,
+                    field
+                )
             ) {
 
                 totalPapers++;
@@ -1128,6 +1165,10 @@ async function loadStudent() {
 
         }
 
+
+        // =================================================
+        // PROGRESS
+        // =================================================
 
         const progress =
             totalPapers > 0
