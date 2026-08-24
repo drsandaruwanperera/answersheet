@@ -1,82 +1,87 @@
+// ============================================================
+// A/L MODEL PAPERS
+// model-papers.js
+// ============================================================
+
 import {
     db,
     doc,
-    getDoc
+    getDoc,
+    updateDoc
 } from "./firebase.js";
 
 
-// =====================================================
+// ============================================================
 // LOGIN CHECK
-// =====================================================
+// ============================================================
 
 if (
     sessionStorage.getItem("loggedIn") !== "true"
 ) {
-
-    window.location.replace(
-        "index.html"
-    );
-
+    window.location.replace("index.html");
 }
 
 
-// =====================================================
+// ============================================================
 // STUDENT ID
-// =====================================================
-
-const params =
-    new URLSearchParams(
-        window.location.search
-    );
-
+// ============================================================
 
 const studentId =
-    params.get("id") ||
-    sessionStorage.getItem(
-        "studentId"
-    );
+    sessionStorage.getItem("studentId");
 
 
-if (
-    studentId
-) {
+// ============================================================
+// ELEMENTS
+// ============================================================
 
-    sessionStorage.setItem(
-        "studentId",
-        studentId
-    );
+const paperContainer =
+    document.getElementById("paperContainer");
 
+
+// ============================================================
+// GET PAPER ELEMENT
+// ============================================================
+
+function findPaperElement(paperNumber) {
+
+    const number =
+        String(paperNumber).padStart(2, "0");
+
+    const paperId =
+        `paper${number}`;
+
+    const selectors = [
+        `#${paperId}`,
+        `[data-paper="${paperId}"]`,
+        `[data-paper="${number}"]`,
+        `[data-paper-id="${paperId}"]`
+    ];
+
+    for (const selector of selectors) {
+
+        const element =
+            document.querySelector(selector);
+
+        if (element) {
+            return element;
+        }
+    }
+
+    return null;
 }
 
 
-// =====================================================
-// LOAD MODEL PAPERS
-// =====================================================
+// ============================================================
+// GET STUDENT DOCUMENT
+// ============================================================
 
-async function loadModelPapers() {
+async function getStudentData() {
 
-    if (
-        !studentId
-    ) {
-
-        alert(
-            "Student ID not found. Please login again."
-        );
-
-        window.location.replace(
-            "index.html"
-        );
-
-        return;
-
+    if (!studentId) {
+        return null;
     }
 
-
     try {
-
-        // =================================================
-        // GET STUDENT
-        // =================================================
 
         const studentRef =
             doc(
@@ -85,321 +90,561 @@ async function loadModelPapers() {
                 studentId
             );
 
-
-        const snap =
+        const snapshot =
             await getDoc(
                 studentRef
             );
 
-
-        if (
-            !snap.exists()
-        ) {
-
-            alert(
-                "Student account not found."
-            );
-
-            window.location.replace(
-                "index.html"
-            );
-
-            return;
-
+        if (!snapshot.exists()) {
+            return null;
         }
 
+        return snapshot.data();
 
-        const data =
-            snap.data();
-
-
-        console.log(
-            "======================================"
-        );
-
-        console.log(
-            "A/L MODEL PAPERS"
-        );
-
-        console.log(
-            "Student:",
-            studentId
-        );
-
-        console.log(
-            "Student data:",
-            data
-        );
-
-        console.log(
-            "======================================"
-        );
-
-
-        // =================================================
-        // PAPERS 01 - 10
-        // =================================================
-
-        for (
-            let i = 1;
-            i <= 10;
-            i++
-        ) {
-
-            const number =
-                String(
-                    i
-                ).padStart(
-                    2,
-                    "0"
-                );
-
-
-            const permissionField =
-                "paper" +
-                number;
-
-
-            const viewedField =
-                permissionField +
-                "Viewed";
-
-
-            const btn =
-                document.getElementById(
-                    permissionField
-                );
-
-
-            if (
-                !btn
-            ) {
-
-                console.warn(
-                    "Button not found:",
-                    permissionField
-                );
-
-                continue;
-
-            }
-
-
-            // =================================================
-            // IMPORTANT
-            // =================================================
-            //
-            // Missing paper permission = AVAILABLE
-            //
-            // false = HIDDEN
-            // true = AVAILABLE
-            //
-            // This prevents old A/L student records
-            // from hiding every paper.
-            // =================================================
-
-            const enabled =
-                Object.prototype.hasOwnProperty.call(
-                    data,
-                    permissionField
-                )
-                    ? data[
-                        permissionField
-                    ] === true
-                    : true;
-
-
-            // =================================================
-            // HIDDEN
-            // =================================================
-
-            if (
-                !enabled
-            ) {
-
-                btn.style.display =
-                    "none";
-
-                continue;
-
-            }
-
-
-            // =================================================
-            // SHOW
-            // =================================================
-
-            btn.style.display =
-                "flex";
-
-
-            btn.disabled =
-                false;
-
-
-            btn.className =
-                "available";
-
-
-            // =================================================
-            // VIEWED STATUS
-            // =================================================
-
-            const viewed =
-                data[
-                    viewedField
-                ] === true;
-
-
-            if (
-                viewed
-            ) {
-
-                btn.innerHTML = `
-                    📘 Model Paper ${number}
-                    <small>🔵 Viewed</small>
-                `;
-
-            }
-
-            else {
-
-                btn.innerHTML = `
-                    📘 Model Paper ${number}
-                    <small>🟢 Available</small>
-                `;
-
-            }
-
-
-            // =================================================
-            // CLICK
-            // =================================================
-
-            btn.onclick =
-                () => {
-
-                    openPaper(
-                        i
-                    );
-
-                };
-
-
-            console.log(
-                `Paper ${number}:`,
-                {
-                    enabled,
-                    viewed
-                }
-            );
-
-        }
-
-
-        console.log(
-            "✅ A/L Model Papers loaded"
-        );
-
-    }
-
-    catch (
-        error
-    ) {
+    } catch (error) {
 
         console.error(
-            "A/L Model Papers Error:",
+            "Failed to load student:",
             error
         );
 
-
-        alert(
-            "Failed to load Model Papers."
-        );
-
+        return null;
     }
-
 }
 
 
-// =====================================================
+// ============================================================
+// CHECK WHETHER PAPER WAS VIEWED
+// ============================================================
+
+function hasViewedPaper(
+    studentData,
+    paperId
+) {
+
+    if (!studentData) {
+        return false;
+    }
+
+    /*
+     * Main structure:
+     *
+     * paperViews.al.model.paper01
+     */
+
+    const viewed =
+        studentData
+            ?.paperViews
+            ?.al
+            ?.model
+            ?.[paperId];
+
+
+    return viewed === true;
+}
+
+
+// ============================================================
+// CHECK PAPER ACCESS
+// ============================================================
+
+function hasPaperAccess(
+    studentData,
+    paperId
+) {
+
+    /*
+     * Existing access fields:
+     *
+     * paper01
+     * paper02
+     * ...
+     */
+
+    if (!studentData) {
+
+        // If student data is unavailable,
+        // do not accidentally block all papers.
+        return true;
+    }
+
+
+    const value =
+        studentData[paperId];
+
+
+    /*
+     * Accept common Firestore values.
+     */
+
+    return (
+        value === true ||
+        value === "true" ||
+        value === 1 ||
+        value === "1"
+    );
+}
+
+
+// ============================================================
+// UPDATE PAPER UI
+// ============================================================
+
+function updatePaperUI(
+    paperNumber,
+    status
+) {
+
+    const element =
+        findPaperElement(
+            paperNumber
+        );
+
+
+    if (!element) {
+
+        console.warn(
+            `Paper element not found: paper${String(paperNumber).padStart(2, "0")}`
+        );
+
+        return;
+    }
+
+
+    const number =
+        String(paperNumber).padStart(2, "0");
+
+
+    // Remove previous states
+
+    element.classList.remove(
+        "disabled",
+        "paper-viewed",
+        "paper-available"
+    );
+
+
+    // Remove old disabled attributes
+
+    element.removeAttribute(
+        "disabled"
+    );
+
+    element.removeAttribute(
+        "aria-disabled"
+    );
+
+
+    // ========================================================
+    // VIEWED
+    // ========================================================
+
+    if (
+        status === "viewed"
+    ) {
+
+        element.classList.add(
+            "paper-viewed"
+        );
+
+        element.setAttribute(
+            "aria-disabled",
+            "true"
+        );
+
+
+        /*
+         * Prevent opening.
+         */
+
+        element.onclick =
+            function(event) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+
+                alert(
+                    `Model Paper ${number} has already been viewed.`
+                );
+
+            };
+
+
+        /*
+         * Update visible status if the card
+         * contains a status element.
+         */
+
+        const statusElement =
+            element.querySelector(
+                ".paper-status"
+            );
+
+
+        if (statusElement) {
+
+            statusElement.textContent =
+                "🔵 Viewed";
+
+        }
+
+
+        /*
+         * If no dedicated status exists,
+         * try to replace "Available".
+         */
+
+        element
+            .querySelectorAll(
+                "span"
+            )
+            .forEach(
+                span => {
+
+                    const text =
+                        span.textContent
+                            .toLowerCase();
+
+                    if (
+                        text.includes(
+                            "available"
+                        )
+                    ) {
+
+                        span.textContent =
+                            "🔵 Viewed";
+
+                    }
+
+                }
+            );
+
+
+        return;
+    }
+
+
+    // ========================================================
+    // AVAILABLE
+    // ========================================================
+
+    if (
+        status === "available"
+    ) {
+
+        element.classList.add(
+            "paper-available"
+        );
+
+
+        element.onclick =
+            function(event) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                openPaper(
+                    paperNumber
+                );
+
+            };
+
+
+        const statusElement =
+            element.querySelector(
+                ".paper-status"
+            );
+
+
+        if (statusElement) {
+
+            statusElement.textContent =
+                "🟢 Available";
+
+        }
+
+
+        element
+            .querySelectorAll(
+                "span"
+            )
+            .forEach(
+                span => {
+
+                    const text =
+                        span.textContent
+                            .toLowerCase();
+
+                    if (
+                        text.includes(
+                            "viewed"
+                        ) ||
+                        text.includes(
+                            "available"
+                        )
+                    ) {
+
+                        span.textContent =
+                            "🟢 Available";
+
+                    }
+
+                }
+            );
+
+
+        return;
+    }
+
+
+    // ========================================================
+    // NOT AVAILABLE
+    // ========================================================
+
+    if (
+        status === "locked"
+    ) {
+
+        element.classList.add(
+            "disabled"
+        );
+
+        element.setAttribute(
+            "aria-disabled",
+            "true"
+        );
+
+
+        element.onclick =
+            function(event) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                alert(
+                    "This paper is not available yet."
+                );
+
+            };
+
+
+        const statusElement =
+            element.querySelector(
+                ".paper-status"
+            );
+
+
+        if (statusElement) {
+
+            statusElement.textContent =
+                "🔒 Locked";
+
+        }
+    }
+}
+
+
+// ============================================================
+// SETUP ALL PAPERS
+// ============================================================
+
+async function setupPapers() {
+
+    console.log(
+        "Loading A/L model paper status..."
+    );
+
+
+    const studentData =
+        await getStudentData();
+
+
+    for (
+        let i = 1;
+        i <= 10;
+        i++
+    ) {
+
+        const paperId =
+            `paper${String(i).padStart(2, "0")}`;
+
+
+        // ----------------------------------------------------
+        // CHECK ACCESS
+        // ----------------------------------------------------
+
+        const accessible =
+            hasPaperAccess(
+                studentData,
+                paperId
+            );
+
+
+        if (!accessible) {
+
+            updatePaperUI(
+                i,
+                "locked"
+            );
+
+            continue;
+        }
+
+
+        // ----------------------------------------------------
+        // CHECK VIEWED
+        // ----------------------------------------------------
+
+        const viewed =
+            hasViewedPaper(
+                studentData,
+                paperId
+            );
+
+
+        if (viewed) {
+
+            updatePaperUI(
+                i,
+                "viewed"
+            );
+
+        } else {
+
+            updatePaperUI(
+                i,
+                "available"
+            );
+
+        }
+
+    }
+
+
+    console.log(
+        "A/L model paper statuses loaded."
+    );
+}
+
+
+// ============================================================
 // OPEN PAPER
-// =====================================================
+// ============================================================
 
 function openPaper(
     paperNumber
 ) {
 
-    if (
-        !studentId
-    ) {
-
-        alert(
-            "Student ID not found. Please login again."
-        );
-
-        window.location.replace(
-            "index.html"
-        );
-
-        return;
-
-    }
-
-
     const number =
-        String(
-            paperNumber
-        ).padStart(
-            2,
-            "0"
-        );
+        String(paperNumber).padStart(2, "0");
+
+    const paperId =
+        `paper${number}`;
 
 
-    const paper =
-        "paper" +
-        number;
+    const studentDataPromise =
+        getStudentData();
 
 
-    console.log(
-        "Opening A/L Model Paper:",
-        paper
+    studentDataPromise.then(
+        studentData => {
+
+            // ----------------------------------------------
+            // Check again before opening
+            // ----------------------------------------------
+
+            if (
+                hasViewedPaper(
+                    studentData,
+                    paperId
+                )
+            ) {
+
+                alert(
+                    `Model Paper ${number} has already been viewed.`
+                );
+
+                return;
+            }
+
+
+            if (
+                studentData &&
+                !hasPaperAccess(
+                    studentData,
+                    paperId
+                )
+            ) {
+
+                alert(
+                    "This paper is not available."
+                );
+
+                return;
+            }
+
+
+            // ----------------------------------------------
+            // Store student ID
+            // ----------------------------------------------
+
+            if (studentId) {
+
+                sessionStorage.setItem(
+                    "studentId",
+                    studentId
+                );
+
+            }
+
+
+            // ----------------------------------------------
+            // Open viewer
+            // ----------------------------------------------
+
+            const url =
+                `viewer.html?` +
+                `paper=${encodeURIComponent(
+                    paperId
+                )}` +
+                `&id=${encodeURIComponent(
+                    studentId || ""
+                )}` +
+                `&type=al-model`;
+
+
+            console.log(
+                "Opening model paper:",
+                url
+            );
+
+
+            window.location.href =
+                url;
+
+        }
     );
-
-
-    // =================================================
-    // VIEWER
-    // =================================================
-
-    const url =
-        "viewer.html?" +
-        "paper=" +
-        encodeURIComponent(
-            paper
-        ) +
-        "&id=" +
-        encodeURIComponent(
-            studentId
-        ) +
-        "&type=al-model";
-
-
-    window.location.href =
-        url;
-
 }
 
 
-// =====================================================
+// ============================================================
 // GLOBAL FUNCTION
-// =====================================================
+// ============================================================
 
 window.openPaper =
     openPaper;
 
 
-// =====================================================
-// START
-// =====================================================
+// ============================================================
+// INITIALIZE
+// ============================================================
 
-loadModelPapers();
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        setupPapers();
+
+    }
+);
