@@ -40,7 +40,14 @@ if (!adminLoggedIn) {
 // PAPER SETTINGS
 // =====================================================
 
+// Existing student permission system
 const TOTAL_PAPERS = 13;
+
+// New A/L model paper system
+const AL_MODEL_PAPERS = 15;
+
+// Legacy viewed fields supported
+const MAX_LEGACY_VIEWED_PAPERS = 50;
 
 const ACTIVE_LIMIT =
     90 * 1000;
@@ -609,9 +616,14 @@ function getViewedCount(data) {
     let count = 0;
 
 
+    // -------------------------------------------------
+    // LEGACY VIEWED FIELDS
+    // paper01Viewed ... paper50Viewed
+    // -------------------------------------------------
+
     for (
         let i = 1;
-        i <= TOTAL_PAPERS;
+        i <= MAX_LEGACY_VIEWED_PAPERS;
         i++
     ) {
 
@@ -624,6 +636,44 @@ function getViewedCount(data) {
         ) {
 
             count++;
+
+        }
+
+    }
+
+
+    // -------------------------------------------------
+    // A/L NESTED MODEL VIEWED FIELDS
+    // paperViews.al.model.paper01 ... paper15
+    //
+    // Only count these if legacy fields are not already
+    // representing the same paper.
+    // -------------------------------------------------
+
+    const alModel =
+        data?.paperViews?.al?.model;
+
+
+    if (alModel) {
+
+        for (
+            let i = 1;
+            i <= AL_MODEL_PAPERS;
+            i++
+        ) {
+
+            const paper =
+                getPaperField(i);
+
+
+            if (
+                alModel[paper] === true &&
+                data?.[paper + "Viewed"] !== true
+            ) {
+
+                count++;
+
+            }
 
         }
 
@@ -1596,6 +1646,47 @@ if (saveNewStudent) {
 
 
                 // ---------------------------------
+                // DEFAULT A/L MODEL VIEW STRUCTURE
+                // ---------------------------------
+
+                if (
+                    type === "al"
+                ) {
+
+                    studentData.paperViews = {
+
+                        al: {
+
+                            model: {}
+
+                        }
+
+                    };
+
+
+                    for (
+                        let i = 1;
+                        i <= AL_MODEL_PAPERS;
+                        i++
+                    ) {
+
+                        const paper =
+                            getPaperField(i);
+
+
+                        studentData
+                            .paperViews
+                            .al
+                            .model[
+                                paper
+                            ] = false;
+
+                    }
+
+                }
+
+
+                // ---------------------------------
                 // SAVE
                 // ---------------------------------
 
@@ -2265,7 +2356,19 @@ if (removeAllPapers) {
 
 
 // =====================================================
-// RESET VIEWED 01 - 13
+// RESET VIEWED - ALL PAPER VIEW STATUS
+// =====================================================
+//
+// This resets BOTH systems:
+//
+// 1. Legacy:
+//    paper01Viewed ... paper50Viewed
+//
+// 2. New A/L Model:
+//    paperViews.al.model.paper01
+//    ...
+//    paperViews.al.model.paper15
+//
 // =====================================================
 
 if (resetViewed) {
@@ -2287,7 +2390,7 @@ if (resetViewed) {
 
             const confirmed =
                 confirm(
-                    "Reset all viewed paper status for this student?"
+                    "Reset ALL viewed paper status for this student?"
                 );
 
 
@@ -2300,46 +2403,95 @@ if (resetViewed) {
                 true;
 
 
+            const originalButtonText =
+                resetViewed.textContent;
+
+
+            resetViewed.textContent =
+                "Resetting...";
+
+
             try {
 
                 const updateData = {};
 
 
-                // ---------------------------------
-                // RESET PAPER 01 - 13
-                // ---------------------------------
+                // =================================================
+                // 1. RESET LEGACY VIEWED FIELDS
+                // =================================================
+                //
+                // paper01Viewed
+                // paper02Viewed
+                // ...
+                // paper50Viewed
+                //
+                // =================================================
 
                 for (
                     let i = 1;
-                    i <= TOTAL_PAPERS;
+                    i <= MAX_LEGACY_VIEWED_PAPERS;
                     i++
                 ) {
 
+                    const paper =
+                        getPaperField(i);
+
+
                     updateData[
-                        getPaperViewedField(i)
+                        paper + "Viewed"
                     ] = false;
 
                 }
 
 
-                await updateDoc(
+                // =================================================
+                // 2. RESET A/L MODEL VIEWED FIELDS
+                // =================================================
+                //
+                // paperViews.al.model.paper01
+                // ...
+                // paperViews.al.model.paper15
+                //
+                // =================================================
+
+                for (
+                    let i = 1;
+                    i <= AL_MODEL_PAPERS;
+                    i++
+                ) {
+
+                    const paper =
+                        getPaperField(i);
+
+
+                    updateData[
+                        `paperViews.al.model.${paper}`
+                    ] = false;
+
+                }
+
+
+                // =================================================
+                // 3. UPDATE FIRESTORE
+                // =================================================
+
+                const studentRef =
                     doc(
                         db,
                         "students",
                         currentStudentId
-                    ),
+                    );
+
+
+                await updateDoc(
+                    studentRef,
                     updateData
                 );
 
 
-                alert(
-                    "Viewed status reset successfully."
-                );
-
-
-                // ---------------------------------
-                // UPDATE LOCAL DATA
-                // ---------------------------------
+                // =================================================
+                // 4. UPDATE LOCAL DATA
+                // =================================================
 
                 const localStudent =
                     allStudents.find(
@@ -2351,18 +2503,90 @@ if (resetViewed) {
 
                 if (localStudent) {
 
+                    // ---------------------------------------------
+                    // Reset legacy fields locally
+                    // ---------------------------------------------
+
                     for (
                         let i = 1;
-                        i <= TOTAL_PAPERS;
+                        i <= MAX_LEGACY_VIEWED_PAPERS;
                         i++
                     ) {
 
+                        const paper =
+                            getPaperField(i);
+
+
                         localStudent.data[
-                            getPaperViewedField(i)
+                            paper + "Viewed"
                         ] = false;
 
                     }
 
+
+                    // ---------------------------------------------
+                    // Make sure nested structure exists
+                    // ---------------------------------------------
+
+                    if (
+                        !localStudent.data.paperViews
+                    ) {
+
+                        localStudent.data.paperViews =
+                            {};
+
+                    }
+
+
+                    if (
+                        !localStudent.data.paperViews.al
+                    ) {
+
+                        localStudent.data.paperViews.al =
+                            {};
+
+                    }
+
+
+                    if (
+                        !localStudent.data.paperViews.al.model
+                    ) {
+
+                        localStudent.data
+                            .paperViews
+                            .al
+                            .model = {};
+
+                    }
+
+
+                    // ---------------------------------------------
+                    // Reset A/L model fields locally
+                    // ---------------------------------------------
+
+                    for (
+                        let i = 1;
+                        i <= AL_MODEL_PAPERS;
+                        i++
+                    ) {
+
+                        const paper =
+                            getPaperField(i);
+
+
+                        localStudent.data
+                            .paperViews
+                            .al
+                            .model[
+                                paper
+                            ] = false;
+
+                    }
+
+
+                    // ---------------------------------------------
+                    // Reset displayed viewed count
+                    // ---------------------------------------------
 
                     localStudent.viewed =
                         0;
@@ -2370,7 +2594,20 @@ if (resetViewed) {
                 }
 
 
+                // =================================================
+                // 5. REFRESH TABLE
+                // =================================================
+
                 applyFilters();
+
+
+                // =================================================
+                // 6. SUCCESS
+                // =================================================
+
+                alert(
+                    "✅ All viewed paper status reset successfully."
+                );
 
             }
             catch (error) {
@@ -2382,7 +2619,8 @@ if (resetViewed) {
 
 
                 alert(
-                    "Failed to reset viewed status."
+                    "❌ Failed to reset viewed status.\n\n" +
+                    error.message
                 );
 
             }
@@ -2390,6 +2628,11 @@ if (resetViewed) {
 
                 resetViewed.disabled =
                     false;
+
+
+                resetViewed.textContent =
+                    originalButtonText ||
+                    "🔄 Reset Viewed";
 
             }
 
@@ -2461,8 +2704,18 @@ console.log(
 );
 
 console.log(
-    "📚 Total papers:",
+    "📚 Legacy permission papers:",
     TOTAL_PAPERS
+);
+
+console.log(
+    "📚 A/L model papers:",
+    AL_MODEL_PAPERS
+);
+
+console.log(
+    "👁️ Legacy viewed fields supported:",
+    MAX_LEGACY_VIEWED_PAPERS
 );
 
 console.log(
