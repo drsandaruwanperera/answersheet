@@ -270,14 +270,11 @@ function getDashboardData(
     // A/L
     // =================================================
     //
-    // IMPORTANT:
-    // Existing file is:
-    //
+    // Model Papers:
     // model-papers.html
     //
-    // NOT:
-    //
-    // al-model-papers.html
+    // Province Papers:
+    // province-paper1.html
     //
     // =================================================
 
@@ -294,7 +291,7 @@ function getDashboardData(
                 "model-papers.html",
 
             past:
-                "al-past-papers.html"
+                "province-paper1.html"
 
         };
 
@@ -580,6 +577,28 @@ function updateMaterialText(
 
         }
 
+
+        // ---------------------------------------------
+        // Make sure the link text is correct
+        // ---------------------------------------------
+
+        const pastLink =
+            document.querySelector(
+                "#pastPapersCard .material-link"
+            );
+
+
+        if (
+            pastLink
+        ) {
+
+            pastLink.innerHTML = `
+                Explore Province Papers
+                <span>→</span>
+            `;
+
+        }
+
     }
 
 }
@@ -606,16 +625,12 @@ function setupModelCard(
     }
 
 
-    // =================================================
-    // CORRECT URL
-    // =================================================
-
     let modelUrl = null;
 
 
-    // -------------------------------------------------
+    // =================================================
     // GRADE 10
-    // -------------------------------------------------
+    // =================================================
 
     if (
         type === "grade10"
@@ -627,9 +642,9 @@ function setupModelCard(
     }
 
 
-    // -------------------------------------------------
+    // =================================================
     // GRADE 11
-    // -------------------------------------------------
+    // =================================================
 
     else if (
         type === "grade11"
@@ -641,14 +656,9 @@ function setupModelCard(
     }
 
 
-    // -------------------------------------------------
+    // =================================================
     // A/L
-    // -------------------------------------------------
-    //
-    // IMPORTANT:
-    // Use existing model-papers.html
-    //
-    // -------------------------------------------------
+    // =================================================
 
     else if (
         type === "al"
@@ -783,7 +793,7 @@ function setupModelCard(
 
 
 // =====================================================
-// SETUP PAST CARD
+// SETUP PAST / PROVINCE CARD
 // =====================================================
 
 function setupPastCard(
@@ -793,6 +803,10 @@ function setupPastCard(
     if (
         !pastPapersCard
     ) {
+
+        console.error(
+            "pastPapersCard not found."
+        );
 
         return;
 
@@ -833,15 +847,42 @@ function setupPastCard(
     // =================================================
     // A/L
     // =================================================
+    //
+    // IMPORTANT FIX:
+    //
+    // OLD:
+    // al-past-papers.html
+    //
+    // NEW:
+    // province-paper1.html
+    //
+    // =================================================
 
     else if (
         type === "al"
     ) {
 
         pastUrl =
-            "al-past-papers.html";
+            "province-paper1.html";
 
     }
+
+
+    console.log(
+        "Past / Province card URL:",
+        pastUrl
+    );
+
+
+    // =================================================
+    // REMOVE OLD EVENTS
+    // =================================================
+
+    pastPapersCard.onclick =
+        null;
+
+    pastPapersCard.onkeydown =
+        null;
 
 
     // =================================================
@@ -856,9 +897,20 @@ function setupPastCard(
             event.stopPropagation();
 
 
+            console.log(
+                "Past / Province card clicked:",
+                pastUrl
+            );
+
+
             if (
                 !pastUrl
             ) {
+
+                console.error(
+                    "Past URL not found for:",
+                    type
+                );
 
                 return;
 
@@ -1224,7 +1276,7 @@ async function loadStudent() {
         );
 
         console.log(
-            "Past URL:",
+            "Past / Province URL:",
             gradeInfo.past
         );
 
