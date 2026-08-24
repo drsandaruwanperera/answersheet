@@ -26,13 +26,19 @@ const msg =
 // SHOW MESSAGE
 // =========================================
 
-function showMessage(message, type = "error") {
+function showMessage(
+    message,
+    type = "error"
+) {
 
     if (!msg) {
         return;
     }
 
-    msg.textContent = message;
+
+    msg.textContent =
+        message;
+
 
     msg.style.color =
         type === "success"
@@ -43,19 +49,21 @@ function showMessage(message, type = "error") {
 
 
 // =========================================
-// GET STUDENT TYPE
+// DETECT STUDENT TYPE
 // =========================================
 //
-// 26000 - 26999 = Grade 11
-// 27000 - 27999 = Grade 10
+// RULE:
 //
-// 2005xxxxxxx = A/L
-// 2006xxxxxxx = A/L
-// 2007xxxxxxx = A/L
-// 2008xxxxxxx = A/L
-// 2009xxxxxxx = A/L
+// 26000 - 26999  = Grade 11
 //
-// Old NIC = A/L
+// 27000 - 27999  = Grade 10
+//
+// EVERYTHING ELSE = A/L
+//
+// Firebase studentType / grade is checked FIRST.
+// This means existing explicitly configured
+// Grade 10 / Grade 11 students continue to work.
+//
 // =========================================
 
 function detectStudentType(
@@ -64,10 +72,15 @@ function detectStudentType(
 ) {
 
     const cleanId =
-        String(studentId || "")
-            .trim()
-            .replace(/\s+/g, "")
-            .toUpperCase();
+        String(
+            studentId || ""
+        )
+        .trim()
+        .replace(
+            /\s+/g,
+            ""
+        )
+        .toUpperCase();
 
 
     // =====================================
@@ -78,8 +91,8 @@ function detectStudentType(
         String(
             data?.studentType || ""
         )
-            .trim()
-            .toLowerCase();
+        .trim()
+        .toLowerCase();
 
 
     if (
@@ -123,8 +136,8 @@ function detectStudentType(
         String(
             data?.grade || ""
         )
-            .trim()
-            .toLowerCase();
+        .trim()
+        .toLowerCase();
 
 
     if (
@@ -163,15 +176,19 @@ function detectStudentType(
 
 
     // =====================================
-    // 3. GRADE 11 ID
+    // 3. GRADE 11 STUDENT ID
     // =====================================
 
     if (
-        /^\d{5}$/.test(cleanId)
+        /^\d{5}$/.test(
+            cleanId
+        )
     ) {
 
         const number =
-            Number(cleanId);
+            Number(
+                cleanId
+            );
 
 
         if (
@@ -185,7 +202,7 @@ function detectStudentType(
 
 
         // =================================
-        // GRADE 10
+        // 4. GRADE 10 STUDENT ID
         // =================================
 
         if (
@@ -201,40 +218,28 @@ function detectStudentType(
 
 
     // =====================================
-    // 4. A/L 2005 - 2009
+    // 5. ALL OTHER STUDENT IDs = A/L
     // =====================================
-
-    if (
-        /^(2005|2006|2007|2008|2009)\d+$/.
-            test(cleanId)
-    ) {
-
-        return "al";
-
-    }
-
-
-    // =====================================
-    // 5. OLD NIC
-    // Example:
+    //
+    // This includes:
+    //
+    // 2005xxxxxxx
+    // 2006xxxxxxx
+    // 2007xxxxxxx
+    // 2008xxxxxxx
+    // 2009xxxxxxx
+    //
+    // Old NIC:
     // 123456789V
     // 123456789X
+    //
+    // And any other Student ID that is
+    // NOT in the Grade 10 / Grade 11
+    // ranges above.
+    //
     // =====================================
 
-    if (
-        /^\d{9}[VX]$/.test(cleanId)
-    ) {
-
-        return "al";
-
-    }
-
-
-    // =====================================
-    // UNKNOWN
-    // =====================================
-
-    return null;
+    return "al";
 
 }
 
@@ -243,19 +248,36 @@ function detectStudentType(
 // GET DISPLAY GRADE
 // =========================================
 
-function getGradeName(type) {
+function getGradeName(
+    type
+) {
 
-    if (type === "grade10") {
+    if (
+        type === "grade10"
+    ) {
+
         return "Grade 10";
+
     }
 
-    if (type === "grade11") {
+
+    if (
+        type === "grade11"
+    ) {
+
         return "Grade 11";
+
     }
 
-    if (type === "al") {
+
+    if (
+        type === "al"
+    ) {
+
         return "Advanced Level";
+
     }
+
 
     return "Student";
 
@@ -288,7 +310,9 @@ async function loginStudent() {
             "Please enter your Student ID."
         );
 
+
         studentIdInput?.focus();
+
 
         return;
 
@@ -301,7 +325,9 @@ async function loginStudent() {
             "Please enter your password."
         );
 
+
         passwordInput?.focus();
+
 
         return;
 
@@ -314,7 +340,9 @@ async function loginStudent() {
 
     if (loginBtn) {
 
-        loginBtn.disabled = true;
+        loginBtn.disabled =
+            true;
+
 
         loginBtn.innerHTML =
             `
@@ -324,7 +352,9 @@ async function loginStudent() {
     }
 
 
-    showMessage("");
+    showMessage(
+        ""
+    );
 
 
     try {
@@ -359,6 +389,7 @@ async function loginStudent() {
                 "Invalid Student ID or password."
             );
 
+
             return;
 
         }
@@ -387,6 +418,7 @@ async function loginStudent() {
                 "Invalid Student ID or password."
             );
 
+
             return;
 
         }
@@ -401,33 +433,6 @@ async function loginStudent() {
                 studentId,
                 data
             );
-
-
-        // =================================
-        // CATEGORY NOT FOUND
-        // =================================
-
-        if (!studentType) {
-
-            console.error(
-                "Student category could not be detected.",
-                {
-                    studentId,
-                    studentType:
-                        data?.studentType,
-                    grade:
-                        data?.grade
-                }
-            );
-
-
-            showMessage(
-                "Student category is not configured. Please contact the administrator."
-            );
-
-            return;
-
-        }
 
 
         // =================================
@@ -494,29 +499,35 @@ async function loginStudent() {
             "================================"
         );
 
+
         console.log(
             "LOGIN SUCCESS"
         );
+
 
         console.log(
             "Student ID:",
             studentId
         );
 
+
         console.log(
             "Student Type:",
             studentType
         );
+
 
         console.log(
             "Grade:",
             gradeName
         );
 
+
         console.log(
             "Student Name:",
             studentName
         );
+
 
         console.log(
             "================================"
@@ -550,7 +561,9 @@ async function loginStudent() {
 
     }
 
-    catch (error) {
+    catch (
+        error
+    ) {
 
         console.error(
             "Student login error:",
@@ -568,7 +581,9 @@ async function loginStudent() {
 
         if (loginBtn) {
 
-            loginBtn.disabled = false;
+            loginBtn.disabled =
+                false;
+
 
             loginBtn.innerHTML =
                 `
@@ -604,7 +619,8 @@ if (loginBtn) {
 [
     studentIdInput,
     passwordInput
-].forEach(
+]
+.forEach(
     input => {
 
         if (!input) {
@@ -617,10 +633,12 @@ if (loginBtn) {
             event => {
 
                 if (
-                    event.key === "Enter"
+                    event.key ===
+                    "Enter"
                 ) {
 
                     event.preventDefault();
+
 
                     loginStudent();
 
@@ -644,7 +662,10 @@ if (studentIdInput) {
         () => {
 
             if (msg) {
-                msg.textContent = "";
+
+                msg.textContent =
+                    "";
+
             }
 
         }
@@ -660,7 +681,10 @@ if (passwordInput) {
         () => {
 
             if (msg) {
-                msg.textContent = "";
+
+                msg.textContent =
+                    "";
+
             }
 
         }
@@ -674,9 +698,25 @@ if (passwordInput) {
 // =========================================
 
 console.log(
+    "================================"
+);
+
+console.log(
     "✅ Student Login System Loaded"
 );
 
 console.log(
-    "Supported A/L batches: 2005, 2006, 2007, 2008, 2009"
+    "Grade 11 IDs: 26000 - 26999"
+);
+
+console.log(
+    "Grade 10 IDs: 27000 - 27999"
+);
+
+console.log(
+    "All other IDs: A/L"
+);
+
+console.log(
+    "================================"
 );
