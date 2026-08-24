@@ -1,3 +1,4 @@
+```javascript
 // ============================================================
 // A/L MODEL PAPERS
 // model-papers.js
@@ -22,7 +23,7 @@ if (
 
 
 // ============================================================
-// STUDENT ID
+// GET STUDENT ID
 // ============================================================
 
 function getStudentId() {
@@ -32,19 +33,19 @@ function getStudentId() {
             window.location.search
         );
 
-    const urlId =
+    const urlStudentId =
         params.get("id") ||
         params.get("studentId");
 
 
-    if (urlId) {
+    if (urlStudentId) {
 
         sessionStorage.setItem(
             "studentId",
-            urlId
+            urlStudentId
         );
 
-        return urlId;
+        return urlStudentId;
     }
 
 
@@ -59,7 +60,7 @@ const studentId =
 
 
 // ============================================================
-// GET PAPER ELEMENT
+// FIND PAPER CARD / BUTTON
 // ============================================================
 
 function findPaperElement(
@@ -106,7 +107,9 @@ function findPaperElement(
 
 
             if (element) {
+
                 return element;
+
             }
 
         } catch (error) {
@@ -117,6 +120,7 @@ function findPaperElement(
             );
 
         }
+
     }
 
 
@@ -182,7 +186,7 @@ async function getStudentData() {
 
 
 // ============================================================
-// CHECK VIEWED STATUS
+// CHECK WHETHER PAPER WAS VIEWED
 // ============================================================
 
 function hasViewedPaper(
@@ -191,9 +195,22 @@ function hasViewedPaper(
 ) {
 
     if (!studentData) {
+
         return false;
+
     }
 
+
+    /*
+     * Firestore structure:
+     *
+     * paperViews
+     *   └── al
+     *       └── model
+     *           ├── paper01: true
+     *           ├── paper02: true
+     *           └── ...
+     */
 
     const viewed =
         studentData
@@ -217,7 +234,33 @@ function hasPaperAccess(
 ) {
 
     if (!studentData) {
+
         return false;
+
+    }
+
+
+    /*
+     * IMPORTANT
+     *
+     * If the paper field does not exist,
+     * the existing project behavior is:
+     *
+     *       AVAILABLE
+     *
+     * Therefore we MUST NOT treat a missing
+     * field as locked.
+     */
+
+    if (
+        !Object.prototype.hasOwnProperty.call(
+            studentData,
+            paperId
+        )
+    ) {
+
+        return true;
+
     }
 
 
@@ -235,7 +278,83 @@ function hasPaperAccess(
 
 
 // ============================================================
-// UPDATE PAPER CARD STATUS
+// UPDATE STATUS TEXT
+// ============================================================
+
+function updateStatusText(
+    element,
+    status
+) {
+
+    if (!element) {
+
+        return;
+
+    }
+
+
+    /*
+     * If the HTML has:
+     *
+     * <span class="paper-status">
+     *
+     * use it.
+     */
+
+    const dedicatedStatus =
+        element.querySelector(
+            ".paper-status"
+        );
+
+
+    if (dedicatedStatus) {
+
+        dedicatedStatus.textContent =
+            status;
+
+        return;
+
+    }
+
+
+    /*
+     * Otherwise update an existing span
+     * containing Available / Viewed.
+     */
+
+    const spans =
+        element.querySelectorAll(
+            "span"
+        );
+
+
+    spans.forEach(
+        span => {
+
+            const text =
+                span.textContent
+                    .toLowerCase()
+                    .trim();
+
+
+            if (
+                text.includes("available") ||
+                text.includes("viewed") ||
+                text.includes("locked")
+            ) {
+
+                span.textContent =
+                    status;
+
+            }
+
+        }
+    );
+}
+
+
+// ============================================================
+// UPDATE PAPER UI
 // ============================================================
 
 function updatePaperUI(
@@ -256,17 +375,36 @@ function updatePaperUI(
         );
 
         return;
+
     }
 
 
+    const number =
+        String(
+            paperNumber
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    const paperId =
+        `paper${number}`;
+
+
     // --------------------------------------------------------
-    // REMOVE OLD CLASSES
+    // REMOVE PREVIOUS STATES
     // --------------------------------------------------------
 
     element.classList.remove(
         "paper-viewed",
         "paper-available",
         "disabled"
+    );
+
+
+    element.removeAttribute(
+        "aria-disabled"
     );
 
 
@@ -289,18 +427,21 @@ function updatePaperUI(
         );
 
 
+        /*
+         * IMPORTANT:
+         *
+         * Do not simply remove onclick.
+         * We attach a function that performs
+         * the Firestore check again.
+         */
+
         element.onclick =
             async function(event) {
 
                 event.preventDefault();
+
                 event.stopPropagation();
 
-
-                /*
-                 * Check Firestore AGAIN.
-                 *
-                 * This is the important protection.
-                 */
 
                 await openPaper(
                     paperNumber
@@ -312,6 +453,11 @@ function updatePaperUI(
         updateStatusText(
             element,
             "🔵 Viewed"
+        );
+
+
+        console.log(
+            `${paperId}: VIEWED`
         );
 
 
@@ -341,6 +487,7 @@ function updatePaperUI(
             async function(event) {
 
                 event.preventDefault();
+
                 event.stopPropagation();
 
 
@@ -354,6 +501,11 @@ function updatePaperUI(
         updateStatusText(
             element,
             "🟢 Available"
+        );
+
+
+        console.log(
+            `${paperId}: AVAILABLE`
         );
 
 
@@ -384,11 +536,12 @@ function updatePaperUI(
             function(event) {
 
                 event.preventDefault();
+
                 event.stopPropagation();
 
 
                 alert(
-                    "This paper is not available yet."
+                    `Model Paper ${number} is not available.`
                 );
 
             };
@@ -398,90 +551,37 @@ function updatePaperUI(
             element,
             "🔒 Locked"
         );
+
+
+        console.log(
+            `${paperId}: LOCKED`
+        );
+
     }
 }
 
 
 // ============================================================
-// UPDATE STATUS TEXT
-// ============================================================
-
-function updateStatusText(
-    element,
-    text
-) {
-
-    /*
-     * If the HTML has a dedicated:
-     *
-     * <span class="paper-status">
-     *
-     * use it.
-     */
-
-    const statusElement =
-        element.querySelector(
-            ".paper-status"
-        );
-
-
-    if (statusElement) {
-
-        statusElement.textContent =
-            text;
-
-        return;
-    }
-
-
-    /*
-     * Otherwise update existing spans.
-     */
-
-    const spans =
-        element.querySelectorAll(
-            "span"
-        );
-
-
-    spans.forEach(
-        span => {
-
-            const oldText =
-                span.textContent
-                    .toLowerCase();
-
-
-            if (
-                oldText.includes(
-                    "available"
-                ) ||
-                oldText.includes(
-                    "viewed"
-                ) ||
-                oldText.includes(
-                    "locked"
-                )
-            ) {
-
-                span.textContent =
-                    text;
-
-            }
-
-        }
-    );
-}
-
-
-// ============================================================
-// SETUP PAPERS
+// SETUP ALL PAPERS
 // ============================================================
 
 async function setupPapers() {
 
     console.log(
-        "Loading A/L Model Paper access..."
+        "===================================="
+    );
+
+    console.log(
+        "Loading A/L Model Paper Status"
+    );
+
+    console.log(
+        "Student ID:",
+        studentId
+    );
+
+    console.log(
+        "===================================="
     );
 
 
@@ -492,7 +592,7 @@ async function setupPapers() {
     if (!studentData) {
 
         console.error(
-            "Student data could not be loaded."
+            "Unable to load student data."
         );
 
         return;
@@ -500,7 +600,7 @@ async function setupPapers() {
 
 
     // --------------------------------------------------------
-    // PAPER 01 - 10
+    // PAPERS 01 - 10
     // --------------------------------------------------------
 
     for (
@@ -510,11 +610,16 @@ async function setupPapers() {
     ) {
 
         const paperId =
-            `paper${String(i).padStart(2, "0")}`;
+            `paper${String(
+                i
+            ).padStart(
+                2,
+                "0"
+            )}`;
 
 
         // ----------------------------------------------------
-        // ACCESS
+        // CHECK ACCESS
         // ----------------------------------------------------
 
         const accessible =
@@ -532,11 +637,12 @@ async function setupPapers() {
             );
 
             continue;
+
         }
 
 
         // ----------------------------------------------------
-        // VIEWED
+        // CHECK VIEWED
         // ----------------------------------------------------
 
         const viewed =
@@ -548,12 +654,21 @@ async function setupPapers() {
 
         if (viewed) {
 
+            /*
+             * ONLY THIS PAPER becomes viewed/locked.
+             */
+
             updatePaperUI(
                 i,
                 "viewed"
             );
 
         } else {
+
+            /*
+             * Missing paperViews field means
+             * the paper is still available.
+             */
 
             updatePaperUI(
                 i,
@@ -566,7 +681,15 @@ async function setupPapers() {
 
 
     console.log(
-        "A/L Model Paper status loaded."
+        "===================================="
+    );
+
+    console.log(
+        "A/L Model Paper Status Loaded"
+    );
+
+    console.log(
+        "===================================="
     );
 }
 
@@ -593,14 +716,22 @@ async function openPaper(
 
 
     console.log(
-        "Checking paper before opening:",
+        "------------------------------------"
+    );
+
+    console.log(
+        "Checking paper before opening:"
+    );
+
+    console.log(
+        "Paper:",
         paperId
     );
 
 
-    // --------------------------------------------------------
+    // ========================================================
     // ALWAYS READ FIRESTORE AGAIN
-    // --------------------------------------------------------
+    // ========================================================
 
     const studentData =
         await getStudentData();
@@ -616,9 +747,9 @@ async function openPaper(
     }
 
 
-    // --------------------------------------------------------
+    // ========================================================
     // CHECK ACCESS
-    // --------------------------------------------------------
+    // ========================================================
 
     const accessible =
         hasPaperAccess(
@@ -637,9 +768,9 @@ async function openPaper(
     }
 
 
-    // --------------------------------------------------------
+    // ========================================================
     // CHECK VIEWED
-    // --------------------------------------------------------
+    // ========================================================
 
     const alreadyViewed =
         hasViewedPaper(
@@ -651,7 +782,7 @@ async function openPaper(
     if (alreadyViewed) {
 
         console.log(
-            `Blocked: ${paperId} has already been viewed.`
+            `BLOCKED: ${paperId} has already been viewed.`
         );
 
 
@@ -664,9 +795,9 @@ async function openPaper(
     }
 
 
-    // --------------------------------------------------------
+    // ========================================================
     // SAVE STUDENT ID
-    // --------------------------------------------------------
+    // ========================================================
 
     if (studentId) {
 
@@ -678,9 +809,9 @@ async function openPaper(
     }
 
 
-    // --------------------------------------------------------
+    // ========================================================
     // VIEWER URL
-    // --------------------------------------------------------
+    // ========================================================
 
     const viewerUrl =
         `viewer.html?` +
@@ -688,20 +819,23 @@ async function openPaper(
             paperId
         )}` +
         `&id=${encodeURIComponent(
-            studentId
+            studentId || ""
         )}` +
         `&type=al-model`;
 
 
     console.log(
-        "Opening:",
+        "Opening viewer:"
+    );
+
+    console.log(
         viewerUrl
     );
 
 
-    // --------------------------------------------------------
-    // OPEN
-    // --------------------------------------------------------
+    // ========================================================
+    // OPEN VIEWER
+    // ========================================================
 
     window.location.href =
         viewerUrl;
@@ -722,7 +856,7 @@ window.openPaper =
 
 document.addEventListener(
     "DOMContentLoaded",
-    () => {
+    function() {
 
         setupPapers();
 
@@ -742,3 +876,4 @@ console.log(
     "Student ID:",
     studentId
 );
+```
