@@ -1,5 +1,5 @@
 // ============================================================
-// MODEL PAPER VIEWER
+// A/L MODEL PAPER VIEWER
 // ============================================================
 
 import {
@@ -11,17 +11,13 @@ import {
 
 
 // ============================================================
-// LOGIN CHECK
+// LOGIN
 // ============================================================
 
 if (
     sessionStorage.getItem("loggedIn") !== "true"
 ) {
-
-    window.location.replace(
-        "index.html"
-    );
-
+    window.location.replace("index.html");
 }
 
 
@@ -34,37 +30,32 @@ const params =
         window.location.search
     );
 
-
 const paper =
     params.get("paper");
 
-
 const studentId =
     params.get("id") ||
-    sessionStorage.getItem(
-        "studentId"
-    );
-
+    sessionStorage.getItem("studentId");
 
 const type =
-    params.get("type") ||
-    "";
+    params.get("type") || "";
 
 
 // ============================================================
-// VALIDATION
+// VALIDATE
 // ============================================================
 
 if (!paper) {
 
-    alert(
-        "Paper not found."
-    );
+    alert("Paper not found.");
 
     window.location.replace(
         "model-papers.html"
     );
 
+    throw new Error(
+        "Paper parameter missing"
+    );
 }
 
 
@@ -77,7 +68,6 @@ const paperNumber =
         "paper",
         ""
     );
-
 
 const formattedNumber =
     String(
@@ -100,7 +90,6 @@ const titleElement =
         "paperTitle"
     );
 
-
 const pagesContainer =
     document.getElementById(
         "pagesContainer"
@@ -108,12 +97,10 @@ const pagesContainer =
 
 
 // ============================================================
-// PAPER TITLE
+// TITLE
 // ============================================================
 
-if (
-    titleElement
-) {
+if (titleElement) {
 
     titleElement.textContent =
         `Model Paper ${formattedNumber}`;
@@ -122,31 +109,8 @@ if (
 
 
 // ============================================================
-// GO BACK
+// PAGE COUNTS
 // ============================================================
-
-function goBack() {
-
-    window.location.href =
-        "model-papers.html";
-
-}
-
-
-// ============================================================
-// GLOBAL BACK
-// ============================================================
-
-window.goBack =
-    goBack;
-
-
-// ============================================================
-// PAGE COUNT
-// ============================================================
-//
-// Based on your Paper Management screenshot.
-//
 
 const PAPER_PAGE_COUNTS = {
 
@@ -180,7 +144,22 @@ const pageCount =
 
 
 // ============================================================
-// LOAD JPG PAGES
+// BACK
+// ============================================================
+
+function goBack() {
+
+    window.location.href =
+        "model-papers.html";
+
+}
+
+window.goBack =
+    goBack;
+
+
+// ============================================================
+// LOAD ALL JPG PAGES
 // ============================================================
 
 function loadPages() {
@@ -188,7 +167,7 @@ function loadPages() {
     if (!pagesContainer) {
 
         console.error(
-            "pagesContainer not found."
+            "❌ pagesContainer not found in viewer.html"
         );
 
         return;
@@ -196,17 +175,14 @@ function loadPages() {
     }
 
 
-    pagesContainer.innerHTML =
-        "";
+    pagesContainer.innerHTML = "";
 
 
-    if (
-        pageCount <= 0
-    ) {
+    if (pageCount === 0) {
 
         pagesContainer.innerHTML = `
-            <div class="viewer-error">
-                Paper pages are not configured.
+            <div class="page-error">
+                No page count configured for ${paper}.
             </div>
         `;
 
@@ -215,9 +191,10 @@ function loadPages() {
     }
 
 
-    // ========================================================
-    // CREATE PAGES
-    // ========================================================
+    console.log(
+        `📄 Loading ${pageCount} pages for ${paper}`
+    );
+
 
     for (
         let i = 1;
@@ -226,27 +203,58 @@ function loadPages() {
     ) {
 
         const pageNumber =
-            String(
-                i
-            ).padStart(
+            String(i).padStart(
                 2,
                 "0"
             );
 
 
+        // ====================================================
+        // EXACT FILE PATH
+        // ====================================================
+
         const imagePath =
             `papers/${paper}/${paper}_Page_${pageNumber}.jpg`;
 
 
-        const wrapper =
+        console.log(
+            `Page ${i}:`,
+            imagePath
+        );
+
+
+        // ====================================================
+        // WRAPPER
+        // ====================================================
+
+        const pageWrapper =
             document.createElement(
                 "div"
             );
 
-
-        wrapper.className =
+        pageWrapper.className =
             "paper-page";
 
+
+        // ====================================================
+        // PAGE NUMBER
+        // ====================================================
+
+        const pageLabel =
+            document.createElement(
+                "div"
+            );
+
+        pageLabel.className =
+            "page-number";
+
+        pageLabel.textContent =
+            `Page ${i} / ${pageCount}`;
+
+
+        // ====================================================
+        // IMAGE
+        // ====================================================
 
         const image =
             document.createElement(
@@ -262,83 +270,110 @@ function loadPages() {
             `Model Paper ${formattedNumber} - Page ${i}`;
 
 
+        // IMPORTANT:
+        // Do NOT use lazy loading.
+        // Load every page.
+
         image.loading =
-            i === 1
-                ? "eager"
-                : "lazy";
+            "eager";
+
+
+        image.decoding =
+            "async";
 
 
         image.draggable =
             false;
 
 
-        image.addEventListener(
-            "contextmenu",
-            event => {
-                event.preventDefault();
-            }
+        image.setAttribute(
+            "oncontextmenu",
+            "return false;"
         );
 
 
         // ====================================================
-        // IMAGE ERROR
+        // SUCCESS
         // ====================================================
 
-        image.addEventListener(
-            "error",
-            () => {
+        image.onload =
+            function() {
+
+                console.log(
+                    `✅ Page ${i} loaded successfully`
+                );
+
+            };
+
+
+        // ====================================================
+        // ERROR
+        // ====================================================
+
+        image.onerror =
+            function() {
 
                 console.error(
-                    "Missing page:",
+                    `❌ PAGE ${i} NOT FOUND:`,
                     imagePath
                 );
 
 
-                wrapper.innerHTML = `
+                pageWrapper.classList.add(
+                    "page-load-error"
+                );
+
+
+                pageWrapper.innerHTML = `
+
                     <div class="page-error">
-                        Page ${i} could not be loaded.
+
+                        <strong>
+                            Page ${i} could not be loaded
+                        </strong>
+
+                        <small>
+                            ${imagePath}
+                        </small>
+
                     </div>
+
                 `;
 
-            }
+            };
+
+
+        // ====================================================
+        // APPEND
+        // ====================================================
+
+        pageWrapper.appendChild(
+            pageLabel
         );
 
-
-        wrapper.appendChild(
+        pageWrapper.appendChild(
             image
         );
 
-
         pagesContainer.appendChild(
-            wrapper
+            pageWrapper
         );
 
     }
-
-
-    console.log(
-        `✅ ${pageCount} pages loaded for ${paper}`
-    );
 
 }
 
 
 // ============================================================
-// TRACK VIEW
+// MARK AS VIEWED
 // ============================================================
-//
-// Only mark viewed after the viewer has successfully loaded.
-// This creates:
-//
-// paperViews.al.model.paper01 = true
-//
 
 async function markAsViewed() {
 
     if (!studentId) {
 
         console.warn(
-            "Student ID missing. Cannot track view."
+            "Student ID not found."
         );
 
         return;
@@ -363,16 +398,13 @@ async function markAsViewed() {
         await updateDoc(
             studentRef,
             {
-
-                [fieldPath]:
-                    true
-
+                [fieldPath]: true
             }
         );
 
 
         console.log(
-            "✅ Paper marked as viewed:",
+            "✅ VIEWED:",
             fieldPath
         );
 
@@ -381,7 +413,7 @@ async function markAsViewed() {
     catch (error) {
 
         console.error(
-            "❌ Failed to mark paper as viewed:",
+            "❌ Could not mark viewed:",
             error
         );
 
@@ -391,12 +423,12 @@ async function markAsViewed() {
 
 
 // ============================================================
-// SECURITY - RIGHT CLICK
+// RIGHT CLICK BLOCK
 // ============================================================
 
 document.addEventListener(
     "contextmenu",
-    event => {
+    function(event) {
 
         event.preventDefault();
 
@@ -405,12 +437,12 @@ document.addEventListener(
 
 
 // ============================================================
-// SECURITY - KEYBOARD
+// KEYBOARD PROTECTION
 // ============================================================
 
 document.addEventListener(
     "keydown",
-    event => {
+    function(event) {
 
         const key =
             event.key.toLowerCase();
@@ -426,7 +458,6 @@ document.addEventListener(
             event.preventDefault();
 
             return;
-
         }
 
 
@@ -440,7 +471,6 @@ document.addEventListener(
             event.preventDefault();
 
             return;
-
         }
 
 
@@ -454,7 +484,6 @@ document.addEventListener(
             event.preventDefault();
 
             return;
-
         }
 
 
@@ -469,7 +498,6 @@ document.addEventListener(
             event.preventDefault();
 
             return;
-
         }
 
 
@@ -484,7 +512,6 @@ document.addEventListener(
             event.preventDefault();
 
             return;
-
         }
 
 
@@ -499,7 +526,6 @@ document.addEventListener(
             event.preventDefault();
 
             return;
-
         }
 
 
@@ -512,7 +538,6 @@ document.addEventListener(
             event.preventDefault();
 
             return;
-
         }
 
     }
@@ -520,12 +545,12 @@ document.addEventListener(
 
 
 // ============================================================
-// PREVENT IMAGE DRAG
+// DRAG BLOCK
 // ============================================================
 
 document.addEventListener(
     "dragstart",
-    event => {
+    function(event) {
 
         if (
             event.target.tagName === "IMG"
@@ -545,7 +570,7 @@ document.addEventListener(
 
 document.addEventListener(
     "DOMContentLoaded",
-    async () => {
+    async function() {
 
         console.log(
             "======================================"
@@ -561,7 +586,7 @@ document.addEventListener(
         );
 
         console.log(
-            "Pages:",
+            "Expected Pages:",
             pageCount
         );
 
@@ -575,19 +600,12 @@ document.addEventListener(
         );
 
 
-        // Load JPG pages
+        // Load ALL pages
 
         loadPages();
 
 
-        /*
-         * Mark as viewed after opening.
-         *
-         * Therefore:
-         *
-         * Paper 01 → Viewed
-         * Paper 02 → still Available
-         */
+        // Mark viewed
 
         await markAsViewed();
 
