@@ -10,9 +10,13 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Model Paper</title>
+    <meta
+        name="robots"
+        content="noindex,nofollow"
+    >
 
-    <link rel="icon" href="data:,">
+    <title>Model Paper Viewer</title>
+
 
     <style>
 
@@ -23,42 +27,61 @@
 
         html,
         body {
-
             margin: 0;
             padding: 0;
-
             width: 100%;
-            height: 100%;
-
-            font-family:
-                Inter,
-                "Segoe UI",
-                Arial,
-                sans-serif;
-
-            background:
-                #f4f7fb;
-
-            color:
-                #0f172a;
-
+            min-height: 100%;
         }
 
 
         body {
-            overflow: hidden;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #f1f5f9;
+
+            color: #0f172a;
+
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
         }
 
 
-        /* =================================================
+        /* =====================================================
            HEADER
-        ================================================= */
+        ===================================================== */
 
-        .header {
+        .viewer-header {
 
-            height: 70px;
+            position: sticky;
+
+            top: 0;
+
+            z-index: 1000;
 
             width: 100%;
+
+            background: #ffffff;
+
+            border-bottom: 1px solid #e2e8f0;
+
+            box-shadow:
+                0 2px 10px
+                rgba(0, 0, 0, 0.08);
+        }
+
+
+        .header-inner {
+
+            max-width: 1200px;
+
+            margin: 0 auto;
+
+            padding: 14px 20px;
 
             display: flex;
 
@@ -66,204 +89,163 @@
 
             justify-content: space-between;
 
-            padding:
-                0 24px;
-
-            background:
-                #ffffff;
-
-            border-bottom:
-                1px solid #e2e8f0;
-
-            box-shadow:
-                0 4px 18px
-                rgba(15, 23, 42, 0.07);
-
-            position:
-                relative;
-
-            z-index: 20;
-
+            gap: 20px;
         }
 
 
-        .title-area {
+        .header-left {
 
             display: flex;
 
             align-items: center;
 
-            gap: 10px;
+            gap: 14px;
 
             min-width: 0;
-
         }
 
-
-        .title-icon {
-
-            width: 42px;
-
-            height: 42px;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            border-radius: 12px;
-
-            background:
-                #f0ebff;
-
-            font-size:
-                22px;
-
-            flex-shrink: 0;
-
-        }
-
-
-        #paperTitle {
-
-            font-size:
-                18px;
-
-            font-weight:
-                800;
-
-            color:
-                #0f172a;
-
-            white-space:
-                nowrap;
-
-            overflow:
-                hidden;
-
-            text-overflow:
-                ellipsis;
-
-        }
-
-
-        /* =================================================
-           BACK BUTTON
-        ================================================= */
 
         .back-button {
 
-            height: 42px;
+            border: none;
 
-            padding:
-                0 18px;
+            background: #0f172a;
 
-            display: inline-flex;
+            color: #ffffff;
 
-            align-items: center;
+            padding: 10px 16px;
 
-            justify-content: center;
+            border-radius: 8px;
 
-            border: 0;
+            font-size: 14px;
 
-            border-radius: 11px;
+            font-weight: 600;
 
-            background:
-                linear-gradient(
-                    135deg,
-                    #6d35f2,
-                    #7c3aed
-                );
+            cursor: pointer;
 
-            color:
-                #ffffff;
-
-            font-family:
-                inherit;
-
-            font-size:
-                13px;
-
-            font-weight:
-                750;
-
-            cursor:
-                pointer;
-
-            box-shadow:
-                0 5px 14px
-                rgba(109, 53, 242, 0.18);
+            white-space: nowrap;
 
             transition:
-                transform .18s ease,
-                box-shadow .18s ease;
-
-            flex-shrink: 0;
-
+                background 0.2s ease,
+                transform 0.2s ease;
         }
 
 
         .back-button:hover {
 
-            transform:
-                translateY(-1px);
+            background: #1e293b;
 
-            box-shadow:
-                0 8px 20px
-                rgba(109, 53, 242, 0.25);
-
+            transform: translateY(-1px);
         }
 
 
-        .back-button:active {
+        .paper-title {
 
-            transform:
-                translateY(0);
+            margin: 0;
 
+            font-size: 20px;
+
+            font-weight: 700;
+
+            color: #0f172a;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+
+            white-space: nowrap;
         }
 
 
-        /* =================================================
-           VIEWER
-        ================================================= */
+        .viewer-label {
 
-        .viewer {
+            font-size: 12px;
+
+            color: #64748b;
+
+            font-weight: 500;
+
+            white-space: nowrap;
+        }
+
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
+
+        .viewer-main {
 
             width: 100%;
 
-            height:
-                calc(100vh - 70px);
-
-            overflow-y: auto;
-
-            overflow-x: hidden;
-
-            background:
-                #e5e7eb;
-
-            padding:
-                24px;
-
+            padding: 25px 15px 50px;
         }
 
-
-        /* =================================================
-           PAGES
-        ================================================= */
 
         .pages-container {
 
-            width:
-                min(900px, 100%);
+            width: 100%;
 
-            margin:
-                0 auto;
+            max-width: 1100px;
 
+            margin: 0 auto;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            gap: 24px;
         }
 
 
+        /* =====================================================
+           PAGE
+        ===================================================== */
+
         .paper-page {
+
+            width: 100%;
+
+            max-width: 1000px;
+
+            background: #ffffff;
+
+            border-radius: 8px;
+
+            padding: 10px;
+
+            box-shadow:
+                0 4px 18px
+                rgba(15, 23, 42, 0.10);
+
+            overflow: hidden;
+        }
+
+
+        .page-number {
+
+            width: 100%;
+
+            text-align: center;
+
+            padding: 8px 10px;
+
+            margin-bottom: 8px;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            color: #64748b;
+
+            background: #f8fafc;
+
+            border-radius: 6px;
+        }
+
+
+        .paper-page img {
 
             display: block;
 
@@ -271,369 +253,193 @@
 
             height: auto;
 
-            margin:
-                0 auto 22px;
+            max-width: 100%;
 
-            background:
-                #ffffff;
+            margin: 0 auto;
 
-            border-radius:
-                4px;
+            object-fit: contain;
 
-            box-shadow:
-                0 8px 25px
-                rgba(15, 23, 42, 0.12);
-
-            user-select: none;
-
-            -webkit-user-select: none;
+            pointer-events: none;
 
             -webkit-user-drag: none;
 
+            user-select: none;
         }
 
 
-        /* =================================================
-           PAGE NUMBER
-        ================================================= */
-
-        .page-wrapper {
-
-            position:
-                relative;
-
-            margin-bottom:
-                22px;
-
-        }
-
-
-        .page-number {
-
-            position:
-                absolute;
-
-            top:
-                10px;
-
-            right:
-                10px;
-
-            padding:
-                5px 9px;
-
-            border-radius:
-                8px;
-
-            background:
-                rgba(15, 23, 42, 0.72);
-
-            color:
-                #ffffff;
-
-            font-size:
-                11px;
-
-            font-weight:
-                700;
-
-            z-index:
-                2;
-
-        }
-
-
-        /* =================================================
-           LOADING
-        ================================================= */
-
-        .loading {
-
-            min-height:
-                calc(100vh - 118px);
-
-            display:
-                flex;
-
-            flex-direction:
-                column;
-
-            align-items:
-                center;
-
-            justify-content:
-                center;
-
-            gap:
-                15px;
-
-            color:
-                #64748b;
-
-        }
-
-
-        .loader {
-
-            width:
-                48px;
-
-            height:
-                48px;
-
-            border:
-                4px solid #e2e8f0;
-
-            border-top-color:
-                #6d35f2;
-
-            border-radius:
-                50%;
-
-            animation:
-                spin .8s linear infinite;
-
-        }
-
-
-        @keyframes spin {
-
-            to {
-
-                transform:
-                    rotate(360deg);
-
-            }
-
-        }
-
-
-        .loading-text {
-
-            font-size:
-                14px;
-
-            font-weight:
-                600;
-
-        }
-
-
-        /* =================================================
+        /* =====================================================
            ERROR
-        ================================================= */
+        ===================================================== */
 
-        .error {
+        .page-error {
 
-            min-height:
-                calc(100vh - 70px);
+            min-height: 250px;
 
-            display:
-                flex;
+            display: flex;
 
-            align-items:
-                center;
+            flex-direction: column;
 
-            justify-content:
-                center;
+            align-items: center;
 
-            padding:
-                30px;
+            justify-content: center;
 
+            text-align: center;
+
+            padding: 30px;
+
+            border: 2px dashed #cbd5e1;
+
+            border-radius: 8px;
+
+            background: #f8fafc;
+
+            color: #475569;
+
+            gap: 8px;
         }
 
 
-        .error-card {
+        .page-error strong {
 
-            width:
-                min(520px, 100%);
+            font-size: 16px;
 
-            padding:
-                42px 30px;
+            color: #dc2626;
+        }
 
-            text-align:
-                center;
 
-            background:
-                #ffffff;
+        .page-error small {
 
-            border:
-                1px solid #e2e8f0;
+            font-size: 12px;
 
-            border-radius:
-                20px;
+            color: #64748b;
+
+            word-break: break-all;
+        }
+
+
+        /* =====================================================
+           LOADING
+        ===================================================== */
+
+        .loading-box {
+
+            width: 100%;
+
+            max-width: 700px;
+
+            margin: 60px auto;
+
+            text-align: center;
+
+            padding: 40px;
+
+            background: #ffffff;
+
+            border-radius: 12px;
 
             box-shadow:
-                0 15px 40px
-                rgba(15, 23, 42, 0.08);
-
+                0 4px 20px
+                rgba(0, 0, 0, 0.08);
         }
 
 
-        .error-icon {
+        .loading-box h2 {
 
-            font-size:
-                48px;
+            margin: 0 0 10px;
 
-            margin-bottom:
-                15px;
-
+            font-size: 20px;
         }
 
 
-        .error-card h2 {
+        .loading-box p {
 
-            margin:
-                0 0 10px;
+            margin: 0;
 
-            font-size:
-                22px;
+            color: #64748b;
 
+            font-size: 14px;
         }
 
 
-        .error-card p {
+        /* =====================================================
+           FOOTER
+        ===================================================== */
 
-            margin:
-                0 0 22px;
+        .viewer-footer {
 
-            color:
-                #64748b;
+            width: 100%;
 
-            line-height:
-                1.6;
+            text-align: center;
 
+            padding: 20px;
+
+            color: #64748b;
+
+            font-size: 12px;
         }
 
 
-        .error-button {
-
-            height:
-                42px;
-
-            padding:
-                0 20px;
-
-            border:
-                0;
-
-            border-radius:
-                10px;
-
-            background:
-                #6d35f2;
-
-            color:
-                #ffffff;
-
-            font-family:
-                inherit;
-
-            font-weight:
-                700;
-
-            cursor:
-                pointer;
-
-        }
-
-
-        /* =================================================
+        /* =====================================================
            MOBILE
-        ================================================= */
+        ===================================================== */
 
-        @media (
-            max-width: 600px
-        ) {
+        @media (max-width: 700px) {
 
-            .header {
+            .header-inner {
 
-                height:
-                    62px;
+                padding: 12px;
 
-                padding:
-                    0 12px;
-
-            }
-
-
-            .title-icon {
-
-                width:
-                    36px;
-
-                height:
-                    36px;
-
-                font-size:
-                    19px;
-
-            }
-
-
-            #paperTitle {
-
-                font-size:
-                    14px;
-
+                gap: 10px;
             }
 
 
             .back-button {
 
-                height:
-                    36px;
+                padding: 9px 12px;
 
-                padding:
-                    0 13px;
-
-                font-size:
-                    12px;
-
+                font-size: 13px;
             }
 
 
-            .viewer {
+            .paper-title {
 
-                height:
-                    calc(100vh - 62px);
+                font-size: 16px;
+            }
 
-                padding:
-                    10px;
 
+            .viewer-label {
+
+                display: none;
+            }
+
+
+            .viewer-main {
+
+                padding: 12px 6px 30px;
             }
 
 
             .pages-container {
 
-                width:
-                    100%;
-
+                gap: 14px;
             }
 
 
             .paper-page {
 
-                margin-bottom:
-                    12px;
+                padding: 5px;
 
+                border-radius: 5px;
             }
 
 
             .page-number {
 
-                top:
-                    6px;
+                margin-bottom: 5px;
 
-                right:
-                    6px;
+                padding: 6px;
 
-                font-size:
-                    10px;
-
-                padding:
-                    4px 7px;
-
+                font-size: 11px;
             }
 
         }
@@ -646,695 +452,97 @@
 <body>
 
 
-<!-- =====================================================
-     HEADER
-===================================================== -->
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
 
-<header class="header">
+    <header class="viewer-header">
 
+        <div class="header-inner">
 
-    <div class="title-area">
+            <div class="header-left">
 
+                <button
+                    type="button"
+                    class="back-button"
+                    onclick="goBack()"
+                >
+                    ← Back
+                </button>
 
-        <div class="title-icon">
-            📘
-        </div>
 
+                <h1
+                    id="paperTitle"
+                    class="paper-title"
+                >
+                    Model Paper
+                </h1>
 
-        <div id="paperTitle">
-            Model Paper
-        </div>
-
-
-    </div>
-
-
-    <button
-        type="button"
-        class="back-button"
-        id="backButton"
-    >
-        ← Back
-    </button>
-
-
-</header>
-
-
-<!-- =====================================================
-     VIEWER
-===================================================== -->
-
-<main
-    id="viewer"
-    class="viewer"
->
-
-
-    <div
-        id="loading"
-        class="loading"
-    >
-
-        <div class="loader"></div>
-
-        <div class="loading-text">
-            Loading Model Paper...
-        </div>
-
-    </div>
-
-
-</main>
-
-
-<script>
-
-
-// =====================================================
-// URL PARAMETERS
-// =====================================================
-
-const params =
-    new URLSearchParams(
-        window.location.search
-    );
-
-
-const paper =
-    params.get(
-        "paper"
-    );
-
-
-const studentId =
-    params.get(
-        "id"
-    ) ||
-    sessionStorage.getItem(
-        "studentId"
-    );
-
-
-const type =
-    params.get(
-        "type"
-    ) ||
-    "al-model";
-
-
-// =====================================================
-// ELEMENTS
-// =====================================================
-
-const viewer =
-    document.getElementById(
-        "viewer"
-    );
-
-
-const paperTitle =
-    document.getElementById(
-        "paperTitle"
-    );
-
-
-const backButton =
-    document.getElementById(
-        "backButton"
-    );
-
-
-// =====================================================
-// BACK BUTTON
-// =====================================================
-
-if (
-    backButton
-) {
-
-    backButton.addEventListener(
-        "click",
-        function () {
-
-            history.back();
-
-        }
-    );
-
-}
-
-
-// =====================================================
-// VALIDATE PAPER
-// =====================================================
-
-if (
-    !paper
-) {
-
-    showError(
-        "No model paper was selected."
-    );
-
-}
-else {
-
-    loadPaper();
-
-}
-
-
-// =====================================================
-// LOAD PAPER
-// =====================================================
-
-function loadPaper() {
-
-
-    // =================================================
-    // VALIDATE PAPER NUMBER
-    // =================================================
-
-    const match =
-        /^paper(\d{2})$/i.exec(
-            paper
-        );
-
-
-    if (
-        !match
-    ) {
-
-        showError(
-            "Invalid model paper number."
-        );
-
-        return;
-
-    }
-
-
-    const number =
-        match[1];
-
-
-    // =================================================
-    // TITLE
-    // =================================================
-
-    if (
-        paperTitle
-    ) {
-
-        paperTitle.textContent =
-            `A/L Model Paper ${number}`;
-
-    }
-
-
-    // =================================================
-    // PAGE COUNT
-    // =================================================
-    //
-    // paper01 currently has 12 JPG pages.
-    //
-    // The same structure is used for the
-    // other papers.
-    //
-    // =================================================
-
-    const pageCount =
-        12;
-
-
-    // =================================================
-    // CREATE PAGE CONTAINER
-    // =================================================
-
-    const pagesContainer =
-        document.createElement(
-            "div"
-        );
-
-
-    pagesContainer.className =
-        "pages-container";
-
-
-    // =================================================
-    // CREATE ALL PAGES
-    // =================================================
-
-    for (
-        let i = 1;
-        i <= pageCount;
-        i++
-    ) {
-
-
-        const pageNumber =
-            String(
-                i
-            ).padStart(
-                2,
-                "0"
-            );
-
-
-        // =============================================
-        // WRAPPER
-        // =============================================
-
-        const pageWrapper =
-            document.createElement(
-                "div"
-            );
-
-
-        pageWrapper.className =
-            "page-wrapper";
-
-
-        // =============================================
-        // PAGE NUMBER
-        // =============================================
-
-        const pageLabel =
-            document.createElement(
-                "div"
-            );
-
-
-        pageLabel.className =
-            "page-number";
-
-
-        pageLabel.textContent =
-            `Page ${i}`;
-
-
-        // =============================================
-        // IMAGE
-        // =============================================
-
-        const image =
-            document.createElement(
-                "img"
-            );
-
-
-        image.className =
-            "paper-page";
-
-
-        image.alt =
-            `A/L Model Paper ${number} - Page ${i}`;
-
-
-        image.loading =
-            i === 1
-                ? "eager"
-                : "lazy";
-
-
-        image.decoding =
-            "async";
-
-
-        image.draggable =
-            false;
-
-
-        // =============================================
-        // EXACT GITHUB PATH
-        // =============================================
-
-        image.src =
-            `papers/paper${number}/paper${number}_Page_${pageNumber}.jpg`;
-
-
-        // =============================================
-        // IMAGE ERROR
-        // =============================================
-
-        image.addEventListener(
-            "error",
-            function () {
-
-                console.error(
-                    "Page not found:",
-                    image.src
-                );
-
-
-                pageWrapper.remove();
-
-
-                // If first page does not exist,
-                // show error.
-
-                if (
-                    i === 1
-                ) {
-
-                    showError(
-                        `Model Paper ${number} could not be found.`
-                    );
-
-                }
-
-            }
-        );
-
-
-        // =============================================
-        // ADD
-        // =============================================
-
-        pageWrapper.appendChild(
-            pageLabel
-        );
-
-
-        pageWrapper.appendChild(
-            image
-        );
-
-
-        pagesContainer.appendChild(
-            pageWrapper
-        );
-
-    }
-
-
-    // =================================================
-    // DISPLAY
-    // =================================================
-
-    viewer.innerHTML = "";
-
-
-    viewer.appendChild(
-        pagesContainer
-    );
-
-
-    // =================================================
-    // CONSOLE
-    // =================================================
-
-    console.log(
-        "======================================"
-    );
-
-    console.log(
-        "A/L MODEL PAPER VIEWER"
-    );
-
-    console.log(
-        "======================================"
-    );
-
-    console.log(
-        "Paper:",
-        paper
-    );
-
-    console.log(
-        "Student:",
-        studentId
-    );
-
-    console.log(
-        "Type:",
-        type
-    );
-
-    console.log(
-        "Pages:",
-        pageCount
-    );
-
-    console.log(
-        "First page:",
-        `papers/paper${number}/paper${number}_Page_01.jpg`
-    );
-
-    console.log(
-        "======================================"
-    );
-
-}
-
-
-// =====================================================
-// ERROR SCREEN
-// =====================================================
-
-function showError(
-    message
-) {
-
-
-    viewer.className =
-        "viewer error";
-
-
-    viewer.innerHTML = `
-
-        <div class="error-card">
-
-
-            <div class="error-icon">
-                ⚠️
             </div>
 
 
-            <h2>
-                Unable to Open Model Paper
-            </h2>
-
-
-            <p>
-                ${message}
-            </p>
-
-
-            <button
-                type="button"
-                class="error-button"
-                id="errorBackButton"
-            >
-                ← Go Back
-            </button>
-
+            <div class="viewer-label">
+                Paper Viewer
+            </div>
 
         </div>
 
-    `;
+    </header>
 
 
-    const errorBackButton =
-        document.getElementById(
-            "errorBackButton"
-        );
 
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
 
-    if (
-        errorBackButton
-    ) {
+    <main class="viewer-main">
 
-        errorBackButton.addEventListener(
-            "click",
-            function () {
+        <div
+            id="pagesContainer"
+            class="pages-container"
+        >
 
-                history.back();
+            <div class="loading-box">
 
-            }
-        );
+                <h2>
+                    Loading Paper...
+                </h2>
 
-    }
+                <p>
+                    Please wait while the paper pages are loading.
+                </p>
 
-}
+            </div>
 
+        </div>
 
-// =====================================================
-// DISABLE RIGHT CLICK
-// =====================================================
+    </main>
 
-document.addEventListener(
-    "contextmenu",
-    function (event) {
 
-        event.preventDefault();
 
-    },
-    true
-);
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
 
+    <footer class="viewer-footer">
 
-// =====================================================
-// DISABLE BASIC SHORTCUTS
-// =====================================================
+        Model Paper Viewer
 
-document.addEventListener(
-    "keydown",
-    function (event) {
+    </footer>
 
 
-        const key =
-            String(
-                event.key
-            ).toLowerCase();
 
+    <!-- =====================================================
+         VIEWER JAVASCRIPT
+         
+         IMPORTANT:
+         Cache-busting version added.
+    ====================================================== -->
 
-        // Ctrl + P
-        if (
-            event.ctrlKey &&
-            key === "p"
-        ) {
-
-            event.preventDefault();
-
-            event.stopPropagation();
-
-            return false;
-
-        }
-
-
-        // Ctrl + S
-        if (
-            event.ctrlKey &&
-            key === "s"
-        ) {
-
-            event.preventDefault();
-
-            event.stopPropagation();
-
-            return false;
-
-        }
-
-
-        // Ctrl + U
-        if (
-            event.ctrlKey &&
-            key === "u"
-        ) {
-
-            event.preventDefault();
-
-            event.stopPropagation();
-
-            return false;
-
-        }
-
-
-        // Ctrl + Shift + I
-        if (
-            event.ctrlKey &&
-            event.shiftKey &&
-            key === "i"
-        ) {
-
-            event.preventDefault();
-
-            event.stopPropagation();
-
-            return false;
-
-        }
-
-
-        // Ctrl + Shift + J
-        if (
-            event.ctrlKey &&
-            event.shiftKey &&
-            key === "j"
-        ) {
-
-            event.preventDefault();
-
-            event.stopPropagation();
-
-            return false;
-
-        }
-
-
-        // F12
-        if (
-            event.key === "F12"
-        ) {
-
-            event.preventDefault();
-
-            event.stopPropagation();
-
-            return false;
-
-        }
-
-    },
-    true
-);
-
-
-// =====================================================
-// DISABLE IMAGE DRAG
-// =====================================================
-
-document.addEventListener(
-    "dragstart",
-    function (event) {
-
-        if (
-            event.target &&
-            event.target.tagName === "IMG"
-        ) {
-
-            event.preventDefault();
-
-        }
-
-    },
-    true
-);
-
-
-// =====================================================
-// PREVENT PRINT
-// =====================================================
-
-const printStyle =
-    document.createElement(
-        "style"
-    );
-
-
-printStyle.textContent = `
-
-    @media print {
-
-        body {
-            display: none !important;
-        }
-
-    }
-
-`;
-
-
-document.head.appendChild(
-    printStyle
-);
-
-</script>
+    <script
+        type="module"
+        src="viewer.js?v=20260824-1901"
+    ></script>
 
 
 </body>
