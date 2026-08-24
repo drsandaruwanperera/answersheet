@@ -12,39 +12,560 @@
 
     <title>Grade 11 Answer</title>
 
-    <link
-        rel="stylesheet"
-        href="grade11-answer.css"
-    >
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        html,
+        body {
+
+            margin: 0;
+
+            width: 100%;
+            height: 100%;
+
+            font-family:
+                Inter,
+                "Segoe UI",
+                Arial,
+                sans-serif;
+
+            background: #f4f7fb;
+
+            color: #0f172a;
+
+        }
+
+
+        /* =================================================
+           HEADER
+        ================================================= */
+
+        .viewer-header {
+
+            height: 70px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding:
+                0 22px;
+
+            background:
+                #ffffff;
+
+            border-bottom:
+                1px solid #e2e8f0;
+
+            box-shadow:
+                0 4px 16px
+                rgba(15, 23, 42, 0.07);
+
+            position:
+                relative;
+
+            z-index: 10;
+
+        }
+
+
+        .viewer-title {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            font-size: 18px;
+
+            font-weight: 800;
+
+            color:
+                #0f172a;
+
+        }
+
+
+        .viewer-title-icon {
+
+            font-size: 24px;
+
+        }
+
+
+        /* =================================================
+           BACK BUTTON
+        ================================================= */
+
+        .back-button {
+
+            min-width: 90px;
+
+            height: 40px;
+
+            padding:
+                0 16px;
+
+            border: 0;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6d35f2,
+                    #7c3aed
+                );
+
+            color: #ffffff;
+
+            font-family: inherit;
+
+            font-size: 13px;
+
+            font-weight: 750;
+
+            cursor: pointer;
+
+            transition:
+                transform .18s ease,
+                box-shadow .18s ease;
+
+        }
+
+
+        .back-button:hover {
+
+            transform:
+                translateY(-1px);
+
+            box-shadow:
+                0 7px 18px
+                rgba(109, 53, 242, 0.22);
+
+        }
+
+
+        /* =================================================
+           VIEWER
+        ================================================= */
+
+        .viewer {
+
+            width: 100%;
+
+            height:
+                calc(100vh - 70px);
+
+            background:
+                #e5e7eb;
+
+        }
+
+
+        .viewer iframe {
+
+            display: block;
+
+            width: 100%;
+
+            height: 100%;
+
+            border: 0;
+
+            background: #ffffff;
+
+        }
+
+
+        /* =================================================
+           ERROR
+        ================================================= */
+
+        .error-screen {
+
+            width: 100%;
+
+            height:
+                calc(100vh - 70px);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 30px;
+
+        }
+
+
+        .error-card {
+
+            max-width: 520px;
+
+            width: 100%;
+
+            padding: 40px 30px;
+
+            background: #ffffff;
+
+            border:
+                1px solid #e2e8f0;
+
+            border-radius: 20px;
+
+            text-align: center;
+
+            box-shadow:
+                0 12px 35px
+                rgba(15, 23, 42, 0.08);
+
+        }
+
+
+        .error-icon {
+
+            font-size: 48px;
+
+            margin-bottom: 15px;
+
+        }
+
+
+        .error-card h2 {
+
+            margin:
+                0 0 10px;
+
+        }
+
+
+        .error-card p {
+
+            margin:
+                0 0 22px;
+
+            color:
+                #64748b;
+
+        }
+
+
+        .error-back {
+
+            height: 42px;
+
+            padding:
+                0 18px;
+
+            border: 0;
+
+            border-radius: 10px;
+
+            background:
+                #6d35f2;
+
+            color: white;
+
+            cursor: pointer;
+
+            font-weight: 700;
+
+        }
+
+
+        /* =================================================
+           MOBILE
+        ================================================= */
+
+        @media (max-width: 600px) {
+
+            .viewer-header {
+
+                height: 62px;
+
+                padding:
+                    0 12px;
+
+            }
+
+
+            .viewer-title {
+
+                font-size: 14px;
+
+            }
+
+
+            .viewer-title-icon {
+
+                font-size: 20px;
+
+            }
+
+
+            .back-button {
+
+                min-width: 75px;
+
+                height: 36px;
+
+                font-size: 12px;
+
+            }
+
+
+            .viewer {
+
+                height:
+                    calc(100vh - 62px);
+
+            }
+
+        }
+
+    </style>
 
 </head>
 
+
 <body>
 
-<div class="top-bar">
 
-    <button onclick="history.back()">
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="viewer-header">
+
+
+    <div class="viewer-title">
+
+        <span
+            class="viewer-title-icon"
+        >
+            📖
+        </span>
+
+        <span id="answerTitle">
+            Answer
+        </span>
+
+    </div>
+
+
+    <button
+        type="button"
+        class="back-button"
+        id="backButton"
+    >
         ← Back
     </button>
 
-    <h1 id="answerTitle">
-        📝 Answer
-    </h1>
 
-</div>
+</header>
 
 
-<div id="answerContainer">
+<!-- =====================================================
+     PDF VIEWER
+===================================================== -->
 
-    <!-- Answer images will load here -->
+<main
+    id="viewer"
+    class="viewer"
+>
 
-</div>
+    <iframe
+        id="answerFrame"
+        title="Answer Viewer"
+        allow="fullscreen"
+    ></iframe>
+
+</main>
 
 
-<script
-    type="module"
-    src="grade11-answer.js"
-></script>
+<script>
+
+
+// =====================================================
+// GET URL PARAMETERS
+// =====================================================
+
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+const file =
+    params.get("file");
+
+
+const title =
+    params.get("title") ||
+    "Answer";
+
+
+// =====================================================
+// ELEMENTS
+// =====================================================
+
+const answerTitle =
+    document.getElementById(
+        "answerTitle"
+    );
+
+
+const answerFrame =
+    document.getElementById(
+        "answerFrame"
+    );
+
+
+const viewer =
+    document.getElementById(
+        "viewer"
+    );
+
+
+const backButton =
+    document.getElementById(
+        "backButton"
+    );
+
+
+// =====================================================
+// TITLE
+// =====================================================
+
+if (answerTitle) {
+
+    answerTitle.textContent =
+        title;
+
+}
+
+
+// =====================================================
+// BACK
+// =====================================================
+
+if (backButton) {
+
+    backButton.addEventListener(
+        "click",
+        function () {
+
+            window.history.back();
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// CHECK FILE
+// =====================================================
+
+if (!file) {
+
+    showError(
+        "Answer file was not provided."
+    );
+
+}
+
+else {
+
+    console.log(
+        "Answer file:",
+        file
+    );
+
+
+    // =================================================
+    // OPEN PDF
+    // =================================================
+
+    /*
+     * #toolbar=0
+     * #navpanes=0
+     *
+     * These hide the browser's built-in PDF
+     * toolbar where supported.
+     */
+
+    const viewerUrl =
+        file +
+        "#toolbar=0&navpanes=0&scrollbar=1";
+
+
+    answerFrame.src =
+        viewerUrl;
+
+}
+
+
+// =====================================================
+// ERROR SCREEN
+// =====================================================
+
+function showError(
+    message
+) {
+
+    if (!viewer) {
+        return;
+    }
+
+
+    viewer.className =
+        "error-screen";
+
+
+    viewer.innerHTML = `
+
+        <div class="error-card">
+
+            <div class="error-icon">
+                ⚠️
+            </div>
+
+            <h2>
+                Unable to Open Answer
+            </h2>
+
+            <p>
+                ${message}
+            </p>
+
+            <button
+                type="button"
+                class="error-back"
+                onclick="history.back()"
+            >
+                ← Go Back
+            </button>
+
+        </div>
+
+    `;
+
+}
+
+
+</script>
+
 
 </body>
 
