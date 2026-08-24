@@ -12,403 +12,20 @@
 
     <title>Model Paper</title>
 
-    <style>
-
-        * {
-            box-sizing: border-box;
-        }
-
-        html,
-        body {
-
-            margin: 0;
-            padding: 0;
-
-            width: 100%;
-            height: 100%;
-
-            font-family:
-                Inter,
-                "Segoe UI",
-                Arial,
-                sans-serif;
-
-            background: #f4f7fb;
-            color: #0f172a;
-
-            overflow: hidden;
-
-        }
-
-
-        /* =========================================
-           HEADER
-        ========================================= */
-
-        .header {
-
-            height: 70px;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: space-between;
-
-            padding: 0 24px;
-
-            background: #ffffff;
-
-            border-bottom:
-                1px solid #e2e8f0;
-
-            box-shadow:
-                0 4px 18px
-                rgba(15, 23, 42, 0.07);
-
-            position: relative;
-
-            z-index: 10;
-
-        }
-
-
-        .title-area {
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 10px;
-
-            min-width: 0;
-
-        }
-
-
-        .title-icon {
-
-            width: 42px;
-            height: 42px;
-
-            display: flex;
-
-            align-items: center;
-            justify-content: center;
-
-            border-radius: 12px;
-
-            background: #f0ebff;
-
-            font-size: 22px;
-
-            flex-shrink: 0;
-
-        }
-
-
-        #paperTitle {
-
-            font-size: 18px;
-
-            font-weight: 800;
-
-            white-space: nowrap;
-
-            overflow: hidden;
-
-            text-overflow: ellipsis;
-
-        }
-
-
-        .back-button {
-
-            height: 42px;
-
-            padding: 0 18px;
-
-            border: 0;
-
-            border-radius: 11px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #6d35f2,
-                    #7c3aed
-                );
-
-            color: white;
-
-            font-weight: 700;
-
-            cursor: pointer;
-
-            flex-shrink: 0;
-
-        }
-
-
-        /* =========================================
-           VIEWER
-        ========================================= */
-
-        .viewer {
-
-            width: 100%;
-
-            height:
-                calc(100vh - 70px);
-
-            overflow: auto;
-
-            background: #e5e7eb;
-
-            padding: 20px;
-
-        }
-
-
-        .pdf-frame {
-
-            width: 100%;
-
-            height: 100%;
-
-            min-height: 600px;
-
-            border: 0;
-
-            background: white;
-
-            display: block;
-
-        }
-
-
-        /* =========================================
-           LOADING
-        ========================================= */
-
-        .loading {
-
-            min-height: 100%;
-
-            display: flex;
-
-            flex-direction: column;
-
-            align-items: center;
-
-            justify-content: center;
-
-            gap: 15px;
-
-        }
-
-
-        .loader {
-
-            width: 48px;
-
-            height: 48px;
-
-            border: 4px solid #e2e8f0;
-
-            border-top-color: #6d35f2;
-
-            border-radius: 50%;
-
-            animation:
-                spin .8s linear infinite;
-
-        }
-
-
-        @keyframes spin {
-
-            to {
-
-                transform:
-                    rotate(360deg);
-
-            }
-
-        }
-
-
-        .loading-text {
-
-            color: #64748b;
-
-            font-weight: 600;
-
-        }
-
-
-        /* =========================================
-           ERROR
-        ========================================= */
-
-        .error {
-
-            min-height: 100%;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-        }
-
-
-        .error-card {
-
-            width:
-                min(500px, 100%);
-
-            padding: 40px;
-
-            text-align: center;
-
-            background: white;
-
-            border-radius: 20px;
-
-            box-shadow:
-                0 15px 40px
-                rgba(15, 23, 42, .08);
-
-        }
-
-
-        .error-icon {
-
-            font-size: 48px;
-
-            margin-bottom: 15px;
-
-        }
-
-
-        .error-card h2 {
-
-            margin:
-                0 0 10px;
-
-        }
-
-
-        .error-card p {
-
-            color: #64748b;
-
-            line-height: 1.6;
-
-        }
-
-
-        .error-button {
-
-            border: 0;
-
-            border-radius: 10px;
-
-            padding:
-                12px 20px;
-
-            background: #6d35f2;
-
-            color: white;
-
-            font-weight: 700;
-
-            cursor: pointer;
-
-        }
-
-
-        /* =========================================
-           MOBILE
-        ========================================= */
-
-        @media (
-            max-width: 600px
-        ) {
-
-            .header {
-
-                height: 62px;
-
-                padding:
-                    0 12px;
-
-            }
-
-
-            .title-icon {
-
-                width: 36px;
-
-                height: 36px;
-
-                font-size: 19px;
-
-            }
-
-
-            #paperTitle {
-
-                font-size: 14px;
-
-            }
-
-
-            .back-button {
-
-                height: 36px;
-
-                padding:
-                    0 13px;
-
-                font-size: 12px;
-
-            }
-
-
-            .viewer {
-
-                height:
-                    calc(100vh - 62px);
-
-                padding: 10px;
-
-            }
-
-
-            .pdf-frame {
-
-                min-height: 500px;
-
-            }
-
-        }
-
-    </style>
+    <link
+        rel="stylesheet"
+        href="viewer.css"
+    >
 
 </head>
 
-
 <body>
 
+<header class="viewer-header">
 
-<header class="header">
+    <div class="viewer-title">
 
-    <div class="title-area">
-
-        <div class="title-icon">
+        <div class="viewer-title-icon">
             📘
         </div>
 
@@ -435,9 +52,12 @@
     class="viewer"
 >
 
-    <div class="loading">
+    <div
+        id="loading"
+        class="loading"
+    >
 
-        <div class="loader"></div>
+        <div class="loading-icon"></div>
 
         <div class="loading-text">
             Loading Model Paper...
@@ -448,11 +68,17 @@
 </main>
 
 
-<script>
+<script type="module">
+
+import {
+    db,
+    doc,
+    getDoc
+} from "./firebase.js";
 
 
 // =====================================================
-// URL PARAMETERS
+// URL
 // =====================================================
 
 const params =
@@ -466,7 +92,10 @@ const paper =
 
 
 const studentId =
-    params.get("id");
+    params.get("id") ||
+    sessionStorage.getItem(
+        "studentId"
+    );
 
 
 const type =
@@ -500,9 +129,7 @@ const backButton =
 // BACK
 // =====================================================
 
-if (
-    backButton
-) {
+if (backButton) {
 
     backButton.addEventListener(
         "click",
@@ -517,19 +144,16 @@ if (
 
 
 // =====================================================
-// VALIDATE PAPER
+// VALIDATE
 // =====================================================
 
-if (
-    !paper
-) {
+if (!paper) {
 
     showError(
         "No model paper was selected."
     );
 
 }
-
 else {
 
     loadPaper();
@@ -541,145 +165,271 @@ else {
 // LOAD PAPER
 // =====================================================
 
-function loadPaper() {
+async function loadPaper() {
 
-    const match =
-        /^paper(\d{2})$/i.exec(
-            paper
-        );
+    try {
 
-
-    if (
-        !match
-    ) {
-
-        showError(
-            "Invalid paper number."
-        );
-
-        return;
-
-    }
+        const match =
+            /^paper(\d{2})$/i.exec(
+                paper
+            );
 
 
-    const number =
-        match[1];
+        if (!match) {
 
-
-    // =================================================
-    // TITLE
-    // =================================================
-
-    if (
-        paperTitle
-    ) {
-
-        paperTitle.textContent =
-            `Model Paper ${number}`;
-
-    }
-
-
-    // =================================================
-    // PDF PATH
-    // =================================================
-    //
-    // IMPORTANT:
-    // Your A/L model PDFs should be:
-    //
-    // papers/
-    //     al/
-    //         model/
-    //             paper01.pdf
-    //             paper02.pdf
-    //             ...
-    //
-    // =================================================
-
-    const pdfPath =
-        `papers/al/model/paper${number}.pdf`;
-
-
-    console.log(
-        "================================"
-    );
-
-    console.log(
-        "A/L MODEL PAPER VIEWER"
-    );
-
-    console.log(
-        "Paper:",
-        paper
-    );
-
-    console.log(
-        "Student:",
-        studentId
-    );
-
-    console.log(
-        "Type:",
-        type
-    );
-
-    console.log(
-        "PDF:",
-        pdfPath
-    );
-
-    console.log(
-        "================================"
-    );
-
-
-    // =================================================
-    // PDF IFRAME
-    // =================================================
-
-    const iframe =
-        document.createElement(
-            "iframe"
-        );
-
-
-    iframe.className =
-        "pdf-frame";
-
-
-    iframe.title =
-        `Model Paper ${number}`;
-
-
-    iframe.src =
-        pdfPath +
-        "#toolbar=0&navpanes=0";
-
-
-    iframe.setAttribute(
-        "allowfullscreen",
-        ""
-    );
-
-
-    iframe.addEventListener(
-        "load",
-        () => {
-
-            console.log(
-                "✅ Model Paper loaded:",
-                pdfPath
+            throw new Error(
+                "Invalid paper number."
             );
 
         }
-    );
 
 
-    viewer.innerHTML = "";
+        const number =
+            match[1];
 
-    viewer.appendChild(
-        iframe
-    );
+
+        // =============================================
+        // TITLE
+        // =============================================
+
+        if (paperTitle) {
+
+            paperTitle.textContent =
+                `A/L Model Paper ${number}`;
+
+        }
+
+
+        // =============================================
+        // GET STUDENT
+        // =============================================
+
+        let studentData = {};
+
+
+        if (studentId) {
+
+            const studentRef =
+                doc(
+                    db,
+                    "students",
+                    studentId
+                );
+
+
+            const snapshot =
+                await getDoc(
+                    studentRef
+                );
+
+
+            if (
+                snapshot.exists()
+            ) {
+
+                studentData =
+                    snapshot.data();
+
+            }
+
+        }
+
+
+        console.log(
+            "======================================"
+        );
+
+        console.log(
+            "A/L MODEL PAPER VIEWER"
+        );
+
+        console.log(
+            "Paper:",
+            paper
+        );
+
+        console.log(
+            "Student:",
+            studentId
+        );
+
+        console.log(
+            "Type:",
+            type
+        );
+
+        console.log(
+            "======================================"
+        );
+
+
+        // =============================================
+        // PAPER URL
+        // =============================================
+        //
+        // USE EXISTING PDF STRUCTURE
+        //
+        // =============================================
+
+        const candidates = [
+
+            `papers/al/model/paper${number}.pdf`,
+
+            `papers/al/paper${number}.pdf`,
+
+            `papers/model/paper${number}.pdf`,
+
+            `pdfs/al/model/paper${number}.pdf`,
+
+            `pdfs/al/paper${number}.pdf`,
+
+            `pdfs/model/paper${number}.pdf`
+
+        ];
+
+
+        const pdfPath =
+            await findWorkingPDF(
+                candidates
+            );
+
+
+        if (!pdfPath) {
+
+            throw new Error(
+                "Model Paper PDF was not found. Please check the PDF location in GitHub."
+            );
+
+        }
+
+
+        console.log(
+            "✅ PDF FOUND:",
+            pdfPath
+        );
+
+
+        // =============================================
+        // CREATE VIEWER
+        // =============================================
+
+        const iframe =
+            document.createElement(
+                "iframe"
+            );
+
+
+        iframe.className =
+            "pdf-frame";
+
+
+        iframe.title =
+            `A/L Model Paper ${number}`;
+
+
+        iframe.src =
+            pdfPath +
+            "#toolbar=0&navpanes=0&scrollbar=1";
+
+
+        iframe.setAttribute(
+            "allowfullscreen",
+            ""
+        );
+
+
+        iframe.addEventListener(
+            "load",
+            () => {
+
+                console.log(
+                    "✅ Model Paper opened"
+                );
+
+            }
+        );
+
+
+        viewer.innerHTML = "";
+
+        viewer.appendChild(
+            iframe
+        );
+
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "A/L Model Paper error:",
+            error
+        );
+
+
+        showError(
+            error.message
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// FIND WORKING PDF
+// =====================================================
+
+async function findWorkingPDF(
+    paths
+) {
+
+    for (
+        const path of paths
+    ) {
+
+        try {
+
+            console.log(
+                "Checking:",
+                path
+            );
+
+
+            const response =
+                await fetch(
+                    path,
+                    {
+                        method: "HEAD"
+                    }
+                );
+
+
+            if (
+                response.ok
+            ) {
+
+                return path;
+
+            }
+
+        }
+
+        catch (
+            error
+        ) {
+
+            console.warn(
+                "Path check failed:",
+                path
+            );
+
+        }
+
+    }
+
+
+    return null;
 
 }
 
@@ -705,7 +455,7 @@ function showError(
             </div>
 
             <h2>
-                Unable to Open Paper
+                Unable to Open Model Paper
             </h2>
 
             <p>
@@ -715,7 +465,7 @@ function showError(
             <button
                 type="button"
                 class="error-button"
-                onclick="history.back()"
+                id="errorBack"
             >
                 ← Go Back
             </button>
@@ -724,11 +474,31 @@ function showError(
 
     `;
 
+
+    const errorBack =
+        document.getElementById(
+            "errorBack"
+        );
+
+
+    if (errorBack) {
+
+        errorBack.addEventListener(
+            "click",
+            () => {
+
+                history.back();
+
+            }
+        );
+
+    }
+
 }
 
 
 // =====================================================
-// DISABLE BASIC DOWNLOAD / PRINT SHORTCUTS
+// SECURITY
 // =====================================================
 
 document.addEventListener(
@@ -770,9 +540,7 @@ document.addEventListener(
     true
 );
 
-
 </script>
-
 
 </body>
 
