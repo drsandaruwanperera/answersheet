@@ -10,36 +10,44 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Grade 11 TOP Ranking</title>
+    <title>
+        Grade 11 TOP Ranking
+    </title>
 
     <link
         rel="stylesheet"
-        href="grade11-model-paper.css?v=6"
+        href="grade11-model-papers.css?v=10"
     >
 
 </head>
 
+
 <body>
+
 
 <div class="container">
 
-    <!-- ==========================
-         Header
-    =========================== -->
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
 
     <div class="header">
 
+
         <div>
 
-            <h1 id="paperTitle">
-                🏆 TOP Ranking - 01
+            <h1>
+                🏆 Grade 11 TOP Ranking
             </h1>
 
-            <p id="paperSubtitle">
-                Grade 11 • TOP Ranking
+
+            <p>
+                Select a TOP Ranking Term
             </p>
 
         </div>
+
 
         <button
             type="button"
@@ -48,106 +56,39 @@
             ← Back
         </button>
 
-    </div>
-
-
-    <!-- ==========================
-         Parts
-    =========================== -->
-
-    <div class="part-grid">
-
-
-        <!-- ==========================
-             PART A
-        =========================== -->
-
-        <div class="part-card">
-
-            <div class="part-icon">
-                📝
-            </div>
-
-            <h2>
-                Part A
-            </h2>
-
-            <p>
-                Multiple Choice Questions
-            </p>
-
-
-            <div class="option-grid">
-
-                <button
-                    id="mcqBtn"
-                    type="button"
-                >
-                    📄 MCQ
-                </button>
-
-
-                <button
-                    id="mcqAnswerBtn"
-                    type="button"
-                >
-                    📝 MCQ Answer
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <!-- ==========================
-             PART B
-        =========================== -->
-
-        <div class="part-card">
-
-            <div class="part-icon">
-                📚
-            </div>
-
-            <h2>
-                Part B
-            </h2>
-
-            <p>
-                Question Paper
-            </p>
-
-
-            <div class="option-grid">
-
-                <button
-                    id="questionBtn"
-                    type="button"
-                >
-                    📄 Question Paper
-                </button>
-
-
-                <button
-                    id="answerBtn"
-                    type="button"
-                >
-                    📝 Answer Scheme
-                </button>
-
-            </div>
-
-        </div>
 
     </div>
+
+
+
+    <!-- =====================================================
+         TERM GRID
+         
+         IMPORTANT:
+         Do NOT put 1st / 2nd / 3rd Term cards manually here.
+         grade11-model-papers.js will create them after
+         checking Firestore.
+    ====================================================== -->
+
+    <div
+        class="term-grid"
+        id="termGrid"
+    ></div>
+
 
 </div>
 
 
+
+<!-- =====================================================
+     JAVASCRIPT
+====================================================== -->
+
 <script
     type="module"
-    src="grade11-model-paper.js?v=6"
+    src="grade11-model-papers.js?v=20"
 ></script>
+
 
 </body>
 
