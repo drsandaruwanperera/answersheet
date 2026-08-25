@@ -2,39 +2,17 @@
 // STUDENT MANAGEMENT SYSTEM
 // =====================================================
 
-import * as firebase from "./firebase.js";
-
-
-// =====================================================
-// FIREBASE
-// =====================================================
-
-const db =
-    firebase.db;
-
-const collection =
-    firebase.collection;
-
-const doc =
-    firebase.doc;
-
-const getDoc =
-    firebase.getDoc;
-
-const getDocs =
-    firebase.getDocs;
-
-const setDoc =
-    firebase.setDoc;
-
-const updateDoc =
-    firebase.updateDoc;
-
-const deleteDoc =
-    firebase.deleteDoc;
-
-const onSnapshot =
-    firebase.onSnapshot;
+import {
+    db,
+    collection,
+    doc,
+    getDoc,
+    getDocs,
+    setDoc,
+    updateDoc,
+    deleteDoc,
+    onSnapshot
+} from "./firebase.js";
 
 
 // =====================================================
@@ -45,7 +23,6 @@ const adminLoggedIn =
     sessionStorage.getItem(
         "adminLoggedIn"
     ) === "true";
-
 
 const adminRole =
     (
@@ -60,11 +37,9 @@ const adminRole =
         ""
     );
 
-
 const isSuperAdmin =
     adminRole === "superadmin" ||
     adminRole === "full";
-
 
 const adminUsername =
     sessionStorage.getItem(
@@ -89,21 +64,25 @@ if (!adminLoggedIn) {
 // ELEMENTS
 // =====================================================
 
-// Table
+// ---------------------------------------------
+// Student Table
+// ---------------------------------------------
+
 const studentTable =
     document.getElementById(
         "studentTable"
     );
 
 
-// Search
+// ---------------------------------------------
+// Search / Filters
+// ---------------------------------------------
+
 const searchInput =
     document.getElementById(
         "search"
     );
 
-
-// Filters
 const typeFilter =
     document.getElementById(
         "typeFilter"
@@ -115,7 +94,10 @@ const statusFilter =
     );
 
 
+// ---------------------------------------------
 // Add Student
+// ---------------------------------------------
+
 const addStudentBtn =
     document.getElementById(
         "addStudentBtn"
@@ -167,7 +149,30 @@ const newMustChange =
     );
 
 
+// ---------------------------------------------
+// A/L Series
+// ---------------------------------------------
+
+const alSeriesSection =
+    document.getElementById(
+        "alSeriesSection"
+    );
+
+const alSeriesButtons =
+    document.querySelectorAll(
+        ".al-series-btn"
+    );
+
+const studentIdHelp =
+    document.getElementById(
+        "studentIdHelp"
+    );
+
+
+// ---------------------------------------------
 // Edit Student
+// ---------------------------------------------
+
 const editModal =
     document.getElementById(
         "editModal"
@@ -214,7 +219,10 @@ const resetPasswordBtn =
     );
 
 
-// Paper buttons
+// ---------------------------------------------
+// Paper Controls
+// ---------------------------------------------
+
 const selectAllPapers =
     document.getElementById(
         "selectAllPapers"
@@ -231,7 +239,10 @@ const resetViewed =
     );
 
 
+// ---------------------------------------------
 // Logout
+// ---------------------------------------------
+
 const logoutBtn =
     document.getElementById(
         "logoutBtn"
@@ -255,9 +266,12 @@ let allStudents = [];
 let selectedStudentId =
     "";
 
+let selectedALSeries =
+    null;
+
 
 // =====================================================
-// HELPER
+// HELPER - PAPER FIELD
 // =====================================================
 
 function getPaperField(
@@ -396,7 +410,6 @@ function getStudentType(
         .toUpperCase();
 
 
-    // Grade 11
     if (
         /^\d{5}$/.test(
             cleanId
@@ -409,6 +422,7 @@ function getStudentType(
             );
 
 
+        // Grade 11
         if (
             number >= 26000 &&
             number <= 26999
@@ -432,7 +446,9 @@ function getStudentType(
     }
 
 
-    // A/L
+    // Everything else
+    // = A/L
+
     return "al";
 
 }
@@ -538,7 +554,7 @@ function getStudentName(
 
 
 // =====================================================
-// STATUS
+// ACTIVE STATUS
 // =====================================================
 
 function isStudentActive(
@@ -566,7 +582,7 @@ function isStudentActive(
     return (
         difference >= 0 &&
         difference <=
-        90 * 1000
+        90000
     );
 
 }
@@ -678,57 +694,6 @@ function escapeHTML(
 
 
 // =====================================================
-// FORMAT DATE
-// =====================================================
-
-function formatDate(
-    value
-) {
-
-    if (!value) {
-
-        return "—";
-
-    }
-
-
-    const date =
-        new Date(
-            Number(
-                value
-            )
-        );
-
-
-    if (
-        Number.isNaN(
-            date.getTime()
-        )
-    ) {
-
-        return "—";
-
-    }
-
-
-    return date.toLocaleDateString(
-        "en-GB",
-        {
-            day:
-                "2-digit",
-
-            month:
-                "short",
-
-            year:
-                "numeric"
-        }
-    );
-
-}
-
-
-// =====================================================
 // LOAD STUDENTS
 // =====================================================
 
@@ -767,12 +732,9 @@ async function loadStudents() {
 
         sortStudents();
 
-
         renderStudents();
 
-
         updateCounts();
-
 
     }
 
@@ -796,9 +758,11 @@ async function loadStudents() {
 
                     <td
                         colspan="6"
-                        style="text-align:center;"
+                        style="text-align:center;padding:30px;"
                     >
+
                         Unable to load students.
+
                     </td>
 
                 </tr>
@@ -813,7 +777,7 @@ async function loadStudents() {
 
 
 // =====================================================
-// SORT STUDENTS
+// SORT
 // =====================================================
 
 function sortStudents() {
@@ -844,7 +808,7 @@ function sortStudents() {
 
 
 // =====================================================
-// FILTER STUDENTS
+// FILTER
 // =====================================================
 
 function getFilteredStudents() {
@@ -1009,7 +973,7 @@ function renderStudents() {
 
 
 // =====================================================
-// RENDER STUDENT ROW
+// RENDER ROW
 // =====================================================
 
 function renderStudentRow(
@@ -1059,11 +1023,11 @@ function renderStudentRow(
 
     const statusClass =
         status
-            .toLowerCase()
-            .replace(
-                /\s+/g,
-                "-"
-            );
+        .toLowerCase()
+        .replace(
+            /\s+/g,
+            "-"
+        );
 
 
     return `
@@ -1073,8 +1037,6 @@ function renderStudentRow(
                 student.id
             )}"
         >
-
-            <!-- Student ID -->
 
             <td>
 
@@ -1086,8 +1048,6 @@ function renderStudentRow(
 
             </td>
 
-
-            <!-- Type / Grade -->
 
             <td>
 
@@ -1104,8 +1064,6 @@ function renderStudentRow(
             </td>
 
 
-            <!-- Viewed -->
-
             <td>
 
                 <strong>
@@ -1116,8 +1074,6 @@ function renderStudentRow(
 
             </td>
 
-
-            <!-- Status -->
 
             <td>
 
@@ -1152,18 +1108,12 @@ function renderStudentRow(
             </td>
 
 
-            <!-- Password -->
-
             <td>
 
-                <span>
-                    ••••••••
-                </span>
+                ••••••••
 
             </td>
 
-
-            <!-- Action -->
 
             <td>
 
@@ -1285,10 +1235,6 @@ if (
 }
 
 
-// =====================================================
-// FILTERS
-// =====================================================
-
 if (
     typeFilter
 ) {
@@ -1380,7 +1326,7 @@ if (
 
 
 // =====================================================
-// CLOSE ADD
+// CLOSE BUTTONS
 // =====================================================
 
 if (
@@ -1436,6 +1382,10 @@ if (
 
 function clearAddForm() {
 
+    selectedALSeries =
+        null;
+
+
     if (
         newStudentType
     ) {
@@ -1467,7 +1417,7 @@ function clearAddForm() {
             false;
 
         newStudentId.placeholder =
-            "Enter Student ID";
+            "Select category first";
 
         newStudentId.style.background =
             "";
@@ -1498,6 +1448,38 @@ function clearAddForm() {
     }
 
 
+    if (
+        alSeriesSection
+    ) {
+
+        alSeriesSection.style.display =
+            "none";
+
+    }
+
+
+    if (
+        studentIdHelp
+    ) {
+
+        studentIdHelp.textContent =
+            "Select a student category first.";
+
+    }
+
+
+    alSeriesButtons.forEach(
+        button => {
+
+            button.classList.remove(
+                "selected",
+                "active"
+            );
+
+        }
+    );
+
+
     document
         .querySelectorAll(
             ".category-btn"
@@ -1517,155 +1499,44 @@ function clearAddForm() {
 
 
 // =====================================================
-// CATEGORY BUTTONS
-// =====================================================
-
-document
-    .querySelectorAll(
-        ".category-btn"
-    )
-    .forEach(
-        button => {
-
-            button.addEventListener(
-                "click",
-                async () => {
-
-                    const type =
-                        button.dataset.type;
-
-
-                    if (
-                        newStudentType
-                    ) {
-
-                        newStudentType.value =
-                            type;
-
-                    }
-
-
-                    document
-                        .querySelectorAll(
-                            ".category-btn"
-                        )
-                        .forEach(
-                            item => {
-
-                                item.classList.remove(
-                                    "selected",
-                                    "active"
-                                );
-
-                            }
-                        );
-
-
-                    button.classList.add(
-                        "selected"
-                    );
-
-
-                    if (
-                        newStudentGrade
-                    ) {
-
-                        if (
-                            type ===
-                            "grade10"
-                        ) {
-
-                            newStudentGrade.textContent =
-                                "Selected: Grade 10";
-
-                        }
-
-                        else if (
-                            type ===
-                            "grade11"
-                        ) {
-
-                            newStudentGrade.textContent =
-                                "Selected: Grade 11";
-
-                        }
-
-                        else {
-
-                            newStudentGrade.textContent =
-                                "Selected: A/L";
-
-                        }
-
-                    }
-
-
-                    // ---------------------------------
-                    // A/L
-                    // ---------------------------------
-
-                    if (
-                        type ===
-                        "al"
-                    ) {
-
-                        await refreshALAdmissionNumberUI();
-
-                    }
-
-
-                    // ---------------------------------
-                    // Grade 10 / Grade 11
-                    // ---------------------------------
-
-                    else if (
-                        newStudentId
-                    ) {
-
-                        newStudentId.value =
-                            "";
-
-                        newStudentId.readOnly =
-                            false;
-
-                        newStudentId.placeholder =
-                            "Enter Student ID";
-
-                        newStudentId.style.background =
-                            "";
-
-                        newStudentId.style.fontWeight =
-                            "";
-
-                    }
-
-                }
-            );
-
-        }
-    );
-
-
-// =====================================================
-// A/L ADMISSION NUMBER GENERATOR
+// GENERATE NEXT A/L ID
 // =====================================================
 //
-// A/L IDs:
-// A27000
-// A27001
-// A27002
-// ...
-// A27999
-// A28000
-// A28001
-// ...
+// Series:
 //
-// Existing numbers are checked first.
-// Missing numbers are reused.
-// Otherwise next number is generated.
+// A27000 - A27999
+// A28000 - A28999
+// A29000 - A29999
+//
+// Each series is independent.
 // =====================================================
 
-async function generateNextALAdmissionNumber() {
+async function generateNextALAdmissionNumber(
+    series
+) {
+
+    const base =
+        Number(
+            series
+        );
+
+
+    if (
+        ![
+            27000,
+            28000,
+            29000
+        ].includes(
+            base
+        )
+    ) {
+
+        throw new Error(
+            "Invalid A/L admission series."
+        );
+
+    }
+
 
     const snapshot =
         await getDocs(
@@ -1676,7 +1547,8 @@ async function generateNextALAdmissionNumber() {
         );
 
 
-    const numbers = [];
+    const usedNumbers =
+        new Set();
 
 
     snapshot.forEach(
@@ -1711,13 +1583,12 @@ async function generateNextALAdmissionNumber() {
 
 
             if (
-                Number.isInteger(
-                    number
-                ) &&
-                number >= 27000
+                number >= base &&
+                number <=
+                base + 999
             ) {
 
-                numbers.push(
+                usedNumbers.add(
                     number
                 );
 
@@ -1727,37 +1598,18 @@ async function generateNextALAdmissionNumber() {
     );
 
 
-    // First A/L student
-    if (
-        numbers.length === 0
-    ) {
+    // ---------------------------------------------
+    // Find first unused ID
+    // ---------------------------------------------
 
-        return "A27000";
-
-    }
-
-
-    const used =
-        new Set(
-            numbers
-        );
-
-
-    const highest =
-        Math.max(
-            ...numbers
-        );
-
-
-    // Find missing number first
     for (
-        let number = 27000;
-        number <= highest;
+        let number = base;
+        number <= base + 999;
         number++
     ) {
 
         if (
-            !used.has(
+            !usedNumbers.has(
                 number
             )
         ) {
@@ -1777,101 +1629,427 @@ async function generateNextALAdmissionNumber() {
     }
 
 
-    // Otherwise next number
-    return (
-        "A" +
-        String(
-            highest + 1
-        ).padStart(
-            5,
-            "0"
-        )
+    throw new Error(
+        "The selected A/L series is full."
     );
 
 }
 
 
 // =====================================================
-// REFRESH A/L NUMBER
+// A/L SERIES BUTTONS
 // =====================================================
 
-async function refreshALAdmissionNumberUI() {
+alSeriesButtons.forEach(
+    button => {
 
-    if (
-        !newStudentType ||
-        !newStudentId
-    ) {
+        button.addEventListener(
+            "click",
+            async () => {
 
-        return;
+                const series =
+                    Number(
+                        button.dataset.series
+                    );
+
+
+                selectedALSeries =
+                    series;
+
+
+                // ---------------------------------
+                // Highlight
+                // ---------------------------------
+
+                alSeriesButtons.forEach(
+                    item => {
+
+                        item.classList.remove(
+                            "selected",
+                            "active"
+                        );
+
+                    }
+                );
+
+
+                button.classList.add(
+                    "selected"
+                );
+
+
+                // ---------------------------------
+                // Generate
+                // ---------------------------------
+
+                if (
+                    newStudentId
+                ) {
+
+                    newStudentId.readOnly =
+                        true;
+
+                    newStudentId.value =
+                        "";
+
+                    newStudentId.placeholder =
+                        "Generating...";
+
+                    newStudentId.style.background =
+                        "#f1f5f9";
+
+                    newStudentId.style.fontWeight =
+                        "700";
+
+                }
+
+
+                try {
+
+                    const nextId =
+                        await generateNextALAdmissionNumber(
+                            series
+                        );
+
+
+                    if (
+                        newStudentType?.value !==
+                        "al"
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    if (
+                        selectedALSeries !==
+                        series
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    if (
+                        newStudentId
+                    ) {
+
+                        newStudentId.value =
+                            nextId;
+
+                    }
+
+                }
+
+                catch (
+                    error
+                ) {
+
+                    console.error(
+                        "A/L series error:",
+                        error
+                    );
+
+
+                    if (
+                        newStudentId
+                    ) {
+
+                        newStudentId.value =
+                            "";
+
+                        newStudentId.placeholder =
+                            "Series unavailable";
+
+                    }
+
+
+                    alert(
+                        error.message
+                    );
+
+                }
+
+            }
+        );
 
     }
+);
 
 
-    if (
-        newStudentType.value !==
-        "al"
-    ) {
+// =====================================================
+// CATEGORY BUTTONS
+// =====================================================
 
-        return;
+document
+    .querySelectorAll(
+        ".category-btn"
+    )
+    .forEach(
+        button => {
 
-    }
+            button.addEventListener(
+                "click",
+                () => {
 
-
-    try {
-
-        newStudentId.readOnly =
-            true;
-
-        newStudentId.placeholder =
-            "Generating admission number...";
-
-        newStudentId.style.background =
-            "#f1f5f9";
-
-        newStudentId.style.fontWeight =
-            "700";
+                    const type =
+                        button.dataset.type;
 
 
-        const nextId =
-            await generateNextALAdmissionNumber();
+                    if (
+                        newStudentType
+                    ) {
+
+                        newStudentType.value =
+                            type;
+
+                    }
 
 
-        if (
-            newStudentType.value ===
-            "al"
-        ) {
+                    // ---------------------------------
+                    // Highlight category
+                    // ---------------------------------
 
-            newStudentId.value =
-                nextId;
+                    document
+                        .querySelectorAll(
+                            ".category-btn"
+                        )
+                        .forEach(
+                            item => {
+
+                                item.classList.remove(
+                                    "selected",
+                                    "active"
+                                );
+
+                            }
+                        );
+
+
+                    button.classList.add(
+                        "selected"
+                    );
+
+
+                    // ---------------------------------
+                    // A/L
+                    // ---------------------------------
+
+                    if (
+                        type ===
+                        "al"
+                    ) {
+
+                        selectedALSeries =
+                            null;
+
+
+                        if (
+                            alSeriesSection
+                        ) {
+
+                            alSeriesSection.style.display =
+                                "block";
+
+                        }
+
+
+                        if (
+                            newStudentId
+                        ) {
+
+                            newStudentId.value =
+                                "";
+
+                            newStudentId.readOnly =
+                                true;
+
+                            newStudentId.placeholder =
+                                "Select A/L series";
+
+                            newStudentId.style.background =
+                                "#f1f5f9";
+
+                            newStudentId.style.fontWeight =
+                                "700";
+
+                        }
+
+
+                        if (
+                            studentIdHelp
+                        ) {
+
+                            studentIdHelp.textContent =
+                                "Select A27000, A28000 or A29000 series.";
+
+                        }
+
+
+                        if (
+                            newStudentGrade
+                        ) {
+
+                            newStudentGrade.textContent =
+                                "Selected: A/L";
+
+                        }
+
+
+                        alSeriesButtons.forEach(
+                            item => {
+
+                                item.classList.remove(
+                                    "selected",
+                                    "active"
+                                );
+
+                            }
+                        );
+
+                    }
+
+
+                    // ---------------------------------
+                    // Grade 10
+                    // ---------------------------------
+
+                    else if (
+                        type ===
+                        "grade10"
+                    ) {
+
+                        selectedALSeries =
+                            null;
+
+
+                        if (
+                            alSeriesSection
+                        ) {
+
+                            alSeriesSection.style.display =
+                                "none";
+
+                        }
+
+
+                        if (
+                            newStudentId
+                        ) {
+
+                            newStudentId.value =
+                                "";
+
+                            newStudentId.readOnly =
+                                false;
+
+                            newStudentId.placeholder =
+                                "Enter Grade 10 Student ID";
+
+                            newStudentId.style.background =
+                                "";
+
+                            newStudentId.style.fontWeight =
+                                "";
+
+                        }
+
+
+                        if (
+                            studentIdHelp
+                        ) {
+
+                            studentIdHelp.textContent =
+                                "Enter the Grade 10 Student ID manually.";
+
+                        }
+
+
+                        if (
+                            newStudentGrade
+                        ) {
+
+                            newStudentGrade.textContent =
+                                "Selected: Grade 10";
+
+                        }
+
+                    }
+
+
+                    // ---------------------------------
+                    // Grade 11
+                    // ---------------------------------
+
+                    else if (
+                        type ===
+                        "grade11"
+                    ) {
+
+                        selectedALSeries =
+                            null;
+
+
+                        if (
+                            alSeriesSection
+                        ) {
+
+                            alSeriesSection.style.display =
+                                "none";
+
+                        }
+
+
+                        if (
+                            newStudentId
+                        ) {
+
+                            newStudentId.value =
+                                "";
+
+                            newStudentId.readOnly =
+                                false;
+
+                            newStudentId.placeholder =
+                                "Enter Grade 11 Student ID";
+
+                            newStudentId.style.background =
+                                "";
+
+                            newStudentId.style.fontWeight =
+                                "";
+
+                        }
+
+
+                        if (
+                            studentIdHelp
+                        ) {
+
+                            studentIdHelp.textContent =
+                                "Enter the Grade 11 Student ID manually.";
+
+                        }
+
+
+                        if (
+                            newStudentGrade
+                        ) {
+
+                            newStudentGrade.textContent =
+                                "Selected: Grade 11";
+
+                        }
+
+                    }
+
+                }
+            );
 
         }
-
-    }
-
-    catch (
-        error
-    ) {
-
-        console.error(
-            "A/L admission number error:",
-            error
-        );
-
-
-        newStudentId.value =
-            "";
-
-        newStudentId.placeholder =
-            "Unable to generate admission number";
-
-
-        alert(
-            "Unable to generate the next A/L admission number."
-        );
-
-    }
-
-}
+    );
 
 
 // =====================================================
@@ -1885,6 +2063,12 @@ if (
     saveNewStudent.addEventListener(
         "click",
         async () => {
+
+            const type =
+                newStudentType
+                    ?.value ||
+                "";
+
 
             let id =
                 newStudentId
@@ -1901,21 +2085,15 @@ if (
                 "";
 
 
-            const type =
-                newStudentType
-                    ?.value ||
-                "";
-
-
             let mustChange =
                 newMustChange
                     ?.checked ||
                 false;
 
 
-            // -----------------------------------------
+            // =========================================
             // CATEGORY
-            // -----------------------------------------
+            // =========================================
 
             if (!type) {
 
@@ -1928,17 +2106,34 @@ if (
             }
 
 
-            // -----------------------------------------
+            // =========================================
             // A/L
-            // -----------------------------------------
+            // =========================================
 
             if (
                 type ===
                 "al"
             ) {
 
+                if (
+                    !selectedALSeries
+                ) {
+
+                    alert(
+                        "Please select an A/L admission series."
+                    );
+
+                    return;
+
+                }
+
+
+                // Re-check immediately
+                // before saving
                 id =
-                    await generateNextALAdmissionNumber();
+                    await generateNextALAdmissionNumber(
+                        selectedALSeries
+                    );
 
 
                 mustChange =
@@ -1957,30 +2152,38 @@ if (
             }
 
 
-            // -----------------------------------------
-            // ID
-            // -----------------------------------------
+            // =========================================
+            // GRADE 10 / 11
+            // =========================================
 
-            if (!id) {
+            else {
 
-                alert(
-                    "Please enter Student ID."
-                );
+                if (!id) {
 
-                return;
+                    alert(
+                        "Please enter Student ID."
+                    );
+
+                    newStudentId?.focus();
+
+                    return;
+
+                }
 
             }
 
 
-            // -----------------------------------------
+            // =========================================
             // PASSWORD
-            // -----------------------------------------
+            // =========================================
 
             if (!password) {
 
                 alert(
                     "Please enter Password."
                 );
+
+                newStudentPassword?.focus();
 
                 return;
 
@@ -1996,30 +2199,136 @@ if (
                     "Password must contain at least 4 characters."
                 );
 
+                newStudentPassword?.focus();
+
                 return;
 
             }
 
 
-            // -----------------------------------------
+            // =========================================
             // A/L VALIDATION
-            // -----------------------------------------
+            // =========================================
 
             if (
-                type === "al" &&
-                !/^A\d{5}$/.test(
-                    id
-                )
+                type === "al"
             ) {
 
-                alert(
-                    "Invalid A/L admission number."
-                );
+                const validAL =
+                    /^A(270|280|290)\d{2}$/
+                    .test(
+                        id
+                    );
 
-                return;
+
+                if (!validAL) {
+
+                    alert(
+                        "Invalid A/L admission number."
+                    );
+
+                    return;
+
+                }
 
             }
 
+
+            // =========================================
+            // GRADE 10 VALIDATION
+            // =========================================
+
+            if (
+                type ===
+                "grade10"
+            ) {
+
+                if (
+                    !/^\d{5}$/.test(
+                        id
+                    )
+                ) {
+
+                    alert(
+                        "Grade 10 Student ID must contain 5 digits."
+                    );
+
+                    return;
+
+                }
+
+
+                const number =
+                    Number(
+                        id
+                    );
+
+
+                if (
+                    number < 27000 ||
+                    number > 27999
+                ) {
+
+                    alert(
+                        "Grade 10 Student ID must be between 27000 and 27999."
+                    );
+
+                    return;
+
+                }
+
+            }
+
+
+            // =========================================
+            // GRADE 11 VALIDATION
+            // =========================================
+
+            if (
+                type ===
+                "grade11"
+            ) {
+
+                if (
+                    !/^\d{5}$/.test(
+                        id
+                    )
+                ) {
+
+                    alert(
+                        "Grade 11 Student ID must contain 5 digits."
+                    );
+
+                    return;
+
+                }
+
+
+                const number =
+                    Number(
+                        id
+                    );
+
+
+                if (
+                    number < 26000 ||
+                    number > 26999
+                ) {
+
+                    alert(
+                        "Grade 11 Student ID must be between 26000 and 26999."
+                    );
+
+                    return;
+
+                }
+
+            }
+
+
+            // =========================================
+            // DISABLE BUTTON
+            // =========================================
 
             saveNewStudent.disabled =
                 true;
@@ -2030,7 +2339,7 @@ if (
 
             try {
 
-                let studentRef =
+                const studentRef =
                     doc(
                         db,
                         "students",
@@ -2049,7 +2358,7 @@ if (
                 ) {
 
                     alert(
-                        "A student with this ID already exists."
+                        "This Student ID already exists."
                     );
 
                     return;
@@ -2057,11 +2366,14 @@ if (
                 }
 
 
-                // ---------------------------------
+                // =====================================
                 // STUDENT DATA
-                // ---------------------------------
+                // =====================================
 
                 const studentData = {
+
+                    admissionNumber:
+                        id,
 
                     password:
                         password,
@@ -2073,33 +2385,44 @@ if (
                         type,
 
                     grade:
-                        type === "grade10"
-                            ? "10"
-                            : type === "grade11"
-                                ? "11"
-                                : "",
+                        type ===
+                        "grade10"
+                            ? 10
+                            : type ===
+                              "grade11"
+                                ? 11
+                                : null,
 
-                    admissionNumber:
-                        id,
+                    fullName:
+                        "",
 
-                    createdAt:
-                        Date.now(),
+                    name:
+                        "",
 
-                    lastActiveAt:
-                        0,
+                    studentName:
+                        "",
+
+                    nicNumber:
+                        "",
 
                     profileCompleted:
                         false,
 
                     registrationCompleted:
-                        false
+                        false,
+
+                    createdAt:
+                        Date.now(),
+
+                    lastActiveAt:
+                        0
 
                 };
 
 
-                // ---------------------------------
+                // =====================================
                 // PAPER FIELDS
-                // ---------------------------------
+                // =====================================
 
                 for (
                     let i = 1;
@@ -2137,54 +2460,9 @@ if (
                 }
 
 
-                // ---------------------------------
-                // A/L MODEL PAPERS
-                // ---------------------------------
-
-                if (
-                    type ===
-                    "al"
-                ) {
-
-                    studentData.paperViews = {
-
-                        al: {
-
-                            model: {}
-
-                        }
-
-                    };
-
-
-                    for (
-                        let i = 1;
-                        i <= 10;
-                        i++
-                    ) {
-
-                        const paper =
-                            getPaperField(
-                                i
-                            );
-
-
-                        studentData
-                            .paperViews
-                            .al
-                            .model[
-                                paper
-                            ] =
-                            false;
-
-                    }
-
-                }
-
-
-                // ---------------------------------
+                // =====================================
                 // SAVE
-                // ---------------------------------
+                // =====================================
 
                 await setDoc(
                     studentRef,
@@ -2192,21 +2470,40 @@ if (
                 );
 
 
-                // ---------------------------------
+                // =====================================
                 // SUCCESS
-                // ---------------------------------
+                // =====================================
 
-                alert(
-                    type === "al"
-                        ? (
-                            "A/L Student added successfully.\n\n" +
-                            "Admission Number: " +
-                            id +
-                            "\n\n" +
-                            "The student must complete registration on first login."
-                        )
-                        : "Student added successfully."
-                );
+                if (
+                    type ===
+                    "al"
+                ) {
+
+                    alert(
+
+                        "A/L Student created successfully.\n\n" +
+
+                        "Admission Number: " +
+                        id +
+                        "\n\n" +
+
+                        "Temporary Password: " +
+                        password +
+                        "\n\n" +
+
+                        "The student must complete registration on first login."
+
+                    );
+
+                }
+
+                else {
+
+                    alert(
+                        "Student created successfully."
+                    );
+
+                }
 
 
                 closeAddModal();
@@ -2221,13 +2518,13 @@ if (
             ) {
 
                 console.error(
-                    "Add Student Error:",
+                    "Add student error:",
                     error
                 );
 
 
                 alert(
-                    "Failed to add student.\n\n" +
+                    "Failed to create student.\n\n" +
                     error.message
                 );
 
@@ -2280,10 +2577,6 @@ function openEditModal(
         student.data;
 
 
-    // ---------------------------------------------
-    // ID
-    // ---------------------------------------------
-
     if (
         editStudentId
     ) {
@@ -2293,10 +2586,6 @@ function openEditModal(
 
     }
 
-
-    // ---------------------------------------------
-    // PASSWORD
-    // ---------------------------------------------
 
     if (
         editPassword
@@ -2311,10 +2600,6 @@ function openEditModal(
     }
 
 
-    // ---------------------------------------------
-    // MUST CHANGE
-    // ---------------------------------------------
-
     if (
         editMustChange
     ) {
@@ -2327,7 +2612,7 @@ function openEditModal(
 
 
     // ---------------------------------------------
-    // PAPER CHECKBOXES
+    // Paper permissions
     // ---------------------------------------------
 
     for (
@@ -2360,10 +2645,6 @@ function openEditModal(
     }
 
 
-    // ---------------------------------------------
-    // OPEN
-    // ---------------------------------------------
-
     if (
         editModal
     ) {
@@ -2381,7 +2662,7 @@ function openEditModal(
 
 
 // =====================================================
-// CLOSE EDIT MODAL
+// CLOSE EDIT
 // =====================================================
 
 function closeEditModal() {
@@ -2405,10 +2686,6 @@ function closeEditModal() {
 
 }
 
-
-// =====================================================
-// EDIT CLOSE BUTTONS
-// =====================================================
 
 if (
     closeEdit
@@ -2458,7 +2735,7 @@ if (
 
 
 // =====================================================
-// SAVE EDIT
+// UPDATE STUDENT
 // =====================================================
 
 if (
@@ -2552,10 +2829,6 @@ if (
                 };
 
 
-                // ---------------------------------
-                // PASSWORD
-                // ---------------------------------
-
                 if (
                     password
                 ) {
@@ -2581,7 +2854,7 @@ if (
 
 
                 // ---------------------------------
-                // PAPER PERMISSIONS
+                // Paper permissions
                 // ---------------------------------
 
                 for (
@@ -2616,6 +2889,38 @@ if (
                 }
 
 
+                // ---------------------------------
+                // Reset viewed
+                // ---------------------------------
+
+                if (
+                    resetViewed &&
+                    resetViewed.dataset.pendingReset ===
+                    "true"
+                ) {
+
+                    for (
+                        let i = 1;
+                        i <= TOTAL_PAPERS;
+                        i++
+                    ) {
+
+                        updateData[
+                            getPaperViewedField(
+                                i
+                            )
+                        ] =
+                            false;
+
+                    }
+
+
+                    resetViewed.dataset.pendingReset =
+                        "false";
+
+                }
+
+
                 await updateDoc(
                     studentRef,
                     updateData
@@ -2639,7 +2944,7 @@ if (
             ) {
 
                 console.error(
-                    "Edit student error:",
+                    "Update student error:",
                     error
                 );
 
@@ -2675,6 +2980,19 @@ async function deleteStudent(
     studentId
 ) {
 
+    if (
+        !isSuperAdmin
+    ) {
+
+        alert(
+            "Only Super Administrator can delete students."
+        );
+
+        return;
+
+    }
+
+
     const student =
         allStudents.find(
             item =>
@@ -2690,19 +3008,6 @@ async function deleteStudent(
     }
 
 
-    if (
-        !isSuperAdmin
-    ) {
-
-        alert(
-            "Only Super Administrator can delete students."
-        );
-
-        return;
-
-    }
-
-
     const name =
         getStudentName(
             student.data
@@ -2711,7 +3016,9 @@ async function deleteStudent(
 
     const confirmed =
         confirm(
+
             "Delete student?\n\n" +
+
             (
                 name ===
                 "Not Registered"
@@ -2721,7 +3028,11 @@ async function deleteStudent(
                       studentId +
                       ")"
             ) +
-            "\n\nThis action cannot be undone."
+
+            "\n\n" +
+
+            "This action cannot be undone."
+
         );
 
 
@@ -2776,7 +3087,7 @@ async function deleteStudent(
 
 
 // =====================================================
-// DELETE FROM EDIT MODAL
+// DELETE BUTTON
 // =====================================================
 
 if (
@@ -2804,7 +3115,7 @@ if (
 
 
 // =====================================================
-// RESET PASSWORD
+// GENERATE PASSWORD
 // =====================================================
 
 function generatePassword() {
@@ -2839,6 +3150,10 @@ function generatePassword() {
 }
 
 
+// =====================================================
+// RESET PASSWORD
+// =====================================================
+
 if (
     resetPasswordBtn
 ) {
@@ -2855,6 +3170,7 @@ if (
                     generatePassword();
 
             }
+
 
             if (
                 editMustChange
@@ -2969,39 +3285,34 @@ if (
         "click",
         () => {
 
-            for (
-                let i = 1;
-                i <= TOTAL_PAPERS;
-                i++
+            if (
+                !selectedStudentId
             ) {
 
-                const paper =
-                    getPaperViewedField(
-                        i
-                    );
+                alert(
+                    "Please select a student first."
+                );
 
-
-                // The viewed field is stored
-                // in Firestore, so mark the
-                // selected student for reset.
-                const checkbox =
-                    document.getElementById(
-                        getPaperField(
-                            i
-                        )
-                    );
-
-
-                if (
-                    checkbox
-                ) {
-
-                    checkbox.dataset.resetViewed =
-                        "true";
-
-                }
+                return;
 
             }
+
+
+            const confirmed =
+                confirm(
+                    "Reset all paper viewed status for this student?"
+                );
+
+
+            if (!confirmed) {
+
+                return;
+
+            }
+
+
+            resetViewed.dataset.pendingReset =
+                "true";
 
 
             alert(
@@ -3020,8 +3331,9 @@ if (
 
 function updateCounts() {
 
-    let total =
+    const total =
         allStudents.length;
+
 
     let grade10 =
         0;
@@ -3055,6 +3367,7 @@ function updateCounts() {
 
             }
 
+
             else if (
                 type ===
                 "grade11"
@@ -3064,10 +3377,8 @@ function updateCounts() {
 
             }
 
-            else if (
-                type ===
-                "al"
-            ) {
+
+            else {
 
                 al++;
 
@@ -3206,7 +3517,7 @@ if (
 
 
 // =====================================================
-// REALTIME FIRESTORE UPDATE
+// REALTIME FIRESTORE
 // =====================================================
 
 function startRealtimeUpdates() {
@@ -3243,9 +3554,7 @@ function startRealtimeUpdates() {
 
                 sortStudents();
 
-
                 renderStudents();
-
 
                 updateCounts();
 
@@ -3254,7 +3563,7 @@ function startRealtimeUpdates() {
             error => {
 
                 console.error(
-                    "Realtime student update error:",
+                    "Realtime update error:",
                     error
                 );
 
@@ -3298,35 +3607,43 @@ setInterval(
 // =====================================================
 
 console.log(
-    "================================"
+    "========================================"
 );
 
 console.log(
-    "Student Management System Loaded"
+    "STUDENT MANAGEMENT SYSTEM"
 );
 
 console.log(
-    "A/L Admission Generator: ACTIVE"
+    "========================================"
 );
 
 console.log(
-    "A/L IDs start from A27000"
+    "A/L Series: A27000"
 );
 
 console.log(
-    "Grade 10 / Grade 11 supported"
+    "A/L Series: A28000"
 );
 
 console.log(
-    "Add / Edit / Delete supported"
+    "A/L Series: A29000"
 );
 
 console.log(
-    "Paper permissions supported"
+    "Grade 10: Manual Student ID"
 );
 
 console.log(
-    "Realtime Firestore updates ACTIVE"
+    "Grade 11: Manual Student ID"
+);
+
+console.log(
+    "Add / Edit / Delete: ACTIVE"
+);
+
+console.log(
+    "Realtime Firestore: ACTIVE"
 );
 
 console.log(
@@ -3340,13 +3657,19 @@ console.log(
 );
 
 console.log(
-    "================================"
+    "========================================"
 );
 
 
-// Initial load
+// =====================================================
+// INITIAL LOAD
+// =====================================================
+
 loadStudents();
 
 
-// Realtime updates
+// =====================================================
+// REALTIME
+// =====================================================
+
 startRealtimeUpdates();
