@@ -1,6 +1,6 @@
-// ==========================
-// Check Login
-// ==========================
+// =====================================================
+// CHECK LOGIN
+// =====================================================
 
 if (
     sessionStorage.getItem("loggedIn") !== "true"
@@ -13,9 +13,9 @@ if (
 }
 
 
-// ==========================
-// Get Student ID
-// ==========================
+// =====================================================
+// STUDENT INFORMATION
+// =====================================================
 
 const studentId =
     sessionStorage.getItem(
@@ -23,24 +23,21 @@ const studentId =
     );
 
 
-// ==========================
-// Get Student Grade
-// ==========================
-
 const studentGrade =
     sessionStorage.getItem(
         "studentGrade"
     );
 
 
-// ==========================
-// Show Student ID
-// ==========================
+// =====================================================
+// SHOW STUDENT ID
+// =====================================================
 
 const studentIdElement =
     document.getElementById(
         "studentId"
     );
+
 
 if (studentIdElement) {
 
@@ -58,16 +55,16 @@ import {
     db,
     doc,
     updateDoc,
-    getDoc,
-    onSnapshot
+    getDoc
 } from "./firebase.js";
 
 
 // =====================================================
-// STUDENT REFERENCE
+// STUDENT FIREBASE REFERENCE
 // =====================================================
 
 let studentRef = null;
+
 
 if (studentId) {
 
@@ -82,259 +79,6 @@ if (studentId) {
 
 
 // =====================================================
-// PAPER SETTINGS REFERENCE
-// =====================================================
-
-const paperSettingsRef =
-    doc(
-        db,
-        "paperSettings",
-        "grade10"
-    );
-
-
-// =====================================================
-// GRADE 10 DASHBOARD RESOURCE CONTROL
-// =====================================================
-//
-// Firebase:
-//
-// paperSettings
-//     └── grade10
-//
-//          dashboard_model: true / false
-//          dashboard_past: true / false
-//
-// If false → card hidden
-// If true → card shown
-//
-// If field does not exist → card shown
-// =====================================================
-
-
-// ==========================
-// Model Papers Card
-// ==========================
-
-const modelPapersCard =
-    document.querySelector(
-        '[data-resource="grade10-model"]'
-    );
-
-
-// ==========================
-// Past Papers Card
-// ==========================
-
-const pastPapersCard =
-    document.querySelector(
-        '[data-resource="grade10-past"]'
-    );
-
-
-// =====================================================
-// APPLY DASHBOARD SETTINGS
-// =====================================================
-
-function applyDashboardSettings(
-    settings = {}
-) {
-
-
-    // =================================================
-    // MODEL PAPERS
-    // =================================================
-
-    if (modelPapersCard) {
-
-        const modelEnabled =
-            settings.dashboard_model !== false;
-
-
-        modelPapersCard.style.display =
-            modelEnabled
-                ? ""
-                : "none";
-
-    }
-
-
-    // =================================================
-    // PAST PAPERS
-    // =================================================
-
-    if (pastPapersCard) {
-
-        const pastEnabled =
-            settings.dashboard_past !== false;
-
-
-        pastPapersCard.style.display =
-            pastEnabled
-                ? ""
-                : "none";
-
-    }
-
-
-    console.log(
-        "Grade 10 dashboard settings applied:",
-        {
-            modelPapers:
-                settings.dashboard_model !== false,
-
-            pastPapers:
-                settings.dashboard_past !== false
-        }
-    );
-
-}
-
-
-// =====================================================
-// LOAD DASHBOARD SETTINGS
-// =====================================================
-
-async function loadDashboardSettings() {
-
-    try {
-
-        const snapshot =
-            await getDoc(
-                paperSettingsRef
-            );
-
-
-        if (
-            !snapshot.exists()
-        ) {
-
-            console.log(
-                "No Grade 10 paper settings found. Using default settings."
-            );
-
-
-            applyDashboardSettings(
-                {}
-            );
-
-
-            return;
-
-        }
-
-
-        const settings =
-            snapshot.data();
-
-
-        applyDashboardSettings(
-            settings
-        );
-
-    }
-    catch (error) {
-
-        console.error(
-            "Failed to load Grade 10 dashboard settings:",
-            error
-        );
-
-
-        // If Firebase settings cannot be loaded,
-        // keep cards visible.
-
-        applyDashboardSettings(
-            {}
-        );
-
-    }
-
-}
-
-
-// =====================================================
-// REAL-TIME DASHBOARD SETTINGS
-// =====================================================
-//
-// This means:
-//
-// Admin changes
-//     ↓
-// Firebase
-//     ↓
-// Student Dashboard
-//     ↓
-// Card updates automatically
-//
-// No manual page refresh required.
-// =====================================================
-
-function startDashboardSettingsListener() {
-
-    try {
-
-        onSnapshot(
-            paperSettingsRef,
-
-            snapshot => {
-
-                if (
-                    snapshot.exists()
-                ) {
-
-                    const settings =
-                        snapshot.data();
-
-
-                    applyDashboardSettings(
-                        settings
-                    );
-
-                }
-                else {
-
-                    applyDashboardSettings(
-                        {}
-                    );
-
-                }
-
-            },
-
-            error => {
-
-                console.error(
-                    "Grade 10 dashboard realtime settings error:",
-                    error
-                );
-
-            }
-        );
-
-    }
-    catch (error) {
-
-        console.error(
-            "Failed to start dashboard settings listener:",
-            error
-        );
-
-    }
-
-}
-
-
-// =====================================================
-// START DASHBOARD SETTINGS
-// =====================================================
-
-loadDashboardSettings();
-
-startDashboardSettingsListener();
-
-
-// =====================================================
 // UPDATE LAST ACTIVE
 // =====================================================
 
@@ -343,6 +87,7 @@ async function updateLastActive() {
     if (!studentRef) {
         return;
     }
+
 
     try {
 
@@ -368,6 +113,204 @@ async function updateLastActive() {
 
 
 // =====================================================
+// SHOW ELEMENT
+// =====================================================
+
+function showElement(
+    elementId
+) {
+
+    const element =
+        document.getElementById(
+            elementId
+        );
+
+
+    if (!element) {
+        return;
+    }
+
+
+    element.style.display =
+        "";
+
+}
+
+
+// =====================================================
+// HIDE ELEMENT
+// =====================================================
+
+function hideElement(
+    elementId
+) {
+
+    const element =
+        document.getElementById(
+            elementId
+        );
+
+
+    if (!element) {
+        return;
+    }
+
+
+    element.style.display =
+        "none";
+
+}
+
+
+// =====================================================
+// LOAD GRADE 10 PAPER SETTINGS
+// =====================================================
+
+async function loadPaperSettings() {
+
+    try {
+
+        const settingsRef =
+            doc(
+                db,
+                "paperSettings",
+                "grade10"
+            );
+
+
+        const settingsSnapshot =
+            await getDoc(
+                settingsRef
+            );
+
+
+        // =================================================
+        // IF DOCUMENT DOES NOT EXIST
+        // =================================================
+
+        if (
+            !settingsSnapshot.exists()
+        ) {
+
+            console.warn(
+                "Grade 10 paperSettings document not found."
+            );
+
+
+            // Default behaviour:
+            // Show both buttons.
+
+            showElement(
+                "modelPapersCard"
+            );
+
+            showElement(
+                "pastPapersCard"
+            );
+
+
+            return;
+
+        }
+
+
+        const settings =
+            settingsSnapshot.data();
+
+
+        // =================================================
+        // MODEL PAPERS
+        // =================================================
+
+        const modelPapersEnabled =
+            settings.modelPapersEnabled !== false;
+
+
+        if (
+            modelPapersEnabled
+        ) {
+
+            showElement(
+                "modelPapersCard"
+            );
+
+        }
+        else {
+
+            hideElement(
+                "modelPapersCard"
+            );
+
+        }
+
+
+        // =================================================
+        // PAST PAPERS
+        // =================================================
+
+        const pastPapersEnabled =
+            settings.pastPapersEnabled !== false;
+
+
+        if (
+            pastPapersEnabled
+        ) {
+
+            showElement(
+                "pastPapersCard"
+            );
+
+        }
+        else {
+
+            hideElement(
+                "pastPapersCard"
+            );
+
+        }
+
+
+        // =================================================
+        // CONSOLE
+        // =================================================
+
+        console.log(
+            "Grade 10 Paper Visibility:",
+            {
+                modelPapers:
+                    modelPapersEnabled,
+
+                pastPapers:
+                    pastPapersEnabled
+            }
+        );
+
+    }
+    catch (error) {
+
+        console.error(
+            "Paper settings load error:",
+            error
+        );
+
+
+        // Firebase error:
+        // keep both buttons visible.
+
+        showElement(
+            "modelPapersCard"
+        );
+
+        showElement(
+            "pastPapersCard"
+        );
+
+    }
+
+}
+
+
+// =====================================================
 // INITIAL ACTIVE STATUS
 // =====================================================
 
@@ -375,11 +318,15 @@ updateLastActive();
 
 
 // =====================================================
+// LOAD PAPER SETTINGS
+// =====================================================
+
+loadPaperSettings();
+
+
+// =====================================================
 // HEARTBEAT
 // =====================================================
-//
-// Update every 30 seconds.
-//
 
 const heartbeat =
     setInterval(
@@ -400,6 +347,7 @@ function markActivity() {
 
     lastActivity =
         Date.now();
+
 
     updateLastActive();
 
@@ -430,9 +378,6 @@ function markActivity() {
 // =====================================================
 // AUTOMATIC LOGOUT
 // =====================================================
-//
-// 5 minutes without activity.
-//
 
 const IDLE_LIMIT =
     5 * 60 * 1000;
@@ -506,7 +451,14 @@ document.addEventListener(
             lastActivity =
                 Date.now();
 
+
             updateLastActive();
+
+
+            // Reload Firebase settings
+            // when student comes back.
+
+            loadPaperSettings();
 
         }
 
@@ -539,9 +491,9 @@ if (logoutBtn) {
             );
 
 
-            // =========================================
-            // Mark inactive
-            // =========================================
+            // ---------------------------------------------
+            // MARK STUDENT OFFLINE
+            // ---------------------------------------------
 
             if (studentRef) {
 
@@ -550,7 +502,8 @@ if (logoutBtn) {
                     await updateDoc(
                         studentRef,
                         {
-                            lastActiveAt: 0
+                            lastActiveAt:
+                                0
                         }
                     );
 
@@ -567,9 +520,9 @@ if (logoutBtn) {
             }
 
 
-            // =========================================
-            // Clear session
-            // =========================================
+            // ---------------------------------------------
+            // CLEAR SESSION
+            // ---------------------------------------------
 
             sessionStorage.removeItem(
                 "loggedIn"
@@ -583,6 +536,10 @@ if (logoutBtn) {
                 "studentGrade"
             );
 
+
+            // ---------------------------------------------
+            // REDIRECT
+            // ---------------------------------------------
 
             window.location.replace(
                 "index.html"
@@ -599,11 +556,11 @@ if (logoutBtn) {
 // =====================================================
 
 console.log(
-    "================================="
+    "===================================="
 );
 
 console.log(
-    "✅ Grade 10 Student Dashboard Loaded"
+    "✅ GRADE 10 STUDENT DASHBOARD"
 );
 
 console.log(
@@ -612,14 +569,14 @@ console.log(
 );
 
 console.log(
-    "Grade:",
+    "Student Grade:",
     studentGrade
 );
 
 console.log(
-    "Dashboard Resource Control: ACTIVE"
+    "Firebase Paper Visibility: ACTIVE"
 );
 
 console.log(
-    "================================="
+    "===================================="
 );
