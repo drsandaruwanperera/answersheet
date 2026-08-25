@@ -50,20 +50,22 @@ if (studentIdElement) {
 }
 
 
-// ==========================
-// Firebase Live Tracking
-// ==========================
+// =====================================================
+// FIREBASE
+// =====================================================
 
 import {
     db,
     doc,
-    updateDoc
+    updateDoc,
+    getDoc,
+    onSnapshot
 } from "./firebase.js";
 
 
-// ==========================
-// Student Reference
-// ==========================
+// =====================================================
+// STUDENT REFERENCE
+// =====================================================
 
 let studentRef = null;
 
@@ -79,9 +81,262 @@ if (studentId) {
 }
 
 
+// =====================================================
+// PAPER SETTINGS REFERENCE
+// =====================================================
+
+const paperSettingsRef =
+    doc(
+        db,
+        "paperSettings",
+        "grade10"
+    );
+
+
+// =====================================================
+// GRADE 10 DASHBOARD RESOURCE CONTROL
+// =====================================================
+//
+// Firebase:
+//
+// paperSettings
+//     └── grade10
+//
+//          dashboard_model: true / false
+//          dashboard_past: true / false
+//
+// If false → card hidden
+// If true → card shown
+//
+// If field does not exist → card shown
+// =====================================================
+
+
 // ==========================
-// Update Last Active
+// Model Papers Card
 // ==========================
+
+const modelPapersCard =
+    document.querySelector(
+        '[data-resource="grade10-model"]'
+    );
+
+
+// ==========================
+// Past Papers Card
+// ==========================
+
+const pastPapersCard =
+    document.querySelector(
+        '[data-resource="grade10-past"]'
+    );
+
+
+// =====================================================
+// APPLY DASHBOARD SETTINGS
+// =====================================================
+
+function applyDashboardSettings(
+    settings = {}
+) {
+
+
+    // =================================================
+    // MODEL PAPERS
+    // =================================================
+
+    if (modelPapersCard) {
+
+        const modelEnabled =
+            settings.dashboard_model !== false;
+
+
+        modelPapersCard.style.display =
+            modelEnabled
+                ? ""
+                : "none";
+
+    }
+
+
+    // =================================================
+    // PAST PAPERS
+    // =================================================
+
+    if (pastPapersCard) {
+
+        const pastEnabled =
+            settings.dashboard_past !== false;
+
+
+        pastPapersCard.style.display =
+            pastEnabled
+                ? ""
+                : "none";
+
+    }
+
+
+    console.log(
+        "Grade 10 dashboard settings applied:",
+        {
+            modelPapers:
+                settings.dashboard_model !== false,
+
+            pastPapers:
+                settings.dashboard_past !== false
+        }
+    );
+
+}
+
+
+// =====================================================
+// LOAD DASHBOARD SETTINGS
+// =====================================================
+
+async function loadDashboardSettings() {
+
+    try {
+
+        const snapshot =
+            await getDoc(
+                paperSettingsRef
+            );
+
+
+        if (
+            !snapshot.exists()
+        ) {
+
+            console.log(
+                "No Grade 10 paper settings found. Using default settings."
+            );
+
+
+            applyDashboardSettings(
+                {}
+            );
+
+
+            return;
+
+        }
+
+
+        const settings =
+            snapshot.data();
+
+
+        applyDashboardSettings(
+            settings
+        );
+
+    }
+    catch (error) {
+
+        console.error(
+            "Failed to load Grade 10 dashboard settings:",
+            error
+        );
+
+
+        // If Firebase settings cannot be loaded,
+        // keep cards visible.
+
+        applyDashboardSettings(
+            {}
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// REAL-TIME DASHBOARD SETTINGS
+// =====================================================
+//
+// This means:
+//
+// Admin changes
+//     ↓
+// Firebase
+//     ↓
+// Student Dashboard
+//     ↓
+// Card updates automatically
+//
+// No manual page refresh required.
+// =====================================================
+
+function startDashboardSettingsListener() {
+
+    try {
+
+        onSnapshot(
+            paperSettingsRef,
+
+            snapshot => {
+
+                if (
+                    snapshot.exists()
+                ) {
+
+                    const settings =
+                        snapshot.data();
+
+
+                    applyDashboardSettings(
+                        settings
+                    );
+
+                }
+                else {
+
+                    applyDashboardSettings(
+                        {}
+                    );
+
+                }
+
+            },
+
+            error => {
+
+                console.error(
+                    "Grade 10 dashboard realtime settings error:",
+                    error
+                );
+
+            }
+        );
+
+    }
+    catch (error) {
+
+        console.error(
+            "Failed to start dashboard settings listener:",
+            error
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// START DASHBOARD SETTINGS
+// =====================================================
+
+loadDashboardSettings();
+
+startDashboardSettingsListener();
+
+
+// =====================================================
+// UPDATE LAST ACTIVE
+// =====================================================
 
 async function updateLastActive() {
 
@@ -112,16 +367,16 @@ async function updateLastActive() {
 }
 
 
-// ==========================
-// Initial Active Status
-// ==========================
+// =====================================================
+// INITIAL ACTIVE STATUS
+// =====================================================
 
 updateLastActive();
 
 
-// ==========================
-// Heartbeat
-// ==========================
+// =====================================================
+// HEARTBEAT
+// =====================================================
 //
 // Update every 30 seconds.
 //
@@ -133,9 +388,9 @@ const heartbeat =
     );
 
 
-// ==========================
-// Activity Tracking
-// ==========================
+// =====================================================
+// ACTIVITY TRACKING
+// =====================================================
 
 let lastActivity =
     Date.now();
@@ -172,9 +427,9 @@ function markActivity() {
 );
 
 
-// ==========================
-// Automatic Logout
-// ==========================
+// =====================================================
+// AUTOMATIC LOGOUT
+// =====================================================
 //
 // 5 minutes without activity.
 //
@@ -235,9 +490,9 @@ const idleChecker =
     );
 
 
-// ==========================
-// Tab Visibility
-// ==========================
+// =====================================================
+// TAB VISIBILITY
+// =====================================================
 
 document.addEventListener(
     "visibilitychange",
@@ -259,14 +514,15 @@ document.addEventListener(
 );
 
 
-// ==========================
-// Logout
-// ==========================
+// =====================================================
+// LOGOUT
+// =====================================================
 
 const logoutBtn =
     document.getElementById(
         "logoutBtn"
     );
+
 
 if (logoutBtn) {
 
@@ -283,10 +539,9 @@ if (logoutBtn) {
             );
 
 
+            // =========================================
             // Mark inactive
-            //
-            // Use 0 so Admin immediately
-            // considers the student offline.
+            // =========================================
 
             if (studentRef) {
 
@@ -312,6 +567,10 @@ if (logoutBtn) {
             }
 
 
+            // =========================================
+            // Clear session
+            // =========================================
+
             sessionStorage.removeItem(
                 "loggedIn"
             );
@@ -335,14 +594,32 @@ if (logoutBtn) {
 }
 
 
-// ==========================
-// Console
-// ==========================
+// =====================================================
+// CONSOLE
+// =====================================================
 
 console.log(
-    "✅ Student dashboard live tracking active:",
-    {
-        studentId,
-        grade: studentGrade
-    }
+    "================================="
+);
+
+console.log(
+    "✅ Grade 10 Student Dashboard Loaded"
+);
+
+console.log(
+    "Student ID:",
+    studentId
+);
+
+console.log(
+    "Grade:",
+    studentGrade
+);
+
+console.log(
+    "Dashboard Resource Control: ACTIVE"
+);
+
+console.log(
+    "================================="
 );
