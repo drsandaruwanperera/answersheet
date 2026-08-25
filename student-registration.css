@@ -1,0 +1,1201 @@
+/* =====================================================
+   STUDENT REGISTRATION
+   ===================================================== */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+:root {
+
+    --primary: #4f46e5;
+    --primary-dark: #3730a3;
+    --primary-light: #eef2ff;
+
+    --text: #172033;
+    --muted: #64748b;
+
+    --border: #e2e8f0;
+    --background: #f8fafc;
+    --white: #ffffff;
+
+    --success: #16a34a;
+    --danger: #dc2626;
+
+    --shadow:
+        0 20px 60px rgba(15, 23, 42, 0.12);
+
+}
+
+
+body {
+
+    min-height: 100vh;
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f8fafc 0%,
+            #eef2ff 100%
+        );
+
+    color:
+        var(--text);
+
+}
+
+
+/* =====================================================
+   BACKGROUND SHAPES
+   ===================================================== */
+
+.background-shape {
+
+    position: fixed;
+
+    border-radius: 50%;
+
+    pointer-events: none;
+
+    z-index: 0;
+
+    filter: blur(2px);
+
+}
+
+
+.shape-one {
+
+    width: 420px;
+
+    height: 420px;
+
+    top: -180px;
+
+    left: -150px;
+
+    background:
+        rgba(99, 102, 241, 0.10);
+
+}
+
+
+.shape-two {
+
+    width: 500px;
+
+    height: 500px;
+
+    right: -220px;
+
+    bottom: -220px;
+
+    background:
+        rgba(59, 130, 246, 0.08);
+
+}
+
+
+/* =====================================================
+   MAIN WRAPPER
+   ===================================================== */
+
+.registration-wrapper {
+
+    position: relative;
+
+    z-index: 1;
+
+    min-height: 100vh;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(360px, 0.9fr)
+        minmax(500px, 1.1fr);
+
+}
+
+
+/* =====================================================
+   LEFT BRAND PANEL
+   ===================================================== */
+
+.registration-brand {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 70px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #111827,
+            #1e1b4b
+        );
+
+    color:
+        white;
+
+}
+
+
+.brand-content {
+
+    width: 100%;
+
+    max-width: 520px;
+
+}
+
+
+.brand-logo {
+
+    width: 64px;
+
+    height: 64px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 18px;
+
+    background:
+        rgba(255,255,255,0.12);
+
+    font-size: 30px;
+
+    margin-bottom: 28px;
+
+}
+
+
+.brand-label {
+
+    display: block;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    letter-spacing: 2px;
+
+    color:
+        #a5b4fc;
+
+    margin-bottom: 18px;
+
+}
+
+
+.brand-content h1 {
+
+    font-size: clamp(
+        38px,
+        4vw,
+        58px
+    );
+
+    line-height: 1.05;
+
+    letter-spacing: -2px;
+
+    margin-bottom: 24px;
+
+}
+
+
+.brand-content h1 span {
+
+    display: block;
+
+    color:
+        #818cf8;
+
+}
+
+
+.brand-description {
+
+    max-width: 470px;
+
+    color:
+        #cbd5e1;
+
+    font-size: 16px;
+
+    line-height: 1.75;
+
+}
+
+
+/* =====================================================
+   STEPS
+   ===================================================== */
+
+.registration-steps {
+
+    margin-top: 42px;
+
+}
+
+
+.step {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+
+}
+
+
+.step-number {
+
+    width: 40px;
+
+    height: 40px;
+
+    flex: 0 0 40px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-weight: 800;
+
+    background:
+        rgba(255,255,255,0.10);
+
+    color:
+        #cbd5e1;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.12);
+
+}
+
+
+.step.active .step-number {
+
+    background:
+        #6366f1;
+
+    color:
+        white;
+
+    border-color:
+        #818cf8;
+
+}
+
+
+.step-content {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+
+}
+
+
+.step-content strong {
+
+    font-size: 14px;
+
+}
+
+
+.step-content span {
+
+    font-size: 12px;
+
+    color:
+        #94a3b8;
+
+}
+
+
+.step-line {
+
+    width: 1px;
+
+    height: 28px;
+
+    margin-left: 19px;
+
+    background:
+        rgba(255,255,255,0.15);
+
+}
+
+
+/* =====================================================
+   SECURITY NOTE
+   ===================================================== */
+
+.security-note {
+
+    margin-top: 44px;
+
+    display: flex;
+
+    gap: 14px;
+
+    padding: 18px;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.10);
+
+    border-radius: 16px;
+
+    background:
+        rgba(255,255,255,0.06);
+
+}
+
+
+.security-icon {
+
+    font-size: 22px;
+
+}
+
+
+.security-note strong {
+
+    font-size: 13px;
+
+}
+
+
+.security-note p {
+
+    margin-top: 5px;
+
+    color:
+        #94a3b8;
+
+    font-size: 12px;
+
+    line-height: 1.6;
+
+}
+
+
+/* =====================================================
+   RIGHT PANEL
+   ===================================================== */
+
+.registration-panel {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: flex-start;
+
+    padding: 55px 50px;
+
+    overflow-y: auto;
+
+}
+
+
+.registration-card {
+
+    width: 100%;
+
+    max-width: 650px;
+
+    background:
+        var(--white);
+
+    border:
+        1px solid
+        rgba(226,232,240,0.9);
+
+    border-radius: 24px;
+
+    padding: 42px;
+
+    box-shadow:
+        var(--shadow);
+
+}
+
+
+/* =====================================================
+   HEADER
+   ===================================================== */
+
+.registration-header {
+
+    margin-bottom: 32px;
+
+}
+
+
+.welcome-label {
+
+    display: inline-block;
+
+    padding: 7px 11px;
+
+    border-radius: 8px;
+
+    background:
+        var(--primary-light);
+
+    color:
+        var(--primary);
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.2px;
+
+    margin-bottom: 14px;
+
+}
+
+
+.registration-header h2 {
+
+    font-size: 30px;
+
+    line-height: 1.2;
+
+    letter-spacing: -0.8px;
+
+}
+
+
+.registration-header p {
+
+    margin-top: 9px;
+
+    color:
+        var(--muted);
+
+    font-size: 14px;
+
+    line-height: 1.6;
+
+}
+
+
+/* =====================================================
+   FORM
+   ===================================================== */
+
+.form-group {
+
+    margin-bottom: 22px;
+
+}
+
+
+.form-group label {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    color:
+        #334155;
+
+}
+
+
+.required {
+
+    color:
+        var(--danger);
+
+}
+
+
+.input-wrapper {
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+}
+
+
+.input-icon {
+
+    position: absolute;
+
+    left: 15px;
+
+    font-size: 17px;
+
+    pointer-events: none;
+
+}
+
+
+.input-wrapper input {
+
+    width: 100%;
+
+    height: 52px;
+
+    padding:
+        0 48px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 12px;
+
+    outline: none;
+
+    background:
+        #ffffff;
+
+    color:
+        var(--text);
+
+    font-size: 14px;
+
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
+
+}
+
+
+.input-wrapper input:focus {
+
+    border-color:
+        #6366f1;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(99,102,241,0.10);
+
+}
+
+
+.input-wrapper input[readonly] {
+
+    background:
+        #f1f5f9;
+
+    color:
+        #475569;
+
+    font-weight: 700;
+
+    cursor: not-allowed;
+
+}
+
+
+.toggle-password {
+
+    position: absolute;
+
+    right: 10px;
+
+    width: 36px;
+
+    height: 36px;
+
+    border: 0;
+
+    background: transparent;
+
+    cursor: pointer;
+
+    border-radius: 8px;
+
+    font-size: 17px;
+
+}
+
+
+.toggle-password:hover {
+
+    background:
+        #f1f5f9;
+
+}
+
+
+.field-note {
+
+    display: block;
+
+    margin-top: 7px;
+
+    color:
+        #94a3b8;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+
+}
+
+
+/* =====================================================
+   PASSWORD REQUIREMENTS
+   ===================================================== */
+
+.password-requirements {
+
+    padding: 16px;
+
+    margin:
+        -5px 0 22px;
+
+    border-radius: 12px;
+
+    background:
+        #f8fafc;
+
+    border:
+        1px solid
+        #e2e8f0;
+
+}
+
+
+.requirements-title {
+
+    margin-bottom: 10px;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    color:
+        #475569;
+
+}
+
+
+.requirement {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 7px;
+
+    font-size: 12px;
+
+    color:
+        #94a3b8;
+
+}
+
+
+.requirement span {
+
+    width: 18px;
+
+    height: 18px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        #e2e8f0;
+
+    color:
+        #64748b;
+
+    font-size: 11px;
+
+}
+
+
+.requirement.valid {
+
+    color:
+        var(--success);
+
+}
+
+
+.requirement.valid span {
+
+    background:
+        #dcfce7;
+
+    color:
+        var(--success);
+
+}
+
+
+.requirement.invalid {
+
+    color:
+        #94a3b8;
+
+}
+
+
+/* =====================================================
+   CONFIRMATION
+   ===================================================== */
+
+.confirmation-box {
+
+    padding: 16px;
+
+    margin-bottom: 20px;
+
+    border-radius: 12px;
+
+    background:
+        #f8fafc;
+
+    border:
+        1px solid
+        #e2e8f0;
+
+}
+
+
+.confirmation-box label {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 10px;
+
+    cursor: pointer;
+
+    color:
+        #475569;
+
+    font-size: 12px;
+
+    line-height: 1.6;
+
+}
+
+
+.confirmation-box input {
+
+    width: 16px;
+
+    height: 16px;
+
+    margin-top: 2px;
+
+    accent-color:
+        var(--primary);
+
+}
+
+
+/* =====================================================
+   MESSAGE
+   ===================================================== */
+
+.registration-message {
+
+    min-height: 20px;
+
+    margin-bottom: 14px;
+
+    padding: 0;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+
+}
+
+
+.registration-message.success {
+
+    padding: 12px 14px;
+
+    border-radius: 10px;
+
+    background:
+        #f0fdf4;
+
+    color:
+        #15803d;
+
+    border:
+        1px solid
+        #bbf7d0;
+
+}
+
+
+.registration-message.error {
+
+    padding: 12px 14px;
+
+    border-radius: 10px;
+
+    background:
+        #fef2f2;
+
+    color:
+        #b91c1c;
+
+    border:
+        1px solid
+        #fecaca;
+
+}
+
+
+/* =====================================================
+   COMPLETE BUTTON
+   ===================================================== */
+
+.complete-registration-btn {
+
+    width: 100%;
+
+    height: 54px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding:
+        0 20px;
+
+    border: 0;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #4f46e5,
+            #6366f1
+        );
+
+    color:
+        white;
+
+    font-size: 14px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 10px 25px
+        rgba(79,70,229,0.22);
+
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s;
+
+}
+
+
+.complete-registration-btn:hover {
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 14px 30px
+        rgba(79,70,229,0.28);
+
+}
+
+
+.complete-registration-btn:disabled {
+
+    opacity: 0.65;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+}
+
+
+/* =====================================================
+   SUPPORT
+   ===================================================== */
+
+.support-box {
+
+    display: flex;
+
+    gap: 12px;
+
+    margin-top: 24px;
+
+    padding: 15px;
+
+    border-radius: 12px;
+
+    background:
+        #f8fafc;
+
+    border:
+        1px solid
+        #e2e8f0;
+
+}
+
+
+.support-icon {
+
+    font-size: 20px;
+
+}
+
+
+.support-content {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+
+}
+
+
+.support-content strong {
+
+    font-size: 12px;
+
+    color:
+        #334155;
+
+}
+
+
+.support-content span {
+
+    color:
+        #64748b;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+
+}
+
+
+.support-content a {
+
+    color:
+        var(--primary);
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    text-decoration: none;
+
+}
+
+
+.support-content a:hover {
+
+    text-decoration: underline;
+
+}
+
+
+/* =====================================================
+   FOOTER
+   ===================================================== */
+
+.registration-footer {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    margin-top: 25px;
+
+    color:
+        #94a3b8;
+
+    font-size: 10px;
+
+    text-align: center;
+
+}
+
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (
+    max-width: 1000px
+) {
+
+    .registration-wrapper {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .registration-brand {
+
+        padding: 45px 30px;
+
+    }
+
+
+    .brand-content {
+
+        max-width: 700px;
+
+    }
+
+
+    .registration-steps {
+
+        display: none;
+
+    }
+
+
+    .security-note {
+
+        margin-top: 28px;
+
+    }
+
+
+    .registration-panel {
+
+        padding:
+            35px 25px 50px;
+
+    }
+
+}
+
+
+@media (
+    max-width: 600px
+) {
+
+    .registration-brand {
+
+        padding:
+            35px 22px;
+
+    }
+
+
+    .brand-logo {
+
+        width: 54px;
+
+        height: 54px;
+
+        font-size: 25px;
+
+    }
+
+
+    .brand-content h1 {
+
+        font-size: 36px;
+
+    }
+
+
+    .registration-panel {
+
+        padding:
+            20px 14px 35px;
+
+    }
+
+
+    .registration-card {
+
+        padding:
+            27px 20px;
+
+        border-radius: 18px;
+
+    }
+
+
+    .registration-header h2 {
+
+        font-size: 25px;
+
+    }
+
+
+    .registration-footer {
+
+        flex-wrap: wrap;
+
+    }
+
+}
