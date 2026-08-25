@@ -19,9 +19,16 @@
 
 </head>
 
+
 <body>
 
+
 <div class="container">
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
 
     <div class="header">
 
@@ -38,16 +45,21 @@
 
         </div>
 
-        <button id="logoutBtn">
+
+        <button
+            id="logoutBtn"
+            type="button"
+        >
             🚪 Sign Out
         </button>
 
     </div>
 
 
-    <!-- ==========================
-         Study Materials
-    =========================== -->
+
+    <!-- =====================================================
+         STUDY MATERIALS
+    ====================================================== -->
 
     <h2 class="section-title">
         📚 Study Materials
@@ -56,8 +68,15 @@
 
     <div class="material-grid">
 
+
+        <!-- =================================================
+             MODEL PAPERS
+        ================================================== -->
+
         <div
+            id="grade10ModelCard"
             class="material-card"
+            data-resource="grade10-model"
             onclick="
                 location.href =
                 'grade10-model-papers.html'
@@ -68,9 +87,11 @@
                 📘
             </div>
 
+
             <h3>
                 Model Papers
             </h3>
+
 
             <p>
                 Grade 10 Model Papers
@@ -78,8 +99,46 @@
 
         </div>
 
+
+
+        <!-- =================================================
+             PAST PAPERS
+        ================================================== -->
+
+        <div
+            id="grade10PastCard"
+            class="material-card"
+            data-resource="grade10-past"
+            onclick="
+                location.href =
+                'grade10-past-papers.html'
+            "
+        >
+
+            <div class="material-icon">
+                📖
+            </div>
+
+
+            <h3>
+                Past Papers
+            </h3>
+
+
+            <p>
+                Grade 10 Past Papers
+            </p>
+
+        </div>
+
+
     </div>
 
+
+
+    <!-- =====================================================
+         INFORMATION
+    ====================================================== -->
 
     <div class="info-card">
 
@@ -87,15 +146,18 @@
             📢 Instructions
         </h3>
 
+
         <ul>
 
             <li>
                 Use only your own Student ID and Password.
             </li>
 
+
             <li>
                 Do not share your login credentials.
             </li>
+
 
             <li>
                 Contact the administrator if you need assistance.
@@ -106,17 +168,31 @@
     </div>
 
 
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
     <footer>
+
         © 2026 Student Assessment Portal
+
     </footer>
+
 
 </div>
 
+
+
+<!-- =====================================================
+     DASHBOARD JAVASCRIPT
+====================================================== -->
 
 <script
     type="module"
     src="dashboard-grade10.js"
 ></script>
+
 
 </body>
 
