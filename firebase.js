@@ -8,6 +8,17 @@ import {
 
 
 // =====================================================
+// FIREBASE AUTHENTICATION
+// =====================================================
+
+import {
+    getAuth,
+    reauthenticateWithCredential,
+    EmailAuthProvider
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+
+// =====================================================
 // FIRESTORE
 // =====================================================
 
@@ -23,7 +34,8 @@ import {
     onSnapshot,
     query,
     where,
-    limit
+    limit,
+    writeBatch
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 
@@ -55,7 +67,7 @@ const firebaseConfig = {
 
 
 // =====================================================
-// INITIALIZE
+// INITIALIZE FIREBASE
 // =====================================================
 
 const app =
@@ -64,8 +76,22 @@ const app =
     );
 
 
+// =====================================================
+// FIRESTORE
+// =====================================================
+
 const db =
     getFirestore(
+        app
+    );
+
+
+// =====================================================
+// AUTHENTICATION
+// =====================================================
+
+const auth =
+    getAuth(
         app
     );
 
@@ -75,6 +101,8 @@ const db =
 // =====================================================
 
 export {
+
+    // Firestore
 
     db,
 
@@ -98,6 +126,17 @@ export {
 
     where,
 
-    limit
+    limit,
+
+    writeBatch,
+
+
+    // Authentication
+
+    auth,
+
+    reauthenticateWithCredential,
+
+    EmailAuthProvider
 
 };
