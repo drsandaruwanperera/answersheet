@@ -1,16 +1,2031 @@
-<div id="addModal" class="modal-overlay">
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Students - Student Assessment Portal</title>
+
+    <style>
+
+        /* =====================================================
+           GLOBAL
+           ===================================================== */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #f4f6fb;
+            color: #172033;
+        }
+
+
+        button,
+        input,
+        select {
+            font-family: inherit;
+        }
+
+
+        button {
+            cursor: pointer;
+        }
+
+
+        /* =====================================================
+           LAYOUT
+           ===================================================== */
+
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+
+        /* =====================================================
+           SIDEBAR
+           ===================================================== */
+
+        .sidebar {
+            width: 264px;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #111827 0%,
+                    #0f172a 100%
+                );
+
+            color: white;
+
+            position: fixed;
+
+            left: 0;
+            top: 0;
+            bottom: 0;
+
+            display: flex;
+            flex-direction: column;
+
+            padding: 20px 18px;
+
+            z-index: 100;
+        }
+
+
+        .brand {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding:
+                0 8px
+                20px;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,0.10);
+        }
+
+
+        .brand-logo {
+            width: 48px;
+            height: 48px;
+
+            border-radius: 14px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #6d28d9
+                );
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 24px;
+
+            box-shadow:
+                0 8px 25px
+                rgba(124,58,237,0.35);
+        }
+
+
+        .brand-text strong {
+            display: block;
+
+            font-size: 17px;
+
+            font-weight: 800;
+        }
+
+
+        .brand-text span {
+            display: block;
+
+            margin-top: 3px;
+
+            font-size: 11px;
+
+            color: #94a3b8;
+        }
+
+
+        .nav-title {
+            margin:
+                30px 10px
+                10px;
+
+            font-size: 11px;
+
+            font-weight: 800;
+
+            letter-spacing: 1.2px;
+
+            color: #64748b;
+        }
+
+
+        .nav {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 5px;
+        }
+
+
+        .nav a {
+            text-decoration: none;
+
+            color: #cbd5e1;
+
+            padding:
+                12px 14px;
+
+            border-radius: 11px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            transition: 0.2s ease;
+        }
+
+
+        .nav a:hover {
+            background:
+                rgba(124,58,237,0.15);
+
+            color: white;
+        }
+
+
+        .nav a.active {
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #6d28d9
+                );
+
+            color: white;
+
+            box-shadow:
+                0 8px 20px
+                rgba(124,58,237,0.25);
+        }
+
+
+        .nav-icon {
+            width: 24px;
+
+            text-align: center;
+
+            font-size: 17px;
+        }
+
+
+        .admin-box {
+            margin-top: auto;
+
+            padding: 14px;
+
+            border:
+                1px solid
+                rgba(255,255,255,0.08);
+
+            border-radius: 13px;
+
+            background:
+                rgba(255,255,255,0.04);
+        }
+
+
+        .admin-box strong {
+            display: block;
+
+            font-size: 13px;
+        }
+
+
+        .admin-box span {
+            display: block;
+
+            margin-top: 3px;
+
+            color: #94a3b8;
+
+            font-size: 11px;
+        }
+
+
+        .logout-btn {
+            width: 100%;
+
+            margin-top: 12px;
+
+            padding: 9px;
+
+            border: 0;
+
+            border-radius: 8px;
+
+            background:
+                rgba(239,68,68,0.12);
+
+            color: #fca5a5;
+
+            font-size: 12px;
+
+            font-weight: 700;
+        }
+
+
+        .logout-btn:hover {
+            background:
+                rgba(239,68,68,0.22);
+        }
+
+
+        /* =====================================================
+           MAIN
+           ===================================================== */
+
+        .main {
+            margin-left: 264px;
+
+            width:
+                calc(100% - 264px);
+
+            min-height: 100vh;
+
+            padding: 24px 30px 40px;
+        }
+
+
+        /* =====================================================
+           PAGE HEADER
+           ===================================================== */
+
+        .page-header {
+            background: white;
+
+            border:
+                1px solid
+                #e2e8f0;
+
+            border-radius: 18px;
+
+            padding:
+                25px 28px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            box-shadow:
+                0 4px 20px
+                rgba(15,23,42,0.04);
+        }
+
+
+        .page-header h1 {
+            margin: 0;
+
+            font-size: 30px;
+
+            font-weight: 800;
+
+            color: #111827;
+        }
+
+
+        .page-header p {
+            margin: 6px 0 0;
+
+            color: #64748b;
+
+            font-size: 14px;
+        }
+
+
+        .add-student-btn {
+            border: 0;
+
+            border-radius: 11px;
+
+            padding:
+                13px 20px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #6d28d9
+                );
+
+            color: white;
+
+            font-size: 14px;
+
+            font-weight: 800;
+
+            box-shadow:
+                0 10px 25px
+                rgba(124,58,237,0.25);
+
+            transition: 0.2s ease;
+        }
+
+
+        .add-student-btn:hover {
+            transform:
+                translateY(-1px);
+        }
+
+
+        /* =====================================================
+           STAT CARDS
+           ===================================================== */
+
+        .stats-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(5, 1fr);
+
+            gap: 16px;
+
+            margin-top: 20px;
+        }
+
+
+        .stat-card {
+            background: white;
+
+            border:
+                1px solid
+                #e2e8f0;
+
+            border-radius: 15px;
+
+            padding: 18px;
+
+            box-shadow:
+                0 4px 18px
+                rgba(15,23,42,0.035);
+        }
+
+
+        .stat-label {
+            color: #64748b;
+
+            font-size: 12px;
+
+            font-weight: 700;
+        }
+
+
+        .stat-number {
+            margin-top: 7px;
+
+            font-size: 28px;
+
+            font-weight: 800;
+
+            color: #111827;
+        }
+
+
+        .stat-description {
+            margin-top: 4px;
+
+            font-size: 11px;
+
+            color: #94a3b8;
+        }
+
+
+        /* =====================================================
+           TOOLBAR
+           ===================================================== */
+
+        .toolbar {
+            margin-top: 20px;
+
+            background: white;
+
+            border:
+                1px solid
+                #e2e8f0;
+
+            border-radius: 15px;
+
+            padding: 15px;
+
+            display: flex;
+
+            gap: 12px;
+
+            align-items: center;
+
+            box-shadow:
+                0 4px 18px
+                rgba(15,23,42,0.035);
+        }
+
+
+        .search-box {
+            flex: 1;
+
+            position: relative;
+        }
+
+
+        .search-box span {
+            position: absolute;
+
+            left: 13px;
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            color: #94a3b8;
+        }
+
+
+        .search-box input {
+            width: 100%;
+
+            height: 42px;
+
+            border:
+                1px solid
+                #dbe3ef;
+
+            border-radius: 10px;
+
+            padding:
+                0 13px 0 38px;
+
+            outline: none;
+
+            font-size: 13px;
+        }
+
+
+        .search-box input:focus {
+            border-color: #7c3aed;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(124,58,237,0.08);
+        }
+
+
+        .filter-select {
+            height: 42px;
+
+            min-width: 150px;
+
+            border:
+                1px solid
+                #dbe3ef;
+
+            border-radius: 10px;
+
+            padding:
+                0 12px;
+
+            background: white;
+
+            color: #475569;
+
+            outline: none;
+
+            font-size: 13px;
+        }
+
+
+        /* =====================================================
+           TABLE
+           ===================================================== */
+
+        .table-card {
+            margin-top: 18px;
+
+            background: white;
+
+            border:
+                1px solid
+                #e2e8f0;
+
+            border-radius: 17px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 4px 18px
+                rgba(15,23,42,0.035);
+        }
+
+
+        .table-header {
+            padding:
+                18px 20px;
+
+            border-bottom:
+                1px solid
+                #e2e8f0;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+        }
+
+
+        .table-header h3 {
+            margin: 0;
+
+            font-size: 16px;
+
+            font-weight: 800;
+        }
+
+
+        .table-header span {
+            font-size: 12px;
+
+            color: #64748b;
+        }
+
+
+        .table-wrapper {
+            width: 100%;
+
+            overflow-x: auto;
+        }
+
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 950px;
+        }
+
+
+        th {
+            padding:
+                13px 15px;
+
+            text-align: left;
+
+            background: #f8fafc;
+
+            border-bottom:
+                1px solid
+                #e2e8f0;
+
+            color: #64748b;
+
+            font-size: 11px;
+
+            font-weight: 800;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.5px;
+        }
+
+
+        td {
+            padding:
+                14px 15px;
+
+            border-bottom:
+                1px solid
+                #f1f5f9;
+
+            font-size: 13px;
+
+            color: #334155;
+        }
+
+
+        tr:last-child td {
+            border-bottom: 0;
+        }
+
+
+        tr:hover td {
+            background:
+                #fafbff;
+        }
+
+
+        .student-id {
+            font-weight: 800;
+
+            color: #111827;
+        }
+
+
+        .student-name {
+            font-weight: 600;
+
+            color: #334155;
+        }
+
+
+        .not-registered {
+            color: #94a3b8;
+
+            font-style: italic;
+        }
+
+
+        /* =====================================================
+           BADGES
+           ===================================================== */
+
+        .student-type-badge {
+            display: inline-flex;
+
+            padding:
+                5px 9px;
+
+            border-radius: 7px;
+
+            font-size: 11px;
+
+            font-weight: 800;
+        }
+
+
+        .student-type-badge.al {
+            background: #f3e8ff;
+
+            color: #7e22ce;
+        }
+
+
+        .student-type-badge.grade10 {
+            background: #dbeafe;
+
+            color: #1d4ed8;
+        }
+
+
+        .student-type-badge.grade11 {
+            background: #dcfce7;
+
+            color: #15803d;
+        }
+
+
+        .registration-badge {
+            display: inline-flex;
+
+            padding:
+                4px 8px;
+
+            border-radius: 6px;
+
+            font-size: 10px;
+
+            font-weight: 800;
+        }
+
+
+        .registration-badge.registered {
+            background: #dcfce7;
+
+            color: #15803d;
+        }
+
+
+        .registration-badge.pending {
+            background: #fef3c7;
+
+            color: #b45309;
+        }
+
+
+        .registration-badge.active {
+            background: #dbeafe;
+
+            color: #1d4ed8;
+        }
+
+
+        .online-status {
+            color: #16a34a;
+
+            font-size: 10px;
+
+            font-weight: 700;
+        }
+
+
+        .offline-status {
+            color: #94a3b8;
+
+            font-size: 10px;
+
+            font-weight: 700;
+        }
+
+
+        /* =====================================================
+           PASSWORD
+           ===================================================== */
+
+        .password-cell {
+            display: flex;
+
+            align-items: center;
+
+            gap: 7px;
+        }
+
+
+        .password-value {
+            min-width: 75px;
+
+            font-family:
+                monospace;
+
+            color: #475569;
+        }
+
+
+        .password-toggle {
+            border: 0;
+
+            background: #f1f5f9;
+
+            border-radius: 7px;
+
+            width: 30px;
+            height: 30px;
+
+            cursor: pointer;
+
+            font-size: 13px;
+        }
+
+
+        .password-toggle:hover {
+            background: #e2e8f0;
+        }
+
+
+        /* =====================================================
+           ACTIONS
+           ===================================================== */
+
+        .student-actions {
+            display: flex;
+
+            gap: 7px;
+        }
+
+
+        .action-btn {
+            border: 1px solid;
+
+            border-radius: 7px;
+
+            padding:
+                6px 9px;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            background: white;
+        }
+
+
+        .edit-btn {
+            border-color: #c4b5fd;
+
+            color: #6d28d9;
+        }
+
+
+        .edit-btn:hover {
+            background: #f5f3ff;
+        }
+
+
+        .delete-btn {
+            border-color: #fecaca;
+
+            color: #dc2626;
+        }
+
+
+        .delete-btn:hover {
+            background: #fef2f2;
+        }
+
+
+        /* =====================================================
+           MODAL
+           ===================================================== */
+
+        .modal-overlay {
+            position: fixed;
+
+            inset: 0;
+
+            display: none;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background:
+                rgba(15,23,42,0.65);
+
+            backdrop-filter:
+                blur(5px);
+
+            z-index: 9999;
+
+            padding: 20px;
+        }
+
+
+        .modal-overlay.show {
+            display: flex !important;
+        }
+
+
+        .modal {
+            width: 100%;
+
+            max-width: 560px;
+
+            max-height:
+                calc(100vh - 40px);
+
+            overflow-y: auto;
+
+            background: white;
+
+            border-radius: 20px;
+
+            box-shadow:
+                0 30px 80px
+                rgba(15,23,42,0.30);
+        }
+
+
+        .modal-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: flex-start;
+
+            padding:
+                25px 27px 20px;
+
+            border-bottom:
+                1px solid
+                #e2e8f0;
+        }
+
+
+        .modal-header h2 {
+            margin: 0;
+
+            font-size: 23px;
+
+            font-weight: 800;
+        }
+
+
+        .modal-header p {
+            margin:
+                5px 0 0;
+
+            font-size: 12px;
+
+            color: #64748b;
+        }
+
+
+        .modal-close {
+            width: 37px;
+            height: 37px;
+
+            border: 0;
+
+            border-radius: 10px;
+
+            background: #f1f5f9;
+
+            color: #64748b;
+
+            font-size: 21px;
+        }
+
+
+        .modal-close:hover {
+            background: #e2e8f0;
+        }
+
+
+        .modal-body {
+            padding:
+                24px 27px;
+        }
+
+
+        .form-group {
+            margin-bottom: 19px;
+        }
+
+
+        .form-group > label {
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: #334155;
+
+            font-size: 12px;
+
+            font-weight: 800;
+        }
+
+
+        .category-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3,1fr);
+
+            gap: 9px;
+        }
+
+
+        .category-btn {
+            min-height: 68px;
+
+            border:
+                1px solid
+                #dbe3ef;
+
+            border-radius: 12px;
+
+            background: white;
+
+            color: #475569;
+
+            font-weight: 700;
+
+            transition: 0.2s ease;
+        }
+
+
+        .category-btn:hover {
+            border-color: #7c3aed;
+
+            background: #faf5ff;
+        }
+
+
+        .category-btn.selected,
+        .category-btn.active {
+            border-color: #7c3aed;
+
+            background: #ede9fe;
+
+            color: #6d28d9;
+
+            box-shadow:
+                0 0 0 2px
+                rgba(124,58,237,0.08);
+        }
+
+
+        .selection-info {
+            margin-top: 8px;
+
+            font-size: 11px;
+
+            font-weight: 800;
+
+            color: #7c3aed;
+        }
+
+
+        /* =====================================================
+           A/L SERIES
+           ===================================================== */
+
+        .al-series-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3,1fr);
+
+            gap: 9px;
+        }
+
+
+        .al-series-btn {
+            min-height: 70px;
+
+            border:
+                1px solid
+                #dbe3ef;
+
+            border-radius: 12px;
+
+            background: white;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 4px;
+
+            color: #334155;
+        }
+
+
+        .al-series-btn:hover {
+            border-color: #7c3aed;
+
+            background: #faf5ff;
+        }
+
+
+        .al-series-btn.selected,
+        .al-series-btn.active {
+            border-color: #7c3aed;
+
+            background: #ede9fe;
+
+            color: #6d28d9;
+
+            box-shadow:
+                0 0 0 2px
+                rgba(124,58,237,0.08);
+        }
+
+
+        .al-series-btn strong {
+            font-size: 16px;
+        }
+
+
+        .al-series-btn small {
+            color: #64748b;
+
+            font-size: 10px;
+        }
+
+
+        /* =====================================================
+           INPUTS
+           ===================================================== */
+
+        .form-group input[type="text"],
+        .form-group input[type="password"] {
+            width: 100%;
+
+            height: 44px;
+
+            border:
+                1px solid
+                #cbd5e1;
+
+            border-radius: 9px;
+
+            padding:
+                0 12px;
+
+            outline: none;
+
+            font-size: 13px;
+
+            color: #1e293b;
+        }
+
+
+        .form-group input:focus {
+            border-color: #7c3aed;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(124,58,237,0.09);
+        }
+
+
+        #newStudentId[readonly] {
+            background: #f1f5f9;
+
+            font-weight: 800;
+        }
+
+
+        .field-help {
+            display: block;
+
+            margin-top: 6px;
+
+            font-size: 10px;
+
+            color: #64748b;
+        }
+
+
+        .checkbox-row {
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            font-size: 12px;
+
+            color: #475569;
+        }
+
+
+        .checkbox-row input {
+            width: 16px;
+            height: 16px;
+        }
+
+
+        .modal-footer {
+            display: flex;
+
+            justify-content: space-between;
+
+            padding:
+                17px 27px 24px;
+
+            border-top:
+                1px solid
+                #e2e8f0;
+        }
+
+
+        .cancel-btn {
+            height: 42px;
+
+            padding:
+                0 17px;
+
+            border:
+                1px solid
+                #dbe3ef;
+
+            border-radius: 9px;
+
+            background: white;
+
+            color: #475569;
+
+            font-weight: 700;
+        }
+
+
+        .cancel-btn:hover {
+            background: #f8fafc;
+        }
+
+
+        .save-btn {
+            height: 43px;
+
+            padding:
+                0 19px;
+
+            border: 0;
+
+            border-radius: 9px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #6d28d9
+                );
+
+            color: white;
+
+            font-weight: 800;
+
+            box-shadow:
+                0 8px 20px
+                rgba(124,58,237,0.25);
+        }
+
+
+        .save-btn:disabled {
+            opacity: 0.6;
+
+            cursor: not-allowed;
+        }
+
+
+        /* =====================================================
+           EDIT MODAL
+           ===================================================== */
+
+        .paper-controls {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 7px;
+
+            margin-bottom: 14px;
+        }
+
+
+        .paper-control-btn {
+            border:
+                1px solid
+                #dbe3ef;
+
+            background: white;
+
+            border-radius: 7px;
+
+            padding:
+                7px 10px;
+
+            color: #475569;
+
+            font-size: 11px;
+
+            font-weight: 700;
+        }
+
+
+        .paper-control-btn:hover {
+            background: #f8fafc;
+        }
+
+
+        .paper-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3,1fr);
+
+            gap: 8px;
+        }
+
+
+        .paper-item {
+            display: flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            padding: 9px;
+
+            border:
+                1px solid
+                #e2e8f0;
+
+            border-radius: 8px;
+
+            font-size: 11px;
+
+            color: #475569;
+        }
+
+
+        .paper-item input {
+            width: 15px;
+            height: 15px;
+        }
+
+
+        .edit-info {
+            padding: 11px;
+
+            margin-bottom: 18px;
+
+            background: #f8fafc;
+
+            border-radius: 9px;
+
+            font-size: 12px;
+
+            color: #475569;
+        }
+
+
+        .edit-danger {
+            margin-top: 15px;
+
+            padding-top: 15px;
+
+            border-top:
+                1px solid
+                #e2e8f0;
+        }
+
+
+        .reset-password-btn {
+            border:
+                1px solid
+                #c4b5fd;
+
+            background: #f5f3ff;
+
+            color: #6d28d9;
+
+            border-radius: 8px;
+
+            padding:
+                8px 11px;
+
+            font-size: 11px;
+
+            font-weight: 700;
+        }
+
+
+        .delete-large-btn {
+            border:
+                1px solid
+                #fecaca;
+
+            background: #fef2f2;
+
+            color: #dc2626;
+
+            border-radius: 8px;
+
+            padding:
+                8px 11px;
+
+            font-size: 11px;
+
+            font-weight: 700;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+           ===================================================== */
+
+        @media (
+            max-width: 1100px
+        ) {
+
+            .stats-grid {
+                grid-template-columns:
+                    repeat(3,1fr);
+            }
+
+        }
+
+
+        @media (
+            max-width: 800px
+        ) {
+
+            .sidebar {
+                width: 72px;
+
+                padding:
+                    15px 10px;
+            }
+
+
+            .brand-text,
+            .nav-title,
+            .nav a span:not(.nav-icon),
+            .admin-box {
+                display: none;
+            }
+
+
+            .brand {
+                justify-content: center;
+
+                padding-bottom: 15px;
+            }
+
+
+            .nav a {
+                justify-content: center;
+
+                padding: 12px 5px;
+            }
+
+
+            .main {
+                margin-left: 72px;
+
+                width:
+                    calc(100% - 72px);
+
+                padding:
+                    18px;
+            }
+
+        }
+
+
+        @media (
+            max-width: 650px
+        ) {
+
+            .stats-grid {
+                grid-template-columns:
+                    repeat(2,1fr);
+            }
+
+
+            .toolbar {
+                flex-direction: column;
+
+                align-items: stretch;
+            }
+
+
+            .filter-select {
+                width: 100%;
+            }
+
+
+            .page-header {
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 15px;
+            }
+
+
+            .category-grid,
+            .al-series-grid {
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .paper-grid {
+                grid-template-columns:
+                    repeat(2,1fr);
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-logo">
+                🎓
+            </div>
+
+            <div class="brand-text">
+
+                <strong>
+                    Student
+                </strong>
+
+                <span>
+                    Assessment Portal
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="nav-title">
+            ADMINISTRATION
+        </div>
+
+
+        <nav class="nav">
+
+            <a href="admin.html">
+
+                <span class="nav-icon">
+                    🏠
+                </span>
+
+                <span>
+                    Dashboard
+                </span>
+
+            </a>
+
+
+            <a
+                href="students.html"
+                class="active"
+            >
+
+                <span class="nav-icon">
+                    👥
+                </span>
+
+                <span>
+                    Students
+                </span>
+
+            </a>
+
+
+            <a href="paper-management.html">
+
+                <span class="nav-icon">
+                    📚
+                </span>
+
+                <span>
+                    Paper Management
+                </span>
+
+            </a>
+
+
+            <a href="import-students.html">
+
+                <span class="nav-icon">
+                    📥
+                </span>
+
+                <span>
+                    Import Students
+                </span>
+
+            </a>
+
+
+            <a href="reports.html">
+
+                <span class="nav-icon">
+                    📊
+                </span>
+
+                <span>
+                    Reports
+                </span>
+
+            </a>
+
+        </nav>
+
+
+        <div class="admin-box">
+
+            <strong id="sidebarAdminName">
+                superadmin
+            </strong>
+
+            <span>
+                System Administrator
+            </span>
+
+
+            <button
+                type="button"
+                id="logoutBtn"
+                class="logout-btn"
+            >
+                Sign Out
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN
+         ===================================================== -->
+
+    <main class="main">
+
+
+        <!-- =================================================
+             HEADER
+             ================================================= -->
+
+        <section class="page-header">
+
+            <div>
+
+                <h1>
+                    Students
+                </h1>
+
+                <p>
+                    Manage student accounts and activity
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                id="addStudentBtn"
+                class="add-student-btn"
+            >
+
+                ＋ Add Student
+
+            </button>
+
+        </section>
+
+
+        <!-- =================================================
+             STATISTICS
+             ================================================= -->
+
+        <section class="stats-grid">
+
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+                    TOTAL STUDENTS
+                </div>
+
+                <div
+                    id="totalStudents"
+                    class="stat-number"
+                >
+                    0
+                </div>
+
+                <div class="stat-description">
+                    Registered accounts
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+                    GRADE 10
+                </div>
+
+                <div
+                    id="grade10Students"
+                    class="stat-number"
+                >
+                    0
+                </div>
+
+                <div class="stat-description">
+                    Grade 10 students
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+                    GRADE 11
+                </div>
+
+                <div
+                    id="grade11Students"
+                    class="stat-number"
+                >
+                    0
+                </div>
+
+                <div class="stat-description">
+                    Grade 11 students
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+                    A/L STUDENTS
+                </div>
+
+                <div
+                    id="alStudents"
+                    class="stat-number"
+                >
+                    0
+                </div>
+
+                <div class="stat-description">
+                    Advanced Level
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+                    ACTIVE NOW
+                </div>
+
+                <div
+                    id="activeStudents"
+                    class="stat-number"
+                >
+                    0
+                </div>
+
+                <div class="stat-description">
+                    Currently active
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =================================================
+             SEARCH / FILTER
+             ================================================= -->
+
+        <section class="toolbar">
+
+
+            <div class="search-box">
+
+                <span>
+                    🔍
+                </span>
+
+                <input
+                    type="text"
+                    id="search"
+                    placeholder="Search by Student ID or Name..."
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+            <select
+                id="typeFilter"
+                class="filter-select"
+            >
+
+                <option value="all">
+                    All Categories
+                </option>
+
+                <option value="al">
+                    A/L Students
+                </option>
+
+                <option value="grade10">
+                    Grade 10
+                </option>
+
+                <option value="grade11">
+                    Grade 11
+                </option>
+
+            </select>
+
+
+            <select
+                id="statusFilter"
+                class="filter-select"
+            >
+
+                <option value="all">
+                    All Status
+                </option>
+
+                <option value="active">
+                    Online
+                </option>
+
+                <option value="offline">
+                    Offline
+                </option>
+
+            </select>
+
+
+        </section>
+
+
+        <!-- =================================================
+             STUDENT TABLE
+             ================================================= -->
+
+        <section class="table-card">
+
+
+            <div class="table-header">
+
+                <h3>
+                    Student Accounts
+                </h3>
+
+                <span>
+                    Manage registered students
+                </span>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Student ID
+                            </th>
+
+                            <th>
+                                Full Name
+                            </th>
+
+                            <th>
+                                Category
+                            </th>
+
+                            <th>
+                                Papers Viewed
+                            </th>
+
+                            <th>
+                                Registration
+                            </th>
+
+                            <th>
+                                Password
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="studentTable">
+
+                        <tr>
+
+                            <td
+                                colspan="7"
+                                style="
+                                    text-align:center;
+                                    padding:35px;
+                                    color:#94a3b8;
+                                "
+                            >
+
+                                Loading students...
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+</div>
+
+
+<!-- =========================================================
+     ADD STUDENT MODAL
+     ========================================================= -->
+
+<div
+    id="addModal"
+    class="modal-overlay"
+>
+
 
     <div class="modal">
+
 
         <div class="modal-header">
 
             <div>
-                <h2>Add Student</h2>
+
+                <h2>
+                    Add Student
+                </h2>
 
                 <p>
                     Create a new student account
                 </p>
+
             </div>
+
 
             <button
                 type="button"
@@ -25,9 +2040,10 @@
 
         <div class="modal-body">
 
-            <!-- ================================
-                 STUDENT CATEGORY
-            ================================= -->
+
+            <!-- =============================================
+                 CATEGORY
+                 ============================================= -->
 
             <div class="form-group">
 
@@ -35,7 +2051,9 @@
                     Student Category
                 </label>
 
+
                 <div class="category-grid">
+
 
                     <button
                         type="button"
@@ -69,6 +2087,7 @@
 
                     </button>
 
+
                 </div>
 
 
@@ -80,9 +2099,9 @@
             </div>
 
 
-            <!-- ================================
+            <!-- =============================================
                  A/L SERIES
-            ================================= -->
+                 ============================================= -->
 
             <div
                 id="alSeriesSection"
@@ -94,7 +2113,9 @@
                     A/L Admission Series
                 </label>
 
+
                 <div class="al-series-grid">
+
 
                     <button
                         type="button"
@@ -146,20 +2167,22 @@
 
                     </button>
 
+
                 </div>
 
             </div>
 
 
-            <!-- ================================
+            <!-- =============================================
                  STUDENT ID
-            ================================= -->
+                 ============================================= -->
 
             <div class="form-group">
 
                 <label for="newStudentId">
                     Student ID
                 </label>
+
 
                 <input
                     type="text"
@@ -168,20 +2191,22 @@
                     autocomplete="off"
                 >
 
+
                 <small
                     id="studentIdHelp"
                     class="field-help"
                 >
-                    A/L students will receive an
-                    automatically generated ID.
+
+                    Select a category first.
+
                 </small>
 
             </div>
 
 
-            <!-- ================================
+            <!-- =============================================
                  PASSWORD
-            ================================= -->
+                 ============================================= -->
 
             <div class="form-group">
 
@@ -189,19 +2214,20 @@
                     Password
                 </label>
 
+
                 <input
-                    type="text"
+                    type="password"
                     id="newStudentPassword"
                     placeholder="Enter Password"
-                    autocomplete="off"
+                    autocomplete="new-password"
                 >
 
             </div>
 
 
-            <!-- ================================
-                 FORCE PASSWORD
-            ================================= -->
+            <!-- =============================================
+                 FIRST LOGIN
+                 ============================================= -->
 
             <div class="checkbox-row">
 
@@ -210,27 +2236,30 @@
                     id="newMustChange"
                 >
 
+
                 <label for="newMustChange">
+
                     Force password change on first login
+
                 </label>
 
             </div>
 
+
         </div>
 
 
-        <!-- ================================
-             FOOTER
-        ================================= -->
-
         <div class="modal-footer">
+
 
             <button
                 type="button"
                 id="cancelAdd"
                 class="cancel-btn"
             >
+
                 Cancel
+
             </button>
 
 
@@ -239,11 +2268,340 @@
                 id="saveNewStudent"
                 class="save-btn"
             >
+
                 💾 Save Student
+
             </button>
 
+
         </div>
+
 
     </div>
 
 </div>
+
+
+<!-- =========================================================
+     EDIT STUDENT MODAL
+     ========================================================= -->
+
+<div
+    id="editModal"
+    class="modal-overlay"
+>
+
+
+    <div class="modal">
+
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2>
+                    Edit Student
+                </h2>
+
+                <p>
+                    Manage student account
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                id="closeEdit"
+                class="modal-close"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="modal-body">
+
+
+            <div class="edit-info">
+
+                <strong>
+                    Student ID:
+                </strong>
+
+                <span
+                    id="editStudentId"
+                >
+                </span>
+
+            </div>
+
+
+            <!-- =============================================
+                 PASSWORD
+                 ============================================= -->
+
+            <div class="form-group">
+
+                <label for="editPassword">
+                    New Password
+                </label>
+
+
+                <input
+                    type="password"
+                    id="editPassword"
+                    placeholder="Leave blank to keep current password"
+                    autocomplete="new-password"
+                >
+
+            </div>
+
+
+            <button
+                type="button"
+                id="resetPasswordBtn"
+                class="reset-password-btn"
+            >
+
+                🔑 Generate New Password
+
+            </button>
+
+
+            <div
+                class="checkbox-row"
+                style="margin-top:15px;"
+            >
+
+                <input
+                    type="checkbox"
+                    id="editMustChange"
+                >
+
+
+                <label for="editMustChange">
+
+                    Force password change on first login
+
+                </label>
+
+            </div>
+
+
+            <!-- =============================================
+                 PAPER ACCESS
+                 ============================================= -->
+
+            <div
+                class="form-group"
+                style="margin-top:22px;"
+            >
+
+                <label>
+                    Paper Access
+                </label>
+
+
+                <div class="paper-controls">
+
+
+                    <button
+                        type="button"
+                        id="selectAllPapers"
+                        class="paper-control-btn"
+                    >
+
+                        ✓ Select All
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="removeAllPapers"
+                        class="paper-control-btn"
+                    >
+
+                        × Remove All
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="resetViewed"
+                        class="paper-control-btn"
+                    >
+
+                        ↻ Reset Viewed
+
+                    </button>
+
+
+                </div>
+
+
+                <div class="paper-grid">
+
+
+                    <label class="paper-item">
+                        <input type="checkbox" id="paper01">
+                        Paper 01
+                    </label>
+
+
+                    <label class="paper-item">
+                        <input type="checkbox" id="paper02">
+                        Paper 02
+                    </label>
+
+
+                    <label class="paper-item">
+                        <input type="checkbox" id="paper03">
+                        Paper 03
+                    </label>
+
+
+                    <label class="paper-item">
+                        <input type="checkbox" id="paper04">
+                        Paper 04
+                    </label>
+
+
+                    <label class="paper-item">
+                        <input type="checkbox" id="paper05">
+                        Paper 05
+                    </label>
+
+
+                    <label class="paper-item">
+                        <input type="checkbox" id="paper06">
+                        Paper 06
+                    </label>
+
+
+                    <label class="paper-item">
+                        <input type="checkbox" id="paper07">
+                        Paper 07
+                    </label>
+
+
+                    <label class="paper-item">
+                        <input type="checkbox" id="paper08">
+                        Paper 08
+                    </label>
+
+
+                    <label class="paper-item">
+                        <input type="checkbox" id="paper09">
+                        Paper 09
+                    </label>
+
+
+                    <label class="paper-item">
+                        <input type="checkbox" id="paper10">
+                        Paper 10
+                    </label>
+
+
+                    <label class="paper-item">
+                        <input type="checkbox" id="paper11">
+                        Paper 11
+                    </label>
+
+
+                    <label class="paper-item">
+                        <input type="checkbox" id="paper12">
+                        Paper 12
+                    </label>
+
+
+                    <label class="paper-item">
+                        <input type="checkbox" id="paper13">
+                        Paper 13
+                    </label>
+
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="modal-footer">
+
+
+            <button
+                type="button"
+                id="deleteStudent"
+                class="delete-large-btn"
+            >
+
+                🗑️ Delete Student
+
+            </button>
+
+
+            <div
+                style="
+                    display:flex;
+                    gap:8px;
+                "
+            >
+
+                <button
+                    type="button"
+                    id="closeEditBottom"
+                    class="cancel-btn"
+                >
+
+                    Cancel
+
+                </button>
+
+
+                <button
+                    type="button"
+                    id="updateStudent"
+                    class="save-btn"
+                >
+
+                    💾 Save Changes
+
+                </button>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     SESSION
+     ========================================================= -->
+
+<script src="session.js"></script>
+
+
+<!-- =========================================================
+     STUDENTS JAVASCRIPT
+     ========================================================= -->
+
+<script
+    type="module"
+    src="students.js"
+></script>
+
+
+</body>
+
+</html>
