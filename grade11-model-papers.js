@@ -1,8 +1,103 @@
+// =====================================================
+// GRADE 11 TOP RANKING - TERM SELECTION
+// =====================================================
+
 import {
     db,
     doc,
     getDoc
 } from "./firebase.js";
+
+
+// =====================================================
+// FIREBASE SETTINGS
+// =====================================================
+
+const SETTINGS_DOCUMENT =
+    "grade11";
+
+
+// =====================================================
+// TERM CONFIGURATION
+// =====================================================
+
+const TERM_CONFIG = [
+
+    {
+        id: "term1",
+
+        title:
+            "1st Term",
+
+        subtitle:
+            "Grade 11 TOP Ranking Papers",
+
+        url:
+            "grade11-term1.html",
+
+        fields: [
+
+            "grade11_term1_01",
+            "grade11_term1_02",
+            "grade11_term1_03",
+            "grade11_term1_04",
+            "grade11_term1_05"
+
+        ]
+
+    },
+
+
+    {
+        id: "term2",
+
+        title:
+            "2nd Term",
+
+        subtitle:
+            "Grade 11 TOP Ranking Papers",
+
+        url:
+            "grade11-term2.html",
+
+        fields: [
+
+            "grade11_term2_01",
+            "grade11_term2_02",
+            "grade11_term2_03",
+            "grade11_term2_04",
+            "grade11_term2_05"
+
+        ]
+
+    },
+
+
+    {
+        id: "term3",
+
+        title:
+            "3rd Term",
+
+        subtitle:
+            "Grade 11 TOP Ranking Papers",
+
+        url:
+            "grade11-term3.html",
+
+        fields: [
+
+            "grade11_term3_01",
+            "grade11_term3_02",
+            "grade11_term3_03",
+            "grade11_term3_04",
+            "grade11_term3_05"
+
+        ]
+
+    }
+
+];
 
 
 // =====================================================
@@ -16,48 +111,152 @@ const termGrid =
 
 
 // =====================================================
-// TERMS
+// CHECK ANY ENABLED
 // =====================================================
 
-const terms = [
+function hasEnabledPaper(
+    settings,
+    fields
+) {
 
-    {
-        number: "1",
-        title: "1st Term"
-    },
+    return fields.some(
+        function(field) {
 
-    {
-        number: "2",
-        title: "2nd Term"
-    },
+            return (
+                settings[field] === true
+            );
 
-    {
-        number: "3",
-        title: "3rd Term"
-    }
+        }
+    );
 
-];
+}
 
 
 // =====================================================
-// LOAD TERMS
+// CREATE TERM CARD
 // =====================================================
 
-async function loadTerms() {
+function createTermCard(
+    term
+) {
 
-    if (!termGrid) {
+    const card =
+        document.createElement(
+            "div"
+        );
+
+
+    card.className =
+        "term-card";
+
+
+    card.setAttribute(
+        "role",
+        "button"
+    );
+
+
+    card.setAttribute(
+        "tabindex",
+        "0"
+    );
+
+
+    card.innerHTML = `
+
+        <div class="term-icon">
+            🏆
+        </div>
+
+        <h2>
+            ${term.title}
+        </h2>
+
+        <p>
+            ${term.subtitle}
+        </p>
+
+    `;
+
+
+    // -------------------------------------------------
+    // CLICK
+    // -------------------------------------------------
+
+    card.addEventListener(
+        "click",
+        function() {
+
+            window.location.href =
+                term.url;
+
+        }
+    );
+
+
+    // -------------------------------------------------
+    // KEYBOARD
+    // -------------------------------------------------
+
+    card.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                event.key === "Enter" ||
+                event.key === " "
+            ) {
+
+                event.preventDefault();
+
+                window.location.href =
+                    term.url;
+
+            }
+
+        }
+    );
+
+
+    return card;
+
+}
+
+
+// =====================================================
+// LOAD FIREBASE SETTINGS
+// =====================================================
+
+async function loadTermVisibility() {
+
+    if (
+        !termGrid
+    ) {
+
+        console.error(
+            "❌ termGrid not found."
+        );
+
         return;
+
     }
+
+
+    // -------------------------------------------------
+    // Loading message
+    // -------------------------------------------------
 
     termGrid.innerHTML = `
 
-        <div style="
-            grid-column:1/-1;
-            text-align:center;
-            padding:40px;
-            color:#64748b;
-        ">
-            Loading...
+        <div
+            style="
+                grid-column: 1 / -1;
+                text-align: center;
+                padding: 40px;
+                color: #64748b;
+            "
+        >
+            Loading TOP Ranking Papers...
         </div>
 
     `;
@@ -65,11 +264,15 @@ async function loadTerms() {
 
     try {
 
+        // -------------------------------------------------
+        // GET GRADE 11 SETTINGS
+        // -------------------------------------------------
+
         const settingsRef =
             doc(
                 db,
                 "paperSettings",
-                "settings"
+                SETTINGS_DOCUMENT
             );
 
 
@@ -79,80 +282,97 @@ async function loadTerms() {
             );
 
 
+        // -------------------------------------------------
+        // NO DOCUMENT
+        // -------------------------------------------------
+
+        if (
+            !snapshot.exists()
+        ) {
+
+            console.warn(
+                "⚠️ Grade 11 paper settings not found."
+            );
+
+
+            termGrid.innerHTML = `
+
+                <div
+                    style="
+                        grid-column: 1 / -1;
+                        text-align: center;
+                        padding: 40px;
+                        color: #64748b;
+                    "
+                >
+                    No TOP Ranking papers are currently available.
+                </div>
+
+            `;
+
+
+            return;
+
+        }
+
+
         const settings =
-            snapshot.exists()
-                ? snapshot.data() || {}
-                : {};
+            snapshot.data();
 
 
-        termGrid.innerHTML = "";
+        console.log(
+            "📚 Grade 11 Settings:",
+            settings
+        );
 
 
-        let visibleTerms = 0;
+        // -------------------------------------------------
+        // CLEAR GRID
+        // -------------------------------------------------
+
+        termGrid.innerHTML =
+            "";
 
 
-        terms.forEach(
-            term => {
+        let visibleTerms =
+            0;
 
-                const settingId =
-                    `grade11_term${term.number}_enabled`;
 
+        // -------------------------------------------------
+        // CREATE ONLY ENABLED TERMS
+        // -------------------------------------------------
+
+        TERM_CONFIG.forEach(
+            function(term) {
 
                 const enabled =
-                    Object.prototype.hasOwnProperty.call(
+                    hasEnabledPaper(
                         settings,
-                        settingId
-                    )
-                        ? settings[settingId] === true
-                        : true;
+                        term.fields
+                    );
 
 
-                // Disabled term = DON'T SHOW
-                if (!enabled) {
+                console.log(
+                    term.title,
+                    enabled
+                        ? "VISIBLE"
+                        : "HIDDEN"
+                );
+
+
+                if (
+                    !enabled
+                ) {
+
                     return;
+
                 }
 
 
                 const card =
-                    document.createElement(
-                        "div"
+                    createTermCard(
+                        term
                     );
-
-
-                card.className =
-                    "term-card";
-
-
-                card.style.cursor =
-                    "pointer";
-
-
-                card.innerHTML = `
-
-                    <div class="term-icon">
-                        🏆
-                    </div>
-
-                    <h2>
-                        ${term.title}
-                    </h2>
-
-                    <p>
-                        Grade 11 TOP Ranking
-                    </p>
-
-                `;
-
-
-                card.addEventListener(
-                    "click",
-                    () => {
-
-                        window.location.href =
-                            `grade11-term.html?term=${term.number}`;
-
-                    }
-                );
 
 
                 termGrid.appendChild(
@@ -166,37 +386,48 @@ async function loadTerms() {
         );
 
 
+        // -------------------------------------------------
+        // NOTHING AVAILABLE
+        // -------------------------------------------------
+
         if (
             visibleTerms === 0
         ) {
 
             termGrid.innerHTML = `
 
-                <div style="
-                    grid-column:1/-1;
-                    background:white;
-                    border-radius:20px;
-                    padding:50px 25px;
-                    text-align:center;
-                    box-shadow:0 10px 30px rgba(0,0,0,.08);
-                ">
+                <div
+                    style="
+                        grid-column: 1 / -1;
+                        text-align: center;
+                        padding: 50px 20px;
+                        color: #64748b;
+                    "
+                >
 
-                    <div style="
-                        font-size:50px;
-                        margin-bottom:15px;
-                    ">
+                    <div
+                        style="
+                            font-size: 42px;
+                            margin-bottom: 12px;
+                        "
+                    >
                         🔒
                     </div>
 
-                    <h2>
-                        TOP Ranking Papers Unavailable
-                    </h2>
+                    <strong
+                        style="
+                            display: block;
+                            color: #0f172a;
+                            font-size: 16px;
+                            margin-bottom: 6px;
+                        "
+                    >
+                        No TOP Ranking Papers Available
+                    </strong>
 
-                    <p style="
-                        color:#64748b;
-                    ">
-                        TOP Ranking Papers are currently unavailable.
-                    </p>
+                    <span>
+                        Please check again later.
+                    </span>
 
                 </div>
 
@@ -205,53 +436,27 @@ async function loadTerms() {
         }
 
 
-        console.log(
-            "✅ Grade 11 terms loaded",
-            {
-                visibleTerms
-            }
-        );
-
     }
-
     catch (error) {
 
         console.error(
-            "Grade 11 terms load error:",
+            "❌ Failed to load Grade 11 paper settings:",
             error
         );
 
 
         termGrid.innerHTML = `
 
-            <div style="
-                grid-column:1/-1;
-                text-align:center;
-                padding:40px;
-            ">
+            <div
+                style="
+                    grid-column: 1 / -1;
+                    text-align: center;
+                    padding: 40px;
+                    color: #dc2626;
+                "
+            >
 
-                <h2>
-                    ⚠️ Unable to Load
-                </h2>
-
-                <p>
-                    ${error.message}
-                </p>
-
-                <button
-                    type="button"
-                    onclick="location.reload()"
-                    style="
-                        padding:12px 20px;
-                        border:0;
-                        border-radius:10px;
-                        background:#6d35f2;
-                        color:white;
-                        cursor:pointer;
-                    "
-                >
-                    🔄 Try Again
-                </button>
+                Failed to load paper availability.
 
             </div>
 
@@ -263,7 +468,28 @@ async function loadTerms() {
 
 
 // =====================================================
-// START
+// INITIALIZE
 // =====================================================
 
-loadTerms();
+loadTermVisibility();
+
+
+// =====================================================
+// CONSOLE
+// =====================================================
+
+console.log(
+    "===================================="
+);
+
+console.log(
+    "🏆 GRADE 11 TOP RANKING"
+);
+
+console.log(
+    "Dynamic term visibility active."
+);
+
+console.log(
+    "===================================="
+);
