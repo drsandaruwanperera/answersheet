@@ -2233,3 +2233,360 @@ body {
     }
 
 }
+/* =====================================================
+   STUDENT ACCOUNT CONTROL
+===================================================== */
+
+.student-control-section {
+    margin-top: 32px;
+    margin-bottom: 40px;
+}
+
+
+/* =====================================================
+   STUDENT COUNT GRID
+===================================================== */
+
+.student-count-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 16px;
+
+    margin-top: 20px;
+}
+
+
+.student-count-card {
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 22px;
+
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 6px 20px
+        rgba(15, 23, 42, 0.06);
+}
+
+
+.student-count-icon {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background: #f1edff;
+
+    font-size: 22px;
+
+    flex-shrink: 0;
+}
+
+
+.student-count-card span {
+    display: block;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.8px;
+
+    color: #64748b;
+}
+
+
+.student-count-card strong {
+    display: block;
+
+    margin-top: 3px;
+
+    font-size: 27px;
+
+    line-height: 1.1;
+
+    color: #0f172a;
+}
+
+
+.student-count-card small {
+    display: block;
+
+    margin-top: 4px;
+
+    font-size: 11px;
+
+    color: #94a3b8;
+}
+
+
+/* =====================================================
+   REMOVAL CARD
+===================================================== */
+
+.student-removal-card {
+    margin-top: 24px;
+
+    padding: 28px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff 0%,
+            #fffafa 100%
+        );
+
+    border: 1px solid #fecaca;
+
+    border-left: 5px solid #dc2626;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 8px 28px
+        rgba(127, 29, 29, 0.07);
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.removal-header {
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+
+.removal-header h2 {
+    margin: 4px 0 7px;
+
+    font-size: 21px;
+
+    font-weight: 800;
+
+    color: #111827;
+}
+
+
+.removal-header p:not(.card-label) {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+}
+
+
+.danger-label {
+    color: #dc2626 !important;
+
+    margin: 0 !important;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.9px;
+}
+
+
+.danger-icon {
+    width: 52px;
+    height: 52px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background: #fee2e2;
+
+    font-size: 24px;
+
+    flex-shrink: 0;
+}
+
+
+/* =====================================================
+   WARNING
+===================================================== */
+
+.removal-warning {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 22px;
+
+    padding: 13px 15px;
+
+    background: #fff7ed;
+
+    border: 1px solid #fed7aa;
+
+    border-radius: 11px;
+
+    font-size: 12px;
+
+    color: #9a3412;
+}
+
+
+.removal-warning strong {
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+.removal-buttons {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 12px;
+
+    margin-top: 20px;
+}
+
+
+.remove-student-btn {
+    min-height: 52px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    padding: 0 18px;
+
+    border: 1px solid #fecaca;
+
+    border-radius: 11px;
+
+    background: #ffffff;
+
+    color: #b91c1c;
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    font-weight: 750;
+
+    cursor: pointer;
+
+    transition:
+        background .18s ease,
+        border-color .18s ease,
+        transform .18s ease,
+        box-shadow .18s ease;
+}
+
+
+.remove-student-btn:hover {
+    background: #fef2f2;
+
+    border-color: #f87171;
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 5px 14px
+        rgba(220, 38, 38, 0.10);
+}
+
+
+.remove-student-btn:active {
+    transform:
+        translateY(0);
+}
+
+
+.remove-btn-icon {
+    font-size: 16px;
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 1000px) {
+
+    .student-count-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+
+    .removal-buttons {
+        grid-template-columns:
+            1fr;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .student-count-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .student-removal-card {
+        padding: 20px;
+    }
+
+
+    .removal-header {
+        align-items: flex-start;
+    }
+
+
+    .danger-icon {
+        width: 44px;
+        height: 44px;
+
+        font-size: 20px;
+    }
+
+}
