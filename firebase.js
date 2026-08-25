@@ -13,7 +13,26 @@ import {
     updateDoc,
     deleteDoc,
     onSnapshot
+    
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+export {
+
+    db,
+
+    doc,
+    getDoc,
+    getDocs,
+
+    setDoc,
+    updateDoc,
+    deleteDoc,
+
+    collection,
+
+    onSnapshot
+
+};
 
 
 // =====================================================
