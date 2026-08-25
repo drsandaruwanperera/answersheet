@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Answer Viewer</title>
+
+    <link
+        rel="stylesheet"
+        href="answer-viewer.css?v=1"
+    >
+
+</head>
+
+
+<body>
+
+
+<div class="viewer-page">
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="viewer-header">
+
+        <div class="viewer-header-left">
+
+            <div class="viewer-icon">
+                📖
+            </div>
+
+            <div>
+
+                <span class="viewer-label">
+                    STUDENT ANSWER
+                </span>
+
+                <h1 id="viewerTitle">
+                    Loading Answer...
+                </h1>
+
+                <p id="viewerSubtitle">
+                    Please wait...
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <button
+            type="button"
+            id="backBtn"
+            class="back-btn"
+        >
+            ← Back
+        </button>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         SECURITY NOTICE
+    ====================================================== -->
+
+    <div class="viewer-notice">
+
+        <span>
+            🔒
+        </span>
+
+        <div>
+
+            <strong>
+                Protected Answer Viewer
+            </strong>
+
+            <p>
+                This answer is available for viewing only.
+                Downloading and printing are disabled.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         PDF VIEWER
+    ====================================================== -->
+
+    <main class="pdf-viewer-wrapper">
+
+        <div
+            id="loading"
+            class="loading"
+        >
+
+            <div class="loading-spinner"></div>
+
+            <strong>
+                Loading answer...
+            </strong>
+
+            <span>
+                Please wait.
+            </span>
+
+        </div>
+
+
+        <div
+            id="errorMessage"
+            class="error-message"
+            style="display:none;"
+        >
+
+            <div class="error-icon">
+                ⚠️
+            </div>
+
+            <h2>
+                Unable to Load Answer
+            </h2>
+
+            <p id="errorText">
+                Please try again later.
+            </p>
+
+            <button
+                type="button"
+                id="errorBackBtn"
+            >
+                ← Go Back
+            </button>
+
+        </div>
+
+
+        <div
+            id="pdfCanvasContainer"
+            class="pdf-canvas-container"
+        ></div>
+
+    </main>
+
+
+</div>
+
+
+<!-- =====================================================
+     PDF.JS
+====================================================== -->
+
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs"
+    type="module"
+></script>
+
+
+<!-- =====================================================
+     VIEWER SCRIPT
+====================================================== -->
+
+<script
+    type="module"
+    src="answer-viewer.js?v=1"
+></script>
+
+
+</body>
+
+</html>
