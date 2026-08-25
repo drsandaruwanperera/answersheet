@@ -14,14 +14,12 @@ import {
 const adminLoggedIn =
     sessionStorage.getItem("adminLoggedIn") === "true";
 
-
 const adminRole =
     String(
         sessionStorage.getItem("adminRole") || ""
     )
     .toLowerCase()
     .replace(/[\s_-]+/g, "");
-
 
 const adminUsername =
     sessionStorage.getItem("adminUsername") || "Admin";
@@ -67,24 +65,20 @@ const enableAllBtn =
         "enableAllBtn"
     );
 
-
 const disableAllBtn =
     document.getElementById(
         "disableAllBtn"
     );
-
 
 const saveSettingsBtn =
     document.getElementById(
         "saveSettingsBtn"
     );
 
-
 const changesStatus =
     document.getElementById(
         "changesStatus"
     );
-
 
 const logoutBtn =
     document.getElementById(
@@ -93,7 +87,7 @@ const logoutBtn =
 
 
 // =====================================================
-// PAPER CONFIG
+// PAPER CONFIGURATION
 // =====================================================
 
 const PAPER_CONFIG = {
@@ -199,9 +193,71 @@ let paperSettings = {
 
 };
 
+let hasUnsavedChanges = false;
 
-let hasUnsavedChanges =
-    false;
+
+// =====================================================
+// DEFAULT DASHBOARD SETTINGS
+// =====================================================
+
+function applyDefaultDashboardSettings() {
+
+    // Grade 10
+    if (
+        typeof paperSettings.grade10.modelPapersEnabled !==
+        "boolean"
+    ) {
+
+        paperSettings.grade10.modelPapersEnabled =
+            true;
+
+    }
+
+
+    if (
+        typeof paperSettings.grade10.pastPapersEnabled !==
+        "boolean"
+    ) {
+
+        paperSettings.grade10.pastPapersEnabled =
+            true;
+
+    }
+
+
+    // Grade 11
+    if (
+        typeof paperSettings.grade11.topRankingEnabled !==
+        "boolean"
+    ) {
+
+        paperSettings.grade11.topRankingEnabled =
+            true;
+
+    }
+
+
+    if (
+        typeof paperSettings.grade11.pastPapersEnabled !==
+        "boolean"
+    ) {
+
+        paperSettings.grade11.pastPapersEnabled =
+            true;
+
+    }
+
+
+    // A/L
+    if (
+        typeof paperSettings.al === "undefined"
+    ) {
+
+        paperSettings.al = {};
+
+    }
+
+}
 
 
 // =====================================================
@@ -212,7 +268,6 @@ const adminUsernameElement =
     document.getElementById(
         "adminUsername"
     );
-
 
 const adminRoleElement =
     document.getElementById(
@@ -226,7 +281,6 @@ if (adminUsernameElement) {
         adminUsername;
 
 }
-
 
 if (adminRoleElement) {
 
@@ -286,8 +340,7 @@ if (logoutBtn) {
 
 function markChanged() {
 
-    hasUnsavedChanges =
-        true;
+    hasUnsavedChanges = true;
 
 
     if (changesStatus) {
@@ -303,14 +356,9 @@ function markChanged() {
 }
 
 
-// =====================================================
-// CLEAR STATUS
-// =====================================================
-
 function clearChanged() {
 
-    hasUnsavedChanges =
-        false;
+    hasUnsavedChanges = false;
 
 
     if (changesStatus) {
@@ -351,7 +399,7 @@ function getFieldName(
 
 
 // =====================================================
-// GET VALUE
+// GET PAPER VALUE
 // =====================================================
 
 function getPaperValue(
@@ -369,7 +417,7 @@ function getPaperValue(
 
 
 // =====================================================
-// SET VALUE
+// SET PAPER VALUE
 // =====================================================
 
 function setPaperValue(
@@ -400,7 +448,7 @@ function setPaperValue(
 
 
 // =====================================================
-// CREATE PAPER
+// CREATE PAPER ITEM
 // =====================================================
 
 function createPaperItem(
@@ -437,7 +485,6 @@ function createPaperItem(
 
     item.dataset.category =
         category;
-
 
     item.dataset.field =
         field;
@@ -570,8 +617,6 @@ function createGroup(
         "paper-group";
 
 
-    // HEADER
-
     const header =
         document.createElement(
             "div"
@@ -612,8 +657,6 @@ function createGroup(
     );
 
 
-    // LIST
-
     const list =
         document.createElement(
             "div"
@@ -623,8 +666,9 @@ function createGroup(
     list.className =
         "paper-group-list";
 
+    list.style.display =
+        "none";
 
-    // MODEL / TOP RANKING
 
     if (group.count) {
 
@@ -668,8 +712,6 @@ function createGroup(
     }
 
 
-    // PAST PAPERS
-
     if (group.years) {
 
         group.years.forEach(
@@ -695,6 +737,44 @@ function createGroup(
 
     wrapper.appendChild(
         list
+    );
+
+
+    const toggle =
+        header.querySelector(
+            ".group-toggle"
+        );
+
+
+    toggle.addEventListener(
+        "click",
+        function () {
+
+            const isHidden =
+                list.style.display ===
+                "none";
+
+
+            if (isHidden) {
+
+                list.style.display =
+                    "block";
+
+                toggle.textContent =
+                    "Collapse";
+
+            }
+            else {
+
+                list.style.display =
+                    "none";
+
+                toggle.textContent =
+                    "Expand";
+
+            }
+
+        }
     );
 
 
@@ -756,6 +836,243 @@ function renderCategory(
 
 
 // =====================================================
+// CREATE DASHBOARD CONTROL
+// =====================================================
+
+function createDashboardControl(
+    title,
+    description,
+    field,
+    category
+) {
+
+    const wrapper =
+        document.createElement(
+            "div"
+        );
+
+
+    wrapper.className =
+        "paper-group";
+
+
+    const enabled =
+        paperSettings?.[
+            category
+        ]?.[field] === true;
+
+
+    wrapper.innerHTML = `
+
+        <div class="paper-group-header">
+
+            <div>
+
+                <span class="paper-group-label">
+                    STUDENT DASHBOARD
+                </span>
+
+                <h3>
+                    ${title}
+                </h3>
+
+                <p style="
+                    margin:4px 0 0;
+                    color:#64748b;
+                    font-size:11px;
+                ">
+                    ${description}
+                </p>
+
+            </div>
+
+
+            <div style="
+                display:flex;
+                align-items:center;
+                gap:12px;
+            ">
+
+                <span
+                    class="paper-status ${
+                        enabled
+                            ? "active"
+                            : "disabled"
+                    }"
+                >
+                    ${
+                        enabled
+                            ? "Visible"
+                            : "Hidden"
+                    }
+                </span>
+
+
+                <label class="switch">
+
+                    <input
+                        type="checkbox"
+                        class="dashboard-control-checkbox"
+                        ${enabled ? "checked" : ""}
+                    >
+
+                    <span class="slider"></span>
+
+                </label>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    const checkbox =
+        wrapper.querySelector(
+            ".dashboard-control-checkbox"
+        );
+
+
+    checkbox.addEventListener(
+        "change",
+        function () {
+
+            setPaperValue(
+                category,
+                field,
+                checkbox.checked
+            );
+
+
+            const status =
+                wrapper.querySelector(
+                    ".paper-status"
+                );
+
+
+            if (status) {
+
+                status.textContent =
+                    checkbox.checked
+                        ? "Visible"
+                        : "Hidden";
+
+
+                status.classList.toggle(
+                    "active",
+                    checkbox.checked
+                );
+
+
+                status.classList.toggle(
+                    "disabled",
+                    !checkbox.checked
+                );
+
+            }
+
+
+            markChanged();
+
+        }
+    );
+
+
+    return wrapper;
+
+}
+
+
+// =====================================================
+// RENDER GRADE 10 DASHBOARD CONTROLS
+// =====================================================
+
+function renderGrade10DashboardControls() {
+
+    const container =
+        document.getElementById(
+            "grade10PaperList"
+        );
+
+
+    if (!container) {
+        return;
+    }
+
+
+    const controls =
+        document.createElement(
+            "div"
+        );
+
+
+    controls.className =
+        "dashboard-controls";
+
+
+    controls.style.padding =
+        "12px 16px";
+
+
+    controls.style.background =
+        "#f8fafc";
+
+
+    controls.innerHTML = `
+
+        <div style="
+            padding:8px 4px 12px;
+        ">
+
+            <strong style="
+                color:#0f172a;
+                font-size:13px;
+            ">
+                Grade 10 Dashboard Controls
+            </strong>
+
+            <p style="
+                margin:4px 0 0;
+                color:#64748b;
+                font-size:10px;
+            ">
+                Control which main buttons students can see.
+            </p>
+
+        </div>
+
+    `;
+
+
+    controls.appendChild(
+        createDashboardControl(
+            "Model Papers",
+            "Show or hide the Model Papers button on the Grade 10 student dashboard.",
+            "modelPapersEnabled",
+            "grade10"
+        )
+    );
+
+
+    controls.appendChild(
+        createDashboardControl(
+            "Past Papers",
+            "Show or hide the Past Papers button on the Grade 10 student dashboard.",
+            "pastPapersEnabled",
+            "grade10"
+        )
+    );
+
+
+    container.insertBefore(
+        controls,
+        container.firstChild
+    );
+
+}
+
+
+// =====================================================
 // LOAD FIREBASE
 // =====================================================
 
@@ -776,7 +1093,9 @@ async function loadSettings() {
 
             grade10: {},
 
-            grade11: {}
+            grade11: {},
+
+            al: {}
 
         };
 
@@ -808,8 +1127,21 @@ async function loadSettings() {
 
                 }
 
+
+                if (
+                    id === "al"
+                ) {
+
+                    paperSettings.al =
+                        paperDoc.data();
+
+                }
+
             }
         );
+
+
+        applyDefaultDashboardSettings();
 
 
         renderCategory(
@@ -822,15 +1154,14 @@ async function loadSettings() {
         );
 
 
+        renderGrade10DashboardControls();
+
+
         clearChanged();
 
 
         console.log(
-            "✅ Paper settings loaded"
-        );
-
-
-        console.log(
+            "✅ Paper settings loaded",
             paperSettings
         );
 
@@ -881,6 +1212,7 @@ function getAllPaperFields() {
                         ) {
 
                             fields.push({
+
                                 category:
                                     category,
 
@@ -890,6 +1222,7 @@ function getAllPaperFields() {
                                         group.id,
                                         i
                                     )
+
                             });
 
                         }
@@ -906,6 +1239,7 @@ function getAllPaperFields() {
                             ) {
 
                                 fields.push({
+
                                     category:
                                         category,
 
@@ -915,6 +1249,7 @@ function getAllPaperFields() {
                                             group.id,
                                             index + 1
                                         )
+
                                 });
 
                             }
@@ -957,14 +1292,29 @@ if (enableAllBtn) {
             );
 
 
+            // Dashboard controls
+            paperSettings.grade10.modelPapersEnabled =
+                true;
+
+            paperSettings.grade10.pastPapersEnabled =
+                true;
+
+            paperSettings.grade11.topRankingEnabled =
+                true;
+
+            paperSettings.grade11.pastPapersEnabled =
+                true;
+
+
             renderCategory(
                 "grade10"
             );
 
-
             renderCategory(
                 "grade11"
             );
+
+            renderGrade10DashboardControls();
 
 
             markChanged();
@@ -987,7 +1337,7 @@ if (disableAllBtn) {
 
             if (
                 !confirm(
-                    "Disable all Grade 10 and Grade 11 papers?"
+                    "Disable all Grade 10 and Grade 11 papers and dashboard buttons?"
                 )
             ) {
 
@@ -1009,14 +1359,29 @@ if (disableAllBtn) {
             );
 
 
+            // Dashboard controls
+            paperSettings.grade10.modelPapersEnabled =
+                false;
+
+            paperSettings.grade10.pastPapersEnabled =
+                false;
+
+            paperSettings.grade11.topRankingEnabled =
+                false;
+
+            paperSettings.grade11.pastPapersEnabled =
+                false;
+
+
             renderCategory(
                 "grade10"
             );
 
-
             renderCategory(
                 "grade11"
             );
+
+            renderGrade10DashboardControls();
 
 
             markChanged();
@@ -1028,7 +1393,7 @@ if (disableAllBtn) {
 
 
 // =====================================================
-// SAVE
+// SAVE SETTINGS
 // =====================================================
 
 if (saveSettingsBtn) {
@@ -1105,7 +1470,6 @@ if (saveSettingsBtn) {
                 saveSettingsBtn.disabled =
                     false;
 
-
                 saveSettingsBtn.textContent =
                     "💾 Save Changes";
 
@@ -1118,7 +1482,7 @@ if (saveSettingsBtn) {
 
 
 // =====================================================
-// UNSAVED CHANGES
+// UNSAVED CHANGES WARNING
 // =====================================================
 
 window.addEventListener(
@@ -1128,7 +1492,9 @@ window.addEventListener(
         if (
             !hasUnsavedChanges
         ) {
+
             return;
+
         }
 
 
@@ -1167,7 +1533,7 @@ console.log(
 );
 
 console.log(
-    "Grade 10: ACTIVE"
+    "Grade 10 Dashboard Controls: ACTIVE"
 );
 
 console.log(
