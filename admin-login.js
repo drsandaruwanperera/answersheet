@@ -1,12 +1,8 @@
-// =====================================================
-// IMPORT FIREBASE
-// =====================================================
-
 import {
     db,
-    collection,
     doc,
     getDoc,
+    collection,
     getDocs,
     query,
     where,
@@ -15,109 +11,63 @@ import {
 
 
 // =====================================================
-// START
-// =====================================================
-
-console.log(
-    "======================================"
-);
-
-console.log(
-    "🔐 ADMIN LOGIN SYSTEM STARTED"
-);
-
-console.log(
-    "======================================"
-);
-
-
-// =====================================================
 // ELEMENTS
 // =====================================================
 
 const loginBtn =
-    document.getElementById(
-        "loginBtn"
-    );
-
+    document.getElementById("loginBtn");
 
 const usernameInput =
-    document.getElementById(
-        "username"
-    );
-
+    document.getElementById("username");
 
 const passwordInput =
-    document.getElementById(
-        "password"
-    );
-
+    document.getElementById("password");
 
 const msg =
-    document.getElementById(
-        "msg"
-    );
+    document.getElementById("msg");
 
 
 // =====================================================
 // MESSAGE
 // =====================================================
 
-function showMessage(
-    message,
-    type = "error"
-) {
+function showMessage(message, type = "error") {
 
-    if (!msg) {
-        return;
-    }
+    if (!msg) return;
 
-
-    msg.textContent =
-        message;
-
+    msg.textContent = message;
 
     msg.style.color =
         type === "success"
             ? "#16a34a"
             : "#dc2626";
-
 }
 
 
 // =====================================================
-// ROLE NORMALIZER
+// NORMALIZE ROLE
 // =====================================================
 
-function normalizeRole(
-    role
-) {
+function normalizeRole(role) {
 
     const value =
-        String(
-            role || ""
-        )
+        String(role || "")
             .trim()
             .toLowerCase()
-            .replace(
-                /[\s_-]+/g,
-                ""
-            );
+            .replace(/[\s_-]+/g, "");
 
-
+    // Your Firebase uses role = "full"
     if (
+        value === "full" ||
         value === "superadmin" ||
-        value === "superadministrator" ||
-        value === "full"
+        value === "superadministrator"
     ) {
 
         return "superadmin";
-
     }
 
-
+    // Your Firebase limited admin
     return "limited";
-
 }
 
 
@@ -125,14 +75,11 @@ function normalizeRole(
 // FIND ADMIN
 // =====================================================
 
-async function findAdmin(
-    username
-) {
+async function findAdmin(username) {
 
-    // =================================================
-    // METHOD 1
-    // DOCUMENT ID
-    // =================================================
+    // -------------------------------------------------
+    // FIRST: try document ID
+    // -------------------------------------------------
 
     try {
 
@@ -143,49 +90,30 @@ async function findAdmin(
                 username
             );
 
-
         const adminSnap =
-            await getDoc(
-                adminRef
-            );
+            await getDoc(adminRef);
 
-
-        if (
-            adminSnap.exists()
-        ) {
-
-            console.log(
-                "✅ Admin found by document ID"
-            );
-
+        if (adminSnap.exists()) {
 
             return {
-
-                id:
-                    adminSnap.id,
-
-                data:
-                    adminSnap.data()
-
+                id: adminSnap.id,
+                data: adminSnap.data()
             };
-
         }
 
     }
     catch (error) {
 
         console.warn(
-            "Document ID lookup failed:",
+            "Document ID lookup error:",
             error
         );
-
     }
 
 
-    // =================================================
-    // METHOD 2
-    // USERNAME FIELD
-    // =================================================
+    // -------------------------------------------------
+    // SECOND: search username field
+    // -------------------------------------------------
 
     try {
 
@@ -194,7 +122,6 @@ async function findAdmin(
                 db,
                 "admins"
             );
-
 
         const adminQuery =
             query(
@@ -207,55 +134,33 @@ async function findAdmin(
                 limit(1)
             );
 
-
         const snapshot =
-            await getDocs(
-                adminQuery
-            );
+            await getDocs(adminQuery);
 
-
-        if (
-            !snapshot.empty
-        ) {
+        if (!snapshot.empty) {
 
             const adminDoc =
                 snapshot.docs[0];
 
-
-            console.log(
-                "✅ Admin found by username field"
-            );
-
-
             return {
-
-                id:
-                    adminDoc.id,
-
-                data:
-                    adminDoc.data()
-
+                id: adminDoc.id,
+                data: adminDoc.data()
             };
-
         }
 
     }
     catch (error) {
 
         console.error(
-            "Username field lookup failed:",
+            "Username query error:",
             error
         );
 
+        throw error;
     }
 
 
-    // =================================================
-    // NOT FOUND
-    // =================================================
-
     return null;
-
 }
 
 
@@ -263,30 +168,22 @@ async function findAdmin(
 // LOGIN
 // =====================================================
 
-async function loginAdmin() {
+async function login() {
 
     const username =
         usernameInput
-            ? usernameInput.value
-                .trim()
+            ? usernameInput.value.trim()
             : "";
-
 
     const password =
         passwordInput
-            ? passwordInput.value
-                .trim()
+            ? passwordInput.value.trim()
             : "";
 
 
-    showMessage(
-        ""
-    );
-
-
-    // =================================================
+    // -------------------------------------------------
     // VALIDATION
-    // =================================================
+    // -------------------------------------------------
 
     if (!username) {
 
@@ -294,11 +191,9 @@ async function loginAdmin() {
             "Please enter username."
         );
 
-
         usernameInput?.focus();
 
         return;
-
     }
 
 
@@ -308,43 +203,39 @@ async function loginAdmin() {
             "Please enter password."
         );
 
-
         passwordInput?.focus();
 
         return;
-
     }
 
 
-    // =================================================
+    // -------------------------------------------------
     // BUTTON
-    // =================================================
+    // -------------------------------------------------
 
     if (loginBtn) {
 
-        loginBtn.disabled =
-            true;
-
+        loginBtn.disabled = true;
 
         loginBtn.innerHTML =
             `
             <span>Signing In...</span>
             `;
-
     }
+
+
+    showMessage("");
 
 
     try {
 
         console.log(
-            "--------------------------------------"
+            "================================"
         );
-
 
         console.log(
-            "Attempting admin login"
+            "ADMIN LOGIN"
         );
-
 
         console.log(
             "Username:",
@@ -352,9 +243,9 @@ async function loginAdmin() {
         );
 
 
-        // =================================================
+        // -------------------------------------------------
         // FIND ADMIN
-        // =================================================
+        // -------------------------------------------------
 
         const admin =
             await findAdmin(
@@ -365,21 +256,18 @@ async function loginAdmin() {
         if (!admin) {
 
             console.error(
-                "❌ ADMIN NOT FOUND"
+                "Admin document not found."
             );
-
 
             showMessage(
                 "Invalid username or password."
             );
 
-
             return;
-
         }
 
 
-        const adminData =
+        const data =
             admin.data;
 
 
@@ -388,151 +276,133 @@ async function loginAdmin() {
             admin.id
         );
 
+        console.log(
+            "Database username:",
+            data.username
+        );
 
         console.log(
-            "Admin username:",
-            adminData.username
+            "Database role:",
+            data.role
         );
 
 
-        console.log(
-            "Admin role:",
-            adminData.role
-        );
+        // -------------------------------------------------
+        // USERNAME
+        // -------------------------------------------------
 
-
-        // =================================================
-        // USERNAME CHECK
-        // =================================================
-
-        const storedUsername =
+        const databaseUsername =
             String(
-                adminData.username ||
-                admin.id ||
+                data.username ||
                 ""
             )
-                .trim()
-                .toLowerCase();
+            .trim()
+            .toLowerCase();
 
 
         if (
-            storedUsername !==
+            databaseUsername !==
             username.toLowerCase()
         ) {
-
-            console.error(
-                "❌ Username mismatch"
-            );
-
 
             showMessage(
                 "Invalid username or password."
             );
 
-
             return;
-
         }
 
 
-        // =================================================
+        // -------------------------------------------------
         // PASSWORD
-        // =================================================
+        // -------------------------------------------------
 
-        const storedPassword =
+        const databasePassword =
             String(
-                adminData.password ??
+                data.password ||
                 ""
             )
-                .trim();
+            .trim();
 
 
         if (
-            storedPassword !==
+            databasePassword !==
             password
         ) {
 
             console.error(
-                "❌ Password mismatch"
+                "Password mismatch."
             );
-
 
             showMessage(
                 "Invalid username or password."
             );
 
-
             return;
-
         }
 
 
-        // =================================================
+        // -------------------------------------------------
         // ROLE
-        // =================================================
+        // -------------------------------------------------
 
-        const role =
+        const normalizedRole =
             normalizeRole(
-                adminData.role
+                data.role
             );
 
 
-        // =================================================
-        // SESSION
-        // =================================================
+        console.log(
+            "Normalized role:",
+            normalizedRole
+        );
+
+
+        // -------------------------------------------------
+        // SAVE SESSION
+        // -------------------------------------------------
 
         sessionStorage.setItem(
             "adminLoggedIn",
             "true"
         );
 
-
         sessionStorage.setItem(
             "adminUsername",
             username
         );
 
-
         sessionStorage.setItem(
             "adminRole",
-            role
+            normalizedRole
         );
 
 
-        // =================================================
+        // -------------------------------------------------
         // SUCCESS
-        // =================================================
+        // -------------------------------------------------
 
         console.log(
-            "======================================"
+            "LOGIN SUCCESS"
         );
-
-
-        console.log(
-            "✅ ADMIN LOGIN SUCCESS"
-        );
-
 
         console.log(
             "Username:",
             username
         );
 
-
         console.log(
             "Role:",
-            role
+            normalizedRole
         );
-
 
         console.log(
             "Super Admin:",
-            role === "superadmin"
+            normalizedRole === "superadmin"
         );
 
-
         console.log(
-            "======================================"
+            "================================"
         );
 
 
@@ -542,47 +412,27 @@ async function loginAdmin() {
         );
 
 
-        // =================================================
+        // -------------------------------------------------
         // REDIRECT
-        // =================================================
+        // -------------------------------------------------
 
         setTimeout(
             () => {
 
-                window.location.href =
-                    "admin.html";
+                window.location.replace(
+                    "admin.html"
+                );
 
             },
-            500
+            300
         );
 
     }
-
     catch (error) {
 
         console.error(
-            "======================================"
-        );
-
-
-        console.error(
-            "❌ ADMIN LOGIN ERROR"
-        );
-
-
-        console.error(
+            "ADMIN LOGIN ERROR:",
             error
-        );
-
-
-        console.error(
-            "Message:",
-            error.message
-        );
-
-
-        console.error(
-            "======================================"
         );
 
 
@@ -592,39 +442,32 @@ async function loginAdmin() {
         );
 
     }
-
     finally {
 
         if (loginBtn) {
 
-            loginBtn.disabled =
-                false;
-
+            loginBtn.disabled = false;
 
             loginBtn.innerHTML =
                 `
                 <span>Sign In</span>
                 <span>→</span>
                 `;
-
         }
-
     }
-
 }
 
 
 // =====================================================
-// BUTTON
+// LOGIN BUTTON
 // =====================================================
 
 if (loginBtn) {
 
     loginBtn.addEventListener(
         "click",
-        loginAdmin
+        login
     );
-
 }
 
 
@@ -638,29 +481,22 @@ if (loginBtn) {
 ].forEach(
     input => {
 
-        if (!input) {
-            return;
-        }
-
+        if (!input) return;
 
         input.addEventListener(
             "keydown",
             event => {
 
                 if (
-                    event.key ===
-                    "Enter"
+                    event.key === "Enter"
                 ) {
 
                     event.preventDefault();
 
-                    loginAdmin();
-
+                    login();
                 }
-
             }
         );
-
     }
 );
 
@@ -678,10 +514,8 @@ if (usernameInput) {
             if (msg) {
                 msg.textContent = "";
             }
-
         }
     );
-
 }
 
 
@@ -694,8 +528,15 @@ if (passwordInput) {
             if (msg) {
                 msg.textContent = "";
             }
-
         }
     );
-
 }
+
+
+// =====================================================
+// START
+// =====================================================
+
+console.log(
+    "✅ Admin Login JS Loaded"
+);
