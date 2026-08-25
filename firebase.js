@@ -4,14 +4,15 @@ import {
 
 import {
     getFirestore,
+    collection,
     doc,
     getDoc,
-    updateDoc,
+    getDocs,
     setDoc,
+    updateDoc,
     deleteDoc,
-    collection,
-    getDocs
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+    onSnapshot
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
 const firebaseConfig = {
