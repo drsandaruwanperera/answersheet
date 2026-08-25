@@ -107,15 +107,17 @@
             color:
                 #b91c1c;
 
-            font-size: 11px;
+            font-size:
+                11px;
 
-            font-weight: 800;
+            font-weight:
+                800;
 
         }
 
 
         /* =====================================================
-           PASSWORD
+           PASSWORD CARD
         ===================================================== */
 
         .password-card {
@@ -316,7 +318,7 @@
 
 
         /* =====================================================
-           REPORT PANEL
+           REPORT
         ===================================================== */
 
         .report-panel {
@@ -326,10 +328,6 @@
 
         }
 
-
-        /* =====================================================
-           SUMMARY TITLE
-        ===================================================== */
 
         .summary-heading {
 
@@ -368,7 +366,7 @@
 
 
         /* =====================================================
-           TOTAL CARDS
+           SUMMARY CARDS
         ===================================================== */
 
         .deletion-summary {
@@ -463,6 +461,10 @@
         }
 
 
+        /* =====================================================
+           DELETE BUTTON
+        ===================================================== */
+
         .delete-series-btn {
 
             width:
@@ -471,7 +473,7 @@
             margin-top:
                 14px;
 
-            height:
+            min-height:
                 35px;
 
             border:
@@ -496,6 +498,9 @@
             cursor:
                 pointer;
 
+            padding:
+                7px 8px;
+
         }
 
 
@@ -503,6 +508,17 @@
 
             background:
                 #fee2e2;
+
+        }
+
+
+        .delete-series-btn:disabled {
+
+            opacity:
+                .5;
+
+            cursor:
+                not-allowed;
 
         }
 
@@ -543,6 +559,28 @@
 
             color:
                 #64748b;
+
+        }
+
+
+        .nic-card .delete-series-btn {
+
+            border-color:
+                #bfdbfe;
+
+            background:
+                #dbeafe;
+
+            color:
+                #1d4ed8;
+
+        }
+
+
+        .nic-card .delete-series-btn:hover {
+
+            background:
+                #bfdbfe;
 
         }
 
@@ -598,9 +636,6 @@
 
             outline:
                 none;
-
-            box-sizing:
-                border-box;
 
         }
 
@@ -1059,8 +1094,6 @@
         <nav class="sidebar-nav">
 
 
-            <!-- DASHBOARD -->
-
             <a
                 href="admin.html"
                 class="nav-item"
@@ -1076,8 +1109,6 @@
 
             </a>
 
-
-            <!-- STUDENTS -->
 
             <a
                 href="students.html"
@@ -1095,8 +1126,6 @@
             </a>
 
 
-            <!-- PAPER MANAGEMENT -->
-
             <a
                 href="paper-management.html"
                 class="nav-item superadmin-only"
@@ -1112,8 +1141,6 @@
 
             </a>
 
-
-            <!-- IMPORT -->
 
             <a
                 href="import-students.html"
@@ -1131,8 +1158,6 @@
             </a>
 
 
-            <!-- ONBOARDING REPORT -->
-
             <a
                 href="onboarding-report.html"
                 class="nav-item superadmin-only"
@@ -1149,8 +1174,6 @@
             </a>
 
 
-            <!-- STUDENT DELETION -->
-
             <a
                 href="student-deletion.html"
                 class="nav-item superadmin-only active"
@@ -1166,8 +1189,6 @@
 
             </a>
 
-
-            <!-- REPORTS -->
 
             <a
                 href="reports.html"
@@ -1247,7 +1268,7 @@
 
 
             <!-- =================================================
-                 PAGE HEADER
+                 HEADER
             ================================================== -->
 
             <header class="page-header">
@@ -1347,8 +1368,8 @@
                     </h2>
 
                     <p>
-                        Delete an entire student series or
-                        individual student accounts.
+                        Delete students by admission series
+                        or by NIC registration.
                     </p>
 
                 </div>
@@ -1357,7 +1378,9 @@
                 <div class="deletion-summary">
 
 
-                    <!-- A27000 -->
+                    <!-- =================================================
+                         A27000
+                    ================================================== -->
 
                     <div class="deletion-card">
 
@@ -1378,13 +1401,15 @@
                             class="delete-series-btn"
                             data-series="A27000"
                         >
-                            🗑 Delete All
+                            🗑 Delete All A27000
                         </button>
 
                     </div>
 
 
-                    <!-- A28000 -->
+                    <!-- =================================================
+                         A28000
+                    ================================================== -->
 
                     <div class="deletion-card">
 
@@ -1405,13 +1430,15 @@
                             class="delete-series-btn"
                             data-series="A28000"
                         >
-                            🗑 Delete All
+                            🗑 Delete All A28000
                         </button>
 
                     </div>
 
 
-                    <!-- A29000 -->
+                    <!-- =================================================
+                         A29000
+                    ================================================== -->
 
                     <div class="deletion-card">
 
@@ -1432,13 +1459,15 @@
                             class="delete-series-btn"
                             data-series="A29000"
                         >
-                            🗑 Delete All
+                            🗑 Delete All A29000
                         </button>
 
                     </div>
 
 
-                    <!-- 26000 -->
+                    <!-- =================================================
+                         26000
+                    ================================================== -->
 
                     <div class="deletion-card">
 
@@ -1459,13 +1488,15 @@
                             class="delete-series-btn"
                             data-series="26000"
                         >
-                            🗑 Delete All
+                            🗑 Delete All 26000
                         </button>
 
                     </div>
 
 
-                    <!-- 27000 -->
+                    <!-- =================================================
+                         27000
+                    ================================================== -->
 
                     <div class="deletion-card">
 
@@ -1486,17 +1517,17 @@
                             class="delete-series-btn"
                             data-series="27000"
                         >
-                            🗑 Delete All
+                            🗑 Delete All 27000
                         </button>
 
                     </div>
 
 
-                    <!-- NIC STUDENTS -->
+                    <!-- =================================================
+                         NIC STUDENTS
+                    ================================================== -->
 
-                    <div
-                        class="deletion-card nic-card"
-                    >
+                    <div class="deletion-card nic-card">
 
                         <h3>
                             NIC Students
@@ -1507,8 +1538,16 @@
                         </strong>
 
                         <small>
-                            Students with NIC
+                            Students with NIC Number
                         </small>
+
+                        <button
+                            type="button"
+                            id="deleteAllNIC"
+                            class="delete-series-btn"
+                        >
+                            🗑 Delete All NIC Students
+                        </button>
 
                     </div>
 
@@ -1518,7 +1557,7 @@
 
 
                 <!-- =================================================
-                     INDIVIDUAL DELETION
+                     INDIVIDUAL SEARCH
                 ================================================== -->
 
                 <div class="summary-heading">
@@ -1528,7 +1567,8 @@
                     </h2>
 
                     <p>
-                        Search by Student ID, name or NIC.
+                        Search by Student ID, name or NIC
+                        and delete one student.
                     </p>
 
                 </div>
@@ -1596,7 +1636,7 @@
 
 
                 <!-- =================================================
-                     STUDENT TABLE
+                     TABLE
                 ================================================== -->
 
                 <div class="table-card">
@@ -1696,7 +1736,7 @@
 
 <script
     type="module"
-    src="student-deletion.js?v=2"
+    src="student-deletion.js?v=3"
 ></script>
 
 
