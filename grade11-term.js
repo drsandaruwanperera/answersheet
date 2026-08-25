@@ -1,7 +1,6 @@
 // =====================================================
 // GRADE 11 TERM PAPER PAGE
-// Firebase Controlled Paper Visibility
-// Protected Answer Viewer
+// Firebase Controlled Visibility
 // =====================================================
 
 import {
@@ -9,6 +8,23 @@ import {
     doc,
     getDoc
 } from "./firebase.js";
+
+
+// =====================================================
+// LOGIN
+// =====================================================
+
+if (
+    sessionStorage.getItem(
+        "loggedIn"
+    ) !== "true"
+) {
+
+    window.location.replace(
+        "index.html"
+    );
+
+}
 
 
 // =====================================================
@@ -28,24 +44,7 @@ const termTitle =
 
 
 // =====================================================
-// CHECK STUDENT LOGIN
-// =====================================================
-
-if (
-    sessionStorage.getItem(
-        "loggedIn"
-    ) !== "true"
-) {
-
-    window.location.replace(
-        "index.html"
-    );
-
-}
-
-
-// =====================================================
-// DETECT CURRENT TERM
+// CURRENT TERM
 // =====================================================
 
 function getCurrentTerm() {
@@ -100,10 +99,10 @@ const currentTerm =
 
 
 // =====================================================
-// TERM TITLES
+// TITLE
 // =====================================================
 
-const TERM_TITLES = {
+const titles = {
 
     term1:
         "🏆 Grade 11 - 1st Term TOP Ranking",
@@ -117,90 +116,71 @@ const TERM_TITLES = {
 };
 
 
-// =====================================================
-// SET PAGE TITLE
-// =====================================================
-
 if (termTitle) {
 
     termTitle.textContent =
-        TERM_TITLES[
+        titles[
             currentTerm
-        ] ||
-        "🏆 Grade 11 TOP Ranking";
+        ];
 
 }
 
 
 // =====================================================
-// PAPER CONFIGURATION
+// PAPERS
 // =====================================================
 
-const PAPER_CONFIG = [
+const papers = [
 
     {
         number: 1,
 
         field:
-            "grade11_" +
-            currentTerm +
-            "_01",
+            `grade11_${currentTerm}_01`,
 
         title:
             "TOP Ranking - 01"
 
     },
 
-
     {
         number: 2,
 
         field:
-            "grade11_" +
-            currentTerm +
-            "_02",
+            `grade11_${currentTerm}_02`,
 
         title:
             "TOP Ranking - 02"
 
     },
 
-
     {
         number: 3,
 
         field:
-            "grade11_" +
-            currentTerm +
-            "_03",
+            `grade11_${currentTerm}_03`,
 
         title:
             "TOP Ranking - 03"
 
     },
 
-
     {
         number: 4,
 
         field:
-            "grade11_" +
-            currentTerm +
-            "_04",
+            `grade11_${currentTerm}_04`,
 
         title:
             "TOP Ranking - 04"
 
     },
 
-
     {
         number: 5,
 
         field:
-            "grade11_" +
-            currentTerm +
-            "_05",
+            `grade11_${currentTerm}_05`,
 
         title:
             "TOP Ranking - 05"
@@ -211,10 +191,38 @@ const PAPER_CONFIG = [
 
 
 // =====================================================
-// CREATE PAPER CARD
+// OPEN VIEWER
 // =====================================================
 
-function createPaperCard(
+function openAnswer(
+    number,
+    part
+) {
+
+    const url =
+        "answer-viewer.html" +
+        "?grade=11" +
+        "&term=" +
+        encodeURIComponent(
+            currentTerm
+        ) +
+        "&paper=" +
+        number +
+        "&part=" +
+        part;
+
+
+    window.location.href =
+        url;
+
+}
+
+
+// =====================================================
+// CREATE CARD
+// =====================================================
+
+function createCard(
     paper
 ) {
 
@@ -240,8 +248,8 @@ function createPaperCard(
         </h2>
 
 
-        <p class="answer-label">
-            Answers
+        <p>
+            Select Answer Part
         </p>
 
 
@@ -254,10 +262,7 @@ function createPaperCard(
                 data-part="A"
             >
 
-                📖
-                <span>
-                    Part A Answer
-                </span>
+                📖 Part A Answer
 
             </button>
 
@@ -268,10 +273,7 @@ function createPaperCard(
                 data-part="B"
             >
 
-                📖
-                <span>
-                    Part B Answer
-                </span>
+                📖 Part B Answer
 
             </button>
 
@@ -281,19 +283,21 @@ function createPaperCard(
     `;
 
 
-    // =================================================
-    // PART A
-    // =================================================
-
-    const partA =
+    const buttonA =
         card.querySelector(
             '[data-part="A"]'
         );
 
 
-    if (partA) {
+    const buttonB =
+        card.querySelector(
+            '[data-part="B"]'
+        );
 
-        partA.addEventListener(
+
+    if (buttonA) {
+
+        buttonA.addEventListener(
             "click",
             function () {
 
@@ -308,19 +312,9 @@ function createPaperCard(
     }
 
 
-    // =================================================
-    // PART B
-    // =================================================
+    if (buttonB) {
 
-    const partB =
-        card.querySelector(
-            '[data-part="B"]'
-        );
-
-
-    if (partB) {
-
-        partB.addEventListener(
+        buttonB.addEventListener(
             "click",
             function () {
 
@@ -341,111 +335,75 @@ function createPaperCard(
 
 
 // =====================================================
-// OPEN PROTECTED ANSWER VIEWER
-// =====================================================
-//
-// IMPORTANT:
-//
-// DO NOT open PDF directly.
-//
-// We send the student to:
-//
-// answer-viewer.html
-//
-// The viewer will render the PDF inside the system.
-//
-
-function openAnswer(
-    number,
-    part
-) {
-
-    const viewerURL =
-        "answer-viewer.html" +
-        "?grade=11" +
-        "&term=" +
-        encodeURIComponent(
-            currentTerm
-        ) +
-        "&paper=" +
-        encodeURIComponent(
-            number
-        ) +
-        "&part=" +
-        encodeURIComponent(
-            part
-        );
-
-
-    console.log(
-        "Opening protected answer:",
-        viewerURL
-    );
-
-
-    window.location.href =
-        viewerURL;
-
-}
-
-
-// =====================================================
-// LOAD FIREBASE PAPER SETTINGS
+// NO PAPERS
 // =====================================================
 
-async function loadPaperSettings() {
-
-    if (!paperContainer) {
-
-        console.error(
-            "❌ paperContainer not found."
-        );
-
-        return;
-
-    }
-
-
-    // =================================================
-    // LOADING
-    // =================================================
+function showNoPapers() {
 
     paperContainer.innerHTML = `
 
         <div
-            class="loading-message"
             style="
                 grid-column:1/-1;
                 text-align:center;
                 padding:60px 20px;
-                color:#64748b;
-                font-size:15px;
             "
         >
 
             <div
                 style="
-                    font-size:35px;
-                    margin-bottom:12px;
+                    font-size:45px;
+                    margin-bottom:15px;
                 "
             >
-                ⏳
+                🔒
             </div>
 
-            Loading available papers...
+
+            <h3>
+                No Papers Available
+            </h3>
+
+
+            <p>
+                There are currently no TOP Ranking
+                papers available for this term.
+            </p>
 
         </div>
 
     `;
 
+}
+
+
+// =====================================================
+// LOAD SETTINGS
+// =====================================================
+
+async function loadSettings() {
 
     try {
 
-        // =================================================
-        // FIREBASE DOCUMENT
-        // =================================================
+        paperContainer.innerHTML = `
 
-        const settingsRef =
+            <div
+                style="
+                    grid-column:1/-1;
+                    text-align:center;
+                    padding:50px;
+                    color:#64748b;
+                "
+            >
+
+                Loading papers...
+
+            </div>
+
+        `;
+
+
+        const reference =
             doc(
                 db,
                 "paperSettings",
@@ -455,22 +413,13 @@ async function loadPaperSettings() {
 
         const snapshot =
             await getDoc(
-                settingsRef
+                reference
             );
 
-
-        // =================================================
-        // DOCUMENT NOT FOUND
-        // =================================================
 
         if (
             !snapshot.exists()
         ) {
-
-            console.warn(
-                "⚠️ Grade 11 paper settings not found."
-            );
-
 
             showNoPapers();
 
@@ -483,49 +432,15 @@ async function loadPaperSettings() {
             snapshot.data();
 
 
-        console.log(
-            "===================================="
-        );
-
-
-        console.log(
-            "🏆 GRADE 11 PAPER SETTINGS"
-        );
-
-
-        console.log(
-            "Current Term:",
-            currentTerm
-        );
-
-
-        console.log(
-            settings
-        );
-
-
-        console.log(
-            "===================================="
-        );
-
-
-        // =================================================
-        // CLEAR
-        // =================================================
-
         paperContainer.innerHTML =
             "";
 
 
-        let visibleCount =
+        let visible =
             0;
 
 
-        // =================================================
-        // CREATE ONLY ENABLED PAPERS
-        // =================================================
-
-        PAPER_CONFIG.forEach(
+        papers.forEach(
             function (paper) {
 
                 const enabled =
@@ -536,16 +451,9 @@ async function loadPaperSettings() {
 
                 console.log(
                     paper.field,
-                    "=>",
                     enabled
-                        ? "ENABLED"
-                        : "DISABLED"
                 );
 
-
-                // =========================================
-                // DISABLED = DON'T CREATE CARD
-                // =========================================
 
                 if (
                     !enabled
@@ -556,29 +464,21 @@ async function loadPaperSettings() {
                 }
 
 
-                const card =
-                    createPaperCard(
-                        paper
-                    );
-
-
                 paperContainer.appendChild(
-                    card
+                    createCard(
+                        paper
+                    )
                 );
 
 
-                visibleCount++;
+                visible++;
 
             }
         );
 
 
-        // =================================================
-        // NO ENABLED PAPERS
-        // =================================================
-
         if (
-            visibleCount === 0
+            visible === 0
         ) {
 
             showNoPapers();
@@ -586,16 +486,11 @@ async function loadPaperSettings() {
         }
 
 
-        console.log(
-            "Visible papers:",
-            visibleCount
-        );
-
     }
     catch (error) {
 
         console.error(
-            "❌ Failed to load Grade 11 paper settings:",
+            "Grade 11 loading error:",
             error
         );
 
@@ -606,37 +501,12 @@ async function loadPaperSettings() {
                 style="
                     grid-column:1/-1;
                     text-align:center;
-                    padding:60px 20px;
+                    padding:50px;
                     color:#dc2626;
                 "
             >
 
-                <div
-                    style="
-                        font-size:40px;
-                        margin-bottom:12px;
-                    "
-                >
-                    ⚠️
-                </div>
-
-
-                <strong
-                    style="
-                        display:block;
-                        font-size:17px;
-                        margin-bottom:8px;
-                    "
-                >
-
-                    Failed to load paper availability.
-
-                </strong>
-
-
-                <p>
-                    Please refresh the page and try again.
-                </p>
+                ⚠️ Failed to load papers.
 
             </div>
 
@@ -648,115 +518,7 @@ async function loadPaperSettings() {
 
 
 // =====================================================
-// NO PAPERS
+// START
 // =====================================================
 
-function showNoPapers() {
-
-    if (!paperContainer) {
-
-        return;
-
-    }
-
-
-    paperContainer.innerHTML = `
-
-        <div
-            style="
-                grid-column:1/-1;
-                text-align:center;
-                padding:70px 20px;
-                color:#64748b;
-            "
-        >
-
-            <div
-                style="
-                    width:70px;
-                    height:70px;
-                    margin:0 auto 18px;
-                    border-radius:20px;
-                    background:#f1f5f9;
-                    display:flex;
-                    align-items:center;
-                    justify-content:center;
-                    font-size:34px;
-                "
-            >
-
-                🔒
-
-            </div>
-
-
-            <strong
-                style="
-                    display:block;
-                    color:#0f172a;
-                    font-size:18px;
-                    margin-bottom:8px;
-                "
-            >
-
-                No Papers Available
-
-            </strong>
-
-
-            <span>
-
-                There are currently no TOP Ranking
-                papers available for this term.
-
-            </span>
-
-        </div>
-
-    `;
-
-}
-
-
-// =====================================================
-// INITIALIZE
-// =====================================================
-
-loadPaperSettings();
-
-
-// =====================================================
-// CONSOLE
-// =====================================================
-
-console.log(
-    "===================================="
-);
-
-console.log(
-    "🏆 GRADE 11 TERM PAPER PAGE"
-);
-
-console.log(
-    "Grade:",
-    "11"
-);
-
-console.log(
-    "Term:",
-    currentTerm
-);
-
-console.log(
-    "Firebase visibility:",
-    "ACTIVE"
-);
-
-console.log(
-    "Protected answer viewer:",
-    "ACTIVE"
-);
-
-console.log(
-    "===================================="
-);
+loadSettings();
