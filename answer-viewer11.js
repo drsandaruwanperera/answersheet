@@ -1,29 +1,69 @@
 // =====================================================
-// PROTECTED ANSWER VIEWER
+// ANSWER VIEWER
+// Student-only PDF viewer
 // =====================================================
 
 
 // =====================================================
-// LOGIN CHECK
+// PDF.JS WORKER
 // =====================================================
 
-const loggedIn =
-    sessionStorage.getItem(
-        "loggedIn"
-    ) === "true";
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
 
-if (!loggedIn) {
+// =====================================================
+// ELEMENTS
+// =====================================================
 
-    window.location.replace(
-        "index.html"
+const canvas =
+    document.getElementById(
+        "pdfCanvas"
     );
 
-}
+const ctx =
+    canvas.getContext(
+        "2d"
+    );
+
+const loading =
+    document.getElementById(
+        "loading"
+    );
+
+const errorBox =
+    document.getElementById(
+        "error"
+    );
+
+const pageInfo =
+    document.getElementById(
+        "pageInfo"
+    );
+
+const previousPageBtn =
+    document.getElementById(
+        "previousPage"
+    );
+
+const nextPageBtn =
+    document.getElementById(
+        "nextPage"
+    );
+
+const viewerTitle =
+    document.getElementById(
+        "viewerTitle"
+    );
+
+const viewerSubtitle =
+    document.getElementById(
+        "viewerSubtitle"
+    );
 
 
 // =====================================================
-// GET URL PARAMETERS
+// GET PDF URL
 // =====================================================
 
 const params =
@@ -32,429 +72,119 @@ const params =
     );
 
 
-const grade =
-    params.get("grade");
-
-
-const term =
-    params.get("term");
-
-
-const paper =
-    params.get("paper");
-
-
-const part =
-    params.get("part");
+const pdfURL =
+    params.get(
+        "pdf"
+    );
 
 
 // =====================================================
-// VALIDATION
+// VALIDATE
 // =====================================================
 
-const validGrades = [
-    "11"
-];
-
-
-const validTerms = [
-    "term1",
-    "term2",
-    "term3"
-];
-
-
-const validParts = [
-    "A",
-    "B"
-];
-
-
-const paperNumber =
-    Number(paper);
-
-
-if (
-    !validGrades.includes(
-        grade
-    ) ||
-
-    !validTerms.includes(
-        term
-    ) ||
-
-    !validParts.includes(
-        part
-    ) ||
-
-    !Number.isInteger(
-        paperNumber
-    ) ||
-
-    paperNumber < 1 ||
-
-    paperNumber > 5
-) {
+if (!pdfURL) {
 
     showError(
-        "Invalid answer request."
+        "No answer file was specified."
     );
 
-    throw new Error(
-        "Invalid answer parameters."
-    );
+}
+else {
+
+    loadPDF();
 
 }
 
 
 // =====================================================
-// ELEMENTS
+// STATE
 // =====================================================
 
-const viewerTitle =
-    document.getElementById(
-        "viewerTitle"
-    );
+let pdfDocument =
+    null;
 
+let currentPage =
+    1;
 
-const viewerSubtitle =
-    document.getElementById(
-        "viewerSubtitle"
-    );
+let totalPages =
+    0;
 
+let rendering =
+    false;
 
-const loading =
-    document.getElementById(
-        "loading"
-    );
-
-
-const errorMessage =
-    document.getElementById(
-        "errorMessage"
-    );
-
-
-const errorText =
-    document.getElementById(
-        "errorText"
-    );
-
-
-const canvasContainer =
-    document.getElementById(
-        "pdfCanvasContainer"
-    );
-
-
-const backBtn =
-    document.getElementById(
-        "backBtn"
-    );
-
-
-const errorBackBtn =
-    document.getElementById(
-        "errorBackBtn"
-    );
-
-
-// =====================================================
-// TERM TITLE
-// =====================================================
-
-const termTitles = {
-
-    term1:
-        "1st Term TOP Ranking",
-
-    term2:
-        "2nd Term TOP Ranking",
-
-    term3:
-        "3rd Term TOP Ranking"
-
-};
-
-
-const paperTitle =
-    "TOP Ranking - " +
-    String(
-        paperNumber
-    ).padStart(
-        2,
-        "0"
-    );
-
-
-if (viewerTitle) {
-
-    viewerTitle.textContent =
-        paperTitle +
-        " - Part " +
-        part;
-
-}
-
-
-if (viewerSubtitle) {
-
-    viewerSubtitle.textContent =
-        "Grade 11 • " +
-        termTitles[term];
-
-}
-
-
-// =====================================================
-// BACK
-// =====================================================
-
-if (backBtn) {
-
-    backBtn.addEventListener(
-        "click",
-        function () {
-
-            history.back();
-
-        }
-    );
-
-}
-
-
-if (errorBackBtn) {
-
-    errorBackBtn.addEventListener(
-        "click",
-        function () {
-
-            history.back();
-
-        }
-    );
-
-}
-
-
-// =====================================================
-// PDF FILE PATH
-// =====================================================
-//
-// Current GitHub structure:
-//
-// answers/grade11/term3/
-// top-ranking-01-part-a.pdf
-//
-// etc.
-//
-// =====================================================
-
-function getPDFPath() {
-
-    const number =
-        String(
-            paperNumber
-        ).padStart(
-            2,
-            "0"
-        );
-
-
-    const partName =
-        part.toLowerCase();
-
-
-    return (
-        "answers/grade11/" +
-        term +
-        "/top-ranking-" +
-        number +
-        "-part-" +
-        partName +
-        ".pdf"
-    );
-
-}
-
-
-const pdfPath =
-    getPDFPath();
-
-
-console.log(
-    "Answer path:",
-    pdfPath
-);
-
-
-// =====================================================
-// PDF.JS
-// =====================================================
-//
-// Import PDF.js dynamically.
-//
-// =====================================================
-
-async function loadPDFJS() {
-
-    const pdfjs =
-        await import(
-            "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs"
-        );
-
-
-    return pdfjs;
-
-}
+let pendingPage =
+    null;
 
 
 // =====================================================
 // LOAD PDF
 // =====================================================
 
-async function loadAnswer() {
+async function loadPDF() {
 
     try {
 
-        if (loading) {
-
-            loading.style.display =
-                "flex";
-
-        }
+        loading.style.display =
+            "block";
 
 
-        if (canvasContainer) {
-
-            canvasContainer.innerHTML =
-                "";
-
-        }
+        canvas.style.display =
+            "none";
 
 
-        // =================================================
-        // LOAD PDF.JS
-        // =================================================
+        // ---------------------------------------------
+        // Load PDF
+        // ---------------------------------------------
 
-        const pdfjs =
-            await loadPDFJS();
-
-
-        // =================================================
-        // WORKER
-        // =================================================
-
-        pdfjs.GlobalWorkerOptions.workerSrc =
-            "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
-
-
-        // =================================================
-        // FETCH PDF
-        // =================================================
-
-        const response =
-            await fetch(
-                pdfPath,
+        pdfDocument =
+            await pdfjsLib.getDocument(
                 {
-                    cache:
-                        "no-store"
+                    url: pdfURL
                 }
-            );
+            ).promise;
 
 
-        if (!response.ok) {
-
-            throw new Error(
-                "Answer file not found."
-            );
-
-        }
+        totalPages =
+            pdfDocument.numPages;
 
 
-        const buffer =
-            await response.arrayBuffer();
+        // ---------------------------------------------
+        // Title
+        // ---------------------------------------------
+
+        updateTitle();
 
 
-        if (
-            !buffer ||
-            buffer.byteLength === 0
-        ) {
+        // ---------------------------------------------
+        // First page
+        // ---------------------------------------------
 
-            throw new Error(
-                "Answer file is empty."
-            );
-
-        }
-
-
-        // =================================================
-        // LOAD DOCUMENT
-        // =================================================
-
-        const pdf =
-            await pdfjs.getDocument(
-                {
-                    data:
-                        buffer,
-
-                    disableAutoFetch:
-                        false,
-
-                    disableStream:
-                        false
-                }
-            )
-            .promise;
-
-
-        console.log(
-            "PDF loaded. Pages:",
-            pdf.numPages
+        await renderPage(
+            currentPage
         );
 
 
-        // =================================================
-        // RENDER ALL PAGES
-        // =================================================
-
-        for (
-            let pageNumber = 1;
-            pageNumber <= pdf.numPages;
-            pageNumber++
-        ) {
-
-            await renderPage(
-                pdf,
-                pageNumber
-            );
-
-        }
+        loading.style.display =
+            "none";
 
 
-        // =================================================
-        // HIDE LOADING
-        // =================================================
+        canvas.style.display =
+            "block";
 
-        if (loading) {
 
-            loading.style.display =
-                "none";
-
-        }
+        updateControls();
 
     }
     catch (error) {
 
         console.error(
-            "❌ Answer loading failed:",
+            "PDF loading error:",
             error
         );
 
 
         showError(
-            "The answer could not be loaded. Please try again."
+            "Unable to load this answer file."
         );
 
     }
@@ -467,138 +197,239 @@ async function loadAnswer() {
 // =====================================================
 
 async function renderPage(
-    pdf,
     pageNumber
 ) {
 
-    const page =
-        await pdf.getPage(
-            pageNumber
-        );
+    if (
+        rendering
+    ) {
 
+        pendingPage =
+            pageNumber;
 
-    // =================================================
-    // SCALE
-    // =================================================
-
-    const baseViewport =
-        page.getViewport(
-            {
-                scale: 1
-            }
-        );
-
-
-    const maxWidth =
-        Math.min(
-            1000,
-            window.innerWidth - 70
-        );
-
-
-    const scale =
-        Math.min(
-            1.5,
-            maxWidth /
-            baseViewport.width
-        );
-
-
-    const viewport =
-        page.getViewport(
-            {
-                scale:
-                    scale
-            }
-        );
-
-
-    // =================================================
-    // CANVAS
-    // =================================================
-
-    const canvas =
-        document.createElement(
-            "canvas"
-        );
-
-
-    canvas.className =
-        "pdf-page";
-
-
-    const context =
-        canvas.getContext(
-            "2d"
-        );
-
-
-    const outputScale =
-        window.devicePixelRatio ||
-        1;
-
-
-    canvas.width =
-        Math.floor(
-            viewport.width *
-            outputScale
-        );
-
-
-    canvas.height =
-        Math.floor(
-            viewport.height *
-            outputScale
-        );
-
-
-    canvas.style.width =
-        Math.floor(
-            viewport.width
-        ) +
-        "px";
-
-
-    canvas.style.height =
-        Math.floor(
-            viewport.height
-        ) +
-        "px";
-
-
-    context.setTransform(
-        outputScale,
-        0,
-        0,
-        outputScale,
-        0,
-        0
-    );
-
-
-    if (canvasContainer) {
-
-        canvasContainer.appendChild(
-            canvas
-        );
+        return;
 
     }
 
 
-    // =================================================
-    // RENDER
-    // =================================================
+    rendering =
+        true;
 
-    await page.render(
-        {
-            canvasContext:
-                context,
 
-            viewport:
-                viewport
+    try {
+
+        const page =
+            await pdfDocument.getPage(
+                pageNumber
+            );
+
+
+        const container =
+            document.querySelector(
+                ".pdf-area"
+            );
+
+
+        const availableWidth =
+            container.clientWidth -
+            40;
+
+
+        const originalViewport =
+            page.getViewport(
+                {
+                    scale: 1
+                }
+            );
+
+
+        const scale =
+            Math.min(
+                1.6,
+                availableWidth /
+                originalViewport.width
+            );
+
+
+        const viewport =
+            page.getViewport(
+                {
+                    scale:
+                        Math.max(
+                            scale,
+                            0.7
+                        )
+                }
+            );
+
+
+        canvas.width =
+            viewport.width;
+
+        canvas.height =
+            viewport.height;
+
+
+        await page.render(
+            {
+                canvasContext:
+                    ctx,
+
+                viewport:
+                    viewport
+            }
+        ).promise;
+
+
+        currentPage =
+            pageNumber;
+
+
+        updateControls();
+
+    }
+    catch (error) {
+
+        console.error(
+            "Render error:",
+            error
+        );
+
+        showError(
+            "Unable to display this page."
+        );
+
+    }
+    finally {
+
+        rendering =
+            false;
+
+
+        if (
+            pendingPage !== null
+        ) {
+
+            const nextPage =
+                pendingPage;
+
+            pendingPage =
+                null;
+
+            renderPage(
+                nextPage
+            );
+
         }
-    )
-    .promise;
+
+    }
+
+}
+
+
+// =====================================================
+// PREVIOUS
+// =====================================================
+
+previousPageBtn.addEventListener(
+    "click",
+    function () {
+
+        if (
+            currentPage <= 1
+        ) {
+
+            return;
+
+        }
+
+
+        renderPage(
+            currentPage - 1
+        );
+
+    }
+);
+
+
+// =====================================================
+// NEXT
+// =====================================================
+
+nextPageBtn.addEventListener(
+    "click",
+    function () {
+
+        if (
+            currentPage >= totalPages
+        ) {
+
+            return;
+
+        }
+
+
+        renderPage(
+            currentPage + 1
+        );
+
+    }
+);
+
+
+// =====================================================
+// UPDATE CONTROLS
+// =====================================================
+
+function updateControls() {
+
+    pageInfo.textContent =
+        `Page ${currentPage} / ${totalPages}`;
+
+
+    previousPageBtn.disabled =
+        currentPage <= 1;
+
+
+    nextPageBtn.disabled =
+        currentPage >= totalPages;
+
+}
+
+
+// =====================================================
+// TITLE
+// =====================================================
+
+function updateTitle() {
+
+    const decoded =
+        decodeURIComponent(
+            pdfURL
+        );
+
+
+    const filename =
+        decoded
+            .split("/")
+            .pop();
+
+
+    viewerTitle.textContent =
+        filename
+            .replace(
+                ".pdf",
+                ""
+            )
+            .replaceAll(
+                "-",
+                " "
+            )
+            .toUpperCase();
+
+
+    viewerSubtitle.textContent =
+        "Grade 11 • Student Answer Viewer";
 
 }
 
@@ -611,42 +442,26 @@ function showError(
     message
 ) {
 
-    if (loading) {
-
-        loading.style.display =
-            "none";
-
-    }
+    loading.style.display =
+        "none";
 
 
-    if (canvasContainer) {
-
-        canvasContainer.innerHTML =
-            "";
-
-    }
+    canvas.style.display =
+        "none";
 
 
-    if (errorText) {
-
-        errorText.textContent =
-            message;
-
-    }
+    errorBox.textContent =
+        message;
 
 
-    if (errorMessage) {
-
-        errorMessage.style.display =
-            "flex";
-
-    }
+    errorBox.style.display =
+        "block";
 
 }
 
 
 // =====================================================
-// BLOCK RIGHT CLICK
+// DISABLE RIGHT CLICK
 // =====================================================
 
 document.addEventListener(
@@ -660,23 +475,17 @@ document.addEventListener(
 
 
 // =====================================================
-// BLOCK COMMON SAVE / PRINT SHORTCUTS
+// DISABLE COMMON SHORTCUTS
 // =====================================================
 
 document.addEventListener(
     "keydown",
     function (event) {
 
-        const key =
-            String(
-                event.key
-            ).toLowerCase();
-
-
         // Ctrl + S
         if (
             event.ctrlKey &&
-            key === "s"
+            event.key.toLowerCase() === "s"
         ) {
 
             event.preventDefault();
@@ -687,7 +496,7 @@ document.addEventListener(
         // Ctrl + P
         if (
             event.ctrlKey &&
-            key === "p"
+            event.key.toLowerCase() === "p"
         ) {
 
             event.preventDefault();
@@ -698,19 +507,7 @@ document.addEventListener(
         // Ctrl + U
         if (
             event.ctrlKey &&
-            key === "u"
-        ) {
-
-            event.preventDefault();
-
-        }
-
-
-        // Ctrl + Shift + I
-        if (
-            event.ctrlKey &&
-            event.shiftKey &&
-            key === "i"
+            event.key.toLowerCase() === "u"
         ) {
 
             event.preventDefault();
@@ -732,21 +529,7 @@ document.addEventListener(
 
 
 // =====================================================
-// BLOCK PRINT EVENT
-// =====================================================
-
-window.addEventListener(
-    "beforeprint",
-    function (event) {
-
-        event.preventDefault();
-
-    }
-);
-
-
-// =====================================================
-// PREVENT DRAGGING
+// DISABLE DRAG
 // =====================================================
 
 document.addEventListener(
@@ -760,7 +543,27 @@ document.addEventListener(
 
 
 // =====================================================
-// START
+// RESIZE
 // =====================================================
 
-loadAnswer();
+window.addEventListener(
+    "resize",
+    function () {
+
+        if (
+            pdfDocument
+        ) {
+
+            renderPage(
+                currentPage
+            );
+
+        }
+
+    }
+);
+
+
+console.log(
+    "🔐 Answer Viewer loaded"
+);
