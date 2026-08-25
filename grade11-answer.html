@@ -12,13 +12,16 @@
 
     <title>Grade 11 Answer</title>
 
+    <link
+        rel="icon"
+        href="data:,"
+    >
 
     <style>
 
         * {
             box-sizing: border-box;
         }
-
 
         html,
         body {
@@ -36,7 +39,6 @@
                 sans-serif;
 
             background: #eef2f7;
-
             color: #0f172a;
 
             overflow: hidden;
@@ -44,9 +46,9 @@
         }
 
 
-        /* =================================================
+        /* =====================================================
            HEADER
-        ================================================= */
+        ===================================================== */
 
         .viewer-header {
 
@@ -125,9 +127,9 @@
         }
 
 
-        /* =================================================
+        /* =====================================================
            BACK BUTTON
-        ================================================= */
+        ===================================================== */
 
         .back-button {
 
@@ -156,32 +158,12 @@
 
             cursor: pointer;
 
-            box-shadow:
-                0 5px 14px
-                rgba(109, 53, 242, 0.20);
-
-            transition:
-                transform .18s ease,
-                box-shadow .18s ease;
-
         }
 
 
-        .back-button:hover {
-
-            transform:
-                translateY(-1px);
-
-            box-shadow:
-                0 8px 20px
-                rgba(109, 53, 242, 0.28);
-
-        }
-
-
-        /* =================================================
-           PDF AREA
-        ================================================= */
+        /* =====================================================
+           VIEWER
+        ===================================================== */
 
         .viewer {
 
@@ -194,10 +176,10 @@
 
             overflow-x: hidden;
 
-            padding: 28px 20px 50px;
+            padding:
+                28px 20px 50px;
 
-            background:
-                #eef2f7;
+            background: #eef2f7;
 
             user-select: none;
 
@@ -205,10 +187,6 @@
 
         }
 
-
-        /* =================================================
-           PDF PAGES
-        ================================================= */
 
         #pdfContainer {
 
@@ -255,9 +233,9 @@
         }
 
 
-        /* =================================================
+        /* =====================================================
            LOADING
-        ================================================= */
+        ===================================================== */
 
         .loading {
 
@@ -282,7 +260,6 @@
         .loading-spinner {
 
             width: 52px;
-
             height: 52px;
 
             border-radius: 50%;
@@ -320,13 +297,13 @@
         }
 
 
-        /* =================================================
+        /* =====================================================
            ERROR
-        ================================================= */
+        ===================================================== */
 
         .error-screen {
 
-            min-height:
+            height:
                 calc(100vh - 70px);
 
             display: flex;
@@ -415,9 +392,25 @@
         }
 
 
-        /* =================================================
+        /* =====================================================
+           PRINT BLOCK
+        ===================================================== */
+
+        @media print {
+
+            html,
+            body {
+
+                display: none !important;
+
+            }
+
+        }
+
+
+        /* =====================================================
            MOBILE
-        ================================================= */
+        ===================================================== */
 
         @media (max-width: 600px) {
 
@@ -433,7 +426,6 @@
             .viewer-title-icon {
 
                 width: 36px;
-
                 height: 36px;
 
                 font-size: 19px;
@@ -486,12 +478,7 @@
 <body>
 
 
-<!-- =====================================================
-     HEADER
-===================================================== -->
-
 <header class="viewer-header">
-
 
     <div class="viewer-title">
 
@@ -500,7 +487,7 @@
         </div>
 
         <div id="answerTitle">
-            Answer
+            Grade 11 Answer
         </div>
 
     </div>
@@ -514,13 +501,9 @@
         ← Back
     </button>
 
-
 </header>
 
 
-<!-- =====================================================
-     VIEWER
-===================================================== -->
 
 <main
     id="viewer"
@@ -548,668 +531,11 @@
 </main>
 
 
-<!-- =====================================================
-     PDF.JS
-===================================================== -->
 
-<script type="module">
-
-import * as pdfjsLib from
-    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs";
-
-
-// =====================================================
-// PDF.JS WORKER
-// =====================================================
-
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
-
-
-// =====================================================
-// URL PARAMETERS
-// =====================================================
-
-const params =
-    new URLSearchParams(
-        window.location.search
-    );
-
-
-const file =
-    params.get("file");
-
-
-const title =
-    params.get("title") ||
-    "Answer";
-
-
-// =====================================================
-// ELEMENTS
-// =====================================================
-
-const viewer =
-    document.getElementById(
-        "viewer"
-    );
-
-
-const loading =
-    document.getElementById(
-        "loading"
-    );
-
-
-const pdfContainer =
-    document.getElementById(
-        "pdfContainer"
-    );
-
-
-const answerTitle =
-    document.getElementById(
-        "answerTitle"
-    );
-
-
-const backButton =
-    document.getElementById(
-        "backButton"
-    );
-
-
-// =====================================================
-// TITLE
-// =====================================================
-
-if (answerTitle) {
-
-    answerTitle.textContent =
-        title;
-
-}
-
-
-// =====================================================
-// BACK
-// =====================================================
-
-if (backButton) {
-
-    backButton.addEventListener(
-        "click",
-        function () {
-
-            window.history.back();
-
-        }
-    );
-
-}
-
-
-// =====================================================
-// BLOCK RIGHT CLICK
-// =====================================================
-
-document.addEventListener(
-    "contextmenu",
-    function (event) {
-
-        event.preventDefault();
-
-        return false;
-
-    },
-    true
-);
-
-
-// =====================================================
-// BLOCK SHORTCUTS
-// =====================================================
-
-document.addEventListener(
-    "keydown",
-    function (event) {
-
-        const key =
-            String(
-                event.key
-            ).toLowerCase();
-
-
-        // Ctrl + P
-        if (
-            event.ctrlKey &&
-            key === "p"
-        ) {
-
-            event.preventDefault();
-
-            event.stopPropagation();
-
-            return false;
-
-        }
-
-
-        // Ctrl + S
-        if (
-            event.ctrlKey &&
-            key === "s"
-        ) {
-
-            event.preventDefault();
-
-            event.stopPropagation();
-
-            return false;
-
-        }
-
-
-        // Ctrl + Shift + S
-        if (
-            event.ctrlKey &&
-            event.shiftKey &&
-            key === "s"
-        ) {
-
-            event.preventDefault();
-
-            event.stopPropagation();
-
-            return false;
-
-        }
-
-
-        // Ctrl + U
-        if (
-            event.ctrlKey &&
-            key === "u"
-        ) {
-
-            event.preventDefault();
-
-            event.stopPropagation();
-
-            return false;
-
-        }
-
-
-        // F12
-        if (
-            event.key === "F12"
-        ) {
-
-            event.preventDefault();
-
-            event.stopPropagation();
-
-            return false;
-
-        }
-
-
-        // Ctrl + Shift + I
-        if (
-            event.ctrlKey &&
-            event.shiftKey &&
-            key === "i"
-        ) {
-
-            event.preventDefault();
-
-            event.stopPropagation();
-
-            return false;
-
-        }
-
-
-        // Ctrl + Shift + J
-        if (
-            event.ctrlKey &&
-            event.shiftKey &&
-            key === "j"
-        ) {
-
-            event.preventDefault();
-
-            event.stopPropagation();
-
-            return false;
-
-        }
-
-    },
-    true
-);
-
-
-// =====================================================
-// BLOCK DRAG
-// =====================================================
-
-document.addEventListener(
-    "dragstart",
-    function (event) {
-
-        event.preventDefault();
-
-    },
-    true
-);
-
-
-// =====================================================
-// BLOCK COPY
-// =====================================================
-
-document.addEventListener(
-    "copy",
-    function (event) {
-
-        event.preventDefault();
-
-    },
-    true
-);
-
-
-// =====================================================
-// BLOCK CUT
-// =====================================================
-
-document.addEventListener(
-    "cut",
-    function (event) {
-
-        event.preventDefault();
-
-    },
-    true
-);
-
-
-// =====================================================
-// PRINT BLOCK
-// =====================================================
-
-const printStyle =
-    document.createElement(
-        "style"
-    );
-
-
-printStyle.textContent = `
-
-    @media print {
-
-        html,
-        body {
-
-            display: none !important;
-
-        }
-
-    }
-
-`;
-
-
-document.head.appendChild(
-    printStyle
-);
-
-
-// =====================================================
-// VALIDATE FILE
-// =====================================================
-
-if (
-    !file ||
-    file.trim() === ""
-) {
-
-    showError(
-        "No answer file was provided."
-    );
-
-}
-
-else {
-
-    loadPDF(
-        file
-    );
-
-}
-
-
-// =====================================================
-// LOAD PDF
-// =====================================================
-
-async function loadPDF(
-    filePath
-) {
-
-    try {
-
-        console.log(
-            "================================"
-        );
-
-        console.log(
-            "Grade 11 Answer Viewer"
-        );
-
-        console.log(
-            "PDF:",
-            filePath
-        );
-
-        console.log(
-            "Title:",
-            title
-        );
-
-        console.log(
-            "================================"
-        );
-
-
-        // ---------------------------------------------
-        // LOAD PDF
-        // ---------------------------------------------
-
-        const loadingTask =
-            pdfjsLib.getDocument({
-                url: filePath
-            });
-
-
-        const pdf =
-            await loadingTask.promise;
-
-
-        console.log(
-            "PDF loaded:",
-            pdf.numPages,
-            "pages"
-        );
-
-
-        // ---------------------------------------------
-        // REMOVE LOADING
-        // ---------------------------------------------
-
-        if (loading) {
-
-            loading.remove();
-
-        }
-
-
-        // ---------------------------------------------
-        // RENDER ALL PAGES
-        // ---------------------------------------------
-
-        for (
-            let pageNumber = 1;
-            pageNumber <= pdf.numPages;
-            pageNumber++
-        ) {
-
-            await renderPage(
-                pdf,
-                pageNumber
-            );
-
-        }
-
-
-        console.log(
-            "✅ All pages rendered"
-        );
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "PDF loading error:",
-            error
-        );
-
-
-        showError(
-            "Unable to load this answer. Please check the PDF file and try again."
-        );
-
-    }
-
-}
-
-
-// =====================================================
-// RENDER PAGE
-// =====================================================
-
-async function renderPage(
-    pdf,
-    pageNumber
-) {
-
-    const page =
-        await pdf.getPage(
-            pageNumber
-        );
-
-
-    // ---------------------------------------------
-    // PAGE SCALE
-    // ---------------------------------------------
-
-    const baseViewport =
-        page.getViewport({
-            scale: 1
-        });
-
-
-    const availableWidth =
-        Math.max(
-            300,
-            viewer.clientWidth -
-            40
-        );
-
-
-    const scale =
-        Math.min(
-            1.8,
-            availableWidth /
-            baseViewport.width
-        );
-
-
-    const viewport =
-        page.getViewport({
-            scale: scale
-        });
-
-
-    // ---------------------------------------------
-    // PAGE WRAPPER
-    // ---------------------------------------------
-
-    const pageWrapper =
-        document.createElement(
-            "div"
-        );
-
-
-    pageWrapper.className =
-        "pdf-page";
-
-
-    pageWrapper.dataset.page =
-        pageNumber;
-
-
-    pageWrapper.style.width =
-        `${viewport.width}px`;
-
-
-    pageWrapper.style.height =
-        `${viewport.height}px`;
-
-
-    // ---------------------------------------------
-    // CANVAS
-    // ---------------------------------------------
-
-    const canvas =
-        document.createElement(
-            "canvas"
-        );
-
-
-    const context =
-        canvas.getContext(
-            "2d",
-            {
-                alpha: false
-            }
-        );
-
-
-    const outputScale =
-        window.devicePixelRatio ||
-        1;
-
-
-    canvas.width =
-        Math.floor(
-            viewport.width *
-            outputScale
-        );
-
-
-    canvas.height =
-        Math.floor(
-            viewport.height *
-            outputScale
-        );
-
-
-    canvas.style.width =
-        `${viewport.width}px`;
-
-
-    canvas.style.height =
-        `${viewport.height}px`;
-
-
-    // ---------------------------------------------
-    // RENDER
-    // ---------------------------------------------
-
-    const renderContext = {
-
-        canvasContext:
-            context,
-
-        viewport:
-            viewport,
-
-        transform:
-            outputScale !== 1
-                ? [
-                    outputScale,
-                    0,
-                    0,
-                    outputScale,
-                    0,
-                    0
-                ]
-                : null
-
-    };
-
-
-    pageWrapper.appendChild(
-        canvas
-    );
-
-
-    pdfContainer.appendChild(
-        pageWrapper
-    );
-
-
-    await page.render(
-        renderContext
-    ).promise;
-
-}
-
-
-// =====================================================
-// ERROR
-// =====================================================
-
-function showError(
-    message
-) {
-
-    if (loading) {
-
-        loading.remove();
-
-    }
-
-
-    viewer.className =
-        "error-screen";
-
-
-    viewer.innerHTML = `
-
-        <div class="error-card">
-
-            <div class="error-icon">
-                ⚠️
-            </div>
-
-            <h2>
-                Unable to Open Answer
-            </h2>
-
-            <p>
-                ${message}
-            </p>
-
-            <button
-                type="button"
-                class="error-back"
-                onclick="history.back()"
-            >
-                ← Go Back
-            </button>
-
-        </div>
-
-    `;
-
-}
-
-</script>
+<script
+    type="module"
+    src="grade11-answer.js?v=30"
+></script>
 
 
 </body>
