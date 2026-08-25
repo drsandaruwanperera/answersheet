@@ -14,12 +14,14 @@ import {
 const adminLoggedIn =
     sessionStorage.getItem("adminLoggedIn") === "true";
 
+
 const adminRole =
     String(
         sessionStorage.getItem("adminRole") || ""
     )
     .toLowerCase()
     .replace(/[\s_-]+/g, "");
+
 
 const adminUsername =
     sessionStorage.getItem("adminUsername") || "Admin";
@@ -65,25 +67,124 @@ const enableAllBtn =
         "enableAllBtn"
     );
 
+
 const disableAllBtn =
     document.getElementById(
         "disableAllBtn"
     );
+
 
 const saveSettingsBtn =
     document.getElementById(
         "saveSettingsBtn"
     );
 
+
 const changesStatus =
     document.getElementById(
         "changesStatus"
     );
 
+
 const logoutBtn =
     document.getElementById(
         "logoutBtn"
     );
+
+
+// =====================================================
+// PAPER CONFIG
+// =====================================================
+
+const PAPER_CONFIG = {
+
+    grade10: {
+
+        groups: [
+
+            {
+                id: "term1",
+                title: "1st Term",
+                subtitle: "Model Papers",
+                type: "model",
+                count: 5
+            },
+
+            {
+                id: "term2",
+                title: "2nd Term",
+                subtitle: "Model Papers",
+                type: "model",
+                count: 5
+            },
+
+            {
+                id: "term3",
+                title: "3rd Term",
+                subtitle: "Model Papers",
+                type: "model",
+                count: 5
+            }
+
+        ]
+
+    },
+
+
+    grade11: {
+
+        groups: [
+
+            {
+                id: "term1",
+                title: "1st Term",
+                subtitle: "Top Ranking Papers",
+                type: "top-ranking",
+                count: 5
+            },
+
+            {
+                id: "term2",
+                title: "2nd Term",
+                subtitle: "Top Ranking Papers",
+                type: "top-ranking",
+                count: 5
+            },
+
+            {
+                id: "term3",
+                title: "3rd Term",
+                subtitle: "Top Ranking Papers",
+                type: "top-ranking",
+                count: 5
+            },
+
+            {
+                id: "past",
+                title: "Past Papers",
+                subtitle: "2016 - 2025",
+                type: "past",
+
+                years: [
+                    2016,
+                    2017,
+                    2018,
+                    2019,
+                    2020,
+                    2021,
+                    2022,
+                    2023,
+                    2024,
+                    2025
+                ]
+
+            }
+
+        ]
+
+    }
+
+};
 
 
 // =====================================================
@@ -94,23 +195,24 @@ let paperSettings = {
 
     grade10: {},
 
-    grade11: {},
-
-    al: {}
+    grade11: {}
 
 };
 
-let hasUnsavedChanges = false;
+
+let hasUnsavedChanges =
+    false;
 
 
 // =====================================================
-// ADMIN INFORMATION
+// ADMIN INFO
 // =====================================================
 
 const adminUsernameElement =
     document.getElementById(
         "adminUsername"
     );
+
 
 const adminRoleElement =
     document.getElementById(
@@ -142,7 +244,7 @@ if (logoutBtn) {
 
     logoutBtn.addEventListener(
         "click",
-        () => {
+        function () {
 
             if (
                 !confirm(
@@ -184,7 +286,8 @@ if (logoutBtn) {
 
 function markChanged() {
 
-    hasUnsavedChanges = true;
+    hasUnsavedChanges =
+        true;
 
 
     if (changesStatus) {
@@ -201,12 +304,13 @@ function markChanged() {
 
 
 // =====================================================
-// CLEAR CHANGE STATUS
+// CLEAR STATUS
 // =====================================================
 
 function clearChanged() {
 
-    hasUnsavedChanges = false;
+    hasUnsavedChanges =
+        false;
 
 
     if (changesStatus) {
@@ -223,71 +327,37 @@ function clearChanged() {
 
 
 // =====================================================
-// GET CATEGORY FROM PAPER FIELD
+// FIELD NAME
 // =====================================================
 
-function getCategoryFromField(
-    field
+function getFieldName(
+    category,
+    group,
+    number
 ) {
 
-    if (
-        field.startsWith(
-            "grade10_"
+    return (
+        category +
+        "_" +
+        group +
+        "_" +
+        String(number).padStart(
+            2,
+            "0"
         )
-    ) {
-
-        return "grade10";
-
-    }
-
-
-    if (
-        field.startsWith(
-            "grade11_"
-        )
-    ) {
-
-        return "grade11";
-
-    }
-
-
-    if (
-        field.startsWith(
-            "al_"
-        )
-    ) {
-
-        return "al";
-
-    }
-
-
-    return null;
+    );
 
 }
 
 
 // =====================================================
-// GET PAPER VALUE
+// GET VALUE
 // =====================================================
 
 function getPaperValue(
+    category,
     field
 ) {
-
-    const category =
-        getCategoryFromField(
-            field
-        );
-
-
-    if (!category) {
-
-        return false;
-
-    }
-
 
     return (
         paperSettings?.[
@@ -299,26 +369,14 @@ function getPaperValue(
 
 
 // =====================================================
-// SET PAPER VALUE
+// SET VALUE
 // =====================================================
 
 function setPaperValue(
+    category,
     field,
     value
 ) {
-
-    const category =
-        getCategoryFromField(
-            field
-        );
-
-
-    if (!category) {
-
-        return;
-
-    }
-
 
     if (
         !paperSettings[
@@ -342,180 +400,353 @@ function setPaperValue(
 
 
 // =====================================================
-// UPDATE ALL CHECKBOXES FROM STATE
+// CREATE PAPER
 // =====================================================
 
-function updateCheckboxes() {
-
-    const checkboxes =
-        document.querySelectorAll(
-            ".paper-checkbox"
-        );
-
-
-    checkboxes.forEach(
-        checkbox => {
-
-            const field =
-                checkbox.dataset.paper;
-
-
-            if (!field) {
-
-                return;
-
-            }
-
-
-            checkbox.checked =
-                getPaperValue(
-                    field
-                );
-
-        }
-    );
-
-}
-
-
-// =====================================================
-// UPDATE ALL CHECKBOX EVENTS
-// =====================================================
-
-function setupCheckboxes() {
-
-    const checkboxes =
-        document.querySelectorAll(
-            ".paper-checkbox"
-        );
-
-
-    checkboxes.forEach(
-        checkbox => {
-
-            checkbox.addEventListener(
-                "change",
-                () => {
-
-                    const field =
-                        checkbox.dataset.paper;
-
-
-                    if (!field) {
-
-                        return;
-
-                    }
-
-
-                    setPaperValue(
-                        field,
-                        checkbox.checked
-                    );
-
-
-                    markChanged();
-
-                }
-            );
-
-        }
-    );
-
-}
-
-
-// =====================================================
-// ENABLE ALL PAPERS
-// =====================================================
-
-function setAllPapers(
-    enabled
+function createPaperItem(
+    category,
+    group,
+    number,
+    label
 ) {
 
-    const checkboxes =
-        document.querySelectorAll(
+    const field =
+        getFieldName(
+            category,
+            group.id,
+            number
+        );
+
+
+    const enabled =
+        getPaperValue(
+            category,
+            field
+        );
+
+
+    const item =
+        document.createElement(
+            "div"
+        );
+
+
+    item.className =
+        "paper-item";
+
+
+    item.dataset.category =
+        category;
+
+
+    item.dataset.field =
+        field;
+
+
+    item.innerHTML = `
+
+        <div class="paper-info">
+
+            <div class="paper-icon">
+                📘
+            </div>
+
+            <div class="paper-details">
+
+                <strong>
+                    ${label}
+                </strong>
+
+                <span class="paper-status ${
+                    enabled
+                        ? "active"
+                        : "disabled"
+                }">
+
+                    ${
+                        enabled
+                            ? "Available to students"
+                            : "Currently disabled"
+                    }
+
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="paper-actions">
+
+            <label class="switch">
+
+                <input
+                    type="checkbox"
+                    class="paper-checkbox"
+                    ${enabled ? "checked" : ""}
+                >
+
+                <span class="slider"></span>
+
+            </label>
+
+        </div>
+
+    `;
+
+
+    const checkbox =
+        item.querySelector(
             ".paper-checkbox"
         );
 
 
-    checkboxes.forEach(
-        checkbox => {
-
-            const field =
-                checkbox.dataset.paper;
-
-
-            if (!field) {
-
-                return;
-
-            }
-
+    checkbox.addEventListener(
+        "change",
+        function () {
 
             setPaperValue(
+                category,
                 field,
-                enabled
+                checkbox.checked
             );
 
 
-            checkbox.checked =
-                enabled;
-
-        }
-    );
-
-
-    markChanged();
-
-}
-
-
-// =====================================================
-// ENABLE ALL
-// =====================================================
-
-if (enableAllBtn) {
-
-    enableAllBtn.addEventListener(
-        "click",
-        () => {
-
-            setAllPapers(
-                true
-            );
-
-        }
-    );
-
-}
-
-
-// =====================================================
-// DISABLE ALL
-// =====================================================
-
-if (disableAllBtn) {
-
-    disableAllBtn.addEventListener(
-        "click",
-        () => {
-
-            const confirmed =
-                confirm(
-                    "Disable all Grade 10, Grade 11 and A/L papers?"
+            const status =
+                item.querySelector(
+                    ".paper-status"
                 );
 
 
-            if (!confirmed) {
+            if (status) {
 
-                return;
+                status.textContent =
+                    checkbox.checked
+                        ? "Available to students"
+                        : "Currently disabled";
+
+
+                status.classList.toggle(
+                    "active",
+                    checkbox.checked
+                );
+
+
+                status.classList.toggle(
+                    "disabled",
+                    !checkbox.checked
+                );
 
             }
 
 
-            setAllPapers(
-                false
+            markChanged();
+
+        }
+    );
+
+
+    return item;
+
+}
+
+
+// =====================================================
+// CREATE GROUP
+// =====================================================
+
+function createGroup(
+    category,
+    group
+) {
+
+    const wrapper =
+        document.createElement(
+            "div"
+        );
+
+
+    wrapper.className =
+        "paper-group";
+
+
+    // HEADER
+
+    const header =
+        document.createElement(
+            "div"
+        );
+
+
+    header.className =
+        "paper-group-header";
+
+
+    header.innerHTML = `
+
+        <div>
+
+            <span class="paper-group-label">
+                ${group.title}
+            </span>
+
+            <h3>
+                ${group.subtitle}
+            </h3>
+
+        </div>
+
+
+        <button
+            type="button"
+            class="group-toggle"
+        >
+            Expand
+        </button>
+
+    `;
+
+
+    wrapper.appendChild(
+        header
+    );
+
+
+    // LIST
+
+    const list =
+        document.createElement(
+            "div"
+        );
+
+
+    list.className =
+        "paper-group-list";
+
+
+    // MODEL / TOP RANKING
+
+    if (group.count) {
+
+        for (
+            let i = 1;
+            i <= group.count;
+            i++
+        ) {
+
+            let label;
+
+
+            if (
+                group.type ===
+                "top-ranking"
+            ) {
+
+                label =
+                    `Top Ranking ${String(i).padStart(2, "0")}`;
+
+            }
+            else {
+
+                label =
+                    `Model Paper ${String(i).padStart(2, "0")}`;
+
+            }
+
+
+            list.appendChild(
+                createPaperItem(
+                    category,
+                    group,
+                    i,
+                    label
+                )
+            );
+
+        }
+
+    }
+
+
+    // PAST PAPERS
+
+    if (group.years) {
+
+        group.years.forEach(
+            function (
+                year,
+                index
+            ) {
+
+                list.appendChild(
+                    createPaperItem(
+                        category,
+                        group,
+                        index + 1,
+                        `Past Paper ${year}`
+                    )
+                );
+
+            }
+        );
+
+    }
+
+
+    wrapper.appendChild(
+        list
+    );
+
+
+    return wrapper;
+
+}
+
+
+// =====================================================
+// RENDER CATEGORY
+// =====================================================
+
+function renderCategory(
+    category
+) {
+
+    const config =
+        PAPER_CONFIG[
+            category
+        ];
+
+
+    if (!config) {
+        return;
+    }
+
+
+    const container =
+        document.getElementById(
+            category === "grade10"
+                ? "grade10PaperList"
+                : "grade11PaperList"
+        );
+
+
+    if (!container) {
+        return;
+    }
+
+
+    container.innerHTML =
+        "";
+
+
+    config.groups.forEach(
+        function (group) {
+
+            container.appendChild(
+                createGroup(
+                    category,
+                    group
+                )
             );
 
         }
@@ -525,17 +756,12 @@ if (disableAllBtn) {
 
 
 // =====================================================
-// LOAD FIREBASE SETTINGS
+// LOAD FIREBASE
 // =====================================================
 
 async function loadSettings() {
 
     try {
-
-        console.log(
-            "Loading paper settings..."
-        );
-
 
         const snapshot =
             await getDocs(
@@ -550,24 +776,17 @@ async function loadSettings() {
 
             grade10: {},
 
-            grade11: {},
-
-            al: {}
+            grade11: {}
 
         };
 
 
         snapshot.forEach(
-            paperDoc => {
+            function (paperDoc) {
 
                 const id =
                     paperDoc.id
-                        .toLowerCase()
-                        .trim();
-
-
-                const data =
-                    paperDoc.data();
+                        .toLowerCase();
 
 
                 if (
@@ -575,7 +794,7 @@ async function loadSettings() {
                 ) {
 
                     paperSettings.grade10 =
-                        data || {};
+                        paperDoc.data();
 
                 }
 
@@ -585,17 +804,7 @@ async function loadSettings() {
                 ) {
 
                     paperSettings.grade11 =
-                        data || {};
-
-                }
-
-
-                if (
-                    id === "al"
-                ) {
-
-                    paperSettings.al =
-                        data || {};
+                        paperDoc.data();
 
                 }
 
@@ -603,22 +812,33 @@ async function loadSettings() {
         );
 
 
-        console.log(
-            "Loaded settings:",
-            paperSettings
+        renderCategory(
+            "grade10"
         );
 
 
-        updateCheckboxes();
+        renderCategory(
+            "grade11"
+        );
 
 
         clearChanged();
+
+
+        console.log(
+            "✅ Paper settings loaded"
+        );
+
+
+        console.log(
+            paperSettings
+        );
 
     }
     catch (error) {
 
         console.error(
-            "Paper settings load error:",
+            "❌ Paper settings load error:",
             error
         );
 
@@ -634,14 +854,188 @@ async function loadSettings() {
 
 
 // =====================================================
-// SAVE SETTINGS
+// ALL PAPER FIELDS
+// =====================================================
+
+function getAllPaperFields() {
+
+    const fields = [];
+
+
+    Object.keys(
+        PAPER_CONFIG
+    ).forEach(
+        function (category) {
+
+            PAPER_CONFIG[
+                category
+            ].groups.forEach(
+                function (group) {
+
+                    if (group.count) {
+
+                        for (
+                            let i = 1;
+                            i <= group.count;
+                            i++
+                        ) {
+
+                            fields.push({
+                                category:
+                                    category,
+
+                                field:
+                                    getFieldName(
+                                        category,
+                                        group.id,
+                                        i
+                                    )
+                            });
+
+                        }
+
+                    }
+
+
+                    if (group.years) {
+
+                        group.years.forEach(
+                            function (
+                                year,
+                                index
+                            ) {
+
+                                fields.push({
+                                    category:
+                                        category,
+
+                                    field:
+                                        getFieldName(
+                                            category,
+                                            group.id,
+                                            index + 1
+                                        )
+                                });
+
+                            }
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+
+    return fields;
+
+}
+
+
+// =====================================================
+// ENABLE ALL
+// =====================================================
+
+if (enableAllBtn) {
+
+    enableAllBtn.addEventListener(
+        "click",
+        function () {
+
+            getAllPaperFields().forEach(
+                function (item) {
+
+                    setPaperValue(
+                        item.category,
+                        item.field,
+                        true
+                    );
+
+                }
+            );
+
+
+            renderCategory(
+                "grade10"
+            );
+
+
+            renderCategory(
+                "grade11"
+            );
+
+
+            markChanged();
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// DISABLE ALL
+// =====================================================
+
+if (disableAllBtn) {
+
+    disableAllBtn.addEventListener(
+        "click",
+        function () {
+
+            if (
+                !confirm(
+                    "Disable all Grade 10 and Grade 11 papers?"
+                )
+            ) {
+
+                return;
+
+            }
+
+
+            getAllPaperFields().forEach(
+                function (item) {
+
+                    setPaperValue(
+                        item.category,
+                        item.field,
+                        false
+                    );
+
+                }
+            );
+
+
+            renderCategory(
+                "grade10"
+            );
+
+
+            renderCategory(
+                "grade11"
+            );
+
+
+            markChanged();
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// SAVE
 // =====================================================
 
 if (saveSettingsBtn) {
 
     saveSettingsBtn.addEventListener(
         "click",
-        async () => {
+        async function () {
 
             if (!hasUnsavedChanges) {
 
@@ -664,10 +1058,6 @@ if (saveSettingsBtn) {
 
             try {
 
-                // -------------------------------------
-                // GRADE 10
-                // -------------------------------------
-
                 await setDoc(
                     doc(
                         db,
@@ -677,10 +1067,6 @@ if (saveSettingsBtn) {
                     paperSettings.grade10
                 );
 
-
-                // -------------------------------------
-                // GRADE 11
-                // -------------------------------------
 
                 await setDoc(
                     doc(
@@ -692,20 +1078,6 @@ if (saveSettingsBtn) {
                 );
 
 
-                // -------------------------------------
-                // A/L
-                // -------------------------------------
-
-                await setDoc(
-                    doc(
-                        db,
-                        "paperSettings",
-                        "al"
-                    ),
-                    paperSettings.al
-                );
-
-
                 clearChanged();
 
 
@@ -713,23 +1085,17 @@ if (saveSettingsBtn) {
                     "✅ Paper settings saved successfully."
                 );
 
-
-                console.log(
-                    "Paper settings saved:",
-                    paperSettings
-                );
-
             }
             catch (error) {
 
                 console.error(
-                    "Paper settings save error:",
+                    "❌ Save error:",
                     error
                 );
 
 
                 alert(
-                    "Failed to save paper settings.\n\n" +
+                    "Failed to save settings.\n\n" +
                     error.message
                 );
 
@@ -738,6 +1104,7 @@ if (saveSettingsBtn) {
 
                 saveSettingsBtn.disabled =
                     false;
+
 
                 saveSettingsBtn.textContent =
                     "💾 Save Changes";
@@ -751,211 +1118,17 @@ if (saveSettingsBtn) {
 
 
 // =====================================================
-// MAIN SECTION EXPAND / COLLAPSE
-// =====================================================
-
-function setupSectionToggle() {
-
-    const buttons =
-        document.querySelectorAll(
-            ".section-toggle"
-        );
-
-
-    buttons.forEach(
-        button => {
-
-            button.addEventListener(
-                "click",
-                event => {
-
-                    event.preventDefault();
-                    event.stopPropagation();
-
-
-                    const section =
-                        button.closest(
-                            ".paper-section"
-                        );
-
-
-                    if (!section) {
-
-                        return;
-
-                    }
-
-
-                    const list =
-                        section.querySelector(
-                            ".paper-list"
-                        );
-
-
-                    if (!list) {
-
-                        return;
-
-                    }
-
-
-                    const isHidden =
-                        window.getComputedStyle(
-                            list
-                        ).display === "none";
-
-
-                    if (isHidden) {
-
-                        list.style.display =
-                            "block";
-
-                        section.classList.add(
-                            "expanded"
-                        );
-
-                        button.textContent =
-                            "Collapse";
-
-                    }
-                    else {
-
-                        list.style.display =
-                            "none";
-
-                        section.classList.remove(
-                            "expanded"
-                        );
-
-                        button.textContent =
-                            "Expand";
-
-                    }
-
-                }
-            );
-
-        }
-    );
-
-}
-
-
-// =====================================================
-// GROUP EXPAND / COLLAPSE
-// =====================================================
-
-function setupGroupToggle() {
-
-    const buttons =
-        document.querySelectorAll(
-            ".group-toggle"
-        );
-
-
-    buttons.forEach(
-        button => {
-
-            button.addEventListener(
-                "click",
-                event => {
-
-                    event.preventDefault();
-                    event.stopPropagation();
-
-
-                    const groupId =
-                        button.dataset.group;
-
-
-                    if (!groupId) {
-
-                        return;
-
-                    }
-
-
-                    const group =
-                        document.getElementById(
-                            groupId
-                        );
-
-
-                    if (!group) {
-
-                        return;
-
-                    }
-
-
-                    const isHidden =
-                        window.getComputedStyle(
-                            group
-                        ).display === "none";
-
-
-                    if (isHidden) {
-
-                        group.style.display =
-                            "block";
-
-                        button.textContent =
-                            "Hide Papers";
-
-                    }
-                    else {
-
-                        group.style.display =
-                            "none";
-
-                        button.textContent =
-                            "Show Papers";
-
-                    }
-
-                }
-            );
-
-        }
-    );
-
-}
-
-
-// =====================================================
-// INITIALISE
-// =====================================================
-
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
-
-        setupSectionToggle();
-
-        setupGroupToggle();
-
-        setupCheckboxes();
-
-        loadSettings();
-
-    }
-);
-
-
-// =====================================================
-// UNSAVED CHANGES WARNING
+// UNSAVED CHANGES
 // =====================================================
 
 window.addEventListener(
     "beforeunload",
-    event => {
+    function (event) {
 
         if (
             !hasUnsavedChanges
         ) {
-
             return;
-
         }
 
 
@@ -969,15 +1142,18 @@ window.addEventListener(
 
 
 // =====================================================
-// CONSOLE
+// INITIALIZE
 // =====================================================
 
+loadSettings();
+
+
 console.log(
-    "================================="
+    "===================================="
 );
 
 console.log(
-    "📚 PAPER MANAGEMENT LOADED"
+    "📚 PAPER MANAGEMENT"
 );
 
 console.log(
@@ -991,10 +1167,17 @@ console.log(
 );
 
 console.log(
-    "Super Admin:",
-    isSuperAdmin
+    "Grade 10: ACTIVE"
 );
 
 console.log(
-    "================================="
+    "Grade 11: ACTIVE"
+);
+
+console.log(
+    "A/L: HOLD"
+);
+
+console.log(
+    "===================================="
 );
