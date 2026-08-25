@@ -28,37 +28,41 @@ const adminLoggedIn =
     ) === "true";
 
 
-const rawRole =
-    sessionStorage.getItem(
-        "adminRole"
-    ) || "limited";
-
-
-const adminRole =
-    String(
-        rawRole
-    )
-        .trim()
-        .toLowerCase()
-        .replace(
-            /[\s_-]+/g,
-            ""
-        );
-
-
 const adminUsername =
     sessionStorage.getItem(
         "adminUsername"
     ) || "Admin";
 
 
-const isSuperAdmin =
-    adminRole === "superadmin" ||
-    adminRole === "full";
+const storedRole =
+    (
+        sessionStorage.getItem(
+            "adminRole"
+        ) || "limited"
+    )
+    .trim()
+    .toLowerCase()
+    .replace(
+        /[\s_-]+/g,
+        ""
+    );
 
 
 // =====================================================
-// LOGIN PROTECTION
+// ROLE
+// =====================================================
+//
+// full / superadmin = SUPER ADMIN
+// limited / admin   = NORMAL ADMIN
+// =====================================================
+
+const isSuperAdmin =
+    storedRole === "superadmin" ||
+    storedRole === "full";
+
+
+// =====================================================
+// ADMIN PROTECTION
 // =====================================================
 
 if (!adminLoggedIn) {
@@ -74,6 +78,11 @@ if (!adminLoggedIn) {
 // ELEMENTS
 // =====================================================
 
+
+// -----------------------------------------------------
+// ADMIN INFO
+// -----------------------------------------------------
+
 const adminUsernameElement =
     document.getElementById(
         "adminUsername"
@@ -86,11 +95,19 @@ const adminRoleElement =
     );
 
 
+// -----------------------------------------------------
+// LOGOUT
+// -----------------------------------------------------
+
 const logoutBtn =
     document.getElementById(
         "logoutBtn"
     );
 
+
+// -----------------------------------------------------
+// SUMMARY
+// -----------------------------------------------------
 
 const totalStudentsElement =
     document.getElementById(
@@ -110,16 +127,40 @@ const activeStudentsElement =
     );
 
 
+// -----------------------------------------------------
+// MANAGEMENT LINKS
+// -----------------------------------------------------
+
+const studentManagementLink =
+    document.getElementById(
+        "studentManagementLink"
+    );
+
+
+const paperManagementLink =
+    document.getElementById(
+        "paperManagementLink"
+    );
+
+
+const importStudentsLink =
+    document.getElementById(
+        "importStudentsLink"
+    );
+
+
+const statisticsLink =
+    document.getElementById(
+        "statisticsLink"
+    );
+
+
 // =====================================================
 // SETTINGS
 // =====================================================
 
 const ACTIVE_LIMIT =
     90 * 1000;
-
-
-const TOTAL_PAPERS =
-    13;
 
 
 // =====================================================
@@ -130,7 +171,7 @@ let allStudents = [];
 
 
 // =====================================================
-// ADMIN INFO
+// ADMIN INFORMATION
 // =====================================================
 
 function loadAdminInfo() {
@@ -171,13 +212,7 @@ function showAccessDenied() {
 
 
     if (!container) {
-
-        alert(
-            "🔒 Access denied. Super Administrator only."
-        );
-
         return;
-
     }
 
 
@@ -205,6 +240,7 @@ function showAccessDenied() {
             <button
                 type="button"
                 class="access-denied-close"
+                aria-label="Close"
             >
                 ×
             </button>
@@ -229,13 +265,7 @@ function showAccessDenied() {
 
         closeButton.addEventListener(
             "click",
-            () => {
-
-                container.classList.remove(
-                    "show"
-                );
-
-            }
+            hideAccessDenied
         );
 
     }
@@ -248,13 +278,7 @@ function showAccessDenied() {
 
     window.accessDeniedTimer =
         setTimeout(
-            () => {
-
-                container.classList.remove(
-                    "show"
-                );
-
-            },
+            hideAccessDenied,
             3500
         );
 
@@ -262,10 +286,72 @@ function showAccessDenied() {
 
 
 // =====================================================
-// ROLE ACCESS
+// HIDE ACCESS DENIED
+// =====================================================
+
+function hideAccessDenied() {
+
+    const container =
+        document.getElementById(
+            "accessDeniedMessage"
+        );
+
+
+    if (!container) {
+        return;
+    }
+
+
+    container.classList.remove(
+        "show"
+    );
+
+}
+
+
+// =====================================================
+// SUPER ADMIN ACCESS CONTROL
+// =====================================================
+//
+// IMPORTANT:
+// This function DOES NOT create lock icons.
+// CSS handles the single 🔒 icon.
+//
+// Therefore duplicate lock icons will not occur.
 // =====================================================
 
 function setupRoleAccess() {
+
+
+    // =================================================
+    // SIDEBAR SUPER ADMIN ITEMS
+    // =================================================
+
+    const superAdminNavItems =
+        document.querySelectorAll(
+            ".superadmin-only"
+        );
+
+
+    // =================================================
+    // MANAGEMENT LINKS
+    // =================================================
+
+    const superAdminLinks =
+        document.querySelectorAll(
+            ".superadmin-link"
+        );
+
+
+    // =================================================
+    // MANAGEMENT CARDS
+    // =================================================
+
+    const superAdminCards =
+        document.querySelectorAll(
+            ".superadmin-card"
+        );
+
 
     // =================================================
     // SUPER ADMIN
@@ -273,8 +359,69 @@ function setupRoleAccess() {
 
     if (isSuperAdmin) {
 
-        console.log(
-            "👑 Super Administrator access enabled."
+
+        // ---------------------------------------------
+        // NAV
+        // ---------------------------------------------
+
+        superAdminNavItems.forEach(
+            item => {
+
+                item.classList.remove(
+                    "locked-menu"
+                );
+
+
+                item.removeAttribute(
+                    "aria-disabled"
+                );
+
+
+                item.removeAttribute(
+                    "title"
+                );
+
+            }
+        );
+
+
+        // ---------------------------------------------
+        // LINKS
+        // ---------------------------------------------
+
+        superAdminLinks.forEach(
+            link => {
+
+                link.classList.remove(
+                    "access-locked"
+                );
+
+
+                link.removeAttribute(
+                    "aria-disabled"
+                );
+
+
+                link.removeAttribute(
+                    "title"
+                );
+
+            }
+        );
+
+
+        // ---------------------------------------------
+        // CARDS
+        // ---------------------------------------------
+
+        superAdminCards.forEach(
+            card => {
+
+                card.classList.remove(
+                    "access-locked"
+                );
+
+            }
         );
 
 
@@ -287,22 +434,7 @@ function setupRoleAccess() {
     // LIMITED ADMIN
     // =================================================
 
-    console.log(
-        "👤 Limited Administrator access enabled."
-    );
-
-
-    // ---------------------------------------------
-    // Navigation items
-    // ---------------------------------------------
-
-    const restrictedNav =
-        document.querySelectorAll(
-            ".superadmin-only"
-        );
-
-
-    restrictedNav.forEach(
+    superAdminNavItems.forEach(
         item => {
 
             item.classList.add(
@@ -315,6 +447,16 @@ function setupRoleAccess() {
                 "true"
             );
 
+
+            item.setAttribute(
+                "title",
+                "Super Administrator only"
+            );
+
+
+            // -----------------------------------------
+            // CLICK PROTECTION
+            // -----------------------------------------
 
             item.addEventListener(
                 "click",
@@ -329,54 +471,15 @@ function setupRoleAccess() {
                 }
             );
 
-
-            // Add lock
-
-            if (
-                !item.querySelector(
-                    ".nav-lock"
-                )
-            ) {
-
-                const lock =
-                    document.createElement(
-                        "span"
-                    );
-
-
-                lock.className =
-                    "nav-lock";
-
-
-                lock.textContent =
-                    "🔒";
-
-
-                lock.style.marginLeft =
-                    "auto";
-
-
-                item.appendChild(
-                    lock
-                );
-
-            }
-
         }
     );
 
 
-    // ---------------------------------------------
-    // Management links
-    // ---------------------------------------------
+    // =================================================
+    // MANAGEMENT LINKS
+    // =================================================
 
-    const restrictedLinks =
-        document.querySelectorAll(
-            ".superadmin-link"
-        );
-
-
-    restrictedLinks.forEach(
+    superAdminLinks.forEach(
         link => {
 
             link.classList.add(
@@ -387,6 +490,12 @@ function setupRoleAccess() {
             link.setAttribute(
                 "aria-disabled",
                 "true"
+            );
+
+
+            link.setAttribute(
+                "title",
+                "Super Administrator only"
             );
 
 
@@ -407,39 +516,15 @@ function setupRoleAccess() {
     );
 
 
-    // ---------------------------------------------
-    // Management cards
-    // ---------------------------------------------
+    // =================================================
+    // MANAGEMENT CARDS
+    // =================================================
 
-    const restrictedCards =
-        document.querySelectorAll(
-            ".superadmin-card"
-        );
-
-
-    restrictedCards.forEach(
+    superAdminCards.forEach(
         card => {
 
             card.classList.add(
                 "access-locked"
-            );
-
-
-            card.setAttribute(
-                "aria-disabled",
-                "true"
-            );
-
-
-            card.addEventListener(
-                "click",
-                event => {
-
-                    event.preventDefault();
-
-                    showAccessDenied();
-
-                }
             );
 
         }
@@ -472,7 +557,19 @@ if (logoutBtn) {
             }
 
 
-            sessionStorage.clear();
+            sessionStorage.removeItem(
+                "adminLoggedIn"
+            );
+
+
+            sessionStorage.removeItem(
+                "adminRole"
+            );
+
+
+            sessionStorage.removeItem(
+                "adminUsername"
+            );
 
 
             window.location.replace(
@@ -491,28 +588,17 @@ if (logoutBtn) {
 
 function getStudentType(data) {
 
-    const type =
+    const studentType =
         String(
-            data?.studentType ||
-            ""
+            data?.studentType || ""
         )
-            .toLowerCase()
-            .trim();
-
-
-    const grade =
-        String(
-            data?.grade ||
-            ""
-        )
-            .toLowerCase()
-            .trim();
+        .trim()
+        .toLowerCase();
 
 
     if (
-        type === "grade10" ||
-        type === "grade 10" ||
-        grade === "10"
+        studentType === "grade10" ||
+        studentType === "grade 10"
     ) {
 
         return "grade10";
@@ -521,9 +607,38 @@ function getStudentType(data) {
 
 
     if (
-        type === "grade11" ||
-        type === "grade 11" ||
-        grade === "11"
+        studentType === "grade11" ||
+        studentType === "grade 11"
+    ) {
+
+        return "grade11";
+
+    }
+
+
+    const grade =
+        String(
+            data?.grade || ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+    if (
+        grade === "10" ||
+        grade === "grade10" ||
+        grade === "grade 10"
+    ) {
+
+        return "grade10";
+
+    }
+
+
+    if (
+        grade === "11" ||
+        grade === "grade11" ||
+        grade === "grade 11"
     ) {
 
         return "grade11";
@@ -537,22 +652,19 @@ function getStudentType(data) {
 
 
 // =====================================================
-// ACTIVE
+// ACTIVE STUDENT
 // =====================================================
 
 function isStudentActive(data) {
 
     const lastActive =
         Number(
-            data?.lastActiveAt ||
-            0
+            data?.lastActiveAt || 0
         );
 
 
     if (!lastActive) {
-
         return false;
-
     }
 
 
@@ -570,7 +682,7 @@ function isStudentActive(data) {
 
 
 // =====================================================
-// VIEWED COUNT
+// PAPER VIEW COUNT
 // =====================================================
 
 function getViewedCount(data) {
@@ -578,9 +690,11 @@ function getViewedCount(data) {
     let count = 0;
 
 
+    // Supports papers 01 - 13
+
     for (
         let i = 1;
-        i <= TOTAL_PAPERS;
+        i <= 13;
         i++
     ) {
 
@@ -619,32 +733,30 @@ function setText(
     value
 ) {
 
-    if (element) {
-
-        element.textContent =
-            String(value);
-
+    if (!element) {
+        return;
     }
+
+
+    element.textContent =
+        String(value);
 
 }
 
 
 // =====================================================
-// DASHBOARD
+// UPDATE DASHBOARD
 // =====================================================
 
 function updateDashboard() {
 
-    let total =
+    const total =
         allStudents.length;
 
 
-    let totalViewed =
-        0;
+    let totalViewed = 0;
 
-
-    let totalOnline =
-        0;
+    let totalOnline = 0;
 
 
     const categories = {
@@ -669,6 +781,10 @@ function updateDashboard() {
 
     };
 
+
+    // =================================================
+    // PROCESS STUDENTS
+    // =================================================
 
     allStudents.forEach(
         student => {
@@ -706,16 +822,22 @@ function updateDashboard() {
             }
 
 
-            categories[type].total++;
+            if (
+                categories[type]
+            ) {
+
+                categories[type].total++;
 
 
-            categories[type].views +=
-                viewed;
+                categories[type].views +=
+                    viewed;
 
 
-            if (active) {
+                if (active) {
 
-                categories[type].online++;
+                    categories[type].online++;
+
+                }
 
             }
 
@@ -746,7 +868,7 @@ function updateDashboard() {
 
 
     // =================================================
-    // ALL
+    // ALL STUDENTS
     // =================================================
 
     setText(
@@ -769,7 +891,8 @@ function updateDashboard() {
         document.getElementById(
             "reportAllOffline"
         ),
-        total - totalOnline
+        total -
+        totalOnline
     );
 
 
@@ -898,101 +1021,7 @@ function updateDashboard() {
 // LOAD STUDENTS
 // =====================================================
 
-function processStudents(
-    snapshot
-) {
-
-    const students = [];
-
-
-    snapshot.forEach(
-        studentDoc => {
-
-            students.push({
-
-                id:
-                    studentDoc.id,
-
-                data:
-                    studentDoc.data()
-
-            });
-
-        }
-    );
-
-
-    allStudents =
-        students;
-
-
-    updateDashboard();
-
-}
-
-
-// =====================================================
-// REAL-TIME
-// =====================================================
-
-function startRealtime() {
-
-    if (
-        typeof onSnapshot !==
-        "function"
-    ) {
-
-        console.error(
-            "onSnapshot is not available."
-        );
-
-
-        return;
-
-    }
-
-
-    const studentsRef =
-        collection(
-            db,
-            "students"
-        );
-
-
-    onSnapshot(
-        studentsRef,
-
-        snapshot => {
-
-            processStudents(
-                snapshot
-            );
-
-
-            console.log(
-                "🟢 Dashboard updated in real-time"
-            );
-
-        },
-
-        error => {
-
-            console.error(
-                "Realtime error:",
-                error
-            );
-
-        }
-    );
-
-}
-
-
-// =====================================================
-// INITIAL LOAD
-// =====================================================
-
-async function initialLoad() {
+async function loadStudents() {
 
     try {
 
@@ -1005,19 +1034,37 @@ async function initialLoad() {
             );
 
 
-        processStudents(
-            snapshot
+        const students = [];
+
+
+        snapshot.forEach(
+            studentDoc => {
+
+                students.push({
+
+                    id:
+                        studentDoc.id,
+
+                    data:
+                        studentDoc.data()
+
+                });
+
+            }
         );
 
 
-        startRealtime();
+        allStudents =
+            students;
+
+
+        updateDashboard();
 
     }
-
     catch (error) {
 
         console.error(
-            "Dashboard load error:",
+            "Dashboard student load error:",
             error
         );
 
@@ -1044,25 +1091,126 @@ async function initialLoad() {
 }
 
 
-initialLoad();
+// =====================================================
+// REAL-TIME FIREBASE LISTENER
+// =====================================================
+
+function startRealtimeUpdates() {
+
+    if (
+        typeof onSnapshot !==
+        "function"
+    ) {
+
+        console.warn(
+            "onSnapshot is not available."
+        );
+
+
+        return;
+
+    }
+
+
+    try {
+
+        const studentsRef =
+            collection(
+                db,
+                "students"
+            );
+
+
+        onSnapshot(
+            studentsRef,
+
+            snapshot => {
+
+                const students = [];
+
+
+                snapshot.forEach(
+                    studentDoc => {
+
+                        students.push({
+
+                            id:
+                                studentDoc.id,
+
+                            data:
+                                studentDoc.data()
+
+                        });
+
+                    }
+                );
+
+
+                allStudents =
+                    students;
+
+
+                updateDashboard();
+
+
+                console.log(
+                    "🔄 Student dashboard updated:",
+                    students.length
+                );
+
+            },
+
+            error => {
+
+                console.error(
+                    "Realtime dashboard error:",
+                    error
+                );
+
+
+                loadStudents();
+
+            }
+        );
+
+    }
+    catch (error) {
+
+        console.error(
+            "Realtime listener setup error:",
+            error
+        );
+
+
+        loadStudents();
+
+    }
+
+}
 
 
 // =====================================================
-// ACTIVE STATUS REFRESH
+// REFRESH ACTIVE STATUS
 // =====================================================
 
-setInterval(
-    () => {
+function refreshActiveStatus() {
 
-        updateDashboard();
+    if (
+        !allStudents.length
+    ) {
 
-    },
-    15000
-);
+        return;
+
+    }
+
+
+    updateDashboard();
+
+}
 
 
 // =====================================================
-// DIRECT URL PROTECTION
+// DIRECT PAGE PROTECTION
 // =====================================================
 
 function protectCurrentPage() {
@@ -1112,6 +1260,51 @@ protectCurrentPage();
 
 
 // =====================================================
+// INITIAL LOAD
+// =====================================================
+
+loadStudents();
+
+
+// =====================================================
+// REAL-TIME
+// =====================================================
+
+startRealtimeUpdates();
+
+
+// =====================================================
+// ACTIVE STATUS REFRESH
+// =====================================================
+
+setInterval(
+    refreshActiveStatus,
+    15000
+);
+
+
+// =====================================================
+// PAGE VISIBILITY
+// =====================================================
+
+document.addEventListener(
+    "visibilitychange",
+    () => {
+
+        if (
+            document.visibilityState ===
+            "visible"
+        ) {
+
+            refreshActiveStatus();
+
+        }
+
+    }
+);
+
+
+// =====================================================
 // CONSOLE
 // =====================================================
 
@@ -1120,17 +1313,17 @@ console.log(
 );
 
 console.log(
-    "✅ ADMIN DASHBOARD"
+    "✅ ADMIN DASHBOARD LOADED"
 );
 
 console.log(
-    "Username:",
+    "Admin:",
     adminUsername
 );
 
 console.log(
     "Role:",
-    adminRole
+    storedRole
 );
 
 console.log(
