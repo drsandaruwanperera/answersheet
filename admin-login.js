@@ -5,49 +5,254 @@ import {
 } from "./firebase.js";
 
 
+// =====================================================
+// ADMIN LOGIN
+// =====================================================
+
 console.log(
-    "ADMIN LOGIN JS STARTED"
+    "🔐 ADMIN LOGIN JS STARTED"
 );
 
 
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
+// =====================================================
+// ELEMENTS
+// =====================================================
 
-        const loginBtn =
-            document.getElementById(
-                "loginBtn"
+const loginBtn =
+    document.getElementById(
+        "loginBtn"
+    );
+
+
+const usernameInput =
+    document.getElementById(
+        "username"
+    );
+
+
+const passwordInput =
+    document.getElementById(
+        "password"
+    );
+
+
+const msg =
+    document.getElementById(
+        "msg"
+    );
+
+
+// =====================================================
+// MESSAGE
+// =====================================================
+
+function showMessage(
+    message,
+    type = "error"
+) {
+
+    if (!msg) {
+        return;
+    }
+
+
+    msg.textContent =
+        message;
+
+
+    msg.style.color =
+        type === "success"
+            ? "#16a34a"
+            : "#dc2626";
+
+}
+
+
+// =====================================================
+// NORMALIZE ROLE
+// =====================================================
+
+function normalizeRole(
+    role
+) {
+
+    const value =
+        String(
+            role || ""
+        )
+            .trim()
+            .toLowerCase()
+            .replace(
+                /[\s_-]+/g,
+                ""
             );
 
 
-        const usernameInput =
-            document.getElementById(
-                "username"
+    // ---------------------------------------------
+    // SUPER ADMIN
+    // ---------------------------------------------
+
+    if (
+        value === "superadmin" ||
+        value === "superadministrator" ||
+        value === "full"
+    ) {
+
+        return "superadmin";
+
+    }
+
+
+    // ---------------------------------------------
+    // LIMITED ADMIN
+    // ---------------------------------------------
+
+    if (
+        value === "limited" ||
+        value === "admin" ||
+        value === "administrator" ||
+        value === "normaladmin"
+    ) {
+
+        return "limited";
+
+    }
+
+
+    // ---------------------------------------------
+    // DEFAULT
+    // ---------------------------------------------
+
+    return "limited";
+
+}
+
+
+// =====================================================
+// LOGIN
+// =====================================================
+
+async function login() {
+
+    const username =
+        usernameInput
+            ? usernameInput.value
+                .trim()
+            : "";
+
+
+    const password =
+        passwordInput
+            ? passwordInput.value
+                .trim()
+            : "";
+
+
+    showMessage(
+        ""
+    );
+
+
+    // =================================================
+    // VALIDATION
+    // =================================================
+
+    if (!username) {
+
+        showMessage(
+            "Please enter username."
+        );
+
+
+        if (usernameInput) {
+            usernameInput.focus();
+        }
+
+
+        return;
+
+    }
+
+
+    if (!password) {
+
+        showMessage(
+            "Please enter password."
+        );
+
+
+        if (passwordInput) {
+            passwordInput.focus();
+        }
+
+
+        return;
+
+    }
+
+
+    // =================================================
+    // BUTTON
+    // =================================================
+
+    if (loginBtn) {
+
+        loginBtn.disabled =
+            true;
+
+
+        loginBtn.innerHTML =
+            `
+            <span>Signing In...</span>
+            `;
+
+    }
+
+
+    try {
+
+        console.log(
+            "Checking admin:",
+            username
+        );
+
+
+        // =================================================
+        // ADMIN DOCUMENT
+        // =================================================
+
+        const adminRef =
+            doc(
+                db,
+                "admins",
+                username
             );
 
 
-        const passwordInput =
-            document.getElementById(
-                "password"
+        const adminSnap =
+            await getDoc(
+                adminRef
             );
 
 
-        const msg =
-            document.getElementById(
-                "msg"
-            );
-
+        // =================================================
+        // NOT FOUND
+        // =================================================
 
         if (
-            !loginBtn ||
-            !usernameInput ||
-            !passwordInput ||
-            !msg
+            !adminSnap.exists()
         ) {
 
             console.error(
-                "Admin login elements not found."
+                "Admin document not found:",
+                username
             );
+
+
+            showMessage(
+                "Invalid username or password."
+            );
+
 
             return;
 
@@ -55,266 +260,259 @@ document.addEventListener(
 
 
         // =================================================
-        // LOGIN
+        // DATA
         // =================================================
 
-        async function login() {
-
-            const username =
-                usernameInput.value.trim();
+        const adminData =
+            adminSnap.data();
 
 
-            const password =
-                passwordInput.value.trim();
+        console.log(
+            "Admin data loaded:",
+            {
+                username:
+                    adminData.username,
 
-
-            msg.textContent =
-                "";
-
-
-            if (
-                !username ||
-                !password
-            ) {
-
-                msg.textContent =
-                    "Please enter username and password.";
-
-                return;
-
+                role:
+                    adminData.role
             }
+        );
 
 
-            loginBtn.disabled =
-                true;
+        // =================================================
+        // USERNAME
+        // =================================================
 
+        const databaseUsername =
+            String(
+                adminData.username ||
+                adminSnap.id ||
+                ""
+            )
+                .trim()
+                .toLowerCase();
 
-            loginBtn.textContent =
-                "Signing in...";
 
+        if (
+            databaseUsername !==
+            username.toLowerCase()
+        ) {
 
-            try {
+            showMessage(
+                "Invalid username or password."
+            );
 
-                console.log(
-                    "Checking admin:",
-                    username
-                );
 
-
-                // =========================================
-                // ADMIN DOCUMENT
-                // =========================================
-
-                const adminRef =
-                    doc(
-                        db,
-                        "admins",
-                        username
-                    );
-
-
-                const adminSnap =
-                    await getDoc(
-                        adminRef
-                    );
-
-
-                if (
-                    !adminSnap.exists()
-                ) {
-
-                    msg.textContent =
-                        "Invalid username or password.";
-
-                    return;
-
-                }
-
-
-                const adminData =
-                    adminSnap.data();
-
-
-                // =========================================
-                // USERNAME CHECK
-                // =========================================
-
-                const databaseUsername =
-                    String(
-                        adminData.username ||
-                        ""
-                    )
-                    .trim()
-                    .toLowerCase();
-
-
-                if (
-                    databaseUsername !==
-                    username.toLowerCase()
-                ) {
-
-                    msg.textContent =
-                        "Invalid username or password.";
-
-                    return;
-
-                }
-
-
-                // =========================================
-                // PASSWORD CHECK
-                // =========================================
-
-                const databasePassword =
-                    String(
-                        adminData.password ||
-                        ""
-                    ).trim();
-
-
-                if (
-                    databasePassword !==
-                    password
-                ) {
-
-                    msg.textContent =
-                        "Invalid username or password.";
-
-                    return;
-
-                }
-
-
-                // =========================================
-                // ROLE
-                // =========================================
-
-                const originalRole =
-                    String(
-                        adminData.role ||
-                        "admin"
-                    )
-                    .trim();
-
-
-                const normalizedRole =
-                    originalRole
-                        .toLowerCase()
-                        .replace(
-                            /[\s_-]+/g,
-                            ""
-                        );
-
-
-                // =========================================
-                // SAVE SESSION
-                // =========================================
-
-                sessionStorage.setItem(
-                    "adminLoggedIn",
-                    "true"
-                );
-
-
-                sessionStorage.setItem(
-                    "adminUsername",
-                    username
-                );
-
-
-                sessionStorage.setItem(
-                    "adminRole",
-                    normalizedRole
-                );
-
-
-                console.log(
-                    "================================="
-                );
-
-                console.log(
-                    "ADMIN LOGIN SUCCESS"
-                );
-
-                console.log(
-                    "Username:",
-                    username
-                );
-
-                console.log(
-                    "Original Role:",
-                    originalRole
-                );
-
-                console.log(
-                    "Normalized Role:",
-                    normalizedRole
-                );
-
-                console.log(
-                    "Super Admin:",
-                    normalizedRole ===
-                    "superadmin"
-                );
-
-                console.log(
-                    "================================="
-                );
-
-
-                // =========================================
-                // REDIRECT
-                // =========================================
-
-                window.location.replace(
-                    "admin.html"
-                );
-
-            }
-            catch (
-                error
-            ) {
-
-                console.error(
-                    "ADMIN LOGIN ERROR:",
-                    error
-                );
-
-
-                msg.textContent =
-                    "Login failed: " +
-                    error.message;
-
-            }
-            finally {
-
-                loginBtn.disabled =
-                    false;
-
-
-                loginBtn.textContent =
-                    "Sign In →";
-
-            }
+            return;
 
         }
 
 
         // =================================================
-        // BUTTON
+        // PASSWORD
         // =================================================
 
-        loginBtn.addEventListener(
-            "click",
-            login
+        const databasePassword =
+            String(
+                adminData.password ||
+                ""
+            )
+                .trim();
+
+
+        if (
+            databasePassword !==
+            password
+        ) {
+
+            showMessage(
+                "Invalid username or password."
+            );
+
+
+            return;
+
+        }
+
+
+        // =================================================
+        // ROLE
+        // =================================================
+
+        const originalRole =
+            String(
+                adminData.role ||
+                "limited"
+            )
+                .trim();
+
+
+        const normalizedRole =
+            normalizeRole(
+                originalRole
+            );
+
+
+        // =================================================
+        // SAVE SESSION
+        // =================================================
+
+        sessionStorage.setItem(
+            "adminLoggedIn",
+            "true"
+        );
+
+
+        sessionStorage.setItem(
+            "adminUsername",
+            username
+        );
+
+
+        sessionStorage.setItem(
+            "adminRole",
+            normalizedRole
         );
 
 
         // =================================================
-        // ENTER KEY
+        // DEBUG
         // =================================================
 
-        passwordInput.addEventListener(
+        console.log(
+            "======================================"
+        );
+
+
+        console.log(
+            "✅ ADMIN LOGIN SUCCESS"
+        );
+
+
+        console.log(
+            "Username:",
+            username
+        );
+
+
+        console.log(
+            "Database Role:",
+            originalRole
+        );
+
+
+        console.log(
+            "Session Role:",
+            normalizedRole
+        );
+
+
+        console.log(
+            "Super Admin:",
+            normalizedRole ===
+            "superadmin"
+        );
+
+
+        console.log(
+            "======================================"
+        );
+
+
+        // =================================================
+        // SUCCESS
+        // =================================================
+
+        showMessage(
+            "Login successful. Redirecting...",
+            "success"
+        );
+
+
+        // =================================================
+        // REDIRECT
+        // =================================================
+
+        setTimeout(
+            () => {
+
+                window.location.replace(
+                    "admin.html"
+                );
+
+            },
+            300
+        );
+
+    }
+
+    catch (
+        error
+    ) {
+
+        console.error(
+            "❌ ADMIN LOGIN ERROR:",
+            error
+        );
+
+
+        showMessage(
+            "Login failed. Please try again."
+        );
+
+    }
+
+    finally {
+
+        if (loginBtn) {
+
+            loginBtn.disabled =
+                false;
+
+
+            loginBtn.innerHTML =
+                `
+                <span>Sign In</span>
+                <span>→</span>
+                `;
+
+        }
+
+    }
+
+}
+
+
+// =====================================================
+// LOGIN BUTTON
+// =====================================================
+
+if (loginBtn) {
+
+    loginBtn.addEventListener(
+        "click",
+        login
+    );
+
+}
+
+
+// =====================================================
+// ENTER KEY
+// =====================================================
+
+[
+    usernameInput,
+    passwordInput
+].forEach(
+    input => {
+
+        if (!input) {
+            return;
+        }
+
+
+        input.addEventListener(
             "keydown",
             event => {
 
@@ -322,6 +520,8 @@ document.addEventListener(
                     event.key ===
                     "Enter"
                 ) {
+
+                    event.preventDefault();
 
                     login();
 
@@ -331,4 +531,13 @@ document.addEventListener(
         );
 
     }
+);
+
+
+// =====================================================
+// START
+// =====================================================
+
+console.log(
+    "✅ Admin Login System Ready"
 );
