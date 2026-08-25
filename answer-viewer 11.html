@@ -10,7 +10,14 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Answer Viewer</title>
+    <meta
+        name="robots"
+        content="noindex,nofollow"
+    >
+
+    <title>
+        Protected Answer Viewer
+    </title>
 
     <link
         rel="stylesheet"
@@ -32,29 +39,38 @@
 
     <header class="viewer-header">
 
+
         <div class="viewer-header-left">
+
 
             <div class="viewer-icon">
                 📖
             </div>
 
-            <div>
+
+            <div class="viewer-heading">
+
 
                 <span class="viewer-label">
                     STUDENT ANSWER
                 </span>
 
+
                 <h1 id="viewerTitle">
                     Loading Answer...
                 </h1>
+
 
                 <p id="viewerSubtitle">
                     Please wait...
                 </p>
 
+
             </div>
 
+
         </div>
+
 
 
         <button
@@ -62,63 +78,85 @@
             id="backBtn"
             class="back-btn"
         >
+
             ← Back
+
         </button>
+
 
     </header>
 
 
 
     <!-- =====================================================
-         SECURITY NOTICE
+         PROTECTION NOTICE
     ====================================================== -->
 
-    <div class="viewer-notice">
+    <section class="viewer-notice">
 
-        <span>
+
+        <div class="notice-icon">
             🔒
-        </span>
+        </div>
 
-        <div>
+
+        <div class="notice-content">
+
 
             <strong>
                 Protected Answer Viewer
             </strong>
 
+
             <p>
                 This answer is available for viewing only.
-                Downloading and printing are disabled.
+                Download and printing are disabled.
             </p>
+
 
         </div>
 
-    </div>
+
+    </section>
 
 
 
     <!-- =====================================================
-         PDF VIEWER
+         VIEWER
     ====================================================== -->
 
-    <main class="pdf-viewer-wrapper">
+    <main
+        class="pdf-viewer-wrapper"
+        id="viewerWrapper"
+    >
+
+
+        <!-- LOADING -->
 
         <div
             id="loading"
             class="loading"
         >
 
+
             <div class="loading-spinner"></div>
+
 
             <strong>
                 Loading answer...
             </strong>
 
+
             <span>
                 Please wait.
             </span>
 
+
         </div>
 
+
+
+        <!-- ERROR -->
 
         <div
             id="errorMessage"
@@ -126,51 +164,70 @@
             style="display:none;"
         >
 
+
             <div class="error-icon">
                 ⚠️
             </div>
+
 
             <h2>
                 Unable to Load Answer
             </h2>
 
+
             <p id="errorText">
-                Please try again later.
+                Please try again.
             </p>
+
 
             <button
                 type="button"
                 id="errorBackBtn"
+                class="error-back-btn"
             >
+
                 ← Go Back
+
             </button>
+
 
         </div>
 
+
+
+        <!-- PDF CANVAS -->
 
         <div
             id="pdfCanvasContainer"
             class="pdf-canvas-container"
         ></div>
 
+
     </main>
+
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer class="viewer-footer">
+
+        🔐 Student Assessment Portal
+
+        <span>
+            • Protected Viewing
+        </span>
+
+    </footer>
 
 
 </div>
 
 
-<!-- =====================================================
-     PDF.JS
-====================================================== -->
-
-<script
-    src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs"
-    type="module"
-></script>
-
 
 <!-- =====================================================
-     VIEWER SCRIPT
+     JAVASCRIPT
 ====================================================== -->
 
 <script
