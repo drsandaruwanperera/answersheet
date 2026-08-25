@@ -1,7 +1,15 @@
+// =====================================================
+// FIREBASE APP
+// =====================================================
+
 import {
     initializeApp
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 
+
+// =====================================================
+// FIRESTORE
+// =====================================================
 
 import {
     getFirestore,
@@ -12,27 +20,11 @@ import {
     setDoc,
     updateDoc,
     deleteDoc,
-    onSnapshot
-    
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-export {
-
-    db,
-
-    doc,
-    getDoc,
-    getDocs,
-
-    setDoc,
-    updateDoc,
-    deleteDoc,
-
-    collection,
-
-    onSnapshot
-
-};
+    onSnapshot,
+    query,
+    where,
+    limit
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 
 // =====================================================
@@ -42,7 +34,7 @@ export {
 const firebaseConfig = {
 
     apiKey:
-        "...",
+        "YOUR_REAL_FIREBASE_API_KEY",
 
     authDomain:
         "answersheet2026.firebaseapp.com",
@@ -63,7 +55,7 @@ const firebaseConfig = {
 
 
 // =====================================================
-// INITIALIZE FIREBASE
+// INITIALIZE
 // =====================================================
 
 const app =
@@ -71,10 +63,6 @@ const app =
         firebaseConfig
     );
 
-
-// =====================================================
-// FIRESTORE
-// =====================================================
 
 const db =
     getFirestore(
@@ -90,33 +78,26 @@ export {
 
     db,
 
-    // Firestore document functions
-    doc,
-    getDoc,
-    getDocs,
-
-    // Firestore write functions
-    setDoc,
-    updateDoc,
-    deleteDoc,
-
-    // Firestore collection
     collection,
 
-    // ⭐ REAL-TIME LISTENER
-    onSnapshot
+    doc,
+
+    getDoc,
+
+    getDocs,
+
+    setDoc,
+
+    updateDoc,
+
+    deleteDoc,
+
+    onSnapshot,
+
+    query,
+
+    where,
+
+    limit
 
 };
-
-
-// =====================================================
-// CONSOLE
-// =====================================================
-
-console.log(
-    "✅ Firebase initialized"
-);
-
-console.log(
-    "🔥 Firestore real-time listener available"
-);
