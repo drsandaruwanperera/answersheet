@@ -14,11 +14,345 @@
 
     <link
         rel="stylesheet"
-        href="import-students.css"
+        href="import-students.css?v=30"
     >
 
     <!-- SheetJS -->
-    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+    <script
+        src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"
+    ></script>
+
+    <style>
+
+        /* =====================================================
+           A/L INFORMATION
+        ===================================================== */
+
+        .al-info-box {
+
+            display: none;
+
+            margin-top: 18px;
+
+            padding: 18px 20px;
+
+            border-radius: 14px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f5f3ff,
+                    #eef2ff
+                );
+
+            border:
+                1px solid #ddd6fe;
+
+        }
+
+
+        .al-info-box.show {
+
+            display: block;
+
+        }
+
+
+        .al-info-title {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 9px;
+
+            margin-bottom: 12px;
+
+            color: #4c1d95;
+
+            font-size: 14px;
+
+            font-weight: 800;
+
+        }
+
+
+        .al-info-list {
+
+            margin: 0;
+
+            padding-left: 20px;
+
+            color: #475569;
+
+            font-size: 12px;
+
+            line-height: 1.8;
+
+        }
+
+
+        .al-info-list strong {
+
+            color: #312e81;
+
+        }
+
+
+        /* =====================================================
+           SELECTED CATEGORY
+        ===================================================== */
+
+        .category-btn.selected {
+
+            border-color: #7c3aed !important;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #faf5ff,
+                    #f5f3ff
+                ) !important;
+
+            box-shadow:
+                0 7px 20px
+                rgba(124,58,237,.12);
+
+        }
+
+
+        /* =====================================================
+           IMPORT STATUS
+        ===================================================== */
+
+        .import-status {
+
+            display: none;
+
+            margin-top: 18px;
+
+            padding: 16px;
+
+            border-radius: 12px;
+
+            background: #f8fafc;
+
+            border:
+                1px solid #e2e8f0;
+
+        }
+
+
+        .import-status.show {
+
+            display: block;
+
+        }
+
+
+        .import-status-title {
+
+            font-size: 13px;
+
+            font-weight: 800;
+
+            margin-bottom: 7px;
+
+        }
+
+
+        .import-status-text {
+
+            color: #64748b;
+
+            font-size: 12px;
+
+        }
+
+
+        /* =====================================================
+           PREVIEW
+        ===================================================== */
+
+        .preview-section {
+
+            display: none;
+
+            margin-top: 22px;
+
+        }
+
+
+        .preview-section.show {
+
+            display: block;
+
+        }
+
+
+        .preview-header {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .preview-header h3 {
+
+            margin: 0;
+
+        }
+
+
+        .preview-count {
+
+            padding: 6px 10px;
+
+            border-radius: 20px;
+
+            background: #f0ebff;
+
+            color: #6d35f2;
+
+            font-size: 11px;
+
+            font-weight: 800;
+
+        }
+
+
+        .preview-wrapper {
+
+            overflow-x: auto;
+
+            border:
+                1px solid #e2e8f0;
+
+            border-radius: 12px;
+
+        }
+
+
+        .preview-table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 600px;
+
+        }
+
+
+        .preview-table th {
+
+            padding: 11px;
+
+            text-align: left;
+
+            background: #f8fafc;
+
+            color: #64748b;
+
+            font-size: 10px;
+
+            text-transform: uppercase;
+
+        }
+
+
+        .preview-table td {
+
+            padding: 11px;
+
+            border-top:
+                1px solid #e2e8f0;
+
+            font-size: 12px;
+
+        }
+
+
+        .admission-badge {
+
+            display: inline-block;
+
+            padding: 5px 9px;
+
+            border-radius: 7px;
+
+            background: #f0ebff;
+
+            color: #5b21b6;
+
+            font-weight: 800;
+
+        }
+
+
+        .password-badge {
+
+            font-family: monospace;
+
+            padding: 5px 8px;
+
+            border-radius: 6px;
+
+            background: #f1f5f9;
+
+        }
+
+
+        .ready {
+
+            color: #047857;
+
+            font-weight: 800;
+
+        }
+
+
+        /* =====================================================
+           A/L NOTICE
+        ===================================================== */
+
+        .first-login-notice {
+
+            display: none;
+
+            margin-top: 15px;
+
+            padding: 12px 14px;
+
+            border-radius: 10px;
+
+            background: #ecfdf5;
+
+            border:
+                1px solid #a7f3d0;
+
+            color: #065f46;
+
+            font-size: 12px;
+
+            line-height: 1.5;
+
+        }
+
+
+        .first-login-notice.show {
+
+            display: block;
+
+        }
+
+    </style>
 
 </head>
 
@@ -29,9 +363,9 @@
 <div class="container">
 
 
-    <!-- ==========================
-         Header
-    =========================== -->
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
 
     <div class="page-header">
 
@@ -51,9 +385,9 @@
 
 
 
-    <!-- ==========================
-         Information
-    =========================== -->
+    <!-- =====================================================
+         IMPORT RULES
+    ====================================================== -->
 
     <div class="info-box">
 
@@ -72,11 +406,11 @@
             </li>
 
             <li>
-                All other Student IDs → A/L
+                A/L students → A27000, A28000, A29000 series
             </li>
 
             <li>
-                Imported students must change their password on first login.
+                Existing student records will not be overwritten.
             </li>
 
         </ul>
@@ -85,9 +419,9 @@
 
 
 
-    <!-- ==========================
-         Category
-    =========================== -->
+    <!-- =====================================================
+         CATEGORY
+    ====================================================== -->
 
     <h3>
         Select Student Category
@@ -96,6 +430,8 @@
 
     <div class="category-grid">
 
+
+        <!-- A/L -->
 
         <button
             type="button"
@@ -108,6 +444,7 @@
             </span>
 
             <span>
+
                 <strong>
                     Import A/L
                 </strong>
@@ -115,11 +452,14 @@
                 <small>
                     Advanced Level Students
                 </small>
+
             </span>
 
         </button>
 
 
+
+        <!-- GRADE 10 -->
 
         <button
             type="button"
@@ -146,6 +486,8 @@
         </button>
 
 
+
+        <!-- GRADE 11 -->
 
         <button
             type="button"
@@ -175,7 +517,6 @@
     </div>
 
 
-
     <input
         type="hidden"
         id="selectedType"
@@ -184,9 +525,84 @@
 
 
 
-    <!-- ==========================
-         Excel Format
-    =========================== -->
+    <!-- =====================================================
+         A/L SPECIAL INFORMATION
+    ====================================================== -->
+
+    <div
+        id="alInfoBox"
+        class="al-info-box"
+    >
+
+        <div class="al-info-title">
+
+            🎓
+
+            <span>
+                A/L Student Registration
+            </span>
+
+        </div>
+
+
+        <ul class="al-info-list">
+
+            <li>
+                A/L admission numbers use the
+                <strong>A27000 / A28000 / A29000</strong>
+                series.
+            </li>
+
+            <li>
+                Student name is
+                <strong>not required</strong>
+                during bulk import.
+            </li>
+
+            <li>
+                Temporary passwords are used for
+                the first login.
+            </li>
+
+            <li>
+                Students must complete their own
+                <strong>Full Name, NIC Number and New Password</strong>
+                during first login.
+            </li>
+
+            <li>
+                Existing A/L student records will
+                <strong>not be modified</strong>.
+            </li>
+
+        </ul>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         FIRST LOGIN NOTICE
+    ====================================================== -->
+
+    <div
+        id="firstLoginNotice"
+        class="first-login-notice"
+    >
+
+        🔐 <strong>First Login Required:</strong>
+
+        New A/L students will be redirected to
+        the registration page after their first
+        successful login.
+
+    </div>
+
+
+
+    <!-- =====================================================
+         EXCEL FORMAT
+    ====================================================== -->
 
     <div class="format-header">
 
@@ -196,8 +612,8 @@
                 📄 Excel Format
             </h3>
 
-            <p>
-                Your Excel file should contain these columns:
+            <p id="formatDescription">
+                Select a student category to view the required Excel format.
             </p>
 
         </div>
@@ -208,14 +624,23 @@
             id="downloadTemplateBtn"
             class="template-btn"
         >
+
             📥 Download Sample Template
+
         </button>
 
     </div>
 
 
 
-    <table class="sample">
+    <!-- =====================================================
+         SAMPLE TABLE
+    ====================================================== -->
+
+    <table
+        class="sample"
+        id="sampleTable"
+    >
 
         <thead>
 
@@ -267,9 +692,9 @@
 
 
 
-    <!-- ==========================
-         File Upload
-    =========================== -->
+    <!-- =====================================================
+         FILE UPLOAD
+    ====================================================== -->
 
     <div class="upload-box">
 
@@ -295,9 +720,9 @@
 
 
 
-    <!-- ==========================
-         Import
-    =========================== -->
+    <!-- =====================================================
+         IMPORT BUTTON
+    ====================================================== -->
 
     <button
         id="importBtn"
@@ -311,9 +736,106 @@
 
 
 
-    <!-- ==========================
-         Result
-    =========================== -->
+    <!-- =====================================================
+         STATUS
+    ====================================================== -->
+
+    <div
+        id="importStatus"
+        class="import-status"
+    >
+
+        <div
+            id="importStatusTitle"
+            class="import-status-title"
+        >
+            Preparing import...
+        </div>
+
+        <div
+            id="importStatusText"
+            class="import-status-text"
+        >
+            Please wait.
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         PREVIEW
+    ====================================================== -->
+
+    <section
+        id="previewSection"
+        class="preview-section"
+    >
+
+        <div class="preview-header">
+
+            <h3>
+                👀 Import Preview
+            </h3>
+
+            <span
+                id="previewCount"
+                class="preview-count"
+            >
+                0 Students
+            </span>
+
+        </div>
+
+
+        <div class="preview-wrapper">
+
+            <table class="preview-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            #
+                        </th>
+
+                        <th>
+                            Admission / Student ID
+                        </th>
+
+                        <th>
+                            Password
+                        </th>
+
+                        <th>
+                            Type
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody
+                    id="previewBody"
+                ></tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         RESULT
+    ====================================================== -->
 
     <div
         id="result"
@@ -322,9 +844,9 @@
 
 
 
-    <!-- ==========================
-         Back
-    =========================== -->
+    <!-- =====================================================
+         BACK
+    ====================================================== -->
 
     <button
         class="back-btn"
@@ -341,12 +863,256 @@
 
 
 
+<!-- =====================================================
+     SESSION
+====================================================== -->
+
 <script src="session.js"></script>
+
+
+
+<!-- =====================================================
+     IMPORT JAVASCRIPT
+====================================================== -->
 
 <script
     type="module"
-    src="import-students.js"
+    src="import-students.js?v=30"
 ></script>
+
+
+<!-- =====================================================
+     CATEGORY UI
+====================================================== -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+
+        const categoryButtons =
+            document.querySelectorAll(
+                ".category-btn"
+            );
+
+
+        const selectedType =
+            document.getElementById(
+                "selectedType"
+            );
+
+
+        const alInfoBox =
+            document.getElementById(
+                "alInfoBox"
+            );
+
+
+        const firstLoginNotice =
+            document.getElementById(
+                "firstLoginNotice"
+            );
+
+
+        const formatDescription =
+            document.getElementById(
+                "formatDescription"
+            );
+
+
+        const sampleTable =
+            document.getElementById(
+                "sampleTable"
+            );
+
+
+        categoryButtons.forEach(
+            button => {
+
+                button.addEventListener(
+                    "click",
+                    function () {
+
+
+                        categoryButtons.forEach(
+                            item => {
+
+                                item.classList.remove(
+                                    "selected"
+                                );
+
+                            }
+                        );
+
+
+                        button.classList.add(
+                            "selected"
+                        );
+
+
+                        const type =
+                            button.dataset.type;
+
+
+                        selectedType.value =
+                            type;
+
+
+                        // =================================
+                        // A/L
+                        // =================================
+
+                        if (
+                            type === "al"
+                        ) {
+
+                            alInfoBox.classList.add(
+                                "show"
+                            );
+
+
+                            firstLoginNotice.classList.add(
+                                "show"
+                            );
+
+
+                            formatDescription.textContent =
+                                "A/L Excel file should contain Admission Number and Temporary Password.";
+
+
+                            sampleTable.innerHTML = `
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th>
+                                            Admission Number
+                                        </th>
+
+                                        <th>
+                                            Temporary Password
+                                        </th>
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody>
+
+                                    <tr>
+
+                                        <td>
+                                            A27001
+                                        </td>
+
+                                        <td>
+                                            X7kP92Lm
+                                        </td>
+
+                                    </tr>
+
+                                    <tr>
+
+                                        <td>
+                                            A27002
+                                        </td>
+
+                                        <td>
+                                            Q8mR43Tp
+                                        </td>
+
+                                    </tr>
+
+                                </tbody>
+
+                            `;
+
+                        }
+
+                        // =================================
+                        // GRADE 10 / 11
+                        // =================================
+
+                        else {
+
+                            alInfoBox.classList.remove(
+                                "show"
+                            );
+
+
+                            firstLoginNotice.classList.remove(
+                                "show"
+                            );
+
+
+                            formatDescription.textContent =
+                                "Your Excel file should contain Student ID and Password.";
+
+
+                            sampleTable.innerHTML = `
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th>
+                                            Student ID
+                                        </th>
+
+                                        <th>
+                                            Password
+                                        </th>
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody>
+
+                                    <tr>
+
+                                        <td>
+                                            001
+                                        </td>
+
+                                        <td>
+                                            1234
+                                        </td>
+
+                                    </tr>
+
+                                    <tr>
+
+                                        <td>
+                                            002
+                                        </td>
+
+                                        <td>
+                                            5678
+                                        </td>
+
+                                    </tr>
+
+                                </tbody>
+
+                            `;
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+
+    }
+);
+
+</script>
 
 
 </body>
