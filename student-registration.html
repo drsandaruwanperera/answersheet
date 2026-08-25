@@ -15,477 +15,17 @@
         content="Student Assessment Portal - Complete Registration"
     >
 
-    <title>
-        Complete Registration
-    </title>
-
-
-    <style>
-
-        * {
-            box-sizing: border-box;
-        }
-
-
-        html,
-        body {
-
-            margin: 0;
-
-            padding: 0;
-
-            min-height: 100%;
-
-            font-family:
-                Inter,
-                "Segoe UI",
-                Arial,
-                sans-serif;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #eef2ff,
-                    #f8fafc
-                );
-
-            color:
-                #0f172a;
-
-        }
-
-
-        .page {
-
-            min-height:
-                100vh;
-
-            display:
-                flex;
-
-            align-items:
-                center;
-
-            justify-content:
-                center;
-
-            padding:
-                30px 18px;
-
-        }
-
-
-        .card {
-
-            width:
-                min(
-                    520px,
-                    100%
-                );
-
-            background:
-                #ffffff;
-
-            border-radius:
-                22px;
-
-            padding:
-                35px;
-
-            box-shadow:
-                0 20px 60px
-                rgba(
-                    15,
-                    23,
-                    42,
-                    0.12
-                );
-
-            border:
-                1px solid
-                #e2e8f0;
-
-        }
-
-
-        .logo {
-
-            width:
-                58px;
-
-            height:
-                58px;
-
-            display:
-                flex;
-
-            align-items:
-                center;
-
-            justify-content:
-                center;
-
-            border-radius:
-                16px;
-
-            background:
-                #f0ebff;
-
-            font-size:
-                28px;
-
-            margin-bottom:
-                18px;
-
-        }
-
-
-        .label {
-
-            display:
-                inline-block;
-
-            font-size:
-                11px;
-
-            font-weight:
-                800;
-
-            letter-spacing:
-                1px;
-
-            color:
-                #6d35f2;
-
-            margin-bottom:
-                7px;
-
-        }
-
-
-        h1 {
-
-            margin:
-                0 0 8px;
-
-            font-size:
-                27px;
-
-        }
-
-
-        .description {
-
-            margin:
-                0 0 28px;
-
-            color:
-                #64748b;
-
-            line-height:
-                1.6;
-
-            font-size:
-                14px;
-
-        }
-
-
-        .form-group {
-
-            margin-bottom:
-                18px;
-
-        }
-
-
-        label {
-
-            display:
-                block;
-
-            margin-bottom:
-                7px;
-
-            font-size:
-                13px;
-
-            font-weight:
-                750;
-
-            color:
-                #334155;
-
-        }
-
-
-        input {
-
-            width:
-                100%;
-
-            height:
-                48px;
-
-            padding:
-                0 14px;
-
-            border:
-                1px solid
-                #cbd5e1;
-
-            border-radius:
-                11px;
-
-            outline:
-                none;
-
-            font-family:
-                inherit;
-
-            font-size:
-                14px;
-
-            transition:
-                border-color .2s,
-                box-shadow .2s;
-
-        }
-
-
-        input:focus {
-
-            border-color:
-                #7c3aed;
-
-            box-shadow:
-                0 0 0 4px
-                rgba(
-                    124,
-                    58,
-                    237,
-                    0.10
-                );
-
-        }
-
-
-        input[readonly] {
-
-            background:
-                #f8fafc;
-
-            color:
-                #64748b;
-
-            cursor:
-                not-allowed;
-
-        }
-
-
-        .button {
-
-            width:
-                100%;
-
-            height:
-                50px;
-
-            border:
-                0;
-
-            border-radius:
-                12px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #6d35f2,
-                    #7c3aed
-                );
-
-            color:
-                #ffffff;
-
-            font-family:
-                inherit;
-
-            font-size:
-                14px;
-
-            font-weight:
-                800;
-
-            cursor:
-                pointer;
-
-            margin-top:
-                5px;
-
-            box-shadow:
-                0 8px 20px
-                rgba(
-                    109,
-                    53,
-                    242,
-                    0.22
-                );
-
-        }
-
-
-        .button:hover {
-
-            transform:
-                translateY(-1px);
-
-        }
-
-
-        .button:disabled {
-
-            opacity:
-                .65;
-
-            cursor:
-                not-allowed;
-
-            transform:
-                none;
-
-        }
-
-
-        .message {
-
-            margin-top:
-                16px;
-
-            padding:
-                12px 14px;
-
-            border-radius:
-                10px;
-
-            display:
-                none;
-
-            font-size:
-                13px;
-
-            line-height:
-                1.5;
-
-        }
-
-
-        .message.show {
-
-            display:
-                block;
-
-        }
-
-
-        .message.error {
-
-            background:
-                #fef2f2;
-
-            color:
-                #b91c1c;
-
-            border:
-                1px solid
-                #fecaca;
-
-        }
-
-
-        .message.success {
-
-            background:
-                #f0fdf4;
-
-            color:
-                #15803d;
-
-            border:
-                1px solid
-                #bbf7d0;
-
-        }
-
-
-        .security-note {
-
-            margin-top:
-                22px;
-
-            padding:
-                14px;
-
-            border-radius:
-                12px;
-
-            background:
-                #f8fafc;
-
-            border:
-                1px solid
-                #e2e8f0;
-
-            font-size:
-                12px;
-
-            color:
-                #64748b;
-
-            line-height:
-                1.6;
-
-        }
-
-
-        .security-note strong {
-
-            color:
-                #334155;
-
-        }
-
-
-        .required {
-
-            color:
-                #dc2626;
-
-        }
-
-
-        @media (
-            max-width: 600px
-        ) {
-
-            .card {
-
-                padding:
-                    25px 20px;
-
-            }
-
-
-            h1 {
-
-                font-size:
-                    23px;
-
-            }
-
-        }
-
-    </style>
+    <title>Complete Student Registration</title>
+
+    <link
+        rel="stylesheet"
+        href="student-registration.css"
+    >
+
+    <link
+        rel="icon"
+        href="data:,"
+    >
 
 </head>
 
@@ -493,231 +33,597 @@
 <body>
 
 
-<div class="page">
+<!-- =====================================================
+     BACKGROUND
+====================================================== -->
+
+<div class="background-shape shape-one"></div>
+<div class="background-shape shape-two"></div>
 
 
-    <div class="card">
+<!-- =====================================================
+     MAIN
+====================================================== -->
+
+<main class="registration-wrapper">
 
 
-        <!-- LOGO -->
+    <!-- =================================================
+         LEFT INFORMATION PANEL
+    ================================================== -->
 
-        <div class="logo">
-            🎓
-        </div>
+    <section class="registration-brand">
 
-
-        <!-- HEADER -->
-
-        <span class="label">
-            FIRST LOGIN
-        </span>
+        <div class="brand-content">
 
 
-        <h1>
-            Complete Your Registration
-        </h1>
+            <div class="brand-logo">
+                🎓
+            </div>
 
 
-        <p class="description">
-
-            Please complete your student profile
-            before accessing the Student Assessment Portal.
-
-        </p>
+            <span class="brand-label">
+                STUDENT ASSESSMENT PORTAL
+            </span>
 
 
-        <!-- =========================================
-             ADMISSION NUMBER
-        ========================================== -->
-
-        <div class="form-group">
-
-            <label
-                for="studentId"
-            >
-                Admission Number
-            </label>
+            <h1>
+                Complete Your
+                <span>Registration</span>
+            </h1>
 
 
-            <input
-                type="text"
-                id="studentId"
-                readonly
-                autocomplete="off"
-            >
+            <p class="brand-description">
 
-        </div>
+                Welcome to the Student Assessment Portal.
+                Before accessing your dashboard, please
+                complete your student registration details.
+
+            </p>
 
 
-        <!-- =========================================
-             FULL NAME
-        ========================================== -->
+            <!-- =========================================
+                 STEPS
+            ========================================== -->
 
-        <div class="form-group">
+            <div class="registration-steps">
 
-            <label
-                for="fullName"
-            >
 
-                Full Name
+                <div class="step active">
 
-                <span class="required">
-                    *
+                    <div class="step-number">
+                        1
+                    </div>
+
+                    <div class="step-content">
+
+                        <strong>
+                            Student Information
+                        </strong>
+
+                        <span>
+                            Enter your personal details
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="step-line"></div>
+
+
+                <div class="step">
+
+                    <div class="step-number">
+                        2
+                    </div>
+
+                    <div class="step-content">
+
+                        <strong>
+                            Secure Your Account
+                        </strong>
+
+                        <span>
+                            Create your new password
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="step-line"></div>
+
+
+                <div class="step">
+
+                    <div class="step-number">
+                        3
+                    </div>
+
+                    <div class="step-content">
+
+                        <strong>
+                            Access Dashboard
+                        </strong>
+
+                        <span>
+                            Start using the portal
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- =========================================
+                 SECURITY
+            ========================================== -->
+
+            <div class="security-note">
+
+                <span class="security-icon">
+                    🔐
                 </span>
 
-            </label>
+                <div>
 
+                    <strong>
+                        Secure Registration
+                    </strong>
 
-            <input
-                type="text"
-                id="fullName"
-                placeholder="Enter your full name"
-                autocomplete="name"
-                maxlength="150"
-            >
+                    <p>
+                        Your information is securely stored
+                        and is only used for student
+                        identification and portal access.
+                    </p>
+
+                </div>
+
+            </div>
+
 
         </div>
 
+    </section>
 
-        <!-- =========================================
-             NIC
-        ========================================== -->
 
-        <div class="form-group">
 
-            <label
-                for="nicNumber"
-            >
+    <!-- =================================================
+         REGISTRATION FORM
+    ================================================== -->
 
-                NIC Number
+    <section class="registration-panel">
 
-                <span class="required">
-                    *
+
+        <div class="registration-card">
+
+
+            <!-- =========================================
+                 HEADER
+            ========================================== -->
+
+            <div class="registration-header">
+
+                <span class="welcome-label">
+                    FIRST LOGIN
                 </span>
 
-            </label>
+
+                <h2>
+                    Complete Your Registration
+                </h2>
 
 
-            <input
-                type="text"
-                id="nicNumber"
-                placeholder="Enter your NIC number"
-                autocomplete="off"
-                maxlength="12"
+                <p>
+                    Please provide the following information
+                    to activate your student account.
+                </p>
+
+            </div>
+
+
+
+            <!-- =========================================
+                 ADMISSION NUMBER
+            ========================================== -->
+
+            <div class="form-group">
+
+                <label for="registrationStudentId">
+                    Admission Number
+                </label>
+
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">
+                        🎓
+                    </span>
+
+
+                    <input
+                        type="text"
+                        id="registrationStudentId"
+                        readonly
+                    >
+
+                </div>
+
+
+                <small class="field-note">
+                    Your admission number is assigned
+                    by the institution.
+                </small>
+
+            </div>
+
+
+
+            <!-- =========================================
+                 FULL NAME
+            ========================================== -->
+
+            <div class="form-group">
+
+                <label for="fullName">
+                    Full Name
+                    <span class="required">
+                        *
+                    </span>
+                </label>
+
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">
+                        👤
+                    </span>
+
+
+                    <input
+                        type="text"
+                        id="fullName"
+                        placeholder="Enter your full name"
+                        autocomplete="name"
+                    >
+
+                </div>
+
+
+                <small class="field-note">
+                    Enter your full name as shown on
+                    your official identification document.
+                </small>
+
+            </div>
+
+
+
+            <!-- =========================================
+                 NIC NUMBER
+            ========================================== -->
+
+            <div class="form-group">
+
+                <label for="nicNumber">
+
+                    NIC Number
+
+                    <span class="required">
+                        *
+                    </span>
+
+                </label>
+
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">
+                        🪪
+                    </span>
+
+
+                    <input
+                        type="text"
+                        id="nicNumber"
+                        placeholder="Enter your NIC number"
+                        autocomplete="off"
+                        maxlength="20"
+                    >
+
+                </div>
+
+
+                <small class="field-note">
+                    Enter your National Identity Card number.
+                </small>
+
+            </div>
+
+
+
+            <!-- =========================================
+                 NEW PASSWORD
+            ========================================== -->
+
+            <div class="form-group">
+
+                <label for="newPassword">
+
+                    New Password
+
+                    <span class="required">
+                        *
+                    </span>
+
+                </label>
+
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">
+                        🔒
+                    </span>
+
+
+                    <input
+                        type="password"
+                        id="newPassword"
+                        placeholder="Create a new password"
+                        autocomplete="new-password"
+                    >
+
+
+                    <button
+                        type="button"
+                        id="toggleNewPassword"
+                        class="toggle-password"
+                        aria-label="Show password"
+                    >
+                        🙊
+                    </button>
+
+                </div>
+
+
+                <small class="field-note">
+                    Password must contain at least 6 characters.
+                </small>
+
+            </div>
+
+
+
+            <!-- =========================================
+                 CONFIRM PASSWORD
+            ========================================== -->
+
+            <div class="form-group">
+
+                <label for="confirmPassword">
+
+                    Confirm Password
+
+                    <span class="required">
+                        *
+                    </span>
+
+                </label>
+
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">
+                        🔐
+                    </span>
+
+
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        placeholder="Confirm your new password"
+                        autocomplete="new-password"
+                    >
+
+
+                    <button
+                        type="button"
+                        id="toggleConfirmPassword"
+                        class="toggle-password"
+                        aria-label="Show password"
+                    >
+                        🙊
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =========================================
+                 PASSWORD REQUIREMENTS
+            ========================================== -->
+
+            <div
+                id="passwordRequirements"
+                class="password-requirements"
             >
 
-        </div>
+                <div class="requirements-title">
+                    Password Requirements
+                </div>
 
 
-        <!-- =========================================
-             NEW PASSWORD
-        ========================================== -->
+                <div
+                    id="requirementLength"
+                    class="requirement"
+                >
 
-        <div class="form-group">
+                    <span>
+                        ✓
+                    </span>
 
-            <label
-                for="newPassword"
+                    At least 6 characters
+
+                </div>
+
+
+                <div
+                    id="requirementMatch"
+                    class="requirement"
+                >
+
+                    <span>
+                        ✓
+                    </span>
+
+                    Passwords match
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =========================================
+                 TERMS / CONFIRMATION
+            ========================================== -->
+
+            <div class="confirmation-box">
+
+                <label>
+
+                    <input
+                        type="checkbox"
+                        id="registrationConfirm"
+                    >
+
+
+                    <span>
+
+                        I confirm that the information
+                        provided above is accurate and belongs
+                        to me.
+
+                    </span>
+
+                </label>
+
+            </div>
+
+
+
+            <!-- =========================================
+                 MESSAGE
+            ========================================== -->
+
+            <div
+                id="registrationMessage"
+                class="registration-message"
+                aria-live="polite"
+            ></div>
+
+
+
+            <!-- =========================================
+                 SUBMIT
+            ========================================== -->
+
+            <button
+                type="button"
+                id="completeRegistrationBtn"
+                class="complete-registration-btn"
             >
 
-                New Password
-
-                <span class="required">
-                    *
+                <span>
+                    Complete Registration
                 </span>
 
-            </label>
-
-
-            <input
-                type="password"
-                id="newPassword"
-                placeholder="Create a new password"
-                autocomplete="new-password"
-            >
-
-        </div>
-
-
-        <!-- =========================================
-             CONFIRM PASSWORD
-        ========================================== -->
-
-        <div class="form-group">
-
-            <label
-                for="confirmPassword"
-            >
-
-                Confirm New Password
-
-                <span class="required">
-                    *
+                <span>
+                    →
                 </span>
 
-            </label>
+            </button>
 
 
-            <input
-                type="password"
-                id="confirmPassword"
-                placeholder="Re-enter your new password"
-                autocomplete="new-password"
-            >
+
+            <!-- =========================================
+                 SUPPORT
+            ========================================== -->
+
+            <div class="support-box">
+
+                <div class="support-icon">
+                    🛟
+                </div>
+
+
+                <div class="support-content">
+
+                    <strong>
+                        Need Assistance?
+                    </strong>
+
+
+                    <span>
+                        Unable to complete registration?
+                        Contact the System Administrator.
+                    </span>
+
+
+                    <a
+                        href="tel:0779011780"
+                    >
+                        📞 077 901 1780
+                    </a>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =========================================
+                 FOOTER
+            ========================================== -->
+
+            <div class="registration-footer">
+
+                <span>
+                    Secure Student Registration
+                </span>
+
+
+                <span>
+                    •
+                </span>
+
+
+                <span>
+                    © 2026 Student Assessment Portal
+                </span>
+
+            </div>
+
 
         </div>
 
-
-        <!-- =========================================
-             SUBMIT
-        ========================================== -->
-
-        <button
-            type="button"
-            id="completeBtn"
-            class="button"
-        >
-
-            Complete Registration
-
-        </button>
+    </section>
 
 
-        <!-- MESSAGE -->
-
-        <div
-            id="message"
-            class="message"
-            aria-live="polite"
-        ></div>
+</main>
 
 
-        <!-- SECURITY -->
-
-        <div class="security-note">
-
-            🔐
-
-            <strong>
-                Security Notice
-            </strong>
-
-            <br>
-
-            Your temporary password must be replaced
-            with a new password before you can access
-            the Student Portal.
-
-        </div>
-
-
-    </div>
-
-</div>
-
-
-<!-- ================================================
-     REGISTRATION JAVASCRIPT
-================================================ -->
+<!-- =====================================================
+     JAVASCRIPT
+====================================================== -->
 
 <script
     type="module"
