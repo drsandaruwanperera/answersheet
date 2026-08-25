@@ -1,33 +1,6 @@
 // =====================================================
 // STUDENT DELETION SYSTEM
 // =====================================================
-//
-// SUPER ADMIN ONLY
-//
-// Deletion password:
-// Nimeth
-//
-// Firebase collection:
-// students
-//
-// Supported student series:
-//
-// A27000xxxxx
-// A28000xxxxx
-// A29000xxxxx
-//
-// Grade 11:
-// 26000 - 26999
-//
-// Grade 10:
-// 27000 - 27999
-//
-// =====================================================
-
-
-// =====================================================
-// FIREBASE
-// =====================================================
 
 import {
     db,
@@ -39,11 +12,22 @@ import {
 
 
 // =====================================================
-// CONFIGURATION
+// CONFIG
 // =====================================================
 
 const DELETE_PASSWORD =
     "Nimeth";
+
+
+// =====================================================
+// DATA
+// =====================================================
+
+let allStudents = [];
+
+let unlocked = false;
+
+let deleteRunning = false;
 
 
 // =====================================================
@@ -55,78 +39,50 @@ const passwordCard =
         "passwordCard"
     );
 
-
 const reportPanel =
     document.getElementById(
         "reportPanel"
     );
-
 
 const deletePassword =
     document.getElementById(
         "deletePassword"
     );
 
-
 const unlockBtn =
     document.getElementById(
         "unlockBtn"
     );
-
 
 const passwordError =
     document.getElementById(
         "passwordError"
     );
 
-
 const searchInput =
     document.getElementById(
         "searchInput"
     );
-
 
 const categoryFilter =
     document.getElementById(
         "categoryFilter"
     );
 
-
 const refreshBtn =
     document.getElementById(
         "refreshBtn"
     );
-
 
 const studentTable =
     document.getElementById(
         "studentTable"
     );
 
-
-const shownCount =
-    document.getElementById(
-        "shownCount"
-    );
-
-
-const alCount =
-    document.getElementById(
-        "alCount"
-    );
-
-
-const gradeCount =
-    document.getElementById(
-        "gradeCount"
-    );
-
-
 const resultCount =
     document.getElementById(
         "resultCount"
     );
-
 
 const logoutBtn =
     document.getElementById(
@@ -134,36 +90,11 @@ const logoutBtn =
     );
 
 
-const adminUsername =
-    document.getElementById(
-        "adminUsername"
-    );
-
-
-const adminRole =
-    document.getElementById(
-        "adminRole"
-    );
-
-
 // =====================================================
-// GLOBAL DATA
+// SESSION
 // =====================================================
 
-let allStudents = [];
-
-let unlocked = false;
-
-let deletingStudent = false;
-
-
-// =====================================================
-// SESSION VALUE
-// =====================================================
-
-function getSessionValue(
-    ...keys
-) {
+function getSessionValue(...keys) {
 
     for (
         const key of keys
@@ -174,10 +105,8 @@ function getSessionValue(
                 key
             );
 
-
         if (
-            value !== null &&
-            value !== ""
+            value
         ) {
 
             return value;
@@ -186,30 +115,23 @@ function getSessionValue(
 
     }
 
-
     return "";
 
 }
 
 
 // =====================================================
-// GET ADMIN ROLE
+// ADMIN ROLE
 // =====================================================
 
 function getAdminRole() {
 
     return getSessionValue(
-
         "adminRole",
-
         "userRole",
-
         "role",
-
         "admin_role",
-
         "user_role"
-
     )
         .trim()
         .toLowerCase()
@@ -222,14 +144,13 @@ function getAdminRole() {
 
 
 // =====================================================
-// SUPER ADMIN CHECK
+// SUPER ADMIN
 // =====================================================
 
 function isSuperAdmin() {
 
     const role =
         getAdminRole();
-
 
     return (
 
@@ -252,12 +173,12 @@ function isSuperAdmin() {
 
 
 // =====================================================
-// ADMIN LOGIN CHECK
+// ADMIN LOGIN
 // =====================================================
 
 function isAdminLoggedIn() {
 
-    const values = [
+    return [
 
         sessionStorage.getItem(
             "adminLoggedIn"
@@ -275,10 +196,7 @@ function isAdminLoggedIn() {
             "loggedIn"
         )
 
-    ];
-
-
-    return values.some(
+    ].some(
         value =>
             value === "true"
     );
@@ -287,90 +205,69 @@ function isAdminLoggedIn() {
 
 
 // =====================================================
-// ACCESS DENIED PAGE
+// ACCESS DENIED
 // =====================================================
 
-function showAccessDenied() {
+function accessDenied() {
 
     document.body.innerHTML = `
 
         <div
             style="
                 min-height:100vh;
-                width:100%;
                 display:flex;
                 align-items:center;
                 justify-content:center;
                 background:#f4f6fb;
-                font-family:Arial,Helvetica,sans-serif;
+                font-family:Arial,sans-serif;
                 padding:20px;
             "
         >
 
             <div
                 style="
+                    max-width:450px;
                     width:100%;
-                    max-width:460px;
-                    background:#ffffff;
-                    border:1px solid #e2e8f0;
-                    border-radius:22px;
-                    padding:42px 30px;
+                    background:white;
+                    border-radius:20px;
+                    padding:40px;
                     text-align:center;
                     box-shadow:
                         0 20px 60px
-                        rgba(15,23,42,.10);
+                        rgba(15,23,42,.12);
                 "
             >
 
                 <div
                     style="
-                        width:70px;
-                        height:70px;
-                        margin:0 auto 20px;
-                        border-radius:20px;
-                        display:flex;
-                        align-items:center;
-                        justify-content:center;
-                        background:#fef2f2;
-                        font-size:34px;
+                        font-size:48px;
                     "
                 >
                     🔒
                 </div>
 
-
-                <h2
-                    style="
-                        margin:0 0 10px;
-                        color:#172033;
-                    "
-                >
+                <h2>
                     Access Restricted
                 </h2>
 
-
                 <p
                     style="
-                        margin:0 0 24px;
                         color:#64748b;
                         line-height:1.6;
-                        font-size:14px;
                     "
                 >
-                    Student deletion is available
-                    only to the Super Administrator.
+                    Only the Super Administrator
+                    can access Student Deletion.
                 </p>
 
-
                 <button
-                    type="button"
-                    id="backToAdmin"
+                    id="backBtn"
                     style="
                         border:0;
-                        padding:12px 22px;
-                        border-radius:10px;
                         background:#7c3aed;
-                        color:#ffffff;
+                        color:white;
+                        padding:12px 20px;
+                        border-radius:9px;
                         font-weight:700;
                         cursor:pointer;
                     "
@@ -385,17 +282,11 @@ function showAccessDenied() {
     `;
 
 
-    const backButton =
-        document.getElementById(
-            "backToAdmin"
-        );
-
-
-    if (
-        backButton
-    ) {
-
-        backButton.addEventListener(
+    document
+        .getElementById(
+            "backBtn"
+        )
+        ?.addEventListener(
             "click",
             () => {
 
@@ -404,8 +295,6 @@ function showAccessDenied() {
 
             }
         );
-
-    }
 
 }
 
@@ -416,21 +305,23 @@ function showAccessDenied() {
 
 function initialise() {
 
-    // ---------------------------------------------
-    // ADMIN DISPLAY
-    // ---------------------------------------------
+    const adminUsername =
+        document.getElementById(
+            "adminUsername"
+        );
+
+    const adminRole =
+        document.getElementById(
+            "adminRole"
+        );
+
 
     const username =
         getSessionValue(
-
             "adminUsername",
-
             "adminName",
-
             "username",
-
             "displayName"
-
         );
 
 
@@ -455,180 +346,122 @@ function initialise() {
     }
 
 
-    // ---------------------------------------------
-    // UNLOCK BUTTON
-    // ---------------------------------------------
-
-    if (
-        unlockBtn
-    ) {
-
-        unlockBtn.addEventListener(
-            "click",
-            unlockDeletion
-        );
-
-    }
+    unlockBtn?.addEventListener(
+        "click",
+        unlock
+    );
 
 
-    // ---------------------------------------------
-    // PASSWORD ENTER
-    // ---------------------------------------------
+    deletePassword?.addEventListener(
+        "keydown",
+        event => {
 
-    if (
-        deletePassword
-    ) {
+            if (
+                event.key ===
+                "Enter"
+            ) {
 
-        deletePassword.addEventListener(
-            "keydown",
-            event => {
+                unlock();
 
-                if (
-                    event.key ===
-                    "Enter"
-                ) {
+            }
 
-                    event.preventDefault();
+        }
+    );
 
-                    unlockDeletion();
 
-                }
+    searchInput?.addEventListener(
+        "input",
+        render
+    );
+
+
+    categoryFilter?.addEventListener(
+        "change",
+        render
+    );
+
+
+    refreshBtn?.addEventListener(
+        "click",
+        loadStudents
+    );
+
+
+    logoutBtn?.addEventListener(
+        "click",
+        () => {
+
+            if (
+                confirm(
+                    "Are you sure you want to sign out?"
+                )
+            ) {
+
+                sessionStorage.clear();
+
+                window.location.href =
+                    "admin-login.html";
+
+            }
+
+        }
+    );
+
+
+    document
+        .querySelectorAll(
+            ".delete-series-btn"
+        )
+        .forEach(
+            button => {
+
+                button.addEventListener(
+                    "click",
+                    () => {
+
+                        const series =
+                            button.dataset.series;
+
+                        deleteSeries(
+                            series
+                        );
+
+                    }
+                );
 
             }
         );
 
-    }
 
-
-    // ---------------------------------------------
-    // SEARCH
-    // ---------------------------------------------
-
-    if (
-        searchInput
-    ) {
-
-        searchInput.addEventListener(
-            "input",
-            renderStudents
-        );
-
-    }
-
-
-    // ---------------------------------------------
-    // FILTER
-    // ---------------------------------------------
-
-    if (
-        categoryFilter
-    ) {
-
-        categoryFilter.addEventListener(
-            "change",
-            renderStudents
-        );
-
-    }
-
-
-    // ---------------------------------------------
-    // REFRESH
-    // ---------------------------------------------
-
-    if (
-        refreshBtn
-    ) {
-
-        refreshBtn.addEventListener(
+    document
+        .getElementById(
+            "deleteAllAL"
+        )
+        ?.addEventListener(
             "click",
-            loadStudents
+            () => {
+
+                deleteAllAL();
+
+            }
         );
-
-    }
-
-
-    // ---------------------------------------------
-    // LOGOUT
-    // ---------------------------------------------
-
-    if (
-        logoutBtn
-    ) {
-
-        logoutBtn.addEventListener(
-            "click",
-            logoutAdmin
-        );
-
-    }
 
 }
 
 
 // =====================================================
-// UNLOCK DELETION
+// UNLOCK
 // =====================================================
 
-function unlockDeletion() {
+function unlock() {
 
-    if (
-        !deletePassword
-    ) {
-
-        return;
-
-    }
-
-
-    const enteredPassword =
-        String(
-            deletePassword.value ||
-            ""
-        );
+    const password =
+        deletePassword?.value ||
+        "";
 
 
     if (
-        passwordError
-    ) {
-
-        passwordError.textContent =
-            "";
-
-    }
-
-
-    // ---------------------------------------------
-    // EMPTY
-    // ---------------------------------------------
-
-    if (
-        !enteredPassword
-    ) {
-
-        if (
-            passwordError
-        ) {
-
-            passwordError.textContent =
-                "Please enter the deletion password.";
-
-        }
-
-
-        deletePassword.focus();
-
-        return;
-
-    }
-
-
-    // ---------------------------------------------
-    // CHECK PASSWORD
-    // ---------------------------------------------
-
-    if (
-        enteredPassword !==
+        password !==
         DELETE_PASSWORD
     ) {
 
@@ -645,7 +478,6 @@ function unlockDeletion() {
         deletePassword.value =
             "";
 
-
         deletePassword.focus();
 
         return;
@@ -653,32 +485,26 @@ function unlockDeletion() {
     }
 
 
-    // ---------------------------------------------
-    // UNLOCK
-    // ---------------------------------------------
+    if (
+        passwordError
+    ) {
+
+        passwordError.textContent =
+            "";
+
+    }
+
 
     unlocked =
         true;
 
 
-    if (
-        passwordCard
-    ) {
-
-        passwordCard.style.display =
-            "none";
-
-    }
+    passwordCard.style.display =
+        "none";
 
 
-    if (
-        reportPanel
-    ) {
-
-        reportPanel.style.display =
-            "block";
-
-    }
+    reportPanel.style.display =
+        "block";
 
 
     loadStudents();
@@ -701,57 +527,46 @@ async function loadStudents() {
     }
 
 
-    if (
-        studentTable
-    ) {
+    studentTable.innerHTML = `
 
-        studentTable.innerHTML = `
+        <tr>
 
-            <tr>
+            <td
+                colspan="6"
+                class="loading"
+            >
+                Loading students...
+            </td>
 
-                <td
-                    colspan="6"
-                    class="loading"
-                >
-                    Loading student accounts...
-                </td>
+        </tr>
 
-            </tr>
-
-        `;
-
-    }
+    `;
 
 
     try {
 
-        const studentsRef =
-            collection(
-                db,
-                "students"
-            );
-
-
         const snapshot =
             await getDocs(
-                studentsRef
+                collection(
+                    db,
+                    "students"
+                )
             );
 
 
-        allStudents =
-            [];
+        allStudents = [];
 
 
         snapshot.forEach(
-            studentDocument => {
+            studentDoc => {
 
                 allStudents.push({
 
                     id:
-                        studentDocument.id,
+                        studentDoc.id,
 
                     data:
-                        studentDocument.data()
+                        studentDoc.data()
 
                 });
 
@@ -759,37 +574,34 @@ async function loadStudents() {
         );
 
 
-        // ---------------------------------------------
-        // SORT BY STUDENT ID
-        // ---------------------------------------------
-
         allStudents.sort(
             (
-                first,
-                second
+                a,
+                b
             ) => {
 
                 return String(
-                    first.id
-                )
-                    .localeCompare(
-                        String(
-                            second.id
-                        ),
-                        undefined,
-                        {
-                            numeric:
-                                true,
-                            sensitivity:
-                                "base"
-                        }
-                    );
+                    a.id
+                ).localeCompare(
+                    String(
+                        b.id
+                    ),
+                    undefined,
+                    {
+                        numeric:
+                            true,
+                        sensitivity:
+                            "base"
+                    }
+                );
 
             }
         );
 
 
-        renderStudents();
+        updateTotals();
+
+        render();
 
     }
 
@@ -798,47 +610,28 @@ async function loadStudents() {
     ) {
 
         console.error(
-            "================================"
-        );
-
-        console.error(
-            "STUDENT LOAD ERROR"
-        );
-
-        console.error(
+            "Student loading error:",
             error
         );
 
-        console.error(
-            "================================"
-        );
 
+        studentTable.innerHTML = `
 
-        if (
-            studentTable
-        ) {
+            <tr>
 
-            studentTable.innerHTML = `
+                <td
+                    colspan="6"
+                    class="loading"
+                    style="color:#dc2626"
+                >
+                    ❌ Unable to load students.
+                    <br><br>
+                    Check Firebase Firestore permissions.
+                </td>
 
-                <tr>
+            </tr>
 
-                    <td
-                        colspan="6"
-                        class="loading"
-                        style="
-                            color:#dc2626;
-                        "
-                    >
-                        ❌ Unable to load students.
-                        <br><br>
-                        Check your Firestore permissions.
-                    </td>
-
-                </tr>
-
-            `;
-
-        }
+        `;
 
     }
 
@@ -849,27 +642,22 @@ async function loadStudents() {
 // GET STUDENT TYPE
 // =====================================================
 
-function getStudentType(
+function getType(
     student
 ) {
 
-    const studentId =
+    const id =
         String(
-            student?.id ||
-            ""
+            student.id
         )
             .trim()
             .toUpperCase();
 
 
     const data =
-        student?.data ||
+        student.data ||
         {};
 
-
-    // ---------------------------------------------
-    // FIREBASE studentType
-    // ---------------------------------------------
 
     const firebaseType =
         String(
@@ -881,11 +669,8 @@ function getStudentType(
 
 
     if (
-        firebaseType ===
-        "grade10"
-        ||
-        firebaseType ===
-        "grade 10"
+        firebaseType === "grade10" ||
+        firebaseType === "grade 10"
     ) {
 
         return "grade10";
@@ -894,11 +679,8 @@ function getStudentType(
 
 
     if (
-        firebaseType ===
-        "grade11"
-        ||
-        firebaseType ===
-        "grade 11"
+        firebaseType === "grade11" ||
+        firebaseType === "grade 11"
     ) {
 
         return "grade11";
@@ -907,20 +689,10 @@ function getStudentType(
 
 
     if (
-        firebaseType ===
-        "al"
-        ||
-        firebaseType ===
-        "a/l"
-        ||
-        firebaseType ===
-        "a level"
-        ||
-        firebaseType ===
-        "advanced"
-        ||
-        firebaseType ===
-        "advanced level"
+        firebaseType === "al" ||
+        firebaseType === "a/l" ||
+        firebaseType === "a level" ||
+        firebaseType === "advanced level"
     ) {
 
         return "al";
@@ -928,87 +700,14 @@ function getStudentType(
     }
 
 
-    // ---------------------------------------------
-    // FIREBASE grade
-    // ---------------------------------------------
-
-    const firebaseGrade =
-        String(
-            data?.grade ||
-            ""
-        )
-            .trim()
-            .toLowerCase();
-
-
     if (
-        firebaseGrade ===
-        "10"
-        ||
-        firebaseGrade ===
-        "grade10"
-        ||
-        firebaseGrade ===
-        "grade 10"
-    ) {
-
-        return "grade10";
-
-    }
-
-
-    if (
-        firebaseGrade ===
-        "11"
-        ||
-        firebaseGrade ===
-        "grade11"
-        ||
-        firebaseGrade ===
-        "grade 11"
-    ) {
-
-        return "grade11";
-
-    }
-
-
-    if (
-        firebaseGrade ===
-        "al"
-        ||
-        firebaseGrade ===
-        "a/l"
-        ||
-        firebaseGrade ===
-        "a level"
-        ||
-        firebaseGrade ===
-        "advanced"
-        ||
-        firebaseGrade ===
-        "advanced level"
-    ) {
-
-        return "al";
-
-    }
-
-
-    // ---------------------------------------------
-    // A/L SERIES
-    // ---------------------------------------------
-
-    if (
-        studentId.startsWith(
+        id.startsWith(
             "A27000"
-        )
-        ||
-        studentId.startsWith(
+        ) ||
+        id.startsWith(
             "A28000"
-        )
-        ||
-        studentId.startsWith(
+        ) ||
+        id.startsWith(
             "A29000"
         )
     ) {
@@ -1018,23 +717,17 @@ function getStudentType(
     }
 
 
-    // ---------------------------------------------
-    // NUMERIC IDS
-    // ---------------------------------------------
-
     if (
         /^\d{5}$/.test(
-            studentId
+            id
         )
     ) {
 
         const number =
             Number(
-                studentId
+                id
             );
 
-
-        // Grade 11
 
         if (
             number >= 26000 &&
@@ -1045,8 +738,6 @@ function getStudentType(
 
         }
 
-
-        // Grade 10
 
         if (
             number >= 27000 &&
@@ -1059,10 +750,6 @@ function getStudentType(
 
     }
 
-
-    // ---------------------------------------------
-    // DEFAULT
-    // ---------------------------------------------
 
     return "al";
 
@@ -1079,8 +766,7 @@ function getSeries(
 
     const id =
         String(
-            studentId ||
-            ""
+            studentId
         )
             .trim()
             .toUpperCase();
@@ -1159,49 +845,137 @@ function getSeries(
 
 
 // =====================================================
-// GET CATEGORY NAME
+// UPDATE TOTALS
 // =====================================================
 
-function getCategoryName(
-    student
-) {
+function updateTotals() {
 
-    const type =
-        getStudentType(
-            student
-        );
-
-
-    if (
-        type ===
-        "grade11"
-    ) {
-
-        return "Grade 11";
-
-    }
+    const totalA27000 =
+        allStudents.filter(
+            student =>
+                getSeries(
+                    student.id
+                ) ===
+                "A27000"
+        ).length;
 
 
-    if (
-        type ===
-        "grade10"
-    ) {
+    const totalA28000 =
+        allStudents.filter(
+            student =>
+                getSeries(
+                    student.id
+                ) ===
+                "A28000"
+        ).length;
 
-        return "Grade 10";
 
-    }
+    const totalA29000 =
+        allStudents.filter(
+            student =>
+                getSeries(
+                    student.id
+                ) ===
+                "A29000"
+        ).length;
 
 
-    return "A/L";
+    const total26000 =
+        allStudents.filter(
+            student =>
+                getSeries(
+                    student.id
+                ) ===
+                "26000"
+        ).length;
+
+
+    const total27000 =
+        allStudents.filter(
+            student =>
+                getSeries(
+                    student.id
+                ) ===
+                "27000"
+        ).length;
+
+
+    const currentAL =
+        totalA27000 +
+        totalA28000 +
+        totalA29000;
+
+
+    setText(
+        "totalA27000",
+        totalA27000
+    );
+
+
+    setText(
+        "totalA28000",
+        totalA28000
+    );
+
+
+    setText(
+        "totalA29000",
+        totalA29000
+    );
+
+
+    setText(
+        "total26000",
+        total26000
+    );
+
+
+    setText(
+        "total27000",
+        total27000
+    );
+
+
+    setText(
+        "currentALTotal",
+        currentAL
+    );
 
 }
 
 
 // =====================================================
-// GET STUDENT NAME
+// SET TEXT
 // =====================================================
 
-function getStudentName(
+function setText(
+    id,
+    value
+) {
+
+    const element =
+        document.getElementById(
+            id
+        );
+
+
+    if (
+        element
+    ) {
+
+        element.textContent =
+            value;
+
+    }
+
+}
+
+
+// =====================================================
+// GET NAME
+// =====================================================
+
+function getName(
     data
 ) {
 
@@ -1223,10 +997,10 @@ function getStudentName(
 
 
 // =====================================================
-// GET STUDENT NIC
+// GET NIC
 // =====================================================
 
-function getStudentNIC(
+function getNIC(
     data
 ) {
 
@@ -1248,10 +1022,49 @@ function getStudentNIC(
 
 
 // =====================================================
-// GET FILTERED STUDENTS
+// CATEGORY
 // =====================================================
 
-function getFilteredStudents() {
+function getCategory(
+    student
+) {
+
+    const type =
+        getType(
+            student
+        );
+
+
+    if (
+        type ===
+        "grade10"
+    ) {
+
+        return "Grade 10";
+
+    }
+
+
+    if (
+        type ===
+        "grade11"
+    ) {
+
+        return "Grade 11";
+
+    }
+
+
+    return "A/L";
+
+}
+
+
+// =====================================================
+// FILTER
+// =====================================================
+
+function getFiltered() {
 
     const search =
         String(
@@ -1272,8 +1085,7 @@ function getFilteredStudents() {
 
             const id =
                 String(
-                    student.id ||
-                    ""
+                    student.id
                 )
                     .trim()
                     .toUpperCase();
@@ -1285,30 +1097,22 @@ function getFilteredStudents() {
 
 
             const name =
-                String(
-                    getStudentName(
-                        data
-                    )
+                getName(
+                    data
                 );
 
 
             const nic =
-                String(
-                    getStudentNIC(
-                        data
-                    )
+                getNIC(
+                    data
                 );
 
-
-            // -----------------------------------------
-            // SEARCH
-            // -----------------------------------------
 
             if (
                 search
             ) {
 
-                const searchable =
+                const text =
                     (
                         id +
                         " " +
@@ -1320,7 +1124,7 @@ function getFilteredStudents() {
 
 
                 if (
-                    !searchable.includes(
+                    !text.includes(
                         search
                     )
                 ) {
@@ -1332,10 +1136,6 @@ function getFilteredStudents() {
             }
 
 
-            // -----------------------------------------
-            // ALL
-            // -----------------------------------------
-
             if (
                 filter ===
                 "all"
@@ -1346,9 +1146,29 @@ function getFilteredStudents() {
             }
 
 
-            // -----------------------------------------
-            // A27000
-            // -----------------------------------------
+            if (
+                filter ===
+                "al"
+            ) {
+
+                return (
+
+                    id.startsWith(
+                        "A27000"
+                    ) ||
+
+                    id.startsWith(
+                        "A28000"
+                    ) ||
+
+                    id.startsWith(
+                        "A29000"
+                    )
+
+                );
+
+            }
+
 
             if (
                 filter ===
@@ -1362,10 +1182,6 @@ function getFilteredStudents() {
             }
 
 
-            // -----------------------------------------
-            // A28000
-            // -----------------------------------------
-
             if (
                 filter ===
                 "a28000"
@@ -1377,10 +1193,6 @@ function getFilteredStudents() {
 
             }
 
-
-            // -----------------------------------------
-            // A29000
-            // -----------------------------------------
 
             if (
                 filter ===
@@ -1394,58 +1206,10 @@ function getFilteredStudents() {
             }
 
 
-            // -----------------------------------------
-            // A/L
-            // -----------------------------------------
-
-            if (
-                filter ===
-                "al"
-            ) {
-
-                return (
-
-                    id.startsWith(
-                        "A27000"
-                    )
-
-                    ||
-
-                    id.startsWith(
-                        "A28000"
-                    )
-
-                    ||
-
-                    id.startsWith(
-                        "A29000"
-                    )
-
-                );
-
-            }
-
-
-            // -----------------------------------------
-            // GRADE 11
-            // 26000 - 26999
-            // -----------------------------------------
-
             if (
                 filter ===
                 "grade11"
             ) {
-
-                if (
-                    !/^\d{5}$/.test(
-                        id
-                    )
-                ) {
-
-                    return false;
-
-                }
-
 
                 const number =
                     Number(
@@ -1454,41 +1218,19 @@ function getFilteredStudents() {
 
 
                 return (
-
-                    number >=
-                    26000
-
-                    &&
-
-                    number <=
-                    26999
-
+                    /^\d{5}$/.test(id) &&
+                    number >= 26000 &&
+                    number <= 26999
                 );
 
             }
 
-
-            // -----------------------------------------
-            // GRADE 10
-            // 27000 - 27999
-            // -----------------------------------------
 
             if (
                 filter ===
                 "grade10"
             ) {
 
-                if (
-                    !/^\d{5}$/.test(
-                        id
-                    )
-                ) {
-
-                    return false;
-
-                }
-
-
                 const number =
                     Number(
                         id
@@ -1496,15 +1238,9 @@ function getFilteredStudents() {
 
 
                 return (
-
-                    number >=
-                    27000
-
-                    &&
-
-                    number <=
-                    27999
-
+                    /^\d{5}$/.test(id) &&
+                    number >= 27000 &&
+                    number <= 27999
                 );
 
             }
@@ -1519,36 +1255,13 @@ function getFilteredStudents() {
 
 
 // =====================================================
-// RENDER STUDENTS
+// RENDER
 // =====================================================
 
-function renderStudents() {
+function render() {
 
-    if (
-        !studentTable
-    ) {
-
-        return;
-
-    }
-
-
-    const filtered =
-        getFilteredStudents();
-
-
-    // ---------------------------------------------
-    // COUNTS
-    // ---------------------------------------------
-
-    if (
-        shownCount
-    ) {
-
-        shownCount.textContent =
-            filtered.length;
-
-    }
+    const students =
+        getFiltered();
 
 
     if (
@@ -1557,58 +1270,18 @@ function renderStudents() {
 
         resultCount.textContent =
 
-            filtered.length ===
-            1
-
-                ? "1 student"
-
-                : filtered.length +
-                  " students";
-
-    }
-
-
-    const totalAL =
-        filtered.filter(
-            student =>
-                getStudentType(
-                    student
-                ) ===
-                "al"
-        ).length;
-
-
-    const totalGrade =
-        filtered.length -
-        totalAL;
-
-
-    if (
-        alCount
-    ) {
-
-        alCount.textContent =
-            totalAL;
+            students.length +
+            (
+                students.length === 1
+                    ? " student"
+                    : " students"
+            );
 
     }
 
 
     if (
-        gradeCount
-    ) {
-
-        gradeCount.textContent =
-            totalGrade;
-
-    }
-
-
-    // ---------------------------------------------
-    // EMPTY
-    // ---------------------------------------------
-
-    if (
-        filtered.length ===
+        students.length ===
         0
     ) {
 
@@ -1632,54 +1305,41 @@ function renderStudents() {
     }
 
 
-    // ---------------------------------------------
-    // TABLE
-    // ---------------------------------------------
-
     studentTable.innerHTML =
-        filtered
+        students
             .map(
                 (
                     student,
                     index
                 ) => {
 
-                    const data =
-                        student.data ||
-                        {};
-
-
-                    const studentId =
-                        student.id;
-
-
                     const name =
-                        getStudentName(
-                            data
+                        getName(
+                            student.data
                         );
 
 
                     const category =
-                        getCategoryName(
+                        getCategory(
                             student
                         );
 
 
                     const series =
                         getSeries(
-                            studentId
+                            student.id
                         );
 
 
                     const type =
-                        getStudentType(
+                        getType(
                             student
                         );
 
 
                     const nic =
-                        getStudentNIC(
-                            data
+                        getNIC(
+                            student.data
                         );
 
 
@@ -1698,7 +1358,7 @@ function renderStudents() {
                                     class="student-id"
                                 >
                                     ${escapeHTML(
-                                        studentId
+                                        student.id
                                     )}
                                 </span>
 
@@ -1706,27 +1366,28 @@ function renderStudents() {
 
 
                             <td>
+
                                 ${escapeHTML(
                                     name
                                 )}
 
                                 ${
                                     nic
-                                    ? `
-                                        <div
-                                            style="
-                                                margin-top:4px;
-                                                color:#94a3b8;
-                                                font-size:10px;
-                                            "
-                                        >
-                                            NIC:
-                                            ${escapeHTML(
-                                                nic
-                                            )}
-                                        </div>
-                                    `
-                                    : ""
+                                        ? `
+                                            <div
+                                                style="
+                                                    margin-top:4px;
+                                                    font-size:10px;
+                                                    color:#94a3b8;
+                                                "
+                                            >
+                                                NIC:
+                                                ${escapeHTML(
+                                                    nic
+                                                )}
+                                            </div>
+                                        `
+                                        : ""
                                 }
 
                             </td>
@@ -1743,35 +1404,11 @@ function renderStudents() {
                                     ${category}
                                 </span>
 
-
-                                <div
-                                    style="
-                                        margin-top:5px;
-                                        color:#94a3b8;
-                                        font-size:10px;
-                                        font-weight:600;
-                                    "
-                                >
-                                    Series:
-                                    ${escapeHTML(
-                                        series
-                                    )}
-                                </div>
-
                             </td>
 
 
                             <td>
-
-                                <span
-                                    style="
-                                        color:#64748b;
-                                        font-size:12px;
-                                    "
-                                >
-                                    Protected
-                                </span>
-
+                                ${series}
                             </td>
 
 
@@ -1780,8 +1417,8 @@ function renderStudents() {
                                 <button
                                     type="button"
                                     class="delete-btn"
-                                    data-student-id="${escapeAttribute(
-                                        studentId
+                                    data-id="${escapeAttribute(
+                                        student.id
                                     )}"
                                 >
                                     🗑 Delete
@@ -1798,10 +1435,6 @@ function renderStudents() {
             .join("");
 
 
-    // ---------------------------------------------
-    // DELETE BUTTONS
-    // ---------------------------------------------
-
     document
         .querySelectorAll(
             ".delete-btn"
@@ -1813,14 +1446,8 @@ function renderStudents() {
                     "click",
                     () => {
 
-                        const id =
-                            button.getAttribute(
-                                "data-student-id"
-                            );
-
-
-                        deleteStudent(
-                            id
+                        deleteIndividual(
+                            button.dataset.id
                         );
 
                     }
@@ -1833,28 +1460,15 @@ function renderStudents() {
 
 
 // =====================================================
-// DELETE STUDENT
+// INDIVIDUAL DELETE
 // =====================================================
 
-async function deleteStudent(
+async function deleteIndividual(
     studentId
 ) {
 
     if (
-        !unlocked
-    ) {
-
-        alert(
-            "Deletion panel is locked."
-        );
-
-        return;
-
-    }
-
-
-    if (
-        deletingStudent
+        deleteRunning
     ) {
 
         return;
@@ -1865,12 +1479,8 @@ async function deleteStudent(
     const student =
         allStudents.find(
             item =>
-                String(
-                    item.id
-                ) ===
-                String(
-                    studentId
-                )
+                item.id ===
+                studentId
         );
 
 
@@ -1879,7 +1489,7 @@ async function deleteStudent(
     ) {
 
         alert(
-            "Student account was not found."
+            "Student not found."
         );
 
         return;
@@ -1887,20 +1497,9 @@ async function deleteStudent(
     }
 
 
-    const data =
-        student.data ||
-        {};
-
-
     const name =
-        getStudentName(
-            data
-        );
-
-
-    const category =
-        getCategoryName(
-            student
+        getName(
+            student.data
         );
 
 
@@ -1910,41 +1509,32 @@ async function deleteStudent(
         );
 
 
-    // ---------------------------------------------
-    // FIRST CONFIRMATION
-    // ---------------------------------------------
+    const first =
+        confirm(
 
-    const firstConfirm =
-        window.confirm(
-
-            "⚠️ PERMANENT STUDENT DELETION\n\n" +
+            "⚠️ DELETE STUDENT\n\n" +
 
             "Student ID: " +
             studentId +
-            "\n\n" +
+            "\n" +
 
-            "Student Name: " +
+            "Name: " +
             name +
-            "\n\n" +
-
-            "Category: " +
-            category +
-            "\n\n" +
+            "\n" +
 
             "Series: " +
             series +
             "\n\n" +
 
-            "This student account will be permanently " +
-            "removed from the Firestore students collection.\n\n" +
+            "This action cannot be undone.\n\n" +
 
-            "Do you want to continue?"
+            "Continue?"
 
         );
 
 
     if (
-        !firstConfirm
+        !first
     ) {
 
         return;
@@ -1952,30 +1542,215 @@ async function deleteStudent(
     }
 
 
-    // ---------------------------------------------
-    // SECOND CONFIRMATION
-    // ---------------------------------------------
+    const password =
+        prompt(
+            "Enter deletion password:"
+        );
 
-    const secondConfirm =
-        window.confirm(
 
-            "FINAL CONFIRMATION\n\n" +
+    if (
+        password !==
+        DELETE_PASSWORD
+    ) {
 
-            "Delete Student ID:\n" +
+        alert(
+            "Incorrect deletion password."
+        );
 
-            studentId +
+        return;
+
+    }
+
+
+    await performDelete(
+        [
+            student
+        ],
+        "Student deleted successfully."
+    );
+
+}
+
+
+// =====================================================
+// DELETE SERIES
+// =====================================================
+
+async function deleteSeries(
+    series
+) {
+
+    const students =
+        allStudents.filter(
+            student =>
+                getSeries(
+                    student.id
+                ) ===
+                series
+        );
+
+
+    if (
+        students.length ===
+        0
+    ) {
+
+        alert(
+            "There are no students in " +
+            series +
+            "."
+        );
+
+        return;
+
+    }
+
+
+    const first =
+        confirm(
+
+            "⚠️ DELETE ENTIRE SERIES\n\n" +
+
+            "Series: " +
+            series +
+            "\n" +
+
+            "Students: " +
+            students.length +
+            "\n\n" +
+
+            "ALL students in this series " +
+            "will be permanently deleted.\n\n" +
+
+            "Continue?"
+
+        );
+
+
+    if (
+        !first
+    ) {
+
+        return;
+
+    }
+
+
+    const password =
+        prompt(
+            "Enter deletion password:"
+        );
+
+
+    if (
+        password !==
+        DELETE_PASSWORD
+    ) {
+
+        alert(
+            "Incorrect deletion password."
+        );
+
+        return;
+
+    }
+
+
+    await performDelete(
+        students,
+        series +
+        " series deleted successfully."
+    );
+
+}
+
+
+// =====================================================
+// DELETE ALL A/L
+// =====================================================
+
+async function deleteAllAL() {
+
+    const students =
+        allStudents.filter(
+            student => {
+
+                const series =
+                    getSeries(
+                        student.id
+                    );
+
+
+                return (
+
+                    series ===
+                    "A27000"
+
+                    ||
+
+                    series ===
+                    "A28000"
+
+                    ||
+
+                    series ===
+                    "A29000"
+
+                );
+
+            }
+        );
+
+
+    if (
+        students.length ===
+        0
+    ) {
+
+        alert(
+            "There are no current A/L students."
+        );
+
+        return;
+
+    }
+
+
+    const first =
+        confirm(
+
+            "⚠️ DELETE ALL CURRENT A/L STUDENTS\n\n" +
+
+            "A27000: " +
+            countSeries(
+                "A27000"
+            ) +
+
+            "\nA28000: " +
+            countSeries(
+                "A28000"
+            ) +
+
+            "\nA29000: " +
+            countSeries(
+                "A29000"
+            ) +
+
+            "\n\nTOTAL A/L: " +
+            students.length +
 
             "\n\n" +
 
-            "This action CANNOT be undone.\n\n" +
+            "ALL current A/L student accounts " +
+            "will be permanently deleted.\n\n" +
 
-            "Press OK to permanently delete."
+            "Continue?"
 
         );
 
 
     if (
-        !secondConfirm
+        !first
     ) {
 
         return;
@@ -1983,66 +1758,137 @@ async function deleteStudent(
     }
 
 
-    deletingStudent =
+    const password =
+        prompt(
+            "Enter deletion password:"
+        );
+
+
+    if (
+        password !==
+        DELETE_PASSWORD
+    ) {
+
+        alert(
+            "Incorrect deletion password."
+        );
+
+        return;
+
+    }
+
+
+    await performDelete(
+        students,
+        "All current A/L students deleted successfully."
+    );
+
+}
+
+
+// =====================================================
+// COUNT SERIES
+// =====================================================
+
+function countSeries(
+    series
+) {
+
+    return allStudents.filter(
+        student =>
+            getSeries(
+                student.id
+            ) ===
+            series
+    ).length;
+
+}
+
+
+// =====================================================
+// PERFORM DELETE
+// =====================================================
+
+async function performDelete(
+    students,
+    successMessage
+) {
+
+    if (
+        deleteRunning
+    ) {
+
+        return;
+
+    }
+
+
+    deleteRunning =
         true;
 
 
     try {
 
-        // -----------------------------------------
-        // FIRESTORE DOCUMENT
-        // -----------------------------------------
+        let deleted =
+            0;
 
-        const studentReference =
-            doc(
-                db,
-                "students",
-                studentId
+
+        for (
+            const student of students
+        ) {
+
+            const reference =
+                doc(
+                    db,
+                    "students",
+                    student.id
+                );
+
+
+            await deleteDoc(
+                reference
             );
 
 
-        // -----------------------------------------
-        // DELETE
-        // -----------------------------------------
+            deleted++;
 
-        await deleteDoc(
-            studentReference
-        );
+        }
 
 
-        // -----------------------------------------
-        // REMOVE FROM LOCAL ARRAY
-        // -----------------------------------------
+        // ---------------------------------------------
+        // REMOVE LOCALLY
+        // ---------------------------------------------
+
+        const deletedIds =
+            new Set(
+                students.map(
+                    student =>
+                        student.id
+                )
+            );
+
 
         allStudents =
             allStudents.filter(
-                item =>
-                    String(
-                        item.id
-                    ) !==
-                    String(
-                        studentId
+                student =>
+                    !deletedIds.has(
+                        student.id
                     )
             );
 
 
-        // -----------------------------------------
-        // REFRESH TABLE
-        // -----------------------------------------
+        updateTotals();
 
-        renderStudents();
+        render();
 
-
-        // -----------------------------------------
-        // SUCCESS
-        // -----------------------------------------
 
         alert(
 
-            "Student deleted successfully.\n\n" +
+            successMessage +
 
-            "Student ID: " +
-            studentId
+            "\n\nDeleted: " +
+            deleted +
+            " student(s)."
 
         );
 
@@ -2053,104 +1899,39 @@ async function deleteStudent(
     ) {
 
         console.error(
-            "================================"
-        );
-
-        console.error(
-            "STUDENT DELETE ERROR"
-        );
-
-        console.error(
-            "Student ID:",
-            studentId
-        );
-
-        console.error(
+            "Delete error:",
             error
         );
 
-        console.error(
-            "================================"
-        );
-
-
-        let message =
-            "Unable to delete the student.";
-
-
-        // -----------------------------------------
-        // FIRESTORE PERMISSION
-        // -----------------------------------------
 
         if (
             error?.code ===
             "permission-denied"
         ) {
 
-            message =
+            alert(
                 "Firebase denied the delete operation.\n\n" +
-                "Please check your Firestore Security Rules.";
+                "Please check Firestore Security Rules."
+            );
 
         }
+        else {
 
-
-        // -----------------------------------------
-        // NOT FOUND
-        // -----------------------------------------
-
-        if (
-            error?.code ===
-            "not-found"
-        ) {
-
-            message =
-                "The student document was not found in Firebase.";
+            alert(
+                "Unable to complete the deletion.\n\n" +
+                error.message
+            );
 
         }
-
-
-        alert(
-            message
-        );
 
     }
 
     finally {
 
-        deletingStudent =
+        deleteRunning =
             false;
 
     }
-
-}
-
-
-// =====================================================
-// LOGOUT
-// =====================================================
-
-function logoutAdmin() {
-
-    const confirmLogout =
-        window.confirm(
-            "Are you sure you want to sign out?"
-        );
-
-
-    if (
-        !confirmLogout
-    ) {
-
-        return;
-
-    }
-
-
-    sessionStorage.clear();
-
-
-    window.location.href =
-        "admin-login.html";
 
 }
 
@@ -2190,10 +1971,6 @@ function escapeHTML(
 }
 
 
-// =====================================================
-// ATTRIBUTE ESCAPE
-// =====================================================
-
 function escapeAttribute(
     value
 ) {
@@ -2226,19 +2003,15 @@ function escapeAttribute(
 
 
 // =====================================================
-// START SYSTEM
+// START
 // =====================================================
 
 console.log(
-    "========================================"
+    "===================================="
 );
 
 console.log(
     "🗑️ STUDENT DELETION SYSTEM"
-);
-
-console.log(
-    "========================================"
 );
 
 console.log(
@@ -2252,24 +2025,16 @@ console.log(
 );
 
 console.log(
-    "Deletion Protection: ACTIVE"
+    "===================================="
 );
 
-console.log(
-    "========================================"
-);
-
-
-// =====================================================
-// START
-// =====================================================
 
 if (
     !isAdminLoggedIn() ||
     !isSuperAdmin()
 ) {
 
-    showAccessDenied();
+    accessDenied();
 
 }
 else {
