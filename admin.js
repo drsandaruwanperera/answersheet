@@ -19,7 +19,7 @@ const onSnapshot =
 
 
 // =====================================================
-// ADMIN SESSION
+// SESSION
 // =====================================================
 
 const adminLoggedIn =
@@ -28,14 +28,22 @@ const adminLoggedIn =
     ) === "true";
 
 
+const rawRole =
+    sessionStorage.getItem(
+        "adminRole"
+    ) || "limited";
+
+
 const adminRole =
-    (
-        sessionStorage.getItem(
-            "adminRole"
-        ) || "admin"
+    String(
+        rawRole
     )
-    .toLowerCase()
-    .trim();
+        .trim()
+        .toLowerCase()
+        .replace(
+            /[\s_-]+/g,
+            ""
+        );
 
 
 const adminUsername =
@@ -50,7 +58,7 @@ const isSuperAdmin =
 
 
 // =====================================================
-// ADMIN PROTECTION
+// LOGIN PROTECTION
 // =====================================================
 
 if (!adminLoggedIn) {
@@ -63,35 +71,8 @@ if (!adminLoggedIn) {
 
 
 // =====================================================
-// SETTINGS
-// =====================================================
-
-const TOTAL_PAPERS =
-    13;
-
-
-// Student is considered online
-// if lastActiveAt is within 90 seconds.
-
-const ACTIVE_LIMIT =
-    90 * 1000;
-
-
-// =====================================================
-// DATA
-// =====================================================
-
-let allStudents = [];
-
-let realtimeUnsubscribe = null;
-
-
-// =====================================================
 // ELEMENTS
 // =====================================================
-
-
-// Admin information
 
 const adminUsernameElement =
     document.getElementById(
@@ -105,15 +86,11 @@ const adminRoleElement =
     );
 
 
-// Logout
-
 const logoutBtn =
     document.getElementById(
         "logoutBtn"
     );
 
-
-// Summary
 
 const totalStudentsElement =
     document.getElementById(
@@ -133,41 +110,32 @@ const activeStudentsElement =
     );
 
 
-// Management links
+// =====================================================
+// SETTINGS
+// =====================================================
 
-const studentManagementLink =
-    document.getElementById(
-        "studentManagementLink"
-    );
-
-
-const paperManagementLink =
-    document.getElementById(
-        "paperManagementLink"
-    );
+const ACTIVE_LIMIT =
+    90 * 1000;
 
 
-const importStudentsLink =
-    document.getElementById(
-        "importStudentsLink"
-    );
-
-
-const statisticsLink =
-    document.getElementById(
-        "statisticsLink"
-    );
+const TOTAL_PAPERS =
+    13;
 
 
 // =====================================================
-// ADMIN INFORMATION
+// DATA
+// =====================================================
+
+let allStudents = [];
+
+
+// =====================================================
+// ADMIN INFO
 // =====================================================
 
 function loadAdminInfo() {
 
-    if (
-        adminUsernameElement
-    ) {
+    if (adminUsernameElement) {
 
         adminUsernameElement.textContent =
             adminUsername;
@@ -175,9 +143,7 @@ function loadAdminInfo() {
     }
 
 
-    if (
-        adminRoleElement
-    ) {
+    if (adminRoleElement) {
 
         adminRoleElement.textContent =
             isSuperAdmin
@@ -205,7 +171,13 @@ function showAccessDenied() {
 
 
     if (!container) {
+
+        alert(
+            "🔒 Access denied. Super Administrator only."
+        );
+
         return;
+
     }
 
 
@@ -233,7 +205,6 @@ function showAccessDenied() {
             <button
                 type="button"
                 class="access-denied-close"
-                aria-label="Close"
             >
                 ×
             </button>
@@ -258,7 +229,13 @@ function showAccessDenied() {
 
         closeButton.addEventListener(
             "click",
-            hideAccessDenied
+            () => {
+
+                container.classList.remove(
+                    "show"
+                );
+
+            }
         );
 
     }
@@ -271,33 +248,15 @@ function showAccessDenied() {
 
     window.accessDeniedTimer =
         setTimeout(
-            hideAccessDenied,
+            () => {
+
+                container.classList.remove(
+                    "show"
+                );
+
+            },
             3500
         );
-
-}
-
-
-// =====================================================
-// HIDE ACCESS DENIED
-// =====================================================
-
-function hideAccessDenied() {
-
-    const container =
-        document.getElementById(
-            "accessDeniedMessage"
-        );
-
-
-    if (!container) {
-        return;
-    }
-
-
-    container.classList.remove(
-        "show"
-    );
 
 }
 
@@ -308,68 +267,14 @@ function hideAccessDenied() {
 
 function setupRoleAccess() {
 
-    const superAdminNavItems =
-        document.querySelectorAll(
-            ".superadmin-only"
-        );
-
-
-    const superAdminLinks =
-        document.querySelectorAll(
-            ".superadmin-link"
-        );
-
-
-    const superAdminCards =
-        document.querySelectorAll(
-            ".superadmin-card"
-        );
-
-
     // =================================================
     // SUPER ADMIN
     // =================================================
 
     if (isSuperAdmin) {
 
-        superAdminNavItems.forEach(
-            item => {
-
-                item.classList.remove(
-                    "locked-menu"
-                );
-
-                item.removeAttribute(
-                    "aria-disabled"
-                );
-
-            }
-        );
-
-
-        superAdminLinks.forEach(
-            link => {
-
-                link.classList.remove(
-                    "access-locked"
-                );
-
-                link.removeAttribute(
-                    "aria-disabled"
-                );
-
-            }
-        );
-
-
-        superAdminCards.forEach(
-            card => {
-
-                card.classList.remove(
-                    "access-locked"
-                );
-
-            }
+        console.log(
+            "👑 Super Administrator access enabled."
         );
 
 
@@ -379,10 +284,25 @@ function setupRoleAccess() {
 
 
     // =================================================
-    // NORMAL ADMIN
+    // LIMITED ADMIN
     // =================================================
 
-    superAdminNavItems.forEach(
+    console.log(
+        "👤 Limited Administrator access enabled."
+    );
+
+
+    // ---------------------------------------------
+    // Navigation items
+    // ---------------------------------------------
+
+    const restrictedNav =
+        document.querySelectorAll(
+            ".superadmin-only"
+        );
+
+
+    restrictedNav.forEach(
         item => {
 
             item.classList.add(
@@ -409,11 +329,54 @@ function setupRoleAccess() {
                 }
             );
 
+
+            // Add lock
+
+            if (
+                !item.querySelector(
+                    ".nav-lock"
+                )
+            ) {
+
+                const lock =
+                    document.createElement(
+                        "span"
+                    );
+
+
+                lock.className =
+                    "nav-lock";
+
+
+                lock.textContent =
+                    "🔒";
+
+
+                lock.style.marginLeft =
+                    "auto";
+
+
+                item.appendChild(
+                    lock
+                );
+
+            }
+
         }
     );
 
 
-    superAdminLinks.forEach(
+    // ---------------------------------------------
+    // Management links
+    // ---------------------------------------------
+
+    const restrictedLinks =
+        document.querySelectorAll(
+            ".superadmin-link"
+        );
+
+
+    restrictedLinks.forEach(
         link => {
 
             link.classList.add(
@@ -444,11 +407,39 @@ function setupRoleAccess() {
     );
 
 
-    superAdminCards.forEach(
+    // ---------------------------------------------
+    // Management cards
+    // ---------------------------------------------
+
+    const restrictedCards =
+        document.querySelectorAll(
+            ".superadmin-card"
+        );
+
+
+    restrictedCards.forEach(
         card => {
 
             card.classList.add(
                 "access-locked"
+            );
+
+
+            card.setAttribute(
+                "aria-disabled",
+                "true"
+            );
+
+
+            card.addEventListener(
+                "click",
+                event => {
+
+                    event.preventDefault();
+
+                    showAccessDenied();
+
+                }
             );
 
         }
@@ -481,31 +472,7 @@ if (logoutBtn) {
             }
 
 
-            // Stop Firebase listener
-
-            if (
-                realtimeUnsubscribe
-            ) {
-
-                realtimeUnsubscribe();
-
-                realtimeUnsubscribe =
-                    null;
-
-            }
-
-
-            sessionStorage.removeItem(
-                "adminLoggedIn"
-            );
-
-            sessionStorage.removeItem(
-                "adminRole"
-            );
-
-            sessionStorage.removeItem(
-                "adminUsername"
-            );
+            sessionStorage.clear();
 
 
             window.location.replace(
@@ -524,29 +491,28 @@ if (logoutBtn) {
 
 function getStudentType(data) {
 
-    const studentType =
+    const type =
         String(
-            data?.studentType || ""
+            data?.studentType ||
+            ""
         )
-        .toLowerCase()
-        .trim();
+            .toLowerCase()
+            .trim();
 
 
     const grade =
         String(
-            data?.grade || ""
+            data?.grade ||
+            ""
         )
-        .toLowerCase()
-        .trim();
+            .toLowerCase()
+            .trim();
 
-
-    // ---------------------------------------------
-    // studentType
-    // ---------------------------------------------
 
     if (
-        studentType === "grade10" ||
-        studentType === "grade 10"
+        type === "grade10" ||
+        type === "grade 10" ||
+        grade === "10"
     ) {
 
         return "grade10";
@@ -555,47 +521,9 @@ function getStudentType(data) {
 
 
     if (
-        studentType === "grade11" ||
-        studentType === "grade 11"
-    ) {
-
-        return "grade11";
-
-    }
-
-
-    if (
-        studentType === "al" ||
-        studentType === "a/l" ||
-        studentType === "a level" ||
-        studentType === "advanced" ||
-        studentType === "advanced level"
-    ) {
-
-        return "al";
-
-    }
-
-
-    // ---------------------------------------------
-    // grade
-    // ---------------------------------------------
-
-    if (
-        grade === "10" ||
-        grade === "grade10" ||
-        grade === "grade 10"
-    ) {
-
-        return "grade10";
-
-    }
-
-
-    if (
-        grade === "11" ||
-        grade === "grade11" ||
-        grade === "grade 11"
+        type === "grade11" ||
+        type === "grade 11" ||
+        grade === "11"
     ) {
 
         return "grade11";
@@ -609,19 +537,22 @@ function getStudentType(data) {
 
 
 // =====================================================
-// ACTIVE STUDENT
+// ACTIVE
 // =====================================================
 
 function isStudentActive(data) {
 
     const lastActive =
         Number(
-            data?.lastActiveAt || 0
+            data?.lastActiveAt ||
+            0
         );
 
 
     if (!lastActive) {
+
         return false;
+
     }
 
 
@@ -639,37 +570,13 @@ function isStudentActive(data) {
 
 
 // =====================================================
-// PAPER VIEWED FIELD
-// =====================================================
-
-function getPaperViewedField(
-    number
-) {
-
-    return (
-        "paper" +
-        String(number)
-            .padStart(
-                2,
-                "0"
-            ) +
-        "Viewed"
-    );
-
-}
-
-
-// =====================================================
-// PAPER VIEW COUNT
+// VIEWED COUNT
 // =====================================================
 
 function getViewedCount(data) {
 
     let count = 0;
 
-
-    // IMPORTANT:
-    // Papers 01 - 13
 
     for (
         let i = 1;
@@ -678,9 +585,13 @@ function getViewedCount(data) {
     ) {
 
         const field =
-            getPaperViewedField(
-                i
-            );
+            "paper" +
+            String(i)
+                .padStart(
+                    2,
+                    "0"
+                ) +
+            "Viewed";
 
 
         if (
@@ -708,26 +619,23 @@ function setText(
     value
 ) {
 
-    if (!element) {
-        return;
+    if (element) {
+
+        element.textContent =
+            String(value);
+
     }
-
-
-    element.textContent =
-        String(
-            value
-        );
 
 }
 
 
 // =====================================================
-// UPDATE DASHBOARD
+// DASHBOARD
 // =====================================================
 
 function updateDashboard() {
 
-    const total =
+    let total =
         allStudents.length;
 
 
@@ -742,43 +650,25 @@ function updateDashboard() {
     const categories = {
 
         grade10: {
-
             total: 0,
-
             online: 0,
-
             views: 0
-
         },
-
 
         grade11: {
-
             total: 0,
-
             online: 0,
-
             views: 0
-
         },
 
-
         al: {
-
             total: 0,
-
             online: 0,
-
             views: 0
-
         }
 
     };
 
-
-    // =================================================
-    // PROCESS STUDENTS
-    // =================================================
 
     allStudents.forEach(
         student => {
@@ -805,13 +695,9 @@ function updateDashboard() {
                 );
 
 
-            // Total views
-
             totalViewed +=
                 viewed;
 
-
-            // Online
 
             if (active) {
 
@@ -820,24 +706,16 @@ function updateDashboard() {
             }
 
 
-            // Category
-
-            if (
-                categories[type]
-            ) {
-
-                categories[type].total++;
+            categories[type].total++;
 
 
-                categories[type].views +=
-                    viewed;
+            categories[type].views +=
+                viewed;
 
 
-                if (active) {
+            if (active) {
 
-                    categories[type].online++;
-
-                }
+                categories[type].online++;
 
             }
 
@@ -846,7 +724,7 @@ function updateDashboard() {
 
 
     // =================================================
-    // SUMMARY CARDS
+    // SUMMARY
     // =================================================
 
     setText(
@@ -868,7 +746,7 @@ function updateDashboard() {
 
 
     // =================================================
-    // ALL STUDENTS
+    // ALL
     // =================================================
 
     setText(
@@ -891,8 +769,7 @@ function updateDashboard() {
         document.getElementById(
             "reportAllOffline"
         ),
-        total -
-        totalOnline
+        total - totalOnline
     );
 
 
@@ -1014,31 +891,97 @@ function updateDashboard() {
         categories.al.views
     );
 
+}
 
-    // =================================================
-    // CONSOLE
-    // =================================================
 
-    console.log(
-        "📊 Dashboard updated:",
-        {
-            totalStudents:
-                total,
+// =====================================================
+// LOAD STUDENTS
+// =====================================================
 
-            totalViewed:
-                totalViewed,
+function processStudents(
+    snapshot
+) {
 
-            online:
-                totalOnline,
+    const students = [];
 
-            grade10:
-                categories.grade10,
 
-            grade11:
-                categories.grade11,
+    snapshot.forEach(
+        studentDoc => {
 
-            al:
-                categories.al
+            students.push({
+
+                id:
+                    studentDoc.id,
+
+                data:
+                    studentDoc.data()
+
+            });
+
+        }
+    );
+
+
+    allStudents =
+        students;
+
+
+    updateDashboard();
+
+}
+
+
+// =====================================================
+// REAL-TIME
+// =====================================================
+
+function startRealtime() {
+
+    if (
+        typeof onSnapshot !==
+        "function"
+    ) {
+
+        console.error(
+            "onSnapshot is not available."
+        );
+
+
+        return;
+
+    }
+
+
+    const studentsRef =
+        collection(
+            db,
+            "students"
+        );
+
+
+    onSnapshot(
+        studentsRef,
+
+        snapshot => {
+
+            processStudents(
+                snapshot
+            );
+
+
+            console.log(
+                "🟢 Dashboard updated in real-time"
+            );
+
+        },
+
+        error => {
+
+            console.error(
+                "Realtime error:",
+                error
+            );
+
         }
     );
 
@@ -1049,14 +992,9 @@ function updateDashboard() {
 // INITIAL LOAD
 // =====================================================
 
-async function loadStudents() {
+async function initialLoad() {
 
     try {
-
-        console.log(
-            "📥 Loading students..."
-        );
-
 
         const snapshot =
             await getDocs(
@@ -1067,43 +1005,19 @@ async function loadStudents() {
             );
 
 
-        const students = [];
-
-
-        snapshot.forEach(
-            studentDoc => {
-
-                students.push({
-
-                    id:
-                        studentDoc.id,
-
-                    data:
-                        studentDoc.data()
-
-                });
-
-            }
+        processStudents(
+            snapshot
         );
 
 
-        allStudents =
-            students;
-
-
-        updateDashboard();
-
-
-        console.log(
-            "✅ Initial students loaded:",
-            allStudents.length
-        );
+        startRealtime();
 
     }
+
     catch (error) {
 
         console.error(
-            "❌ Initial student load error:",
+            "Dashboard load error:",
             error
         );
 
@@ -1130,187 +1044,25 @@ async function loadStudents() {
 }
 
 
-// =====================================================
-// REAL-TIME FIREBASE LISTENER
-// =====================================================
-
-function startRealtimeUpdates() {
-
-    console.log(
-        "🔥 Starting Firestore real-time listener..."
-    );
-
-
-    // -------------------------------------------------
-    // CHECK ON SNAPSHOT
-    // -------------------------------------------------
-
-    if (
-        typeof onSnapshot !==
-        "function"
-    ) {
-
-        console.error(
-            "❌ onSnapshot is not exported from firebase.js"
-        );
-
-
-        console.error(
-            "Please export onSnapshot from firebase.js"
-        );
-
-
-        // Fallback
-
-        loadStudents();
-
-
-        return;
-
-    }
-
-
-    try {
-
-        const studentsRef =
-            collection(
-                db,
-                "students"
-            );
-
-
-        realtimeUnsubscribe =
-            onSnapshot(
-                studentsRef,
-
-                snapshot => {
-
-                    console.log(
-                        "🔥 Firestore student data changed"
-                    );
-
-
-                    const students = [];
-
-
-                    snapshot.forEach(
-                        studentDoc => {
-
-                            students.push({
-
-                                id:
-                                    studentDoc.id,
-
-                                data:
-                                    studentDoc.data()
-
-                            });
-
-                        }
-                    );
-
-
-                    allStudents =
-                        students;
-
-
-                    updateDashboard();
-
-
-                    console.log(
-                        "✅ Real-time students:",
-                        allStudents.length
-                    );
-
-                },
-
-
-                error => {
-
-                    console.error(
-                        "❌ Firestore real-time listener error:",
-                        error
-                    );
-
-                }
-            );
-
-    }
-    catch (error) {
-
-        console.error(
-            "❌ Failed to start real-time listener:",
-            error
-        );
-
-
-        loadStudents();
-
-    }
-
-}
+initialLoad();
 
 
 // =====================================================
 // ACTIVE STATUS REFRESH
 // =====================================================
-//
-// Firestore will notify us when:
-// - login changes lastActiveAt
-// - logout changes lastActiveAt
-// - paperViewed changes
-//
-// But when 90 seconds simply passes,
-// Firestore itself does NOT change.
-//
-// Therefore we refresh locally every 15 seconds.
-// =====================================================
-
-function refreshActiveStatus() {
-
-    if (
-        allStudents.length === 0
-    ) {
-
-        return;
-
-    }
-
-
-    updateDashboard();
-
-}
-
 
 setInterval(
-    refreshActiveStatus,
+    () => {
+
+        updateDashboard();
+
+    },
     15000
 );
 
 
 // =====================================================
-// PAGE VISIBILITY
-// =====================================================
-
-document.addEventListener(
-    "visibilitychange",
-    () => {
-
-        if (
-            document.visibilityState ===
-            "visible"
-        ) {
-
-            refreshActiveStatus();
-
-        }
-
-    }
-);
-
-
-// =====================================================
-// DIRECT PAGE PROTECTION
+// DIRECT URL PROTECTION
 // =====================================================
 
 function protectCurrentPage() {
@@ -1360,73 +1112,19 @@ protectCurrentPage();
 
 
 // =====================================================
-// MANAGEMENT LINK SAFETY
-// =====================================================
-
-if (
-    studentManagementLink
-) {
-
-    studentManagementLink.addEventListener(
-        "click",
-        () => {
-
-            console.log(
-                "Opening Student Management"
-            );
-
-        }
-    );
-
-}
-
-
-// =====================================================
-// CLEANUP
-// =====================================================
-
-window.addEventListener(
-    "beforeunload",
-    () => {
-
-        if (
-            realtimeUnsubscribe
-        ) {
-
-            realtimeUnsubscribe();
-
-            realtimeUnsubscribe =
-                null;
-
-        }
-
-    }
-);
-
-
-// =====================================================
-// START
-// =====================================================
-
-loadStudents();
-
-startRealtimeUpdates();
-
-
-// =====================================================
 // CONSOLE
 // =====================================================
 
 console.log(
-    "=========================================="
+    "======================================"
 );
 
 console.log(
-    "✅ ADMIN DASHBOARD ACTIVE"
+    "✅ ADMIN DASHBOARD"
 );
 
 console.log(
-    "Admin:",
+    "Username:",
     adminUsername
 );
 
@@ -1441,16 +1139,5 @@ console.log(
 );
 
 console.log(
-    "Total Papers:",
-    TOTAL_PAPERS
-);
-
-console.log(
-    "Real-Time Listener:",
-    typeof onSnapshot ===
-    "function"
-);
-
-console.log(
-    "=========================================="
+    "======================================"
 );
