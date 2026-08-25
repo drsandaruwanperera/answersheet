@@ -791,7 +791,255 @@ function setupModelCard(
 
 }
 
+// =====================================================
+// LOAD PAPER VISIBILITY SETTINGS
+// =====================================================
 
+async function loadPaperVisibility(type) {
+
+    try {
+
+        // -------------------------------------------------
+        // GRADE 10
+        // -------------------------------------------------
+
+        if (type === "grade10") {
+
+            const settingsRef =
+                doc(
+                    db,
+                    "paperSettings",
+                    "grade10"
+                );
+
+
+            const snapshot =
+                await getDoc(
+                    settingsRef
+                );
+
+
+            if (!snapshot.exists()) {
+
+                console.warn(
+                    "Grade 10 paper settings not found."
+                );
+
+                return;
+
+            }
+
+
+            const settings =
+                snapshot.data();
+
+
+            console.log(
+                "📚 Grade 10 Dashboard Settings:",
+                settings
+            );
+
+
+            // =============================================
+            // MODEL PAPERS
+            // =============================================
+
+            const modelEnabled =
+                settings.modelPapersEnabled === true;
+
+
+            if (modelPapersCard) {
+
+                modelPapersCard.style.display =
+                    modelEnabled
+                        ? ""
+                        : "none";
+
+            }
+
+
+            // =============================================
+            // PAST PAPERS
+            // =============================================
+
+            const pastEnabled =
+                settings.pastPapersEnabled === true;
+
+
+            if (pastPapersCard) {
+
+                pastPapersCard.style.display =
+                    pastEnabled
+                        ? ""
+                        : "none";
+
+            }
+
+
+            console.log(
+                "Grade 10 Model Papers:",
+                modelEnabled
+                    ? "VISIBLE"
+                    : "HIDDEN"
+            );
+
+
+            console.log(
+                "Grade 10 Past Papers:",
+                pastEnabled
+                    ? "VISIBLE"
+                    : "HIDDEN"
+            );
+
+        }
+
+
+        // -------------------------------------------------
+        // GRADE 11
+        // -------------------------------------------------
+
+        else if (type === "grade11") {
+
+            const settingsRef =
+                doc(
+                    db,
+                    "paperSettings",
+                    "grade11"
+                );
+
+
+            const snapshot =
+                await getDoc(
+                    settingsRef
+                );
+
+
+            if (!snapshot.exists()) {
+
+                console.warn(
+                    "Grade 11 paper settings not found."
+                );
+
+                return;
+
+            }
+
+
+            const settings =
+                snapshot.data();
+
+
+            console.log(
+                "📚 Grade 11 Dashboard Settings:",
+                settings
+            );
+
+
+            const topRankingEnabled =
+                settings.topRankingEnabled === true;
+
+
+            const pastEnabled =
+                settings.pastPapersEnabled === true;
+
+
+            if (modelPapersCard) {
+
+                modelPapersCard.style.display =
+                    topRankingEnabled
+                        ? ""
+                        : "none";
+
+            }
+
+
+            if (pastPapersCard) {
+
+                pastPapersCard.style.display =
+                    pastEnabled
+                        ? ""
+                        : "none";
+
+            }
+
+        }
+
+
+        // -------------------------------------------------
+        // A/L
+        // -------------------------------------------------
+
+        else if (type === "al") {
+
+            const settingsRef =
+                doc(
+                    db,
+                    "paperSettings",
+                    "al"
+                );
+
+
+            const snapshot =
+                await getDoc(
+                    settingsRef
+                );
+
+
+            if (!snapshot.exists()) {
+
+                console.warn(
+                    "A/L paper settings not found."
+                );
+
+                return;
+
+            }
+
+
+            const settings =
+                snapshot.data();
+
+
+            const modelEnabled =
+                settings.modelPapersEnabled === true;
+
+
+            const pastEnabled =
+                settings.pastPapersEnabled === true;
+
+
+            if (modelPapersCard) {
+
+                modelPapersCard.style.display =
+                    modelEnabled
+                        ? ""
+                        : "none";
+
+            }
+
+
+            if (pastPapersCard) {
+
+                pastPapersCard.style.display =
+                    pastEnabled
+                        ? ""
+                        : "none";
+
+            }
+
+        }
+
+    }
+    catch (error) {
+
+        console.error(
+            "❌ Failed to load paper visibility:",
+            error
+        );
+
+    }
+
+}
 // =====================================================
 // SETUP PAST / PROVINCE CARD
 // =====================================================
