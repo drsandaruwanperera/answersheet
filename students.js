@@ -20,28 +20,31 @@ import {
 // =====================================================
 
 const adminLoggedIn =
-    sessionStorage.getItem("adminLoggedIn") === "true";
+    sessionStorage.getItem(
+        "adminLoggedIn"
+    ) === "true";
+
 
 const adminRole =
     (
-        sessionStorage.getItem("adminRole") || ""
+        sessionStorage.getItem(
+            "adminRole"
+        ) || ""
     )
         .trim()
         .toLowerCase()
-        .replace(/[\s_-]+/g, "");
+        .replace(
+            /[\s_-]+/g,
+            ""
+        );
 
-const isSuperAdmin =
-    adminRole === "superadmin" ||
-    adminRole === "full";
 
 const adminUsername =
-    sessionStorage.getItem("adminUsername") ||
+    sessionStorage.getItem(
+        "adminUsername"
+    ) ||
     "Admin";
 
-
-// =====================================================
-// PAGE PROTECTION
-// =====================================================
 
 if (!adminLoggedIn) {
 
@@ -61,15 +64,18 @@ const studentTable =
         "studentTable"
     );
 
+
 const searchInput =
     document.getElementById(
         "search"
     );
 
+
 const typeFilter =
     document.getElementById(
         "typeFilter"
     );
+
 
 const statusFilter =
     document.getElementById(
@@ -78,7 +84,7 @@ const statusFilter =
 
 
 // =====================================================
-// ADD STUDENT ELEMENTS
+// ADD STUDENT
 // =====================================================
 
 const addStudentBtn =
@@ -86,55 +92,66 @@ const addStudentBtn =
         "addStudentBtn"
     );
 
+
 const addModal =
     document.getElementById(
         "addModal"
     );
+
 
 const closeAdd =
     document.getElementById(
         "closeAdd"
     );
 
+
 const cancelAdd =
     document.getElementById(
         "cancelAdd"
     );
+
 
 const saveNewStudent =
     document.getElementById(
         "saveNewStudent"
     );
 
+
 const newStudentGrade =
     document.getElementById(
         "newStudentGrade"
     );
+
 
 const newStudentId =
     document.getElementById(
         "newStudentId"
     );
 
+
 const newStudentPassword =
     document.getElementById(
         "newStudentPassword"
     );
+
 
 const newMustChange =
     document.getElementById(
         "newMustChange"
     );
 
+
 const alSeriesSection =
     document.getElementById(
         "alSeriesSection"
     );
 
+
 const alSeriesButtons =
     document.querySelectorAll(
         ".al-series-btn"
     );
+
 
 const studentIdHelp =
     document.getElementById(
@@ -143,7 +160,7 @@ const studentIdHelp =
 
 
 // =====================================================
-// EDIT ELEMENTS
+// EDIT STUDENT
 // =====================================================
 
 const editModal =
@@ -151,40 +168,48 @@ const editModal =
         "editModal"
     );
 
+
 const closeEdit =
     document.getElementById(
         "closeEdit"
     );
+
 
 const closeEditBottom =
     document.getElementById(
         "closeEditBottom"
     );
 
+
 const editStudentId =
     document.getElementById(
         "editStudentId"
     );
+
 
 const editPassword =
     document.getElementById(
         "editPassword"
     );
 
+
 const editMustChange =
     document.getElementById(
         "editMustChange"
     );
+
 
 const updateStudentBtn =
     document.getElementById(
         "updateStudent"
     );
 
+
 const deleteStudentBtn =
     document.getElementById(
         "deleteStudent"
     );
+
 
 const resetPasswordBtn =
     document.getElementById(
@@ -193,7 +218,7 @@ const resetPasswordBtn =
 
 
 // =====================================================
-// PAPER ELEMENTS
+// PAPER CONTROLS
 // =====================================================
 
 const selectAllPapers =
@@ -201,10 +226,12 @@ const selectAllPapers =
         "selectAllPapers"
     );
 
+
 const removeAllPapers =
     document.getElementById(
         "removeAllPapers"
     );
+
 
 const resetViewed =
     document.getElementById(
@@ -241,14 +268,18 @@ let selectedALSeries = "";
 
 
 // =====================================================
-// PAPER FIELD HELPERS
+// PAPER FIELD
 // =====================================================
 
-function getPaperField(number) {
+function getPaperField(
+    number
+) {
 
     return (
         "paper" +
-        String(number).padStart(
+        String(
+            number
+        ).padStart(
             2,
             "0"
         )
@@ -257,20 +288,28 @@ function getPaperField(number) {
 }
 
 
-function getPaperViewedField(number) {
+function getPaperViewedField(
+    number
+) {
 
     return (
-        getPaperField(number) +
+        getPaperField(
+            number
+        ) +
         "Viewed"
     );
 
 }
 
 
-function getPaperPagesField(number) {
+function getPaperPagesField(
+    number
+) {
 
     return (
-        getPaperField(number) +
+        getPaperField(
+            number
+        ) +
         "Pages"
     );
 
@@ -288,7 +327,8 @@ function getStudentType(
 
     const firebaseType =
         String(
-            data?.studentType || ""
+            data?.studentType ||
+            ""
         )
             .trim()
             .toLowerCase();
@@ -327,18 +367,19 @@ function getStudentType(
     }
 
 
-    const grade =
+    const firebaseGrade =
         String(
-            data?.grade || ""
+            data?.grade ||
+            ""
         )
             .trim()
             .toLowerCase();
 
 
     if (
-        grade === "10" ||
-        grade === "grade10" ||
-        grade === "grade 10"
+        firebaseGrade === "10" ||
+        firebaseGrade === "grade10" ||
+        firebaseGrade === "grade 10"
     ) {
 
         return "grade10";
@@ -347,9 +388,9 @@ function getStudentType(
 
 
     if (
-        grade === "11" ||
-        grade === "grade11" ||
-        grade === "grade 11"
+        firebaseGrade === "11" ||
+        firebaseGrade === "grade11" ||
+        firebaseGrade === "grade 11"
     ) {
 
         return "grade11";
@@ -358,11 +399,11 @@ function getStudentType(
 
 
     if (
-        grade === "al" ||
-        grade === "a/l" ||
-        grade === "a level" ||
-        grade === "advanced" ||
-        grade === "advanced level"
+        firebaseGrade === "al" ||
+        firebaseGrade === "a/l" ||
+        firebaseGrade === "a level" ||
+        firebaseGrade === "advanced" ||
+        firebaseGrade === "advanced level"
     ) {
 
         return "al";
@@ -370,9 +411,10 @@ function getStudentType(
     }
 
 
-    const cleanId =
+    const id =
         String(
-            studentId || ""
+            studentId ||
+            ""
         )
             .trim()
             .toUpperCase();
@@ -383,11 +425,11 @@ function getStudentType(
     // ---------------------------------------------
 
     if (
-        /^\d{5}$/.test(cleanId)
+        /^\d{5}$/.test(id)
     ) {
 
         const number =
-            Number(cleanId);
+            Number(id);
 
 
         if (
@@ -418,16 +460,10 @@ function getStudentType(
 
     // ---------------------------------------------
     // A/L
-    //
-    // A27000 - A27999
-    // A28000 - A28999
-    // A29000 - A29999
     // ---------------------------------------------
 
     if (
-        /^A(27|28|29)\d{3}$/.test(
-            cleanId
-        )
+        /^A\d{5}$/.test(id)
     ) {
 
         return "al";
@@ -444,7 +480,9 @@ function getStudentType(
 // TYPE LABEL
 // =====================================================
 
-function getStudentTypeLabel(type) {
+function getStudentTypeLabel(
+    type
+) {
 
     if (
         type === "grade10"
@@ -482,7 +520,9 @@ function getStudentTypeLabel(type) {
 // TYPE CLASS
 // =====================================================
 
-function getStudentTypeClass(type) {
+function getStudentTypeClass(
+    type
+) {
 
     if (
         type === "grade10"
@@ -511,7 +551,9 @@ function getStudentTypeClass(type) {
 // STUDENT NAME
 // =====================================================
 
-function getStudentName(data) {
+function getStudentName(
+    data
+) {
 
     return (
         data?.fullName ||
@@ -528,11 +570,14 @@ function getStudentName(data) {
 // ACTIVE STATUS
 // =====================================================
 
-function isStudentActive(data) {
+function isStudentActive(
+    data
+) {
 
     const lastActive =
         Number(
-            data?.lastActiveAt || 0
+            data?.lastActiveAt ||
+            0
         );
 
 
@@ -560,10 +605,12 @@ function isStudentActive(data) {
 // REGISTRATION STATUS
 // =====================================================
 
-function getRegistrationStatus(data) {
+function getRegistrationStatus(
+    data
+) {
 
     if (
-        data?.profileCompleted === true ||
+        data?.profileCompleted === true &&
         data?.registrationCompleted === true
     ) {
 
@@ -590,7 +637,9 @@ function getRegistrationStatus(data) {
 // VIEWED COUNT
 // =====================================================
 
-function getViewedCount(data) {
+function getViewedCount(
+    data
+) {
 
     let count = 0;
 
@@ -603,7 +652,9 @@ function getViewedCount(data) {
 
         if (
             data?.[
-                getPaperViewedField(i)
+                getPaperViewedField(
+                    i
+                )
             ] === true
         ) {
 
@@ -623,7 +674,9 @@ function getViewedCount(data) {
 // ESCAPE HTML
 // =====================================================
 
-function escapeHTML(value) {
+function escapeHTML(
+    value
+) {
 
     return String(
         value ?? ""
@@ -653,17 +706,17 @@ function escapeHTML(value) {
 
 
 // =====================================================
-// PASSWORD DISPLAY
+// PASSWORD HTML
 // =====================================================
 
 function getPasswordHTML(
-    studentId,
     password
 ) {
 
     const safePassword =
         escapeHTML(
-            password || ""
+            password ||
+            ""
         );
 
 
@@ -671,12 +724,17 @@ function getPasswordHTML(
 
         <div
             class="password-cell"
+            style="
+                display:flex;
+                align-items:center;
+                gap:6px;
+            "
         >
 
             <span
                 class="student-password"
                 style="
-                    min-width:85px;
+                    min-width:75px;
                     letter-spacing:2px;
                 "
             >
@@ -761,14 +819,16 @@ async function loadStudents() {
         );
 
 
-        if (studentTable) {
+        if (
+            studentTable
+        ) {
 
             studentTable.innerHTML = `
 
                 <tr>
 
                     <td
-                        colspan="6"
+                        colspan="7"
                         style="
                             text-align:center;
                             padding:30px;
@@ -792,7 +852,7 @@ async function loadStudents() {
 
 
 // =====================================================
-// SORT
+// SORT STUDENTS
 // =====================================================
 
 function sortStudents() {
@@ -933,7 +993,9 @@ function getFilteredStudents() {
 
 function renderStudents() {
 
-    if (!studentTable) {
+    if (
+        !studentTable
+    ) {
 
         return;
 
@@ -953,7 +1015,7 @@ function renderStudents() {
             <tr>
 
                 <td
-                    colspan="6"
+                    colspan="7"
                     style="
                         text-align:center;
                         padding:30px;
@@ -992,7 +1054,9 @@ function renderStudents() {
 // RENDER ROW
 // =====================================================
 
-function renderStudentRow(student) {
+function renderStudentRow(
+    student
+) {
 
     const data =
         student.data;
@@ -1050,7 +1114,7 @@ function renderStudentRow(student) {
 
             <td>
 
-                <strong class="student-id">
+                <strong>
                     ${escapeHTML(
                         student.id
                     )}
@@ -1061,15 +1125,11 @@ function renderStudentRow(student) {
 
             <td>
 
-                <span class="student-name">
-
-                    ${escapeHTML(
-                        getStudentName(
-                            data
-                        )
-                    )}
-
-                </span>
+                ${escapeHTML(
+                    getStudentName(
+                        data
+                    )
+                )}
 
             </td>
 
@@ -1116,13 +1176,7 @@ function renderStudentRow(student) {
                 <br>
 
 
-                <small
-                    class="${
-                        active
-                            ? "online-status"
-                            : "offline-status"
-                    }"
-                >
+                <small>
 
                     ${
                         active
@@ -1138,7 +1192,6 @@ function renderStudentRow(student) {
             <td>
 
                 ${getPasswordHTML(
-                    student.id,
                     data?.password
                 )}
 
@@ -1193,11 +1246,17 @@ function renderStudentRow(student) {
 // TABLE ACTIONS
 // =====================================================
 
-if (studentTable) {
+if (
+    studentTable
+) {
 
     studentTable.addEventListener(
         "click",
         event => {
+
+            // =========================================
+            // PASSWORD VIEW
+            // =========================================
 
             const passwordButton =
                 event.target.closest(
@@ -1205,7 +1264,9 @@ if (studentTable) {
                 );
 
 
-            if (passwordButton) {
+            if (
+                passwordButton
+            ) {
 
                 const row =
                     passwordButton.closest(
@@ -1220,7 +1281,8 @@ if (studentTable) {
 
 
                 const password =
-                    passwordButton.dataset.password;
+                    passwordButton.dataset.password ||
+                    "";
 
 
                 const visible =
@@ -1228,9 +1290,13 @@ if (studentTable) {
                     "true";
 
 
-                if (passwordSpan) {
+                if (
+                    passwordSpan
+                ) {
 
-                    if (visible) {
+                    if (
+                        visible
+                    ) {
 
                         passwordSpan.textContent =
                             "••••••••";
@@ -1242,11 +1308,11 @@ if (studentTable) {
                             "false";
 
                     }
-
                     else {
 
                         passwordSpan.textContent =
-                            password || "(empty)";
+                            password ||
+                            "(empty)";
 
                         passwordButton.textContent =
                             "🙈";
@@ -1264,13 +1330,19 @@ if (studentTable) {
             }
 
 
+            // =========================================
+            // ACTION BUTTON
+            // =========================================
+
             const actionButton =
                 event.target.closest(
                     "button[data-action]"
                 );
 
 
-            if (!actionButton) {
+            if (
+                !actionButton
+            ) {
 
                 return;
 
@@ -1313,10 +1385,12 @@ if (studentTable) {
 
 
 // =====================================================
-// SEARCH / FILTER
+// SEARCH
 // =====================================================
 
-if (searchInput) {
+if (
+    searchInput
+) {
 
     searchInput.addEventListener(
         "input",
@@ -1326,7 +1400,9 @@ if (searchInput) {
 }
 
 
-if (typeFilter) {
+if (
+    typeFilter
+) {
 
     typeFilter.addEventListener(
         "change",
@@ -1336,7 +1412,9 @@ if (typeFilter) {
 }
 
 
-if (statusFilter) {
+if (
+    statusFilter
+) {
 
     statusFilter.addEventListener(
         "change",
@@ -1347,7 +1425,7 @@ if (statusFilter) {
 
 
 // =====================================================
-// ADD MODAL
+// OPEN ADD MODAL
 // =====================================================
 
 function openAddModal() {
@@ -1355,11 +1433,14 @@ function openAddModal() {
     clearAddForm();
 
 
-    if (addModal) {
+    if (
+        addModal
+    ) {
 
         addModal.classList.add(
             "show"
         );
+
 
         addModal.style.display =
             "flex";
@@ -1369,13 +1450,32 @@ function openAddModal() {
 }
 
 
+if (
+    addStudentBtn
+) {
+
+    addStudentBtn.addEventListener(
+        "click",
+        openAddModal
+    );
+
+}
+
+
+// =====================================================
+// CLOSE ADD MODAL
+// =====================================================
+
 function closeAddModal() {
 
-    if (addModal) {
+    if (
+        addModal
+    ) {
 
         addModal.classList.remove(
             "show"
         );
+
 
         addModal.style.display =
             "none";
@@ -1388,17 +1488,9 @@ function closeAddModal() {
 }
 
 
-if (addStudentBtn) {
-
-    addStudentBtn.addEventListener(
-        "click",
-        openAddModal
-    );
-
-}
-
-
-if (closeAdd) {
+if (
+    closeAdd
+) {
 
     closeAdd.addEventListener(
         "click",
@@ -1408,7 +1500,9 @@ if (closeAdd) {
 }
 
 
-if (cancelAdd) {
+if (
+    cancelAdd
+) {
 
     cancelAdd.addEventListener(
         "click",
@@ -1418,7 +1512,9 @@ if (cancelAdd) {
 }
 
 
-if (addModal) {
+if (
+    addModal
+) {
 
     addModal.addEventListener(
         "click",
@@ -1449,7 +1545,9 @@ function clearAddForm() {
         "";
 
 
-    if (newStudentGrade) {
+    if (
+        newStudentGrade
+    ) {
 
         newStudentGrade.textContent =
             "";
@@ -1457,19 +1555,42 @@ function clearAddForm() {
     }
 
 
-    if (newStudentId) {
+    if (
+        newStudentId
+    ) {
 
         newStudentId.value =
             "";
 
+
+        // IMPORTANT:
+        // Student ID must ALWAYS be editable
+
         newStudentId.readOnly =
             false;
+
+
+        newStudentId.disabled =
+            false;
+
+
+        newStudentId.removeAttribute(
+            "readonly"
+        );
+
+
+        newStudentId.removeAttribute(
+            "disabled"
+        );
+
 
         newStudentId.placeholder =
             "Select category first";
 
+
         newStudentId.style.background =
             "";
+
 
         newStudentId.style.fontWeight =
             "";
@@ -1477,7 +1598,9 @@ function clearAddForm() {
     }
 
 
-    if (newStudentPassword) {
+    if (
+        newStudentPassword
+    ) {
 
         newStudentPassword.value =
             "";
@@ -1485,7 +1608,9 @@ function clearAddForm() {
     }
 
 
-    if (newMustChange) {
+    if (
+        newMustChange
+    ) {
 
         newMustChange.checked =
             true;
@@ -1493,7 +1618,9 @@ function clearAddForm() {
     }
 
 
-    if (alSeriesSection) {
+    if (
+        alSeriesSection
+    ) {
 
         alSeriesSection.style.display =
             "none";
@@ -1501,7 +1628,9 @@ function clearAddForm() {
     }
 
 
-    if (studentIdHelp) {
+    if (
+        studentIdHelp
+    ) {
 
         studentIdHelp.textContent =
             "Select a student category first.";
@@ -1540,7 +1669,7 @@ function clearAddForm() {
 
 
 // =====================================================
-// CATEGORY BUTTONS
+// CATEGORY SELECTION
 // =====================================================
 
 document
@@ -1591,7 +1720,9 @@ document
                             "";
 
 
-                        if (alSeriesSection) {
+                        if (
+                            alSeriesSection
+                        ) {
 
                             alSeriesSection.style.display =
                                 "block";
@@ -1599,19 +1730,42 @@ document
                         }
 
 
-                        if (newStudentId) {
+                        if (
+                            newStudentId
+                        ) {
 
                             newStudentId.value =
                                 "";
 
+
+                            // IMPORTANT
+                            // ENABLE MANUAL TYPING
+
                             newStudentId.readOnly =
                                 false;
+
+
+                            newStudentId.disabled =
+                                false;
+
+
+                            newStudentId.removeAttribute(
+                                "readonly"
+                            );
+
+
+                            newStudentId.removeAttribute(
+                                "disabled"
+                            );
+
 
                             newStudentId.placeholder =
                                 "Enter A/L Student ID";
 
+
                             newStudentId.style.background =
                                 "";
+
 
                             newStudentId.style.fontWeight =
                                 "";
@@ -1619,18 +1773,22 @@ document
                         }
 
 
-                        if (studentIdHelp) {
+                        if (
+                            studentIdHelp
+                        ) {
 
                             studentIdHelp.textContent =
-                                "Select the A/L series and manually enter the Student ID.";
+                                "Select A27000, A28000 or A29000 series, then enter the Student ID manually.";
 
                         }
 
 
-                        if (newStudentGrade) {
+                        if (
+                            newStudentGrade
+                        ) {
 
                             newStudentGrade.textContent =
-                                "Selected: A/L Student";
+                                "Selected: A/L";
 
                         }
 
@@ -1649,7 +1807,9 @@ document
                             "";
 
 
-                        if (alSeriesSection) {
+                        if (
+                            alSeriesSection
+                        ) {
 
                             alSeriesSection.style.display =
                                 "none";
@@ -1657,19 +1817,39 @@ document
                         }
 
 
-                        if (newStudentId) {
+                        if (
+                            newStudentId
+                        ) {
 
                             newStudentId.value =
                                 "";
 
+
                             newStudentId.readOnly =
                                 false;
+
+
+                            newStudentId.disabled =
+                                false;
+
+
+                            newStudentId.removeAttribute(
+                                "readonly"
+                            );
+
+
+                            newStudentId.removeAttribute(
+                                "disabled"
+                            );
+
 
                             newStudentId.placeholder =
                                 "Enter Grade 10 Student ID";
 
+
                             newStudentId.style.background =
                                 "";
+
 
                             newStudentId.style.fontWeight =
                                 "";
@@ -1677,7 +1857,9 @@ document
                         }
 
 
-                        if (studentIdHelp) {
+                        if (
+                            studentIdHelp
+                        ) {
 
                             studentIdHelp.textContent =
                                 "Enter Grade 10 Student ID manually. Range: 27000–27999.";
@@ -1685,7 +1867,9 @@ document
                         }
 
 
-                        if (newStudentGrade) {
+                        if (
+                            newStudentGrade
+                        ) {
 
                             newStudentGrade.textContent =
                                 "Selected: Grade 10";
@@ -1707,7 +1891,9 @@ document
                             "";
 
 
-                        if (alSeriesSection) {
+                        if (
+                            alSeriesSection
+                        ) {
 
                             alSeriesSection.style.display =
                                 "none";
@@ -1715,19 +1901,39 @@ document
                         }
 
 
-                        if (newStudentId) {
+                        if (
+                            newStudentId
+                        ) {
 
                             newStudentId.value =
                                 "";
 
+
                             newStudentId.readOnly =
                                 false;
+
+
+                            newStudentId.disabled =
+                                false;
+
+
+                            newStudentId.removeAttribute(
+                                "readonly"
+                            );
+
+
+                            newStudentId.removeAttribute(
+                                "disabled"
+                            );
+
 
                             newStudentId.placeholder =
                                 "Enter Grade 11 Student ID";
 
+
                             newStudentId.style.background =
                                 "";
+
 
                             newStudentId.style.fontWeight =
                                 "";
@@ -1735,7 +1941,9 @@ document
                         }
 
 
-                        if (studentIdHelp) {
+                        if (
+                            studentIdHelp
+                        ) {
 
                             studentIdHelp.textContent =
                                 "Enter Grade 11 Student ID manually. Range: 26000–26999.";
@@ -1743,7 +1951,9 @@ document
                         }
 
 
-                        if (newStudentGrade) {
+                        if (
+                            newStudentGrade
+                        ) {
 
                             newStudentGrade.textContent =
                                 "Selected: Grade 11";
@@ -1760,7 +1970,7 @@ document
 
 
 // =====================================================
-// A/L SERIES
+// A/L SERIES SELECTION
 // =====================================================
 
 alSeriesButtons.forEach(
@@ -1799,30 +2009,63 @@ alSeriesButtons.forEach(
                 );
 
 
-                if (newStudentId) {
+                // =====================================
+                // IMPORTANT:
+                // STUDENT ID IS MANUAL
+                // =====================================
+
+                if (
+                    newStudentId
+                ) {
 
                     newStudentId.readOnly =
                         false;
 
+
+                    newStudentId.disabled =
+                        false;
+
+
+                    newStudentId.removeAttribute(
+                        "readonly"
+                    );
+
+
+                    newStudentId.removeAttribute(
+                        "disabled"
+                    );
+
+
                     newStudentId.placeholder =
                         "Enter A/L Student ID";
+
+
+                    // Do NOT automatically insert ID
 
                     newStudentId.focus();
 
                 }
 
 
-                if (studentIdHelp) {
+                // =====================================
+                // HELP TEXT
+                // =====================================
+
+                if (
+                    studentIdHelp
+                ) {
+
+                    const seriesName =
+                        series === "27000"
+                            ? "A27000"
+                            : series === "28000"
+                                ? "A28000"
+                                : "A29000";
+
 
                     studentIdHelp.textContent =
                         "Selected " +
-                        (
-                            series === "27000"
-                                ? "A27000"
-                                : series === "28000"
-                                    ? "A28000"
-                                    : "A29000"
-                        ) +
+                        seriesName +
                         " series. Enter the Student ID manually.";
 
                 }
@@ -1845,7 +2088,8 @@ function validateALSeries(
 
     const id =
         String(
-            studentId || ""
+            studentId ||
+            ""
         )
             .trim()
             .toUpperCase();
@@ -1862,7 +2106,9 @@ function validateALSeries(
 
     const number =
         Number(
-            id.substring(1)
+            id.substring(
+                1
+            )
         );
 
 
@@ -1911,15 +2157,17 @@ function validateALSeries(
 // SAVE NEW STUDENT
 // =====================================================
 
-if (saveNewStudent) {
+if (
+    saveNewStudent
+) {
 
     saveNewStudent.addEventListener(
         "click",
         async () => {
 
-            // -----------------------------------------
+            // =========================================
             // CATEGORY
-            // -----------------------------------------
+            // =========================================
 
             const selectedCategory =
                 document.querySelector(
@@ -1932,9 +2180,9 @@ if (saveNewStudent) {
                 "";
 
 
-            // -----------------------------------------
-            // ID
-            // -----------------------------------------
+            // =========================================
+            // MANUAL STUDENT ID
+            // =========================================
 
             const id =
                 newStudentId?.value
@@ -1943,9 +2191,9 @@ if (saveNewStudent) {
                 "";
 
 
-            // -----------------------------------------
+            // =========================================
             // PASSWORD
-            // -----------------------------------------
+            // =========================================
 
             const password =
                 newStudentPassword?.value
@@ -1955,14 +2203,16 @@ if (saveNewStudent) {
 
             const mustChange =
                 newMustChange?.checked ||
-                false;
+                true;
 
 
-            // -----------------------------------------
-            // CATEGORY REQUIRED
-            // -----------------------------------------
+            // =========================================
+            // CATEGORY
+            // =========================================
 
-            if (!type) {
+            if (
+                !type
+            ) {
 
                 alert(
                     "Please select a student category."
@@ -1973,34 +2223,42 @@ if (saveNewStudent) {
             }
 
 
-            // -----------------------------------------
-            // ID REQUIRED
-            // -----------------------------------------
+            // =========================================
+            // ID
+            // =========================================
 
-            if (!id) {
+            if (
+                !id
+            ) {
 
                 alert(
                     "Please enter Student ID."
                 );
 
+
                 newStudentId?.focus();
+
 
                 return;
 
             }
 
 
-            // -----------------------------------------
-            // PASSWORD REQUIRED
-            // -----------------------------------------
+            // =========================================
+            // PASSWORD
+            // =========================================
 
-            if (!password) {
+            if (
+                !password
+            ) {
 
                 alert(
                     "Please enter Password."
                 );
 
+
                 newStudentPassword?.focus();
+
 
                 return;
 
@@ -2015,13 +2273,14 @@ if (saveNewStudent) {
                     "Password must contain at least 4 characters."
                 );
 
+
                 return;
 
             }
 
 
             // =========================================
-            // A/L VALIDATION
+            // A/L
             // =========================================
 
             if (
@@ -2035,6 +2294,7 @@ if (saveNewStudent) {
                     alert(
                         "Please select A27000, A28000 or A29000 series."
                     );
+
 
                     return;
 
@@ -2057,14 +2317,21 @@ if (saveNewStudent) {
 
 
                     alert(
+
                         "Invalid Student ID.\n\n" +
-                        "The selected series is " +
+
+                        "Selected series: " +
                         seriesName +
-                        ".\n\n" +
-                        "Please enter a valid ID in that series."
+
+                        "\n\n" +
+
+                        "Please enter a valid Student ID in the selected series."
+
                     );
 
+
                     newStudentId?.focus();
+
 
                     return;
 
@@ -2074,7 +2341,7 @@ if (saveNewStudent) {
 
 
             // =========================================
-            // GRADE 10 VALIDATION
+            // GRADE 10
             // =========================================
 
             if (
@@ -2088,6 +2355,7 @@ if (saveNewStudent) {
                     alert(
                         "Grade 10 Student ID must contain 5 digits."
                     );
+
 
                     return;
 
@@ -2107,6 +2375,7 @@ if (saveNewStudent) {
                         "Grade 10 Student ID must be between 27000 and 27999."
                     );
 
+
                     return;
 
                 }
@@ -2115,7 +2384,7 @@ if (saveNewStudent) {
 
 
             // =========================================
-            // GRADE 11 VALIDATION
+            // GRADE 11
             // =========================================
 
             if (
@@ -2129,6 +2398,7 @@ if (saveNewStudent) {
                     alert(
                         "Grade 11 Student ID must contain 5 digits."
                     );
+
 
                     return;
 
@@ -2148,6 +2418,7 @@ if (saveNewStudent) {
                         "Grade 11 Student ID must be between 26000 and 26999."
                     );
 
+
                     return;
 
                 }
@@ -2155,18 +2426,23 @@ if (saveNewStudent) {
             }
 
 
-            // -----------------------------------------
-            // SAVE BUTTON
-            // -----------------------------------------
+            // =========================================
+            // DISABLE SAVE
+            // =========================================
 
             saveNewStudent.disabled =
                 true;
+
 
             saveNewStudent.textContent =
                 "Saving...";
 
 
             try {
+
+                // =====================================
+                // FIRESTORE REFERENCE
+                // =====================================
 
                 const studentRef =
                     doc(
@@ -2190,14 +2466,15 @@ if (saveNewStudent) {
                         "This Student ID already exists."
                     );
 
+
                     return;
 
                 }
 
 
-                // -------------------------------------
+                // =====================================
                 // BASE DATA
-                // -------------------------------------
+                // =====================================
 
                 const studentData = {
 
@@ -2207,17 +2484,21 @@ if (saveNewStudent) {
                     password:
                         password,
 
-                    mustChangePassword:
-                        mustChange,
+                    // IMPORTANT
+                    // New students must go
+                    // through onboarding
 
-                    studentType:
-                        type,
+                    mustChangePassword:
+                        true,
 
                     profileCompleted:
                         false,
 
                     registrationCompleted:
                         false,
+
+                    studentType:
+                        type,
 
                     fullName:
                         "",
@@ -2240,9 +2521,9 @@ if (saveNewStudent) {
                 };
 
 
-                // -------------------------------------
+                // =====================================
                 // GRADE
-                // -------------------------------------
+                // =====================================
 
                 if (
                     type === "grade10"
@@ -2252,8 +2533,6 @@ if (saveNewStudent) {
                         10;
 
                 }
-
-
                 else if (
                     type === "grade11"
                 ) {
@@ -2262,8 +2541,6 @@ if (saveNewStudent) {
                         11;
 
                 }
-
-
                 else {
 
                     studentData.grade =
@@ -2272,9 +2549,9 @@ if (saveNewStudent) {
                 }
 
 
-                // -------------------------------------
-                // PAPER FIELDS
-                // -------------------------------------
+                // =====================================
+                // PAPERS
+                // =====================================
 
                 for (
                     let i = 1;
@@ -2283,7 +2560,9 @@ if (saveNewStudent) {
                 ) {
 
                     const paper =
-                        getPaperField(i);
+                        getPaperField(
+                            i
+                        );
 
 
                     studentData[
@@ -2293,22 +2572,26 @@ if (saveNewStudent) {
 
 
                     studentData[
-                        getPaperViewedField(i)
+                        getPaperViewedField(
+                            i
+                        )
                     ] =
                         false;
 
 
                     studentData[
-                        getPaperPagesField(i)
+                        getPaperPagesField(
+                            i
+                        )
                     ] =
                         10;
 
                 }
 
 
-                // -------------------------------------
-                // SAVE FIRESTORE
-                // -------------------------------------
+                // =====================================
+                // SAVE
+                // =====================================
 
                 await setDoc(
                     studentRef,
@@ -2316,27 +2599,34 @@ if (saveNewStudent) {
                 );
 
 
-                // -------------------------------------
+                // =====================================
                 // SUCCESS
-                // -------------------------------------
+                // =====================================
 
                 alert(
 
                     "Student created successfully.\n\n" +
 
                     "Student ID: " +
-                    id
+                    id +
+
+                    "\n\n" +
+
+                    "The student must complete registration on first login."
 
                 );
 
 
                 closeAddModal();
 
+
                 await loadStudents();
 
             }
 
-            catch (error) {
+            catch (
+                error
+            ) {
 
                 console.error(
                     "Add student error:",
@@ -2345,8 +2635,11 @@ if (saveNewStudent) {
 
 
                 alert(
+
                     "Failed to create student.\n\n" +
+
                     error.message
+
                 );
 
             }
@@ -2355,6 +2648,7 @@ if (saveNewStudent) {
 
                 saveNewStudent.disabled =
                     false;
+
 
                 saveNewStudent.textContent =
                     "💾 Save Student";
@@ -2368,7 +2662,7 @@ if (saveNewStudent) {
 
 
 // =====================================================
-// EDIT STUDENT
+// EDIT MODAL
 // =====================================================
 
 function openEditModal(
@@ -2383,7 +2677,9 @@ function openEditModal(
         );
 
 
-    if (!student) {
+    if (
+        !student
+    ) {
 
         return;
 
@@ -2398,15 +2694,31 @@ function openEditModal(
         student.data;
 
 
-    if (editStudentId) {
+    if (
+        editStudentId
+    ) {
 
-        editStudentId.textContent =
-            studentId;
+        if (
+            "value" in editStudentId
+        ) {
+
+            editStudentId.value =
+                studentId;
+
+        }
+        else {
+
+            editStudentId.textContent =
+                studentId;
+
+        }
 
     }
 
 
-    if (editPassword) {
+    if (
+        editPassword
+    ) {
 
         editPassword.value =
             "";
@@ -2414,7 +2726,9 @@ function openEditModal(
     }
 
 
-    if (editMustChange) {
+    if (
+        editMustChange
+    ) {
 
         editMustChange.checked =
             data?.mustChangePassword ===
@@ -2423,9 +2737,9 @@ function openEditModal(
     }
 
 
-    // ---------------------------------------------
-    // Paper access
-    // ---------------------------------------------
+    // =============================================
+    // PAPER ACCESS
+    // =============================================
 
     for (
         let i = 1;
@@ -2435,15 +2749,21 @@ function openEditModal(
 
         const checkbox =
             document.getElementById(
-                getPaperField(i)
+                getPaperField(
+                    i
+                )
             );
 
 
-        if (checkbox) {
+        if (
+            checkbox
+        ) {
 
             checkbox.checked =
                 data?.[
-                    getPaperField(i)
+                    getPaperField(
+                        i
+                    )
                 ] === true;
 
         }
@@ -2451,7 +2771,9 @@ function openEditModal(
     }
 
 
-    if (resetViewed) {
+    if (
+        resetViewed
+    ) {
 
         resetViewed.dataset.pendingReset =
             "false";
@@ -2459,11 +2781,14 @@ function openEditModal(
     }
 
 
-    if (editModal) {
+    if (
+        editModal
+    ) {
 
         editModal.classList.add(
             "show"
         );
+
 
         editModal.style.display =
             "flex";
@@ -2479,11 +2804,14 @@ function openEditModal(
 
 function closeEditModal() {
 
-    if (editModal) {
+    if (
+        editModal
+    ) {
 
         editModal.classList.remove(
             "show"
         );
+
 
         editModal.style.display =
             "none";
@@ -2497,7 +2825,9 @@ function closeEditModal() {
 }
 
 
-if (closeEdit) {
+if (
+    closeEdit
+) {
 
     closeEdit.addEventListener(
         "click",
@@ -2507,7 +2837,9 @@ if (closeEdit) {
 }
 
 
-if (closeEditBottom) {
+if (
+    closeEditBottom
+) {
 
     closeEditBottom.addEventListener(
         "click",
@@ -2517,7 +2849,9 @@ if (closeEditBottom) {
 }
 
 
-if (editModal) {
+if (
+    editModal
+) {
 
     editModal.addEventListener(
         "click",
@@ -2542,7 +2876,9 @@ if (editModal) {
 // UPDATE STUDENT
 // =====================================================
 
-if (updateStudentBtn) {
+if (
+    updateStudentBtn
+) {
 
     updateStudentBtn.addEventListener(
         "click",
@@ -2556,18 +2892,6 @@ if (updateStudentBtn) {
                     "No student selected."
                 );
 
-                return;
-
-            }
-
-
-            if (
-                !isSuperAdmin
-            ) {
-
-                alert(
-                    "Only Super Administrator can edit students."
-                );
 
                 return;
 
@@ -2589,6 +2913,7 @@ if (updateStudentBtn) {
 
             updateStudentBtn.disabled =
                 true;
+
 
             updateStudentBtn.textContent =
                 "Saving...";
@@ -2618,6 +2943,7 @@ if (updateStudentBtn) {
                         "Student account was not found."
                     );
 
+
                     return;
 
                 }
@@ -2631,7 +2957,9 @@ if (updateStudentBtn) {
                 };
 
 
-                if (password) {
+                if (
+                    password
+                ) {
 
                     if (
                         password.length < 4
@@ -2640,6 +2968,7 @@ if (updateStudentBtn) {
                         alert(
                             "Password must contain at least 4 characters."
                         );
+
 
                         return;
 
@@ -2652,9 +2981,9 @@ if (updateStudentBtn) {
                 }
 
 
-                // ---------------------------------
-                // Paper permissions
-                // ---------------------------------
+                // =====================================
+                // PAPER ACCESS
+                // =====================================
 
                 for (
                     let i = 1;
@@ -2663,7 +2992,9 @@ if (updateStudentBtn) {
                 ) {
 
                     const paper =
-                        getPaperField(i);
+                        getPaperField(
+                            i
+                        );
 
 
                     const checkbox =
@@ -2672,7 +3003,9 @@ if (updateStudentBtn) {
                         );
 
 
-                    if (checkbox) {
+                    if (
+                        checkbox
+                    ) {
 
                         updateData[
                             paper
@@ -2684,9 +3017,9 @@ if (updateStudentBtn) {
                 }
 
 
-                // ---------------------------------
-                // Reset viewed
-                // ---------------------------------
+                // =====================================
+                // RESET VIEWED
+                // =====================================
 
                 if (
                     resetViewed &&
@@ -2701,7 +3034,9 @@ if (updateStudentBtn) {
                     ) {
 
                         updateData[
-                            getPaperViewedField(i)
+                            getPaperViewedField(
+                                i
+                            )
                         ] =
                             false;
 
@@ -2727,11 +3062,14 @@ if (updateStudentBtn) {
 
                 closeEditModal();
 
+
                 await loadStudents();
 
             }
 
-            catch (error) {
+            catch (
+                error
+            ) {
 
                 console.error(
                     "Update student error:",
@@ -2740,8 +3078,11 @@ if (updateStudentBtn) {
 
 
                 alert(
+
                     "Failed to update student.\n\n" +
+
                     error.message
+
                 );
 
             }
@@ -2750,6 +3091,7 @@ if (updateStudentBtn) {
 
                 updateStudentBtn.disabled =
                     false;
+
 
                 updateStudentBtn.textContent =
                     "💾 Save Changes";
@@ -2770,17 +3112,12 @@ async function deleteStudent(
     studentId
 ) {
 
-    if (
-        !isSuperAdmin
-    ) {
+    // ================================================
+    // DELETE PASSWORD
+    // ================================================
 
-        alert(
-            "Only Super Administrator can delete students."
-        );
-
-        return;
-
-    }
+    const DELETE_PASSWORD =
+        "Nimeth";
 
 
     const student =
@@ -2791,32 +3128,83 @@ async function deleteStudent(
         );
 
 
-    if (!student) {
+    if (
+        !student
+    ) {
+
+        alert(
+            "Student account was not found."
+        );
+
 
         return;
 
     }
 
 
-    const name =
+    // ================================================
+    // ASK PASSWORD
+    // ================================================
+
+    const enteredPassword =
+        prompt(
+            "Enter delete password:"
+        );
+
+
+    if (
+        enteredPassword ===
+        null
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        enteredPassword !==
+        DELETE_PASSWORD
+    ) {
+
+        alert(
+            "Incorrect delete password."
+        );
+
+
+        return;
+
+    }
+
+
+    // ================================================
+    // CONFIRM
+    // ================================================
+
+    const studentName =
         getStudentName(
             student.data
         );
 
 
+    const displayName =
+        studentName ===
+        "Not Registered"
+
+            ? studentId
+
+            : studentName +
+              " (" +
+              studentId +
+              ")";
+
+
     const confirmed =
         confirm(
 
-            "Delete student?\n\n" +
+            "Are you sure you want to delete this student?\n\n" +
 
-            (
-                name === "Not Registered"
-                    ? studentId
-                    : name +
-                      " (" +
-                      studentId +
-                      ")"
-            ) +
+            displayName +
 
             "\n\n" +
 
@@ -2825,21 +3213,31 @@ async function deleteStudent(
         );
 
 
-    if (!confirmed) {
+    if (
+        !confirmed
+    ) {
 
         return;
 
     }
 
 
+    // ================================================
+    // DELETE
+    // ================================================
+
     try {
 
-        await deleteDoc(
+        const studentRef =
             doc(
                 db,
                 "students",
                 studentId
-            )
+            );
+
+
+        await deleteDoc(
+            studentRef
         );
 
 
@@ -2850,11 +3248,14 @@ async function deleteStudent(
 
         closeEditModal();
 
+
         await loadStudents();
 
     }
 
-    catch (error) {
+    catch (
+        error
+    ) {
 
         console.error(
             "Delete student error:",
@@ -2863,8 +3264,11 @@ async function deleteStudent(
 
 
         alert(
+
             "Failed to delete student.\n\n" +
+
             error.message
+
         );
 
     }
@@ -2876,7 +3280,9 @@ async function deleteStudent(
 // DELETE FROM EDIT
 // =====================================================
 
-if (deleteStudentBtn) {
+if (
+    deleteStudentBtn
+) {
 
     deleteStudentBtn.addEventListener(
         "click",
@@ -2899,7 +3305,7 @@ if (deleteStudentBtn) {
 
 
 // =====================================================
-// GENERATE RANDOM PASSWORD
+// RANDOM PASSWORD
 // =====================================================
 
 function generatePassword() {
@@ -2938,13 +3344,17 @@ function generatePassword() {
 // RESET PASSWORD
 // =====================================================
 
-if (resetPasswordBtn) {
+if (
+    resetPasswordBtn
+) {
 
     resetPasswordBtn.addEventListener(
         "click",
         () => {
 
-            if (editPassword) {
+            if (
+                editPassword
+            ) {
 
                 editPassword.value =
                     generatePassword();
@@ -2952,7 +3362,9 @@ if (resetPasswordBtn) {
             }
 
 
-            if (editMustChange) {
+            if (
+                editMustChange
+            ) {
 
                 editMustChange.checked =
                     true;
@@ -2969,7 +3381,9 @@ if (resetPasswordBtn) {
 // SELECT ALL PAPERS
 // =====================================================
 
-if (selectAllPapers) {
+if (
+    selectAllPapers
+) {
 
     selectAllPapers.addEventListener(
         "click",
@@ -2983,11 +3397,15 @@ if (selectAllPapers) {
 
                 const checkbox =
                     document.getElementById(
-                        getPaperField(i)
+                        getPaperField(
+                            i
+                        )
                     );
 
 
-                if (checkbox) {
+                if (
+                    checkbox
+                ) {
 
                     checkbox.checked =
                         true;
@@ -3006,7 +3424,9 @@ if (selectAllPapers) {
 // REMOVE ALL PAPERS
 // =====================================================
 
-if (removeAllPapers) {
+if (
+    removeAllPapers
+) {
 
     removeAllPapers.addEventListener(
         "click",
@@ -3020,11 +3440,15 @@ if (removeAllPapers) {
 
                 const checkbox =
                     document.getElementById(
-                        getPaperField(i)
+                        getPaperField(
+                            i
+                        )
                     );
 
 
-                if (checkbox) {
+                if (
+                    checkbox
+                ) {
 
                     checkbox.checked =
                         false;
@@ -3043,7 +3467,9 @@ if (removeAllPapers) {
 // RESET VIEWED
 // =====================================================
 
-if (resetViewed) {
+if (
+    resetViewed
+) {
 
     resetViewed.addEventListener(
         "click",
@@ -3057,6 +3483,7 @@ if (resetViewed) {
                     "Please select a student first."
                 );
 
+
                 return;
 
             }
@@ -3068,7 +3495,9 @@ if (resetViewed) {
                 );
 
 
-            if (!confirmed) {
+            if (
+                !confirmed
+            ) {
 
                 return;
 
@@ -3090,18 +3519,22 @@ if (resetViewed) {
 
 
 // =====================================================
-// UPDATE COUNTS
+// COUNTS
 // =====================================================
 
 function updateCounts() {
 
-    let grade10 = 0;
+    let grade10 =
+        0;
 
-    let grade11 = 0;
+    let grade11 =
+        0;
 
-    let al = 0;
+    let al =
+        0;
 
-    let active = 0;
+    let active =
+        0;
 
 
     allStudents.forEach(
@@ -3121,7 +3554,6 @@ function updateCounts() {
                 grade10++;
 
             }
-
             else if (
                 type === "grade11"
             ) {
@@ -3129,7 +3561,6 @@ function updateCounts() {
                 grade11++;
 
             }
-
             else {
 
                 al++;
@@ -3181,7 +3612,9 @@ function updateCounts() {
         );
 
 
-    if (totalElement) {
+    if (
+        totalElement
+    ) {
 
         totalElement.textContent =
             allStudents.length;
@@ -3189,7 +3622,9 @@ function updateCounts() {
     }
 
 
-    if (grade10Element) {
+    if (
+        grade10Element
+    ) {
 
         grade10Element.textContent =
             grade10;
@@ -3197,7 +3632,9 @@ function updateCounts() {
     }
 
 
-    if (grade11Element) {
+    if (
+        grade11Element
+    ) {
 
         grade11Element.textContent =
             grade11;
@@ -3205,7 +3642,9 @@ function updateCounts() {
     }
 
 
-    if (alElement) {
+    if (
+        alElement
+    ) {
 
         alElement.textContent =
             al;
@@ -3213,7 +3652,9 @@ function updateCounts() {
     }
 
 
-    if (activeElement) {
+    if (
+        activeElement
+    ) {
 
         activeElement.textContent =
             active;
@@ -3227,7 +3668,9 @@ function updateCounts() {
 // LOGOUT
 // =====================================================
 
-if (logoutBtn) {
+if (
+    logoutBtn
+) {
 
     logoutBtn.addEventListener(
         "click",
@@ -3237,9 +3680,11 @@ if (logoutBtn) {
                 "adminLoggedIn"
             );
 
+
             sessionStorage.removeItem(
                 "adminRole"
             );
+
 
             sessionStorage.removeItem(
                 "adminUsername"
@@ -3265,6 +3710,7 @@ function startRealtimeUpdates() {
     try {
 
         onSnapshot(
+
             collection(
                 db,
                 "students"
@@ -3308,11 +3754,14 @@ function startRealtimeUpdates() {
                 );
 
             }
+
         );
 
     }
 
-    catch (error) {
+    catch (
+        error
+    ) {
 
         console.error(
             "Realtime listener error:",
@@ -3325,7 +3774,7 @@ function startRealtimeUpdates() {
 
 
 // =====================================================
-// REFRESH ONLINE STATUS
+// REFRESH STATUS
 // =====================================================
 
 setInterval(
@@ -3357,7 +3806,7 @@ console.log(
 );
 
 console.log(
-    "A/L: Manual Student ID"
+    "A/L Student ID: MANUAL"
 );
 
 console.log(
@@ -3373,11 +3822,11 @@ console.log(
 );
 
 console.log(
-    "Grade 10: Manual Student ID 27000-27999"
+    "Grade 10 ID: MANUAL"
 );
 
 console.log(
-    "Grade 11: Manual Student ID 26000-26999"
+    "Grade 11 ID: MANUAL"
 );
 
 console.log(
@@ -3385,7 +3834,15 @@ console.log(
 );
 
 console.log(
-    "Edit / Delete: ACTIVE"
+    "Edit: ACTIVE"
+);
+
+console.log(
+    "Delete Password: ACTIVE"
+);
+
+console.log(
+    "First Login Onboarding: ACTIVE"
 );
 
 console.log(
@@ -3397,15 +3854,6 @@ console.log(
 );
 
 
-// =====================================================
-// INITIAL LOAD
-// =====================================================
-
 loadStudents();
-
-
-// =====================================================
-// REALTIME
-// =====================================================
 
 startRealtimeUpdates();
