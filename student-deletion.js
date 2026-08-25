@@ -19,31 +19,6 @@ const DELETE_PASSWORD = "Nimeth";
 
 
 // =====================================================
-// NIC STUDENT ID SERIES
-// =====================================================
-//
-// These student IDs are treated as NIC students.
-//
-// 2005
-// 2006
-// 2007
-// 2008
-// 2009
-//
-// =====================================================
-
-const NIC_ID_SERIES = [
-
-    "2005",
-    "2006",
-    "2007",
-    "2008",
-    "2009"
-
-];
-
-
-// =====================================================
 // GLOBAL DATA
 // =====================================================
 
@@ -165,7 +140,7 @@ document.addEventListener(
 
 
         // =================================================
-        // UNLOCK BUTTON
+        // UNLOCK
         // =================================================
 
         if (
@@ -226,7 +201,7 @@ document.addEventListener(
 
 
         // =================================================
-        // CATEGORY FILTER
+        // FILTER
         // =================================================
 
         if (
@@ -505,7 +480,7 @@ async function loadStudents() {
 
 
     // =================================================
-    // SORT STUDENTS
+    // SORT
     // =================================================
 
     allStudents.sort(
@@ -695,72 +670,20 @@ function getSeries(
 
 
 // =====================================================
-// CHECK NIC STUDENT
-// =====================================================
-//
-// NIC student if:
-//
-// 1. Student ID = 2005
-// 2. Student ID = 2006
-// 3. Student ID = 2007
-// 4. Student ID = 2008
-// 5. Student ID = 2009
-//
-// OR
-//
-// 6. Student has a NIC field.
-//
-// =====================================================
-
-function hasNIC(
-    data,
-    studentId = ""
-) {
-
-    const id =
-        String(
-            studentId || ""
-        )
-            .trim()
-            .toUpperCase();
-
-
-    // =================================================
-    // 2005 - 2009 NIC STUDENTS
-    // =================================================
-
-    if (
-        NIC_ID_SERIES.includes(
-            id
-        )
-    ) {
-
-        return true;
-
-    }
-
-
-    // =================================================
-    // CHECK FIRESTORE NIC FIELDS
-    // =================================================
-
-    const nic =
-        getNIC(
-            data
-        );
-
-
-    return String(
-        nic || ""
-    )
-        .trim()
-        .length > 0;
-
-}
-
-
-// =====================================================
 // GET NIC
+// =====================================================
+//
+// Supports common Firestore field names:
+//
+// nicNumber
+// nic
+// NIC
+// nicNo
+// NICNumber
+// nic_number
+// nationalId
+// nationalID
+//
 // =====================================================
 
 function getNIC(
@@ -781,9 +704,108 @@ function getNIC(
 
         data?.nic_number ||
 
+        data?.nationalId ||
+
+        data?.nationalID ||
+
         ""
 
     );
+
+}
+
+
+// =====================================================
+// CHECK NIC STUDENT
+// =====================================================
+//
+// Supported NIC formats:
+//
+// 9 digits
+// 10 digits
+// 11 digits
+//
+// Old format:
+//
+// 123456789V
+// 123456789X
+//
+// Examples:
+//
+// 123456789
+// 1234567890
+// 20076902182
+// 123456789V
+// 123456789X
+//
+// =====================================================
+
+function hasNIC(
+    data,
+    studentId = ""
+) {
+
+    // =================================================
+    // GET NIC
+    // =================================================
+
+    const nic =
+        getNIC(
+            data
+        );
+
+
+    // =================================================
+    // CLEAN NIC
+    // =================================================
+
+    const cleanNIC =
+        String(
+            nic || ""
+        )
+            .trim()
+            .replace(
+                /\s+/g,
+                ""
+            )
+            .toUpperCase();
+
+
+    // =================================================
+    // 9 / 10 / 11 DIGIT NIC
+    // =================================================
+
+    if (
+        /^\d{9,11}$/.test(
+            cleanNIC
+        )
+    ) {
+
+        return true;
+
+    }
+
+
+    // =================================================
+    // OLD NIC - V / X
+    // =================================================
+
+    if (
+        /^\d{9}[VX]$/.test(
+            cleanNIC
+        )
+    ) {
+
+        return true;
+
+    }
+
+
+    // =================================================
+    // NOT NIC
+    // =================================================
+
+    return false;
 
 }
 
@@ -869,7 +891,7 @@ function getCategory(
 
 
     // =================================================
-    // NIC
+    // NIC STUDENT
     // =================================================
 
     if (
@@ -911,7 +933,7 @@ function countSeries(
 
 
 // =====================================================
-// UPDATE TOTALS
+// UPDATE TOTAL COUNTS
 // =====================================================
 
 function updateCounts() {
@@ -956,18 +978,6 @@ function updateCounts() {
 
     // =================================================
     // NIC
-    // =================================================
-    //
-    // Includes:
-    //
-    // 2005
-    // 2006
-    // 2007
-    // 2008
-    // 2009
-    //
-    // PLUS students with NIC fields.
-    //
     // =================================================
 
     const totalNIC =
@@ -1027,7 +1037,7 @@ function updateCounts() {
     // =================================================
 
     console.log(
-        "------------------------------"
+        "===================================="
     );
 
     console.log(
@@ -1061,7 +1071,7 @@ function updateCounts() {
     );
 
     console.log(
-        "------------------------------"
+        "===================================="
     );
 
 }
@@ -1127,7 +1137,7 @@ function renderStudents() {
 
 
     // =================================================
-    // FILTER STUDENTS
+    // FILTER
     // =================================================
 
     const filtered =
@@ -1447,7 +1457,7 @@ function renderStudents() {
 
 
                     // =================================================
-                    // BADGE CLASS
+                    // BADGE
                     // =================================================
 
                     let badgeClass =
@@ -1520,6 +1530,7 @@ function renderStudents() {
                                     )}
 
                                 </strong>
+
 
                                 ${
                                     nic
@@ -1603,7 +1614,7 @@ function renderStudents() {
 
 
     // =================================================
-    // BUTTONS
+    // ATTACH BUTTONS
     // =================================================
 
     attachDeleteButtons();
@@ -1619,7 +1630,7 @@ function attachDeleteButtons() {
 
 
     // =================================================
-    // INDIVIDUAL
+    // INDIVIDUAL DELETE
     // =================================================
 
     document
@@ -1645,7 +1656,7 @@ function attachDeleteButtons() {
 
 
     // =================================================
-    // SERIES
+    // SERIES DELETE
     // =================================================
 
     document
@@ -1695,7 +1706,7 @@ function attachDeleteButtons() {
 
 
     // =================================================
-    // NIC
+    // NIC DELETE
     // =================================================
 
     const deleteAllNIC =
@@ -1756,7 +1767,7 @@ async function deleteAllNICStudents() {
 
 
     // =================================================
-    // NO NIC STUDENTS
+    // NO STUDENTS
     // =================================================
 
     if (
@@ -1787,15 +1798,8 @@ async function deleteAllNICStudents() {
 
             "\n\n" +
 
-            "This includes students from " +
-
-            "2005, 2006, 2007, 2008 and 2009 " +
-
-            "and students with NIC numbers.\n\n" +
-
-            "All selected student accounts " +
-
-            "will be permanently deleted.\n\n" +
+            "Students with 9, 10 or 11 digit " +
+            "NIC numbers will be deleted.\n\n" +
 
             "This action cannot be undone.\n\n" +
 
@@ -1849,7 +1853,7 @@ async function deleteAllNICStudents() {
 
 
 // =====================================================
-// DELETE INDIVIDUAL STUDENT
+// DELETE INDIVIDUAL
 // =====================================================
 
 async function deleteIndividual(
@@ -1920,11 +1924,8 @@ async function deleteIndividual(
 
             (
                 nic
-
                     ? "\nNIC: " + nic
-
                     : ""
-
             ) +
 
             "\n\n" +
@@ -1973,7 +1974,7 @@ async function deleteIndividual(
 
 
 // =====================================================
-// DELETE ENTIRE SERIES
+// DELETE SERIES
 // =====================================================
 
 async function deleteSeries(
@@ -2002,7 +2003,7 @@ async function deleteSeries(
 
 
     // =================================================
-    // NO STUDENTS
+    // NONE
     // =================================================
 
     if (
@@ -2040,7 +2041,6 @@ async function deleteSeries(
             "\n\n" +
 
             "All accounts in this series " +
-
             "will be permanently deleted.\n\n" +
 
             "This action cannot be undone.\n\n" +
@@ -2131,7 +2131,7 @@ async function deleteStudents(
         ) {
 
             console.log(
-                "Deleting student:",
+                "Deleting:",
                 student.id
             );
 
@@ -2151,7 +2151,7 @@ async function deleteStudents(
 
 
         // =================================================
-        // REMOVE FROM LOCAL ARRAY
+        // REMOVE LOCAL DATA
         // =================================================
 
         const deletedIds =
@@ -2205,7 +2205,7 @@ async function deleteStudents(
     ) {
 
         console.error(
-            "Student deletion error:",
+            "Delete error:",
             error
         );
 
@@ -2330,7 +2330,7 @@ function escapeAttribute(
 
 
 // =====================================================
-// READY
+// SYSTEM READY
 // =====================================================
 
 console.log(
@@ -2366,27 +2366,27 @@ console.log(
 );
 
 console.log(
-    "2005-2009 = NIC Students"
+    "9-11 digit NIC = NIC Student"
 );
 
 console.log(
-    "NIC field = NIC Student"
+    "9 digit + V/X = NIC Student"
 );
 
 console.log(
-    "A/L + NIC can overlap"
+    "A/L + NIC can be counted in both"
 );
 
 console.log(
-    "Individual deletion = ENABLED"
+    "Individual delete = ENABLED"
 );
 
 console.log(
-    "Series deletion = ENABLED"
+    "Series delete = ENABLED"
 );
 
 console.log(
-    "NIC deletion = ENABLED"
+    "NIC delete = ENABLED"
 );
 
 console.log(
