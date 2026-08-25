@@ -1,18 +1,6 @@
 // =====================================================
-// GRADE 11 TOP RANKING - TERM PAGE
-// =====================================================
-//
-// This page shows ONLY:
-//      TOP Ranking 01
-//      TOP Ranking 02
-//      TOP Ranking 03
-//      TOP Ranking 04
-//
-// Each paper has:
-//      Part A Answer
-//      Part B Answer
-//
-// No question paper is displayed here.
+// GRADE 11 TERM PAGE
+// FIREBASE CONTROLLED PAPER VISIBILITY
 // =====================================================
 
 
@@ -28,7 +16,7 @@ import {
 
 
 // =====================================================
-// GET TERM
+// URL PARAMETER
 // =====================================================
 
 const params =
@@ -63,14 +51,11 @@ const paperContainer =
 
 const termNames = {
 
-    "1":
-        "1st Term",
+    "1": "1st Term",
 
-    "2":
-        "2nd Term",
+    "2": "2nd Term",
 
-    "3":
-        "3rd Term"
+    "3": "3rd Term"
 
 };
 
@@ -86,7 +71,7 @@ if (
 ) {
 
     alert(
-        "Invalid term."
+        "Invalid Grade 11 term."
     );
 
 
@@ -103,7 +88,7 @@ if (
 
 
 // =====================================================
-// SET PAGE TITLE
+// PAGE TITLE
 // =====================================================
 
 if (termTitle) {
@@ -116,17 +101,6 @@ if (termTitle) {
 
 // =====================================================
 // ANSWER FILE PATH
-// =====================================================
-//
-// Change these paths later if your actual
-// answer files are stored somewhere else.
-//
-// Example:
-//
-// answers/grade11/term3/
-//     top-ranking-01-part-a.pdf
-//     top-ranking-01-part-b.pdf
-//
 // =====================================================
 
 function getAnswerFile(
@@ -149,11 +123,6 @@ function getAnswerFile(
 
 // =====================================================
 // OPEN ANSWER
-// =====================================================
-//
-// Opens answer inside your system.
-//
-// No direct download link is created here.
 // =====================================================
 
 function openAnswer(
@@ -214,7 +183,7 @@ function createAnswerButton(
         </span>
 
         <span class="answer-button-text">
-            ${label}
+            ${escapeHTML(label)}
         </span>
 
     `;
@@ -280,7 +249,7 @@ function createRankingCard(
 
 
     // ---------------------------------------------
-    // CARD HTML
+    // CARD
     // ---------------------------------------------
 
     card.innerHTML = `
@@ -357,6 +326,11 @@ function createRankingCard(
 
 function showTermDisabled() {
 
+    if (!paperContainer) {
+        return;
+    }
+
+
     paperContainer.innerHTML = `
 
         <div
@@ -367,9 +341,7 @@ function showTermDisabled() {
                 border-radius:20px;
                 padding:50px 25px;
                 text-align:center;
-                box-shadow:
-                    0 10px 30px
-                    rgba(0,0,0,.08);
+                box-shadow:0 10px 30px rgba(0,0,0,.08);
             "
         >
 
@@ -408,6 +380,11 @@ function showTermDisabled() {
 
 function showNoPapers() {
 
+    if (!paperContainer) {
+        return;
+    }
+
+
     paperContainer.innerHTML = `
 
         <div
@@ -418,9 +395,7 @@ function showNoPapers() {
                 border-radius:20px;
                 padding:50px 25px;
                 text-align:center;
-                box-shadow:
-                    0 10px 30px
-                    rgba(0,0,0,.08);
+                box-shadow:0 10px 30px rgba(0,0,0,.08);
             "
         >
 
@@ -454,7 +429,158 @@ function showNoPapers() {
 
 
 // =====================================================
-// LOAD FIREBASE SETTINGS
+// SHOW ERROR
+// =====================================================
+
+function showError(
+    error
+) {
+
+    console.error(
+        "Grade 11 Term Error:",
+        error
+    );
+
+
+    if (!paperContainer) {
+        return;
+    }
+
+
+    paperContainer.innerHTML = `
+
+        <div
+            style="
+                grid-column:1/-1;
+                text-align:center;
+                padding:40px;
+            "
+        >
+
+            <div
+                style="
+                    font-size:45px;
+                    margin-bottom:15px;
+                "
+            >
+                ⚠️
+            </div>
+
+            <h2>
+                Unable to Load Papers
+            </h2>
+
+            <p
+                style="
+                    color:#64748b;
+                    line-height:1.6;
+                    max-width:650px;
+                    margin:10px auto 20px;
+                    word-break:break-word;
+                "
+            >
+                ${escapeHTML(
+                    error?.message ||
+                    String(error)
+                )}
+            </p>
+
+            <button
+                type="button"
+                id="retryPaperBtn"
+                style="
+                    padding:12px 24px;
+                    border:0;
+                    border-radius:10px;
+                    background:#6d35f2;
+                    color:white;
+                    cursor:pointer;
+                    font-weight:600;
+                "
+            >
+                🔄 Try Again
+            </button>
+
+        </div>
+
+    `;
+
+
+    const retryButton =
+        document.getElementById(
+            "retryPaperBtn"
+        );
+
+
+    if (retryButton) {
+
+        retryButton.addEventListener(
+            "click",
+            function() {
+
+                window.location.reload();
+
+            }
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// ESCAPE HTML
+// =====================================================
+
+function escapeHTML(
+    value
+) {
+
+    return String(
+        value
+    )
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+// =====================================================
+// LOAD GRADE 11 SETTINGS
+// =====================================================
+//
+// ADMIN SAVES:
+//
+// paperSettings / grade11
+//
+// Example:
+//
+// grade11_term1_01 = true
+// grade11_term1_02 = false
+//
 // =====================================================
 
 async function loadPaperSettings() {
@@ -470,9 +596,9 @@ async function loadPaperSettings() {
     }
 
 
-    // =================================================
+    // -------------------------------------------------
     // LOADING
-    // =================================================
+    // -------------------------------------------------
 
     paperContainer.innerHTML = `
 
@@ -500,7 +626,7 @@ async function loadPaperSettings() {
             doc(
                 db,
                 "paperSettings",
-                "settings"
+                "grade11"
             );
 
 
@@ -517,39 +643,49 @@ async function loadPaperSettings() {
 
 
         console.log(
-            "Grade 11 settings:",
+            "================================"
+        );
+
+
+        console.log(
+            "GRADE 11 FIREBASE SETTINGS"
+        );
+
+
+        console.log(
             settings
         );
 
 
         // =============================================
-        // TERM SETTING
+        // TERM ENABLED
         // =============================================
 
         const termSettingId =
             `grade11_term${term}_enabled`;
 
 
-        /*
-         * true  = enabled
-         * false = disabled
-         *
-         * Missing = enabled
-         */
+        let termEnabled =
+            true;
 
-        const termEnabled =
+
+        if (
             Object.prototype.hasOwnProperty.call(
                 settings,
                 termSettingId
             )
-                ? settings[
+        ) {
+
+            termEnabled =
+                settings[
                     termSettingId
-                ] === true
-                : true;
+                ] === true;
+
+        }
 
 
         console.log(
-            "Term setting:",
+            "Term:",
             termSettingId,
             termEnabled
         );
@@ -581,12 +717,12 @@ async function loadPaperSettings() {
 
 
         // =============================================
-        // CREATE TOP RANKING 01-04
+        // TOP RANKING 01 - 05
         // =============================================
 
         for (
             let i = 1;
-            i <= 4;
+            i <= 5;
             i++
         ) {
 
@@ -599,33 +735,28 @@ async function loadPaperSettings() {
                 );
 
 
-            // =========================================
-            // PAPER SETTING ID
-            // =========================================
+            // -----------------------------------------
+            // IMPORTANT
+            // -----------------------------------------
+            //
+            // This EXACTLY matches Admin:
+            //
+            // grade11_term1_01
+            // grade11_term1_02
+            //
+            // -----------------------------------------
 
             const paperId =
-                `grade11_term${term}_model_${paperNumber}`;
+                `grade11_term${term}_${paperNumber}`;
 
-
-            /*
-             * Expected Firestore format:
-             *
-             * grade11_term3_model_01
-             *     enabled: true
-             *
-             * grade11_term3_model_02
-             *     enabled: false
-             *
-             *
-             * Also supports direct boolean:
-             *
-             * grade11_term3_model_01: true
-             *
-             */
 
             let enabled =
                 true;
 
+
+            // -----------------------------------------
+            // CHECK FIREBASE
+            // -----------------------------------------
 
             if (
                 Object.prototype.hasOwnProperty.call(
@@ -634,29 +765,10 @@ async function loadPaperSettings() {
                 )
             ) {
 
-                const value =
+                enabled =
                     settings[
                         paperId
-                    ];
-
-
-                if (
-                    typeof value ===
-                    "object" &&
-                    value !== null
-                ) {
-
-                    enabled =
-                        value.enabled === true;
-
-                }
-
-                else {
-
-                    enabled =
-                        value === true;
-
-                }
+                    ] === true;
 
             }
 
@@ -669,9 +781,9 @@ async function loadPaperSettings() {
             );
 
 
-            // =========================================
-            // DISABLED → DON'T SHOW
-            // =========================================
+            // -----------------------------------------
+            // DISABLED
+            // -----------------------------------------
 
             if (!enabled) {
 
@@ -680,9 +792,9 @@ async function loadPaperSettings() {
             }
 
 
-            // =========================================
+            // -----------------------------------------
             // CREATE CARD
-            // =========================================
+            // -----------------------------------------
 
             const card =
                 createRankingCard(
@@ -701,7 +813,7 @@ async function loadPaperSettings() {
 
 
         // =============================================
-        // NO ACTIVE PAPERS
+        // NO PAPERS
         // =============================================
 
         if (
@@ -718,83 +830,32 @@ async function loadPaperSettings() {
         // =============================================
 
         console.log(
-            "================================"
+            "--------------------------------"
         );
 
-        console.log(
-            "✅ Grade 11 TOP Ranking Loaded"
-        );
 
         console.log(
-            "Term:",
-            term
-        );
-
-        console.log(
-            "Term Name:",
+            "Grade 11:",
             termNames[term]
         );
+
 
         console.log(
             "Visible Papers:",
             visibleCount
         );
 
-        console.log(
-            "Mode:",
-            "ANSWER ONLY"
-        );
 
         console.log(
-            "================================"
+            "--------------------------------"
         );
 
     }
-
     catch (error) {
 
-        console.error(
-            "Grade 11 paper settings error:",
+        showError(
             error
         );
-
-
-        paperContainer.innerHTML = `
-
-            <div
-                style="
-                    grid-column:1/-1;
-                    text-align:center;
-                    padding:40px;
-                "
-            >
-
-                <h2>
-                    ⚠️ Unable to Load
-                </h2>
-
-                <p>
-                    ${error.message}
-                </p>
-
-                <button
-                    type="button"
-                    onclick="location.reload()"
-                    style="
-                        padding:12px 20px;
-                        border:0;
-                        border-radius:10px;
-                        background:#6d35f2;
-                        color:white;
-                        cursor:pointer;
-                    "
-                >
-                    🔄 Try Again
-                </button>
-
-            </div>
-
-        `;
 
     }
 
