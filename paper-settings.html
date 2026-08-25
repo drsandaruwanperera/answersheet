@@ -14,7 +14,7 @@
 
     <link
         rel="stylesheet"
-        href="paper-settings.css?v=5"
+        href="paper-settings.css?v=10"
     >
 
     <link
@@ -36,7 +36,6 @@
     ====================================================== -->
 
     <aside class="sidebar">
-
 
         <!-- BRAND -->
 
@@ -61,7 +60,7 @@
         </div>
 
 
-        <!-- NAVIGATION LABEL -->
+        <!-- LABEL -->
 
         <div class="sidebar-label">
             ADMINISTRATION
@@ -127,7 +126,7 @@
             </a>
 
 
-            <!-- IMPORT STUDENTS -->
+            <!-- IMPORT -->
 
             <a
                 href="import-students.html"
@@ -173,8 +172,6 @@
         <div class="sidebar-bottom">
 
 
-            <!-- ADMIN USER -->
-
             <div class="admin-user-card">
 
                 <div class="admin-user-icon">
@@ -196,8 +193,6 @@
 
             </div>
 
-
-            <!-- LOGOUT -->
 
             <button
                 type="button"
@@ -228,12 +223,9 @@
     <main class="main-content">
 
 
-        <!-- =================================================
-             PAGE HEADER
-        ================================================== -->
+        <!-- PAGE HEADER -->
 
         <header class="page-header">
-
 
             <div>
 
@@ -241,15 +233,13 @@
                     PAPER AVAILABILITY
                 </p>
 
-
                 <h1>
                     Manage Student Resources
                 </h1>
 
-
                 <p class="page-description">
-                    Control which papers and paper categories
-                    are available to students.
+                    Control which papers are available
+                    to students.
                 </p>
 
             </div>
@@ -263,17 +253,15 @@
 
             </div>
 
-
         </header>
 
 
 
         <!-- =================================================
-             INFORMATION BANNER
+             INFO
         ================================================== -->
 
         <section class="info-banner">
-
 
             <div class="info-banner-icon">
                 🔐
@@ -286,11 +274,10 @@
                     Super Administrator Access
                 </strong>
 
-
                 <p>
-                    Enable or disable papers from the
-                    student portal. Disabled papers will
-                    not be available to students.
+                    Enable or disable individual papers.
+                    Only enabled papers will be displayed
+                    to students.
                 </p>
 
             </div>
@@ -305,13 +292,11 @@
 
         <section class="management-toolbar">
 
-
             <div>
 
                 <span class="toolbar-label">
                     PAPER AVAILABILITY
                 </span>
-
 
                 <h2>
                     Manage Student Resources
@@ -322,15 +307,12 @@
 
             <div class="toolbar-actions">
 
-
                 <button
                     type="button"
                     id="enableAllBtn"
                     class="toolbar-btn enable-all"
                 >
-
                     🟢 Enable All
-
                 </button>
 
 
@@ -339,36 +321,27 @@
                     id="disableAllBtn"
                     class="toolbar-btn disable-all"
                 >
-
                     🔴 Disable All
-
                 </button>
 
-
             </div>
-
 
         </section>
 
 
 
-        <!-- =====================================================
+        <!-- =================================================
              GRADE 10
-        ====================================================== -->
+        ================================================== -->
 
         <section
             class="paper-section"
             data-category="grade10"
         >
 
-
-            <!-- HEADER -->
-
             <div class="section-header">
 
-
                 <div class="section-title">
-
 
                     <div class="section-icon grade10-icon">
                         🎓
@@ -381,11 +354,9 @@
                             GRADE 10
                         </span>
 
-
                         <h2>
                             Grade 10 Papers
                         </h2>
-
 
                         <p>
                             1st, 2nd and 3rd Term Model Papers
@@ -401,339 +372,35 @@
                     class="section-toggle"
                     data-section-toggle="grade10"
                 >
-
                     Expand
-
                 </button>
-
 
             </div>
 
 
-            <!-- PAPER LIST -->
+            <!-- JS WILL LOAD CONTENT -->
 
             <div
                 class="paper-list"
                 id="grade10PaperList"
-                style="display:none;"
-            >
-
-                <!-- =================================================
-                     1ST TERM
-                ================================================== -->
-
-                <div class="paper-group">
-
-
-                    <div class="paper-group-header">
-
-                        <div>
-
-                            <span class="paper-group-label">
-                                1ST TERM
-                            </span>
-
-                            <h3>
-                                Grade 10 - 1st Term
-                            </h3>
-
-                        </div>
-
-
-                        <button
-                            type="button"
-                            class="group-toggle"
-                            data-group="grade10-term1"
-                        >
-                            Show Papers
-                        </button>
-
-                    </div>
-
-
-                    <div
-                        class="group-papers"
-                        id="grade10-term1"
-                        style="display:none;"
-                    >
-
-                        <div class="paper-item">
-                            <span>📄 Model Paper 01</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade10_term1_model01"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>📄 Model Paper 02</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade10_term1_model02"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>📄 Model Paper 03</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade10_term1_model03"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>📄 Model Paper 04</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade10_term1_model04"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>📄 Model Paper 05</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade10_term1_model05"
-                            </div>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- =================================================
-                     2ND TERM
-                ================================================== -->
-
-                <div class="paper-group">
-
-
-                    <div class="paper-group-header">
-
-                        <div>
-
-                            <span class="paper-group-label">
-                                2ND TERM
-                            </span>
-
-                            <h3>
-                                Grade 10 - 2nd Term
-                            </h3>
-
-                        </div>
-
-
-                        <button
-                            type="button"
-                            class="group-toggle"
-                            data-group="grade10-term2"
-                        >
-                            Show Papers
-                        </button>
-
-                    </div>
-
-
-                    <div
-                        class="group-papers"
-                        id="grade10-term2"
-                        style="display:none;"
-                    >
-
-                        <div class="paper-item">
-                            <span>📄 Model Paper 01</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade10_term2_model01"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>📄 Model Paper 02</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade10_term2_model02"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>📄 Model Paper 03</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade10_term2_model03"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>📄 Model Paper 04</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade10_term2_model04"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>📄 Model Paper 05</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade10_term2_model05"
-                            >
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- =================================================
-                     3RD TERM
-                ================================================== -->
-
-                <div class="paper-group">
-
-
-                    <div class="paper-group-header">
-
-                        <div>
-
-                            <span class="paper-group-label">
-                                3RD TERM
-                            </span>
-
-                            <h3>
-                                Grade 10 - 3rd Term
-                            </h3>
-
-                        </div>
-
-
-                        <button
-                            type="button"
-                            class="group-toggle"
-                            data-group="grade10-term3"
-                        >
-                            Show Papers
-                        </button>
-
-                    </div>
-
-
-                    <div
-                        class="group-papers"
-                        id="grade10-term3"
-                        style="display:none;"
-                    >
-
-                        <div class="paper-item">
-                            <span>📄 Model Paper 01</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade10_term3_model01"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>📄 Model Paper 02</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade10_term3_model02"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>📄 Model Paper 03</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade10_term3_model03"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>📄 Model Paper 04</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade10_term3_model04"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>📄 Model Paper 05</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade10_term3_model05"
-                            >
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-            </div>
+            ></div>
 
         </section>
 
 
 
-        <!-- =====================================================
+        <!-- =================================================
              GRADE 11
-        ====================================================== -->
+        ================================================== -->
 
         <section
             class="paper-section"
             data-category="grade11"
         >
 
-
             <div class="section-header">
 
-
                 <div class="section-title">
-
 
                     <div class="section-icon grade11-icon">
                         🎓
@@ -746,14 +413,13 @@
                             GRADE 11
                         </span>
 
-
                         <h2>
                             Grade 11 Papers
                         </h2>
 
-
                         <p>
-                            Term Tests, Top Ranking and Past Papers
+                            1st, 2nd and 3rd Term Top Ranking
+                            and Past Papers
                         </p>
 
                     </div>
@@ -766,494 +432,35 @@
                     class="section-toggle"
                     data-section-toggle="grade11"
                 >
-
                     Expand
-
                 </button>
 
             </div>
 
 
+            <!-- JS WILL LOAD CONTENT -->
 
             <div
                 class="paper-list"
                 id="grade11PaperList"
-                style="display:none;"
-            >
-
-
-                <!-- =================================================
-                     1ST TERM TOP RANKING
-                ================================================== -->
-
-                <div class="paper-group">
-
-
-                    <div class="paper-group-header">
-
-                        <div>
-
-                            <span class="paper-group-label">
-                                1ST TERM
-                            </span>
-
-                            <h3>
-                                Grade 11 - Top Ranking
-                            </h3>
-
-                        </div>
-
-
-                        <button
-                            type="button"
-                            class="group-toggle"
-                            data-group="grade11-term1"
-                        >
-                            Show Papers
-                        </button>
-
-                    </div>
-
-
-                    <div
-                        class="group-papers"
-                        id="grade11-term1"
-                        style="display:none;"
-                    >
-
-                        <div class="paper-item">
-                            <span>🏆 Top Ranking 01</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade11_term1_top01"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>🏆 Top Ranking 02</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade11_term1_top02"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>🏆 Top Ranking 03</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade11_term1_top03"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>🏆 Top Ranking 04</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade11_term1_top04"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>🏆 Top Ranking 05</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade11_term1_top05"
-                            >
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- =================================================
-                     2ND TERM TOP RANKING
-                ================================================== -->
-
-                <div class="paper-group">
-
-
-                    <div class="paper-group-header">
-
-                        <div>
-
-                            <span class="paper-group-label">
-                                2ND TERM
-                            </span>
-
-                            <h3>
-                                Grade 11 - Top Ranking
-                            </h3>
-
-                        </div>
-
-
-                        <button
-                            type="button"
-                            class="group-toggle"
-                            data-group="grade11-term2"
-                        >
-                            Show Papers
-                        </button>
-
-                    </div>
-
-
-                    <div
-                        class="group-papers"
-                        id="grade11-term2"
-                        style="display:none;"
-                    >
-
-                        <div class="paper-item">
-                            <span>🏆 Top Ranking 01</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade11_term2_top01"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>🏆 Top Ranking 02</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade11_term2_top02"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>🏆 Top Ranking 03</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade11_term2_top03"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>🏆 Top Ranking 04</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade11_term2_top04"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>🏆 Top Ranking 05</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade11_term2_top05"
-                            >
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- =================================================
-                     3RD TERM TOP RANKING
-                ================================================== -->
-
-                <div class="paper-group">
-
-
-                    <div class="paper-group-header">
-
-                        <div>
-
-                            <span class="paper-group-label">
-                                3RD TERM
-                            </span>
-
-                            <h3>
-                                Grade 11 - Top Ranking
-                            </h3>
-
-                        </div>
-
-
-                        <button
-                            type="button"
-                            class="group-toggle"
-                            data-group="grade11-term3"
-                        >
-                            Show Papers
-                        </button>
-
-                    </div>
-
-
-                    <div
-                        class="group-papers"
-                        id="grade11-term3"
-                        style="display:none;"
-                    >
-
-                        <div class="paper-item">
-                            <span>🏆 Top Ranking 01</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade11_term3_top01"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>🏆 Top Ranking 02</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade11_term3_top02"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>🏆 Top Ranking 03</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade11_term3_top03"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>🏆 Top Ranking 04</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade11_term3_top04"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>🏆 Top Ranking 05</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade11_term3_top05"
-                            >
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- =================================================
-                     PAST PAPERS
-                ================================================== -->
-
-                <div class="paper-group">
-
-
-                    <div class="paper-group-header">
-
-                        <div>
-
-                            <span class="paper-group-label">
-                                PAST PAPERS
-                            </span>
-
-
-                            <h3>
-                                Grade 11 - Past Papers
-                            </h3>
-
-                        </div>
-
-
-                        <button
-                            type="button"
-                            class="group-toggle"
-                            data-group="grade11-past"
-                        >
-                            Show Papers
-                        </button>
-
-                    </div>
-
-
-                    <div
-                        class="group-papers"
-                        id="grade11-past"
-                        style="display:none;"
-                    >
-
-                        <div class="paper-item">
-                            <span>📖 Past Paper 2016</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade11_past_2016"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>📖 Past Paper 2017</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade11_past_2017"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>📖 Past Paper 2018</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade11_past_2018"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>📖 Past Paper 2019</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade11_past_2019"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>📖 Past Paper 2020</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade11_past_2020"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>📖 Past Paper 2021</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade11_past_2021"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>📖 Past Paper 2022</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade11_past_2022"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>📖 Past Paper 2023</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade11_past_2023"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>📖 Past Paper 2024</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade11_past_2024"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>📖 Past Paper 2025</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="grade11_past_2025"
-                            >
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-            </div>
+            ></div>
 
         </section>
 
 
 
-        <!-- =====================================================
-             A/L
-        ====================================================== -->
+        <!-- =================================================
+             A/L - HOLD
+        ================================================== -->
 
         <section
             class="paper-section"
             data-category="al"
         >
 
-
             <div class="section-header">
 
-
                 <div class="section-title">
-
 
                     <div class="section-icon al-icon">
                         🎓
@@ -1266,14 +473,13 @@
                             ADVANCED LEVEL
                         </span>
 
-
                         <h2>
                             A/L Papers
                         </h2>
 
-
                         <p>
-                            A/L model papers and other resources.
+                            A/L paper management will be
+                            available later.
                         </p>
 
                     </div>
@@ -1284,115 +490,10 @@
                 <button
                     type="button"
                     class="section-toggle"
-                    data-section-toggle="al"
+                    disabled
                 >
-
-                    Expand
-
+                    Coming Soon
                 </button>
-
-            </div>
-
-
-
-            <div
-                class="paper-list"
-                id="alPaperList"
-                style="display:none;"
-            >
-
-                <div class="paper-group">
-
-
-                    <div class="paper-group-header">
-
-                        <div>
-
-                            <span class="paper-group-label">
-                                A/L RESOURCES
-                            </span>
-
-                            <h3>
-                                Advanced Level Papers
-                            </h3>
-
-                        </div>
-
-
-                        <button
-                            type="button"
-                            class="group-toggle"
-                            data-group="al-resources"
-                        >
-                            Show Papers
-                        </button>
-
-                    </div>
-
-
-                    <div
-                        class="group-papers"
-                        id="al-resources"
-                        style="display:none;"
-                    >
-
-                        <div class="paper-item">
-                            <span>📘 A/L Model Paper 01</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="al_model01"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>📘 A/L Model Paper 02</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="al_model02"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>📘 A/L Model Paper 03</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="al_model03"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>📘 A/L Model Paper 04</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="al_model04"
-                            >
-                        </div>
-
-
-                        <div class="paper-item">
-                            <span>📘 A/L Model Paper 05</span>
-
-                            <input
-                                type="checkbox"
-                                class="paper-checkbox"
-                                data-paper="al_model05"
-                            >
-                        </div>
-
-                    </div>
-
-                </div>
 
             </div>
 
@@ -1400,9 +501,9 @@
 
 
 
-        <!-- =====================================================
+        <!-- =================================================
              SAVE BAR
-        ====================================================== -->
+        ================================================== -->
 
         <div class="save-bar">
 
@@ -1436,9 +537,9 @@
 
 
 
-        <!-- =====================================================
+        <!-- =================================================
              FOOTER
-        ====================================================== -->
+        ================================================== -->
 
         <footer class="admin-footer">
 
@@ -1447,7 +548,6 @@
                 <strong>
                     Student Assessment Portal
                 </strong>
-
 
                 <span>
                     © 2026 Administration Dashboard
@@ -1466,26 +566,17 @@
 
 
 <!-- =====================================================
-     SESSION
-====================================================== -->
-
-<script src="session.js"></script>
-
-
-
-<!-- =====================================================
-     PAPER MANAGEMENT JAVASCRIPT
+     PAPER MANAGEMENT JS
 ====================================================== -->
 
 <script
     type="module"
-    src="paper-settings.js?v=5"
+    src="paper-settings.js?v=10"
 ></script>
 
 
-
 <!-- =====================================================
-     GUARANTEED EXPAND / COLLAPSE
+     MAIN EXPAND SYSTEM
 ====================================================== -->
 
 <script>
@@ -1494,226 +585,177 @@ document.addEventListener(
     "DOMContentLoaded",
     function () {
 
-
         console.log(
-            "✅ Paper Expand System Started"
+            "✅ Paper Management UI started"
         );
 
 
-        /* =================================================
-           MAIN SECTION EXPAND
-        ================================================= */
+        /*
+         * MAIN CATEGORY EXPAND
+         */
 
-        const sectionButtons =
-            document.querySelectorAll(
+        document
+            .querySelectorAll(
                 ".section-toggle"
+            )
+            .forEach(
+                function (button) {
+
+                    button.addEventListener(
+                        "click",
+                        function (event) {
+
+                            event.preventDefault();
+                            event.stopPropagation();
+
+
+                            if (
+                                button.disabled
+                            ) {
+                                return;
+                            }
+
+
+                            const section =
+                                button.closest(
+                                    ".paper-section"
+                                );
+
+
+                            if (!section) {
+                                return;
+                            }
+
+
+                            const list =
+                                section.querySelector(
+                                    ".paper-list"
+                                );
+
+
+                            if (!list) {
+                                return;
+                            }
+
+
+                            const isOpen =
+                                list.classList.contains(
+                                    "open"
+                                );
+
+
+                            if (isOpen) {
+
+                                list.classList.remove(
+                                    "open"
+                                );
+
+                                button.textContent =
+                                    "Expand";
+
+                            }
+                            else {
+
+                                list.classList.add(
+                                    "open"
+                                );
+
+                                button.textContent =
+                                    "Collapse";
+
+                            }
+
+                        }
+                    );
+
+                }
             );
 
 
-        sectionButtons.forEach(
-            function (button) {
+        /*
+         * GROUP EXPAND
+         *
+         * paper-settings.js dynamically creates
+         * .group-toggle buttons.
+         *
+         * Event delegation is used here so it
+         * also works for dynamically created buttons.
+         */
 
+        document.addEventListener(
+            "click",
+            function (event) {
 
-                button.addEventListener(
-                    "click",
-                    function (event) {
+                const button =
+                    event.target.closest(
+                        ".group-toggle"
+                    );
 
-                        event.preventDefault();
-                        event.stopPropagation();
 
+                if (!button) {
+                    return;
+                }
 
-                        const section =
-                            button.closest(
-                                ".paper-section"
-                            );
 
+                event.preventDefault();
+                event.stopPropagation();
 
-                        if (!section) {
-                            return;
-                        }
 
+                const group =
+                    button.closest(
+                        ".paper-group"
+                    );
 
-                        const list =
-                            section.querySelector(
-                                ".paper-list"
-                            );
 
+                if (!group) {
+                    return;
+                }
 
-                        if (!list) {
-                            return;
-                        }
 
+                const list =
+                    group.querySelector(
+                        ".paper-group-list"
+                    );
 
-                        const currentlyHidden =
-                            window.getComputedStyle(
-                                list
-                            ).display === "none";
 
+                if (!list) {
+                    return;
+                }
 
-                        if (
-                            currentlyHidden
-                        ) {
 
-                            list.style.display =
-                                "block";
+                const isOpen =
+                    list.classList.contains(
+                        "open"
+                    );
 
 
-                            section.classList.add(
-                                "expanded"
-                            );
+                if (isOpen) {
 
+                    list.classList.remove(
+                        "open"
+                    );
 
-                            button.textContent =
-                                "Collapse";
+                    button.textContent =
+                        "Expand";
 
-                        }
-                        else {
+                }
+                else {
 
-                            list.style.display =
-                                "none";
+                    list.classList.add(
+                        "open"
+                    );
 
+                    button.textContent =
+                        "Collapse";
 
-                            section.classList.remove(
-                                "expanded"
-                            );
-
-
-                            button.textContent =
-                                "Expand";
-
-                        }
-
-                    }
-                );
-
-            }
-        );
-
-
-
-        /* =================================================
-           GROUP EXPAND
-        ================================================= */
-
-        const groupButtons =
-            document.querySelectorAll(
-                ".group-toggle"
-            );
-
-
-        groupButtons.forEach(
-            function (button) {
-
-
-                button.addEventListener(
-                    "click",
-                    function (event) {
-
-                        event.preventDefault();
-                        event.stopPropagation();
-
-
-                        const groupId =
-                            button.dataset.group;
-
-
-                        if (!groupId) {
-                            return;
-                        }
-
-
-                        const group =
-                            document.getElementById(
-                                groupId
-                            );
-
-
-                        if (!group) {
-                            return;
-                        }
-
-
-                        const hidden =
-                            window.getComputedStyle(
-                                group
-                            ).display === "none";
-
-
-                        if (hidden) {
-
-                            group.style.display =
-                                "block";
-
-
-                            button.textContent =
-                                "Hide Papers";
-
-                        }
-                        else {
-
-                            group.style.display =
-                                "none";
-
-
-                            button.textContent =
-                                "Show Papers";
-
-                        }
-
-                    }
-                );
-
-            }
-        );
-
-
-
-        /* =================================================
-           CHECKBOX CHANGE
-        ================================================= */
-
-        const checkboxes =
-            document.querySelectorAll(
-                ".paper-checkbox"
-            );
-
-
-        checkboxes.forEach(
-            function (checkbox) {
-
-                checkbox.addEventListener(
-                    "change",
-                    function () {
-
-                        const status =
-                            document.getElementById(
-                                "changesStatus"
-                            );
-
-
-                        if (status) {
-
-                            status.textContent =
-                                "Unsaved changes";
-
-                        }
-
-                    }
-                );
+                }
 
             }
         );
 
 
         console.log(
-            "Section buttons:",
-            sectionButtons.length
-        );
-
-
-        console.log(
-            "Group buttons:",
-            groupButtons.length
+            "✅ Expand system ready"
         );
 
     }
