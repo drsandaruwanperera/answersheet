@@ -2,6 +2,7 @@ import {
     initializeApp
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 
+
 import {
     getFirestore,
     collection,
@@ -15,9 +16,14 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
+// =====================================================
+// FIREBASE CONFIG
+// =====================================================
+
 const firebaseConfig = {
 
-    apiKey: "...",
+    apiKey:
+        "...",
 
     authDomain:
         "answersheet2026.firebaseapp.com",
@@ -37,26 +43,61 @@ const firebaseConfig = {
 };
 
 
+// =====================================================
+// INITIALIZE FIREBASE
+// =====================================================
+
 const app =
     initializeApp(
         firebaseConfig
     );
 
 
-const db =
-    getFirestore(app);
+// =====================================================
+// FIRESTORE
+// =====================================================
 
+const db =
+    getFirestore(
+        app
+    );
+
+
+// =====================================================
+// EXPORT
+// =====================================================
 
 export {
 
     db,
 
+    // Firestore document functions
     doc,
     getDoc,
-    updateDoc,
+    getDocs,
+
+    // Firestore write functions
     setDoc,
+    updateDoc,
     deleteDoc,
+
+    // Firestore collection
     collection,
-    getDocs
+
+    // ⭐ REAL-TIME LISTENER
+    onSnapshot
 
 };
+
+
+// =====================================================
+// CONSOLE
+// =====================================================
+
+console.log(
+    "✅ Firebase initialized"
+);
+
+console.log(
+    "🔥 Firestore real-time listener available"
+);
