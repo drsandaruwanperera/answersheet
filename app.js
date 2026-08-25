@@ -5,7 +5,8 @@
 import {
     db,
     doc,
-    getDoc
+    getDoc,
+    updateDoc
 } from "./firebase.js";
 
 
@@ -66,19 +67,6 @@ function showMessage(
 // =====================================================
 // DETECT STUDENT TYPE
 // =====================================================
-//
-// Firebase studentType / grade is checked FIRST.
-//
-// Grade 11:
-// 26000 - 26999
-//
-// Grade 10:
-// 27000 - 27999
-//
-// Everything else:
-// A/L
-//
-// =====================================================
 
 function detectStudentType(
     studentId,
@@ -98,7 +86,7 @@ function detectStudentType(
 
 
     // =================================================
-    // 1. FIREBASE studentType
+    // FIREBASE studentType
     // =================================================
 
     const firebaseType =
@@ -143,7 +131,7 @@ function detectStudentType(
 
 
     // =================================================
-    // 2. FIREBASE grade
+    // FIREBASE GRADE
     // =================================================
 
     const firebaseGrade =
@@ -176,12 +164,14 @@ function detectStudentType(
     }
 
 
+    // =================================================
+    // A/L ADMISSION NUMBER
+    // =================================================
+
     if (
-        firebaseGrade === "al" ||
-        firebaseGrade === "a/l" ||
-        firebaseGrade === "a level" ||
-        firebaseGrade === "advanced" ||
-        firebaseGrade === "advanced level"
+        /^A\d{5}$/.test(
+            cleanId
+        )
     ) {
 
         return "al";
@@ -190,7 +180,7 @@ function detectStudentType(
 
 
     // =================================================
-    // 3. GRADE 11 ID
+    // GRADE 11
     // =================================================
 
     if (
@@ -216,7 +206,7 @@ function detectStudentType(
 
 
         // =============================================
-        // 4. GRADE 10 ID
+        // GRADE 10
         // =============================================
 
         if (
@@ -232,7 +222,7 @@ function detectStudentType(
 
 
     // =================================================
-    // 5. EVERYTHING ELSE = A/L
+    // DEFAULT
     // =================================================
 
     return "al";
@@ -241,7 +231,7 @@ function detectStudentType(
 
 
 // =====================================================
-// GET DISPLAY GRADE
+// GET GRADE NAME
 // =====================================================
 
 function getGradeName(
@@ -276,6 +266,71 @@ function getGradeName(
 
 
     return "Student";
+
+}
+
+
+// =====================================================
+// SAVE STUDENT SESSION
+// =====================================================
+
+function saveStudentSession(
+    studentId,
+    studentType,
+    gradeName,
+    data
+) {
+
+    sessionStorage.setItem(
+        "loggedIn",
+        "true"
+    );
+
+
+    sessionStorage.setItem(
+        "studentId",
+        studentId
+    );
+
+
+    sessionStorage.setItem(
+        "studentType",
+        studentType
+    );
+
+
+    sessionStorage.setItem(
+        "studentGrade",
+        gradeName
+    );
+
+
+    const studentName =
+        data?.fullName ||
+        data?.name ||
+        data?.studentName ||
+        data?.displayName ||
+        "Student";
+
+
+    sessionStorage.setItem(
+        "studentName",
+        studentName
+    );
+
+
+    if (
+        data?.nicNumber
+    ) {
+
+        sessionStorage.setItem(
+            "studentNIC",
+            String(
+                data.nicNumber
+            )
+        );
+
+    }
 
 }
 
@@ -332,10 +387,12 @@ async function loginStudent() {
 
 
     // =================================================
-    // DISABLE LOGIN BUTTON
+    // DISABLE BUTTON
     // =================================================
 
-    if (loginBtn) {
+    if (
+        loginBtn
+    ) {
 
         loginBtn.disabled =
             true;
@@ -377,7 +434,7 @@ async function loginStudent() {
 
 
         // =============================================
-        // STUDENT NOT FOUND
+        // NOT FOUND
         // =============================================
 
         if (
@@ -404,7 +461,8 @@ async function loginStudent() {
 
         const storedPassword =
             String(
-                data?.password ?? ""
+                data?.password ??
+                ""
             );
 
 
@@ -424,7 +482,7 @@ async function loginStudent() {
 
 
         // =============================================
-        // DETECT CATEGORY
+        // STUDENT TYPE
         // =============================================
 
         const studentType =
@@ -433,10 +491,6 @@ async function loginStudent() {
                 data
             );
 
-
-        // =============================================
-        // GRADE NAME
-        // =============================================
 
         const gradeName =
             getGradeName(
@@ -448,61 +502,39 @@ async function loginStudent() {
         // SAVE SESSION
         // =============================================
 
-        sessionStorage.setItem(
-            "loggedIn",
-            "true"
-        );
-
-
-        sessionStorage.setItem(
-            "studentId",
-            studentId
-        );
-
-
-        sessionStorage.setItem(
-            "studentType",
-            studentType
-        );
-
-
-        sessionStorage.setItem(
-            "studentGrade",
-            gradeName
+        saveStudentSession(
+            studentId,
+            studentType,
+            gradeName,
+            data
         );
 
 
         // =============================================
-        // STUDENT NAME
+        // UPDATE LAST ACTIVE
         // =============================================
 
-        const studentName =
-            data?.name ||
-            data?.studentName ||
-            data?.fullName ||
-            data?.displayName ||
-            "Student";
+        try {
 
+            await updateDoc(
+                studentRef,
+                {
 
-        sessionStorage.setItem(
-            "studentName",
-            studentName
-        );
+                    lastActiveAt:
+                        Date.now()
 
+                }
+            );
 
-        // =============================================
-        // NIC IF AVAILABLE
-        // =============================================
+        }
 
-        if (
-            data?.nicNumber
+        catch (
+            activeError
         ) {
 
-            sessionStorage.setItem(
-                "studentNIC",
-                String(
-                    data.nicNumber
-                )
+            console.warn(
+                "Unable to update lastActiveAt:",
+                activeError
             );
 
         }
@@ -536,11 +568,6 @@ async function loginStudent() {
         );
 
         console.log(
-            "Student Name:",
-            studentName
-        );
-
-        console.log(
             "Must Change Password:",
             data?.mustChangePassword
         );
@@ -551,12 +578,96 @@ async function loginStudent() {
         );
 
         console.log(
+            "Registration Completed:",
+            data?.registrationCompleted
+        );
+
+        console.log(
             "================================"
         );
 
 
         // =============================================
-        // SUCCESS MESSAGE
+        // FIRST LOGIN / REGISTRATION
+        // =============================================
+
+        if (
+            data?.mustChangePassword ===
+            true
+        ) {
+
+            showMessage(
+                "First login detected. Redirecting to registration...",
+                "success"
+            );
+
+
+            setTimeout(
+                () => {
+
+                    window.location.replace(
+                        "student-registration.html"
+                    );
+
+                },
+                300
+            );
+
+
+            return;
+
+        }
+
+
+        // =============================================
+        // REGISTRATION INCOMPLETE
+        // =============================================
+
+        if (
+            data?.registrationCompleted !==
+            true &&
+            data?.profileCompleted !==
+            true
+        ) {
+
+            // Only send accounts that were specifically
+            // marked for registration.
+            if (
+                data?.studentType ===
+                "al" &&
+                (
+                    data?.fullName ||
+                    data?.nicNumber
+                )
+            ) {
+
+                showMessage(
+                    "Please complete your registration.",
+                    "success"
+                );
+
+
+                setTimeout(
+                    () => {
+
+                        window.location.replace(
+                            "student-registration.html"
+                        );
+
+                    },
+                    300
+                );
+
+
+                return;
+
+            }
+
+        }
+
+
+        // =============================================
+        // NORMAL LOGIN
         // =============================================
 
         showMessage(
@@ -565,33 +676,8 @@ async function loginStudent() {
         );
 
 
-        // =============================================
-        // REDIRECT
-        // =============================================
-
         setTimeout(
             () => {
-
-                // -----------------------------------------
-                // FIRST LOGIN
-                // -----------------------------------------
-
-                if (
-                    data?.mustChangePassword === true
-                ) {
-
-                    window.location.replace(
-                        "student-registration.html"
-                    );
-
-                    return;
-
-                }
-
-
-                // -----------------------------------------
-                // NORMAL LOGIN
-                // -----------------------------------------
 
                 window.location.replace(
                     "dashboard.html"
@@ -621,7 +707,9 @@ async function loginStudent() {
 
     finally {
 
-        if (loginBtn) {
+        if (
+            loginBtn
+        ) {
 
             loginBtn.disabled =
                 false;
@@ -649,7 +737,9 @@ async function loginStudent() {
 // LOGIN BUTTON
 // =====================================================
 
-if (loginBtn) {
+if (
+    loginBtn
+) {
 
     loginBtn.addEventListener(
         "click",
@@ -671,7 +761,9 @@ if (loginBtn) {
     input => {
 
         if (!input) {
+
             return;
+
         }
 
 
@@ -699,16 +791,20 @@ if (loginBtn) {
 
 
 // =====================================================
-// CLEAR MESSAGE WHEN TYPING
+// CLEAR MESSAGE
 // =====================================================
 
-if (studentIdInput) {
+if (
+    studentIdInput
+) {
 
     studentIdInput.addEventListener(
         "input",
         () => {
 
-            if (msg) {
+            if (
+                msg
+            ) {
 
                 msg.textContent =
                     "";
@@ -721,13 +817,17 @@ if (studentIdInput) {
 }
 
 
-if (passwordInput) {
+if (
+    passwordInput
+) {
 
     passwordInput.addEventListener(
         "input",
         () => {
 
-            if (msg) {
+            if (
+                msg
+            ) {
 
                 msg.textContent =
                     "";
@@ -761,7 +861,7 @@ console.log(
 );
 
 console.log(
-    "All other IDs: A/L"
+    "A/L IDs: A27000+"
 );
 
 console.log(
