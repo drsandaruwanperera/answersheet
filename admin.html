@@ -105,6 +105,24 @@
 
 
         /* =====================================================
+           STUDENT DELETION NAV ICON
+        ===================================================== */
+
+        .deletion-nav-icon {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            width: 22px;
+            height: 22px;
+
+        }
+
+
+        /* =====================================================
            MOBILE
         ===================================================== */
 
@@ -287,6 +305,29 @@
 
 
             <!-- =================================================
+                 STUDENT DELETION
+                 SUPER ADMINISTRATOR ONLY
+            ================================================== -->
+
+            <a
+                href="student-deletion.html"
+                class="nav-item superadmin-only"
+                id="studentDeletionNav"
+            >
+
+                <span class="nav-icon deletion-nav-icon">
+                    🗑️
+                </span>
+
+                <span>
+                    Student Deletion
+                </span>
+
+            </a>
+
+
+
+            <!-- =================================================
                  REPORTS
             ================================================== -->
 
@@ -305,6 +346,7 @@
                 </span>
 
             </a>
+
 
         </nav>
 
@@ -412,9 +454,7 @@
         <section class="summary-grid">
 
 
-            <!-- =================================================
-                 STUDENTS
-            ================================================== -->
+            <!-- STUDENTS -->
 
             <div class="summary-card">
 
@@ -442,9 +482,7 @@
 
 
 
-            <!-- =================================================
-                 ACTIVITY
-            ================================================== -->
+            <!-- ACTIVITY -->
 
             <div class="summary-card">
 
@@ -472,9 +510,7 @@
 
 
 
-            <!-- =================================================
-                 ONLINE
-            ================================================== -->
+            <!-- ONLINE -->
 
             <div class="summary-card">
 
@@ -1016,7 +1052,7 @@
 
 
             <!-- =================================================
-                 NEW — ADD A/L STUDENT
+                 ADD A/L STUDENT
             ================================================== -->
 
             <article
@@ -1048,6 +1084,43 @@
                     id="addALStudentLink"
                 >
                     Add A/L Student →
+                </a>
+
+            </article>
+
+
+
+            <!-- =================================================
+                 STUDENT DELETION
+            ================================================== -->
+
+            <article
+                class="management-card superadmin-card"
+            >
+
+                <div class="management-icon red">
+                    🗑️
+                </div>
+
+                <p class="card-label">
+                    SUPER ADMIN
+                </p>
+
+                <h2>
+                    Student Deletion
+                </h2>
+
+                <p>
+                    Permanently delete student accounts
+                    after Super Administrator verification.
+                </p>
+
+                <a
+                    href="student-deletion.html"
+                    class="management-link superadmin-link"
+                    id="studentDeletionLink"
+                >
+                    Delete Students →
                 </a>
 
             </article>
@@ -1088,7 +1161,6 @@
                 </a>
 
             </article>
-
 
 
         </section>
