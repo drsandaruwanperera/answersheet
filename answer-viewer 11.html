@@ -10,19 +10,241 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <meta
-        name="robots"
-        content="noindex,nofollow"
-    >
-
-    <title>
-        Protected Answer Viewer
-    </title>
+    <title>Answer Viewer</title>
 
     <link
-        rel="stylesheet"
-        href="answer-viewer.css?v=1"
+        rel="icon"
+        href="data:,"
     >
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+            background: #0f172a;
+        }
+
+
+        .viewer {
+
+            width: 100%;
+            height: 100vh;
+
+            display: flex;
+            flex-direction: column;
+
+        }
+
+
+        .viewer-header {
+
+            height: 64px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 20px;
+
+            background: #111827;
+
+            color: white;
+
+            flex-shrink: 0;
+
+        }
+
+
+        .viewer-title {
+
+            font-size: 17px;
+            font-weight: 700;
+
+        }
+
+
+        .viewer-subtitle {
+
+            font-size: 12px;
+            color: #94a3b8;
+
+            margin-top: 3px;
+
+        }
+
+
+        .back-btn {
+
+            border: none;
+
+            background: #7c3aed;
+
+            color: white;
+
+            padding: 10px 18px;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            font-weight: 600;
+
+        }
+
+
+        .back-btn:hover {
+
+            background: #6d28d9;
+
+        }
+
+
+        .pdf-area {
+
+            flex: 1;
+
+            position: relative;
+
+            overflow: auto;
+
+            background: #334155;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: flex-start;
+
+            padding: 20px;
+
+        }
+
+
+        #pdfCanvas {
+
+            display: block;
+
+            background: white;
+
+            box-shadow:
+                0 8px 30px
+                rgba(0,0,0,0.35);
+
+            max-width: 100%;
+
+        }
+
+
+        .loading {
+
+            position: absolute;
+
+            top: 50%;
+            left: 50%;
+
+            transform:
+                translate(-50%, -50%);
+
+            color: white;
+
+            font-size: 16px;
+
+        }
+
+
+        .error {
+
+            position: absolute;
+
+            top: 50%;
+            left: 50%;
+
+            transform:
+                translate(-50%, -50%);
+
+            width: min(
+                90%,
+                500px
+            );
+
+            background: white;
+
+            padding: 30px;
+
+            border-radius: 12px;
+
+            text-align: center;
+
+            color: #dc2626;
+
+        }
+
+
+        .controls {
+
+            height: 55px;
+
+            background: #111827;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 15px;
+
+            flex-shrink: 0;
+
+        }
+
+
+        .controls button {
+
+            border: none;
+
+            background: #334155;
+
+            color: white;
+
+            padding: 8px 14px;
+
+            border-radius: 7px;
+
+            cursor: pointer;
+
+        }
+
+
+        .controls button:hover {
+
+            background: #475569;
+
+        }
+
+
+        #pageInfo {
+
+            color: #cbd5e1;
+
+            font-size: 13px;
+
+        }
+
+    </style>
 
 </head>
 
@@ -30,209 +252,108 @@
 <body>
 
 
-<div class="viewer-page">
+<div class="viewer">
 
 
-    <!-- =====================================================
-         HEADER
-    ====================================================== -->
+    <!-- HEADER -->
 
     <header class="viewer-header">
 
+        <div>
 
-        <div class="viewer-header-left">
-
-
-            <div class="viewer-icon">
-                📖
+            <div
+                class="viewer-title"
+                id="viewerTitle"
+            >
+                Answer Viewer
             </div>
 
-
-            <div class="viewer-heading">
-
-
-                <span class="viewer-label">
-                    STUDENT ANSWER
-                </span>
-
-
-                <h1 id="viewerTitle">
-                    Loading Answer...
-                </h1>
-
-
-                <p id="viewerSubtitle">
-                    Please wait...
-                </p>
-
-
+            <div
+                class="viewer-subtitle"
+                id="viewerSubtitle"
+            >
+                Student Assessment Portal
             </div>
-
 
         </div>
-
 
 
         <button
             type="button"
-            id="backBtn"
             class="back-btn"
+            onclick="history.back()"
         >
-
             ← Back
-
         </button>
-
 
     </header>
 
 
+    <!-- PDF AREA -->
 
-    <!-- =====================================================
-         PROTECTION NOTICE
-    ====================================================== -->
-
-    <section class="viewer-notice">
-
-
-        <div class="notice-icon">
-            🔒
-        </div>
-
-
-        <div class="notice-content">
-
-
-            <strong>
-                Protected Answer Viewer
-            </strong>
-
-
-            <p>
-                This answer is available for viewing only.
-                Download and printing are disabled.
-            </p>
-
-
-        </div>
-
-
-    </section>
-
-
-
-    <!-- =====================================================
-         VIEWER
-    ====================================================== -->
-
-    <main
-        class="pdf-viewer-wrapper"
-        id="viewerWrapper"
-    >
-
-
-        <!-- LOADING -->
+    <main class="pdf-area">
 
         <div
-            id="loading"
             class="loading"
+            id="loading"
         >
-
-
-            <div class="loading-spinner"></div>
-
-
-            <strong>
-                Loading answer...
-            </strong>
-
-
-            <span>
-                Please wait.
-            </span>
-
-
+            Loading answer...
         </div>
 
 
+        <canvas
+            id="pdfCanvas"
+        ></canvas>
 
-        <!-- ERROR -->
 
         <div
-            id="errorMessage"
-            class="error-message"
+            class="error"
+            id="error"
             style="display:none;"
-        >
-
-
-            <div class="error-icon">
-                ⚠️
-            </div>
-
-
-            <h2>
-                Unable to Load Answer
-            </h2>
-
-
-            <p id="errorText">
-                Please try again.
-            </p>
-
-
-            <button
-                type="button"
-                id="errorBackBtn"
-                class="error-back-btn"
-            >
-
-                ← Go Back
-
-            </button>
-
-
-        </div>
-
-
-
-        <!-- PDF CANVAS -->
-
-        <div
-            id="pdfCanvasContainer"
-            class="pdf-canvas-container"
         ></div>
-
 
     </main>
 
 
+    <!-- CONTROLS -->
 
-    <!-- =====================================================
-         FOOTER
-    ====================================================== -->
+    <div class="controls">
 
-    <footer class="viewer-footer">
+        <button
+            id="previousPage"
+            type="button"
+        >
+            ← Previous
+        </button>
 
-        🔐 Student Assessment Portal
 
-        <span>
-            • Protected Viewing
+        <span id="pageInfo">
+            Page 1 / 1
         </span>
 
-    </footer>
+
+        <button
+            id="nextPage"
+            type="button"
+        >
+            Next →
+        </button>
+
+    </div>
 
 
 </div>
 
 
-
-<!-- =====================================================
-     JAVASCRIPT
-====================================================== -->
+<!-- PDF.JS -->
 
 <script
-    type="module"
-    src="answer-viewer.js?v=1"
+    src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"
+></script>
+
+
+<script
+    src="answer-viewer.js"
 ></script>
 
 
