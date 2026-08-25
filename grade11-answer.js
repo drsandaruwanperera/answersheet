@@ -1,338 +1,246 @@
-// ==========================
-// Get URL Parameters
-// ==========================
+// =====================================================
+// GRADE 11 ANSWER VIEWER
+// =====================================================
+// Loads PDF from:
+//
+// answers/grade11/term1/
+// answers/grade11/term2/
+// answers/grade11/term3/
+//
+// Example:
+//
+// answers/grade11/term3/top-ranking-01-part-a.pdf
+//
+// =====================================================
+
+
+// =====================================================
+// PDF.JS
+// =====================================================
+
+import * as pdfjsLib from
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs";
+
+
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
+
+
+// =====================================================
+// URL PARAMETERS
+// =====================================================
 
 const params =
     new URLSearchParams(
         window.location.search
     );
 
-const term =
-    params.get("term");
 
-const paper =
-    params.get("paper");
-
-const type =
-    params.get("type");
+const file =
+    params.get("file");
 
 
-// ==========================
-// Elements
-// ==========================
+const title =
+    params.get("title") ||
+    "Grade 11 Answer";
+
+
+// =====================================================
+// ELEMENTS
+// =====================================================
+
+const viewer =
+    document.getElementById(
+        "viewer"
+    );
+
+
+const loading =
+    document.getElementById(
+        "loading"
+    );
+
+
+const pdfContainer =
+    document.getElementById(
+        "pdfContainer"
+    );
+
 
 const answerTitle =
     document.getElementById(
         "answerTitle"
     );
 
-const answerContainer =
+
+const backButton =
     document.getElementById(
-        "answerContainer"
+        "backButton"
     );
 
 
-// ==========================
-// Check Student Login
-// ==========================
+// =====================================================
+// SET TITLE
+// =====================================================
 
-if (
-    sessionStorage.getItem("loggedIn") !== "true"
-) {
+if (answerTitle) {
 
-    window.location.href =
-        "index.html";
+    answerTitle.textContent =
+        title;
 
 }
 
 
-// ==========================
-// Get Student ID
-// ==========================
+// =====================================================
+// BACK BUTTON
+// =====================================================
 
-const studentId =
-    sessionStorage.getItem(
-        "studentId"
-    );
+if (backButton) {
 
+    backButton.addEventListener(
+        "click",
+        function () {
 
-// ==========================
-// Validate
-// ==========================
+            window.history.back();
 
-if (
-    !["1", "2", "3"].includes(term) ||
-    !/^\d{2}$/.test(paper) ||
-    !["mcq", "answer"].includes(type)
-) {
-
-    alert(
-        "Invalid answer request."
-    );
-
-    window.location.href =
-        "grade11-model-papers.html";
-
-}
-
-
-// ==========================
-// Term Names
-// ==========================
-
-const termNames = {
-
-    "1":
-        "1st Term",
-
-    "2":
-        "2nd Term",
-
-    "3":
-        "3rd Term"
-
-};
-
-const termName =
-    termNames[term];
-
-
-// ==========================
-// Answer Type
-// ==========================
-
-let answerName = "";
-
-let title = "";
-
-if (type === "mcq") {
-
-    answerName =
-        "mcq-answer";
-
-    title =
-        "📝 MCQ Answer";
-
-}
-else {
-
-    answerName =
-        "answer";
-
-    title =
-        "📝 Answer Scheme";
-
-}
-
-
-// ==========================
-// Set Title
-// ==========================
-
-answerTitle.textContent =
-    title;
-
-
-// ==========================
-// Image Folder
-// ==========================
-
-const imageFolder =
-    `papers/grade11/term${term}/paper${paper}/${answerName}/`;
-
-
-// ==========================
-// Number Of Pages
-// ==========================
-
-const totalPages = 10;
-
-
-// ==========================
-// Load Images
-// ==========================
-
-for (
-    let i = 1;
-    i <= totalPages;
-    i++
-) {
-
-    const pageNumber =
-        String(i).padStart(
-            2,
-            "0"
-        );
-
-
-    const page =
-        document.createElement(
-            "div"
-        );
-
-    page.className =
-        "answer-page";
-
-
-    // ==========================
-    // Image
-    // ==========================
-
-    const img =
-        document.createElement(
-            "img"
-        );
-
-    img.src =
-        `${imageFolder}Page_${pageNumber}.jpg`;
-
-    img.alt =
-        `${termName} Grade 11 Model Paper ${paper} Answer Page ${i}`;
-
-    img.draggable =
-        false;
-
-
-    // ==========================
-    // Watermark
-    // ==========================
-
-    const watermark =
-        document.createElement(
-            "div"
-        );
-
-    watermark.className =
-        "watermark";
-
-
-    for (
-        let w = 0;
-        w < 20;
-        w++
-    ) {
-
-        const mark =
-            document.createElement(
-                "span"
-            );
-
-        mark.textContent =
-            studentId || "";
-
-        watermark.appendChild(
-            mark
-        );
-
-    }
-
-
-    // ==========================
-    // Add
-    // ==========================
-
-    page.appendChild(
-        img
-    );
-
-    page.appendChild(
-        watermark
-    );
-
-    answerContainer.appendChild(
-        page
+        }
     );
 
 }
 
 
-// ==========================
-// Disable Right Click
-// ==========================
+// =====================================================
+// RIGHT CLICK BLOCK
+// =====================================================
 
 document.addEventListener(
     "contextmenu",
-    event => {
+    function (event) {
 
         event.preventDefault();
 
-    }
+    },
+    true
 );
 
 
-// ==========================
-// Disable Dragging
-// ==========================
-
-document.addEventListener(
-    "dragstart",
-    event => {
-
-        event.preventDefault();
-
-    }
-);
-
-
-// ==========================
-// Disable Copy
-// ==========================
+// =====================================================
+// COPY BLOCK
+// =====================================================
 
 document.addEventListener(
     "copy",
-    event => {
+    function (event) {
 
         event.preventDefault();
 
-    }
+    },
+    true
 );
 
 
-// ==========================
-// Disable Cut
-// ==========================
+// =====================================================
+// CUT BLOCK
+// =====================================================
 
 document.addEventListener(
     "cut",
-    event => {
+    function (event) {
 
         event.preventDefault();
 
-    }
+    },
+    true
 );
 
 
-// ==========================
-// Disable Common Shortcuts
-// ==========================
+// =====================================================
+// DRAG BLOCK
+// =====================================================
+
+document.addEventListener(
+    "dragstart",
+    function (event) {
+
+        event.preventDefault();
+
+    },
+    true
+);
+
+
+// =====================================================
+// KEYBOARD PROTECTION
+// =====================================================
 
 document.addEventListener(
     "keydown",
-    event => {
+    function (event) {
+
+        const key =
+            String(
+                event.key
+            ).toLowerCase();
+
+
+        // Ctrl + P
 
         if (
-            event.ctrlKey ||
-            event.metaKey
+            event.ctrlKey &&
+            key === "p"
         ) {
 
-            const key =
-                event.key.toLowerCase();
+            event.preventDefault();
 
-            if (
-                key === "s" ||
-                key === "p" ||
-                key === "c" ||
-                key === "x" ||
-                key === "u" ||
-                key === "a"
-            ) {
-
-                event.preventDefault();
-
-            }
+            return;
 
         }
 
+
+        // Ctrl + S
+
+        if (
+            event.ctrlKey &&
+            key === "s"
+        ) {
+
+            event.preventDefault();
+
+            return;
+
+        }
+
+
+        // Ctrl + Shift + S
+
+        if (
+            event.ctrlKey &&
+            event.shiftKey &&
+            key === "s"
+        ) {
+
+            event.preventDefault();
+
+            return;
+
+        }
+
+
+        // Ctrl + U
+
+        if (
+            event.ctrlKey &&
+            key === "u"
+        ) {
+
+            event.preventDefault();
+
+            return;
+
+        }
+
+
+        // F12
 
         if (
             event.key === "F12"
@@ -340,21 +248,431 @@ document.addEventListener(
 
             event.preventDefault();
 
+            return;
+
         }
 
-    }
+
+        // Ctrl + Shift + I
+
+        if (
+            event.ctrlKey &&
+            event.shiftKey &&
+            key === "i"
+        ) {
+
+            event.preventDefault();
+
+            return;
+
+        }
+
+
+        // Ctrl + Shift + J
+
+        if (
+            event.ctrlKey &&
+            event.shiftKey &&
+            key === "j"
+        ) {
+
+            event.preventDefault();
+
+            return;
+
+        }
+
+    },
+    true
 );
 
 
-// ==========================
-// Disable Text Selection
-// ==========================
+// =====================================================
+// VALIDATE FILE
+// =====================================================
 
-document.addEventListener(
-    "selectstart",
-    event => {
+if (
+    !file ||
+    file.trim() === ""
+) {
 
-        event.preventDefault();
+    showError(
+        "No answer file was provided."
+    );
+
+}
+else {
+
+    loadPDF(
+        file
+    );
+
+}
+
+
+// =====================================================
+// LOAD PDF
+// =====================================================
+
+async function loadPDF(
+    filePath
+) {
+
+    try {
+
+        console.log(
+            "===================================="
+        );
+
+        console.log(
+            "📖 GRADE 11 ANSWER VIEWER"
+        );
+
+        console.log(
+            "PDF:",
+            filePath
+        );
+
+        console.log(
+            "TITLE:",
+            title
+        );
+
+        console.log(
+            "===================================="
+        );
+
+
+        // =================================================
+        // LOAD PDF
+        // =================================================
+
+        const loadingTask =
+            pdfjsLib.getDocument({
+
+                url:
+                    filePath,
+
+                withCredentials:
+                    false
+
+            });
+
+
+        const pdf =
+            await loadingTask.promise;
+
+
+        console.log(
+            "✅ PDF loaded:",
+            pdf.numPages,
+            "pages"
+        );
+
+
+        // =================================================
+        // REMOVE LOADING
+        // =================================================
+
+        if (loading) {
+
+            loading.remove();
+
+        }
+
+
+        // =================================================
+        // RENDER ALL PAGES
+        // =================================================
+
+        for (
+            let pageNumber = 1;
+            pageNumber <= pdf.numPages;
+            pageNumber++
+        ) {
+
+            await renderPage(
+                pdf,
+                pageNumber
+            );
+
+        }
+
+
+        console.log(
+            "✅ All answer pages rendered"
+        );
 
     }
-);
+    catch (error) {
+
+        console.error(
+            "❌ PDF loading failed:",
+            error
+        );
+
+
+        showError(
+            "Unable to load this answer. Please check the PDF file path."
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// RENDER PDF PAGE
+// =====================================================
+
+async function renderPage(
+    pdf,
+    pageNumber
+) {
+
+    const page =
+        await pdf.getPage(
+            pageNumber
+        );
+
+
+    // =================================================
+    // BASE VIEWPORT
+    // =================================================
+
+    const baseViewport =
+        page.getViewport({
+            scale: 1
+        });
+
+
+    // =================================================
+    // AVAILABLE WIDTH
+    // =================================================
+
+    const availableWidth =
+        Math.max(
+            300,
+            viewer.clientWidth - 40
+        );
+
+
+    // =================================================
+    // SCALE
+    // =================================================
+
+    const scale =
+        Math.min(
+            1.8,
+            availableWidth /
+            baseViewport.width
+        );
+
+
+    const viewport =
+        page.getViewport({
+            scale:
+                scale
+        });
+
+
+    // =================================================
+    // PAGE WRAPPER
+    // =================================================
+
+    const pageWrapper =
+        document.createElement(
+            "div"
+        );
+
+
+    pageWrapper.className =
+        "pdf-page";
+
+
+    pageWrapper.dataset.page =
+        pageNumber;
+
+
+    pageWrapper.style.width =
+        `${viewport.width}px`;
+
+
+    pageWrapper.style.height =
+        `${viewport.height}px`;
+
+
+    // =================================================
+    // CANVAS
+    // =================================================
+
+    const canvas =
+        document.createElement(
+            "canvas"
+        );
+
+
+    const context =
+        canvas.getContext(
+            "2d",
+            {
+                alpha:
+                    false
+            }
+        );
+
+
+    const outputScale =
+        window.devicePixelRatio ||
+        1;
+
+
+    canvas.width =
+        Math.floor(
+            viewport.width *
+            outputScale
+        );
+
+
+    canvas.height =
+        Math.floor(
+            viewport.height *
+            outputScale
+        );
+
+
+    canvas.style.width =
+        `${viewport.width}px`;
+
+
+    canvas.style.height =
+        `${viewport.height}px`;
+
+
+    // =================================================
+    // RENDER CONTEXT
+    // =================================================
+
+    const renderContext = {
+
+        canvasContext:
+            context,
+
+        viewport:
+            viewport,
+
+        transform:
+            outputScale !== 1
+
+                ? [
+                    outputScale,
+                    0,
+                    0,
+                    outputScale,
+                    0,
+                    0
+                ]
+
+                : null
+
+    };
+
+
+    // =================================================
+    // ADD TO DOM
+    // =================================================
+
+    pageWrapper.appendChild(
+        canvas
+    );
+
+
+    pdfContainer.appendChild(
+        pageWrapper
+    );
+
+
+    // =================================================
+    // RENDER
+    // =================================================
+
+    await page.render(
+        renderContext
+    ).promise;
+
+}
+
+
+// =====================================================
+// ERROR SCREEN
+// =====================================================
+
+function showError(
+    message
+) {
+
+    if (loading) {
+
+        loading.remove();
+
+    }
+
+
+    viewer.className =
+        "error-screen";
+
+
+    viewer.innerHTML = `
+
+        <div class="error-card">
+
+            <div class="error-icon">
+                ⚠️
+            </div>
+
+
+            <h2>
+                Unable to Open Answer
+            </h2>
+
+
+            <p>
+                ${message}
+            </p>
+
+
+            <button
+                type="button"
+                class="error-back"
+                id="errorBack"
+            >
+
+                ← Go Back
+
+            </button>
+
+        </div>
+
+    `;
+
+
+    const errorBack =
+        document.getElementById(
+            "errorBack"
+        );
+
+
+    if (errorBack) {
+
+        errorBack.addEventListener(
+            "click",
+            function () {
+
+                window.history.back();
+
+            }
+        );
+
+    }
+
+}
