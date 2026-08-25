@@ -1,4 +1,9 @@
 // =====================================================
+// GRADE 10 STUDENT DASHBOARD
+// =====================================================
+
+
+// =====================================================
 // CHECK LOGIN
 // =====================================================
 
@@ -60,7 +65,7 @@ import {
 
 
 // =====================================================
-// STUDENT FIREBASE REFERENCE
+// STUDENT REFERENCE
 // =====================================================
 
 let studentRef = null;
@@ -85,7 +90,9 @@ if (studentId) {
 async function updateLastActive() {
 
     if (!studentRef) {
+
         return;
+
     }
 
 
@@ -127,7 +134,14 @@ function showElement(
 
 
     if (!element) {
+
+        console.warn(
+            "Element not found:",
+            elementId
+        );
+
         return;
+
     }
 
 
@@ -152,7 +166,14 @@ function hideElement(
 
 
     if (!element) {
+
+        console.warn(
+            "Element not found:",
+            elementId
+        );
+
         return;
+
     }
 
 
@@ -163,12 +184,25 @@ function hideElement(
 
 
 // =====================================================
-// LOAD GRADE 10 PAPER SETTINGS
+// LOAD PAPER SETTINGS
 // =====================================================
 
 async function loadPaperSettings() {
 
+    console.log(
+        "===================================="
+    );
+
+    console.log(
+        "📚 Loading Grade 10 Paper Settings..."
+    );
+
+
     try {
+
+        // -------------------------------------------------
+        // FIREBASE DOCUMENT
+        // -------------------------------------------------
 
         const settingsRef =
             doc(
@@ -184,25 +218,28 @@ async function loadPaperSettings() {
             );
 
 
-        // =================================================
-        // IF DOCUMENT DOES NOT EXIST
-        // =================================================
+        // -------------------------------------------------
+        // DOCUMENT DOES NOT EXIST
+        // -------------------------------------------------
 
         if (
             !settingsSnapshot.exists()
         ) {
 
             console.warn(
-                "Grade 10 paperSettings document not found."
+                "⚠️ paperSettings/grade10 does not exist."
             );
 
 
-            // Default behaviour:
-            // Show both buttons.
+            /*
+             * If there is no Firebase document,
+             * show both buttons.
+             */
 
             showElement(
                 "modelPapersCard"
             );
+
 
             showElement(
                 "pastPapersCard"
@@ -214,16 +251,44 @@ async function loadPaperSettings() {
         }
 
 
+        // -------------------------------------------------
+        // GET DATA
+        // -------------------------------------------------
+
         const settings =
             settingsSnapshot.data();
+
+
+        console.log(
+            "🔥 Firebase Grade 10 Settings:",
+            settings
+        );
 
 
         // =================================================
         // MODEL PAPERS
         // =================================================
+        //
+        // ONLY Boolean true = SHOW
+        //
+        // false = HIDE
+        // undefined = HIDE
+        // "true" = HIDE
+        // "false" = HIDE
+        //
+        // This prevents accidental display.
+        // =================================================
 
         const modelPapersEnabled =
-            settings.modelPapersEnabled !== false;
+            settings.modelPapersEnabled === true;
+
+
+        console.log(
+            "Model Papers:",
+            modelPapersEnabled
+                ? "🟢 VISIBLE"
+                : "🔴 HIDDEN"
+        );
 
 
         if (
@@ -247,9 +312,25 @@ async function loadPaperSettings() {
         // =================================================
         // PAST PAPERS
         // =================================================
+        //
+        // ONLY Boolean true = SHOW
+        //
+        // false = HIDE
+        // undefined = HIDE
+        // "true" = HIDE
+        // "false" = HIDE
+        // =================================================
 
         const pastPapersEnabled =
-            settings.pastPapersEnabled !== false;
+            settings.pastPapersEnabled === true;
+
+
+        console.log(
+            "Past Papers:",
+            pastPapersEnabled
+                ? "🟢 VISIBLE"
+                : "🔴 HIDDEN"
+        );
 
 
         if (
@@ -271,37 +352,61 @@ async function loadPaperSettings() {
 
 
         // =================================================
-        // CONSOLE
+        // FINAL STATUS
         // =================================================
 
         console.log(
-            "Grade 10 Paper Visibility:",
-            {
-                modelPapers:
-                    modelPapersEnabled,
+            "------------------------------------"
+        );
 
-                pastPapers:
-                    pastPapersEnabled
-            }
+        console.log(
+            "Model Papers Card:",
+            document.getElementById(
+                "modelPapersCard"
+            )
+                ? "FOUND"
+                : "NOT FOUND"
+        );
+
+        console.log(
+            "Past Papers Card:",
+            document.getElementById(
+                "pastPapersCard"
+            )
+                ? "FOUND"
+                : "NOT FOUND"
+        );
+
+        console.log(
+            "===================================="
         );
 
     }
     catch (error) {
 
         console.error(
-            "Paper settings load error:",
+            "❌ Failed to load paper settings:",
             error
         );
 
 
-        // Firebase error:
-        // keep both buttons visible.
+        /*
+         * IMPORTANT:
+         *
+         * If Firebase fails, we do NOT automatically
+         * enable hidden buttons.
+         *
+         * This prevents an admin-disabled paper
+         * from accidentally becoming visible.
+         */
 
-        showElement(
+
+        hideElement(
             "modelPapersCard"
         );
 
-        showElement(
+
+        hideElement(
             "pastPapersCard"
         );
 
@@ -318,7 +423,7 @@ updateLastActive();
 
 
 // =====================================================
-// LOAD PAPER SETTINGS
+// INITIAL PAPER SETTINGS
 // =====================================================
 
 loadPaperSettings();
@@ -401,6 +506,7 @@ const idleChecker =
                     heartbeat
                 );
 
+
                 clearInterval(
                     idleChecker
                 );
@@ -410,9 +516,11 @@ const idleChecker =
                     "loggedIn"
                 );
 
+
                 sessionStorage.removeItem(
                     "studentId"
                 );
+
 
                 sessionStorage.removeItem(
                     "studentGrade"
@@ -455,8 +563,9 @@ document.addEventListener(
             updateLastActive();
 
 
-            // Reload Firebase settings
-            // when student comes back.
+            // Reload admin settings
+            // whenever student returns
+            // to the dashboard.
 
             loadPaperSettings();
 
@@ -485,6 +594,7 @@ if (logoutBtn) {
             clearInterval(
                 heartbeat
             );
+
 
             clearInterval(
                 idleChecker
@@ -528,9 +638,11 @@ if (logoutBtn) {
                 "loggedIn"
             );
 
+
             sessionStorage.removeItem(
                 "studentId"
             );
+
 
             sessionStorage.removeItem(
                 "studentGrade"
@@ -552,7 +664,7 @@ if (logoutBtn) {
 
 
 // =====================================================
-// CONSOLE
+// CONSOLE INFORMATION
 // =====================================================
 
 console.log(
@@ -560,7 +672,7 @@ console.log(
 );
 
 console.log(
-    "✅ GRADE 10 STUDENT DASHBOARD"
+    "✅ GRADE 10 STUDENT DASHBOARD LOADED"
 );
 
 console.log(
