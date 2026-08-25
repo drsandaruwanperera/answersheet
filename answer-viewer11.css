@@ -1,5 +1,5 @@
 /* =====================================================
-   GLOBAL
+   PROTECTED ANSWER VIEWER
 ===================================================== */
 
 * {
@@ -7,25 +7,30 @@
 }
 
 
-html,
-body {
-    margin: 0;
-    padding: 0;
-
-    width: 100%;
+html {
     min-height: 100%;
+}
+
+
+body {
+
+    margin: 0;
+
+    min-height: 100vh;
 
     font-family:
         Inter,
+        "Segoe UI",
+        Roboto,
         Arial,
-        Helvetica,
         sans-serif;
 
     background:
-        #f1f5f9;
+        #eef2f7;
 
     color:
         #0f172a;
+
 }
 
 
@@ -52,12 +57,6 @@ body {
 
     min-height: 82px;
 
-    background:
-        #ffffff;
-
-    border-bottom:
-        1px solid #e2e8f0;
-
     padding:
         14px 28px;
 
@@ -68,6 +67,16 @@ body {
     justify-content: space-between;
 
     gap: 20px;
+
+    background:
+        #ffffff;
+
+    border-bottom:
+        1px solid #e2e8f0;
+
+    box-shadow:
+        0 4px 18px
+        rgba(15,23,42,.05);
 
 }
 
@@ -91,10 +100,7 @@ body {
 
     height: 48px;
 
-    border-radius: 14px;
-
-    background:
-        #ede9fe;
+    flex-shrink: 0;
 
     display: flex;
 
@@ -102,9 +108,26 @@ body {
 
     justify-content: center;
 
-    font-size: 24px;
+    border-radius: 14px;
 
-    flex-shrink: 0;
+    background:
+        linear-gradient(
+            135deg,
+            #ede9fe,
+            #f5f3ff
+        );
+
+    border:
+        1px solid #ddd6fe;
+
+    font-size: 23px;
+
+}
+
+
+.viewer-heading {
+
+    min-width: 0;
 
 }
 
@@ -113,40 +136,44 @@ body {
 
     display: block;
 
+    margin-bottom: 3px;
+
     color:
         #7c3aed;
 
-    font-size: 10px;
+    font-size: 9px;
 
-    font-weight: 800;
+    font-weight: 850;
 
     letter-spacing:
-        1.2px;
-
-    margin-bottom: 3px;
+        .13em;
 
 }
 
 
-.viewer-header h1 {
+.viewer-heading h1 {
 
     margin: 0;
 
-    font-size: 20px;
+    color:
+        #0f172a;
 
-    line-height: 1.2;
+    font-size: 19px;
+
+    font-weight: 850;
 
 }
 
 
-.viewer-header p {
+.viewer-heading p {
 
-    margin: 4px 0 0;
+    margin:
+        4px 0 0;
 
     color:
         #64748b;
 
-    font-size: 13px;
+    font-size: 11px;
 
 }
 
@@ -157,35 +184,46 @@ body {
 
 .back-btn {
 
-    border: 0;
+    min-height: 38px;
 
-    background:
-        #7c3aed;
+    padding:
+        0 16px;
 
-    color:
-        #ffffff;
+    border:
+        1px solid #ddd6fe;
 
     border-radius: 10px;
 
-    padding:
-        11px 18px;
+    background:
+        #ffffff;
 
-    font-weight: 700;
+    color:
+        #6d28d9;
 
     cursor: pointer;
 
-    transition:
-        0.2s ease;
+    font-family: inherit;
 
-    flex-shrink: 0;
+    font-size: 11px;
+
+    font-weight: 750;
+
+    transition:
+        .2s ease;
 
 }
 
 
 .back-btn:hover {
 
+    color:
+        #ffffff;
+
     background:
-        #6d28d9;
+        #7c3aed;
+
+    border-color:
+        #7c3aed;
 
     transform:
         translateY(-1px);
@@ -199,11 +237,20 @@ body {
 
 .viewer-notice {
 
-    margin:
-        18px auto;
-
     width:
-        min(1100px, calc(100% - 36px));
+        min(1100px, calc(100% - 40px));
+
+    margin:
+        18px auto 14px;
+
+    padding:
+        13px 16px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
 
     background:
         #ffffff;
@@ -212,25 +259,22 @@ body {
         1px solid #ddd6fe;
 
     border-radius:
-        14px;
+        13px;
 
-    padding:
-        13px 17px;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 12px;
+    box-shadow:
+        0 5px 18px
+        rgba(109,53,242,.05);
 
 }
 
 
-.viewer-notice > span {
+.notice-icon {
 
     width: 38px;
 
     height: 38px;
+
+    flex-shrink: 0;
 
     display: flex;
 
@@ -243,21 +287,26 @@ body {
     background:
         #f5f3ff;
 
-    font-size: 19px;
-
-    flex-shrink: 0;
+    font-size: 18px;
 
 }
 
 
-.viewer-notice strong {
+.notice-content strong {
 
-    font-size: 13px;
+    display: block;
+
+    color:
+        #312e81;
+
+    font-size: 12px;
+
+    font-weight: 800;
 
 }
 
 
-.viewer-notice p {
+.notice-content p {
 
     margin:
         3px 0 0;
@@ -265,25 +314,30 @@ body {
     color:
         #64748b;
 
-    font-size: 12px;
+    font-size: 10px;
 
 }
 
 
 /* =====================================================
-   VIEWER
+   PDF VIEWER AREA
 ===================================================== */
 
 .pdf-viewer-wrapper {
 
-    width:
-        min(1100px, calc(100% - 36px));
+    position: relative;
 
-    margin:
-        0 auto 30px;
+    width:
+        min(1100px, calc(100% - 40px));
 
     min-height:
         calc(100vh - 190px);
+
+    margin:
+        0 auto 20px;
+
+    overflow:
+        auto;
 
     background:
         #cbd5e1;
@@ -294,20 +348,20 @@ body {
     border-radius:
         16px;
 
-    overflow:
-        auto;
-
-    position:
-        relative;
+    box-shadow:
+        0 10px 30px
+        rgba(15,23,42,.08);
 
 }
 
 
 /* =====================================================
-   CANVAS CONTAINER
+   CANVAS
 ===================================================== */
 
 .pdf-canvas-container {
+
+    width: 100%;
 
     padding:
         28px;
@@ -329,17 +383,25 @@ body {
 
 .pdf-page {
 
+    display: block;
+
+    max-width: 100%;
+
     background:
         #ffffff;
 
     box-shadow:
-        0 8px 25px rgba(15, 23, 42, 0.16);
+        0 8px 25px
+        rgba(15,23,42,.18);
 
-    max-width:
-        100%;
+    user-select:
+        none;
 
-    display:
-        block;
+    -webkit-user-select:
+        none;
+
+    -webkit-touch-callout:
+        none;
 
 }
 
@@ -353,46 +415,36 @@ body {
     position:
         absolute;
 
-    inset:
-        0;
+    inset: 0;
 
-    min-height:
-        500px;
+    z-index: 10;
 
-    display:
-        flex;
+    min-height: 500px;
 
-    flex-direction:
-        column;
+    display: flex;
 
-    align-items:
-        center;
+    flex-direction: column;
 
-    justify-content:
-        center;
+    align-items: center;
 
-    gap:
-        8px;
+    justify-content: center;
 
-    color:
-        #475569;
+    gap: 8px;
 
     background:
         #f8fafc;
 
-    z-index:
-        5;
+    color:
+        #475569;
 
 }
 
 
 .loading-spinner {
 
-    width:
-        38px;
+    width: 38px;
 
-    height:
-        38px;
+    height: 38px;
 
     border:
         4px solid #e2e8f0;
@@ -404,12 +456,12 @@ body {
         50%;
 
     animation:
-        spin 0.8s linear infinite;
+        viewerSpin .8s linear infinite;
 
 }
 
 
-@keyframes spin {
+@keyframes viewerSpin {
 
     to {
 
@@ -426,19 +478,22 @@ body {
     margin-top:
         6px;
 
+    color:
+        #334155;
+
     font-size:
-        14px;
+        13px;
 
 }
 
 
 .loading span {
 
-    font-size:
-        12px;
-
     color:
         #94a3b8;
+
+    font-size:
+        10px;
 
 }
 
@@ -449,37 +504,28 @@ body {
 
 .error-message {
 
-    min-height:
-        500px;
+    min-height: 500px;
 
-    display:
-        flex;
+    padding: 40px 20px;
 
-    flex-direction:
-        column;
+    display: flex;
 
-    align-items:
-        center;
+    flex-direction: column;
 
-    justify-content:
-        center;
+    align-items: center;
 
-    text-align:
-        center;
+    justify-content: center;
 
-    padding:
-        30px;
+    text-align: center;
 
 }
 
 
 .error-icon {
 
-    font-size:
-        42px;
+    margin-bottom: 12px;
 
-    margin-bottom:
-        8px;
+    font-size: 42px;
 
 }
 
@@ -490,26 +536,38 @@ body {
         0 0 7px;
 
     font-size:
-        20px;
+        18px;
 
 }
 
 
 .error-message p {
 
+    max-width:
+        450px;
+
+    margin:
+        0 0 18px;
+
     color:
         #64748b;
 
-    margin:
-        0 0 20px;
+    font-size:
+        12px;
 
 }
 
 
-#errorBackBtn {
+.error-back-btn {
 
-    border:
-        0;
+    min-height: 37px;
+
+    padding:
+        0 16px;
+
+    border: 0;
+
+    border-radius: 9px;
 
     background:
         #7c3aed;
@@ -517,72 +575,108 @@ body {
     color:
         #ffffff;
 
-    padding:
-        10px 18px;
+    cursor: pointer;
 
-    border-radius:
-        9px;
+    font-family: inherit;
 
-    cursor:
-        pointer;
+    font-size:
+        11px;
 
     font-weight:
-        700;
+        750;
 
 }
 
 
 /* =====================================================
-   MOBILE
+   FOOTER
+===================================================== */
+
+.viewer-footer {
+
+    padding:
+        0 20px 20px;
+
+    text-align:
+        center;
+
+    color:
+        #94a3b8;
+
+    font-size:
+        9px;
+
+}
+
+
+.viewer-footer span {
+
+    color:
+        #cbd5e1;
+
+}
+
+
+/* =====================================================
+   RESPONSIVE
 ===================================================== */
 
 @media (max-width: 700px) {
 
+
     .viewer-header {
 
         padding:
-            12px 15px;
-
-    }
-
-
-    .viewer-header h1 {
-
-        font-size:
-            16px;
-
-    }
-
-
-    .viewer-header p {
-
-        font-size:
-            11px;
+            12px 14px;
 
     }
 
 
     .viewer-icon {
 
-        width:
-            42px;
+        width: 42px;
 
-        height:
-            42px;
+        height: 42px;
+
+        font-size: 20px;
+
+    }
+
+
+    .viewer-heading h1 {
 
         font-size:
-            20px;
+            15px;
+
+    }
+
+
+    .viewer-heading p {
+
+        font-size:
+            9px;
+
+    }
+
+
+    .viewer-label {
+
+        font-size:
+            8px;
 
     }
 
 
     .back-btn {
 
+        min-height:
+            34px;
+
         padding:
-            9px 12px;
+            0 11px;
 
         font-size:
-            12px;
+            10px;
 
     }
 
@@ -604,7 +698,7 @@ body {
             calc(100% - 20px);
 
         min-height:
-            calc(100vh - 155px);
+            calc(100vh - 160px);
 
     }
 
@@ -616,6 +710,39 @@ body {
 
         gap:
             12px;
+
+    }
+
+}
+
+
+/* =====================================================
+   PRINT PROTECTION
+===================================================== */
+
+@media print {
+
+    body * {
+
+        display:
+            none !important;
+
+    }
+
+
+    body::before {
+
+        content:
+            "Printing is disabled for protected answers.";
+
+        display:
+            block !important;
+
+        padding:
+            50px;
+
+        font-size:
+            20px;
 
     }
 
