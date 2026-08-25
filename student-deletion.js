@@ -1,2044 +1,1090 @@
-// =====================================================
-// STUDENT DELETION SYSTEM
-// =====================================================
+<!DOCTYPE html>
+<html lang="en">
 
-import {
-    db,
-    collection,
-    getDocs,
-    doc,
-    deleteDoc
-} from "./firebase.js";
+<head>
 
+    <meta charset="UTF-8">
 
-// =====================================================
-// CONFIG
-// =====================================================
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-const DELETE_PASSWORD =
-    "Nimeth";
+    <title>Student Deletion</title>
 
+    <link
+        rel="stylesheet"
+        href="admin.css?v=21"
+    >
 
-// =====================================================
-// DATA
-// =====================================================
+    <style>
 
-let allStudents = [];
+        /* =====================================================
+           PAGE
+        ===================================================== */
 
-let unlocked = false;
+        .deletion-page {
 
-let deleteRunning = false;
-
-
-// =====================================================
-// ELEMENTS
-// =====================================================
-
-const passwordCard =
-    document.getElementById(
-        "passwordCard"
-    );
-
-const reportPanel =
-    document.getElementById(
-        "reportPanel"
-    );
-
-const deletePassword =
-    document.getElementById(
-        "deletePassword"
-    );
-
-const unlockBtn =
-    document.getElementById(
-        "unlockBtn"
-    );
-
-const passwordError =
-    document.getElementById(
-        "passwordError"
-    );
-
-const searchInput =
-    document.getElementById(
-        "searchInput"
-    );
-
-const categoryFilter =
-    document.getElementById(
-        "categoryFilter"
-    );
-
-const refreshBtn =
-    document.getElementById(
-        "refreshBtn"
-    );
-
-const studentTable =
-    document.getElementById(
-        "studentTable"
-    );
-
-const resultCount =
-    document.getElementById(
-        "resultCount"
-    );
-
-const logoutBtn =
-    document.getElementById(
-        "logoutBtn"
-    );
-
-
-// =====================================================
-// SESSION
-// =====================================================
-
-function getSessionValue(...keys) {
-
-    for (
-        const key of keys
-    ) {
-
-        const value =
-            sessionStorage.getItem(
-                key
-            );
-
-        if (
-            value
-        ) {
-
-            return value;
+            padding: 30px;
 
         }
 
-    }
 
-    return "";
+        .deletion-header {
 
-}
+            background: white;
 
+            border-radius: 18px;
 
-// =====================================================
-// ADMIN ROLE
-// =====================================================
+            padding: 26px 30px;
 
-function getAdminRole() {
+            margin-bottom: 24px;
 
-    return getSessionValue(
-        "adminRole",
-        "userRole",
-        "role",
-        "admin_role",
-        "user_role"
-    )
-        .trim()
-        .toLowerCase()
-        .replace(
-            /[\s_-]+/g,
-            ""
-        );
+            border: 1px solid #e2e8f0;
 
-}
+        }
 
 
-// =====================================================
-// SUPER ADMIN
-// =====================================================
+        .deletion-header h1 {
 
-function isSuperAdmin() {
+            margin: 0 0 7px;
 
-    const role =
-        getAdminRole();
+            font-size: 28px;
 
-    return (
-
-        role ===
-        "superadmin"
-
-        ||
-
-        role ===
-        "superadministrator"
-
-        ||
-
-        role ===
-        "superadminuser"
-
-    );
-
-}
+        }
 
 
-// =====================================================
-// ADMIN LOGIN
-// =====================================================
+        .deletion-header p {
 
-function isAdminLoggedIn() {
+            margin: 0;
 
-    return [
+            color: #64748b;
 
-        sessionStorage.getItem(
-            "adminLoggedIn"
-        ),
-
-        sessionStorage.getItem(
-            "adminAuthenticated"
-        ),
-
-        sessionStorage.getItem(
-            "isAdmin"
-        ),
-
-        sessionStorage.getItem(
-            "loggedIn"
-        )
-
-    ].some(
-        value =>
-            value === "true"
-    );
-
-}
+        }
 
 
-// =====================================================
-// ACCESS DENIED
-// =====================================================
+        /* =====================================================
+           PASSWORD
+        ===================================================== */
 
-function accessDenied() {
+        .password-box {
 
-    document.body.innerHTML = `
+            max-width: 500px;
 
-        <div
-            style="
-                min-height:100vh;
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                background:#f4f6fb;
-                font-family:Arial,sans-serif;
-                padding:20px;
-            "
-        >
+            margin: 70px auto;
 
-            <div
-                style="
-                    max-width:450px;
-                    width:100%;
-                    background:white;
-                    border-radius:20px;
-                    padding:40px;
-                    text-align:center;
-                    box-shadow:
-                        0 20px 60px
-                        rgba(15,23,42,.12);
-                "
-            >
+            background: white;
 
-                <div
-                    style="
-                        font-size:48px;
-                    "
-                >
-                    🔒
-                </div>
+            padding: 35px;
+
+            border-radius: 20px;
+
+            border: 1px solid #e2e8f0;
+
+            box-shadow:
+                0 20px 50px
+                rgba(15,23,42,.10);
+
+            text-align: center;
+
+        }
+
+
+        .password-icon {
+
+            font-size: 48px;
+
+            margin-bottom: 15px;
+
+        }
+
+
+        .password-box h2 {
+
+            margin: 0 0 8px;
+
+        }
+
+
+        .password-box p {
+
+            color: #64748b;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .password-box input {
+
+            width: 100%;
+
+            box-sizing: border-box;
+
+            padding: 13px 15px;
+
+            border: 1px solid #cbd5e1;
+
+            border-radius: 10px;
+
+            outline: none;
+
+            font-size: 15px;
+
+            margin-bottom: 12px;
+
+        }
+
+
+        .password-box input:focus {
+
+            border-color: #7c3aed;
+
+        }
+
+
+        .unlock-btn {
+
+            width: 100%;
+
+            padding: 13px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: #7c3aed;
+
+            color: white;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+        }
+
+
+        .password-error {
+
+            color: #dc2626;
+
+            font-size: 13px;
+
+            min-height: 20px;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        /* =====================================================
+           REPORT GRID
+        ===================================================== */
+
+        .series-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(
+                        210px,
+                        1fr
+                    )
+                );
+
+            gap: 18px;
+
+            margin-bottom: 28px;
+
+        }
+
+
+        .series-card {
+
+            background: white;
+
+            border: 1px solid #e2e8f0;
+
+            border-radius: 18px;
+
+            padding: 22px;
+
+        }
+
+
+        .series-card h3 {
+
+            margin: 0 0 8px;
+
+            font-size: 18px;
+
+        }
+
+
+        .series-count {
+
+            font-size: 34px;
+
+            font-weight: 800;
+
+            margin: 8px 0 18px;
+
+        }
+
+
+        .series-label {
+
+            color: #64748b;
+
+            font-size: 12px;
+
+            text-transform: uppercase;
+
+            letter-spacing: .05em;
+
+        }
+
+
+        .delete-series-btn {
+
+            width: 100%;
+
+            border: 1px solid #fecaca;
+
+            background: #fff1f2;
+
+            color: #dc2626;
+
+            padding: 10px;
+
+            border-radius: 9px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+        }
+
+
+        .delete-series-btn:hover {
+
+            background: #fee2e2;
+
+        }
+
+
+        /* =====================================================
+           NIC CARD
+        ===================================================== */
+
+        .nic-card {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #5b21b6
+                );
+
+            color: white;
+
+        }
+
+
+        .nic-card .series-label {
+
+            color: rgba(
+                255,
+                255,
+                255,
+                .75
+            );
+
+        }
+
+
+        .nic-card .series-count {
+
+            color: white;
+
+        }
+
+
+        /* =====================================================
+           INDIVIDUAL DELETE
+        ===================================================== */
+
+        .individual-section {
+
+            background: white;
+
+            border-radius: 18px;
+
+            border: 1px solid #e2e8f0;
+
+            padding: 25px;
+
+        }
+
+
+        .individual-section h2 {
+
+            margin-top: 0;
+
+        }
+
+
+        .individual-section > p {
+
+            color: #64748b;
+
+        }
+
+
+        .search-row {
+
+            display: flex;
+
+            gap: 10px;
+
+            margin: 20px 0;
+
+        }
+
+
+        .search-row input {
+
+            flex: 1;
+
+            padding: 13px 15px;
+
+            border: 1px solid #cbd5e1;
+
+            border-radius: 10px;
+
+            outline: none;
+
+        }
+
+
+        .refresh-btn {
+
+            padding: 12px 18px;
+
+            border: 1px solid #cbd5e1;
+
+            background: white;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+        }
+
+
+        /* =====================================================
+           TABLE
+        ===================================================== */
+
+        .table-wrapper {
+
+            overflow-x: auto;
+
+        }
+
+
+        .student-table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+        }
+
+
+        .student-table th {
+
+            text-align: left;
+
+            padding: 13px;
+
+            background: #f8fafc;
+
+            color: #64748b;
+
+            font-size: 12px;
+
+        }
+
+
+        .student-table td {
+
+            padding: 13px;
+
+            border-top: 1px solid #eef2f7;
+
+            font-size: 14px;
+
+        }
+
+
+        .student-id {
+
+            font-weight: 700;
+
+            color: #4f46e5;
+
+        }
+
+
+        .badge {
+
+            display: inline-block;
+
+            padding: 5px 9px;
+
+            border-radius: 7px;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+        }
+
+
+        .badge-al {
+
+            background: #ede9fe;
+
+            color: #6d28d9;
+
+        }
+
+
+        .badge-grade10 {
+
+            background: #dbeafe;
+
+            color: #1d4ed8;
+
+        }
+
+
+        .badge-grade11 {
+
+            background: #dcfce7;
+
+            color: #15803d;
+
+        }
+
+
+        .individual-delete {
+
+            border: 1px solid #fecaca;
+
+            background: white;
+
+            color: #dc2626;
+
+            padding: 7px 12px;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            font-weight: 700;
+
+        }
+
+
+        .empty-row {
+
+            text-align: center;
+
+            color: #64748b;
+
+            padding: 35px !important;
+
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (
+            max-width: 700px
+        ) {
+
+            .deletion-page {
+
+                padding: 15px;
+
+            }
+
+
+            .search-row {
+
+                flex-direction: column;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="admin-layout">
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ===================================================== -->
+
+    <aside class="sidebar">
+
+
+        <div class="sidebar-brand">
+
+            <div class="brand-logo">
+                🎓
+            </div>
+
+            <div>
 
                 <h2>
-                    Access Restricted
+                    Student
                 </h2>
 
-                <p
-                    style="
-                        color:#64748b;
-                        line-height:1.6;
-                    "
-                >
-                    Only the Super Administrator
-                    can access Student Deletion.
-                </p>
-
-                <button
-                    id="backBtn"
-                    style="
-                        border:0;
-                        background:#7c3aed;
-                        color:white;
-                        padding:12px 20px;
-                        border-radius:9px;
-                        font-weight:700;
-                        cursor:pointer;
-                    "
-                >
-                    ← Back to Dashboard
-                </button>
+                <span>
+                    Assessment Portal
+                </span>
 
             </div>
 
         </div>
 
-    `;
 
+        <div class="sidebar-label">
+            ADMINISTRATION
+        </div>
 
-    document
-        .getElementById(
-            "backBtn"
-        )
-        ?.addEventListener(
-            "click",
-            () => {
 
-                window.location.href =
-                    "admin.html";
+        <nav class="sidebar-nav">
 
-            }
-        );
 
-}
-
-
-// =====================================================
-// INITIALISE
-// =====================================================
-
-function initialise() {
-
-    const adminUsername =
-        document.getElementById(
-            "adminUsername"
-        );
-
-    const adminRole =
-        document.getElementById(
-            "adminRole"
-        );
-
-
-    const username =
-        getSessionValue(
-            "adminUsername",
-            "adminName",
-            "username",
-            "displayName"
-        );
-
-
-    if (
-        adminUsername &&
-        username
-    ) {
-
-        adminUsername.textContent =
-            username;
-
-    }
-
-
-    if (
-        adminRole
-    ) {
-
-        adminRole.textContent =
-            "Super Administrator";
-
-    }
-
-
-    unlockBtn?.addEventListener(
-        "click",
-        unlock
-    );
-
-
-    deletePassword?.addEventListener(
-        "keydown",
-        event => {
-
-            if (
-                event.key ===
-                "Enter"
-            ) {
-
-                unlock();
-
-            }
-
-        }
-    );
-
-
-    searchInput?.addEventListener(
-        "input",
-        render
-    );
-
-
-    categoryFilter?.addEventListener(
-        "change",
-        render
-    );
-
-
-    refreshBtn?.addEventListener(
-        "click",
-        loadStudents
-    );
-
-
-    logoutBtn?.addEventListener(
-        "click",
-        () => {
-
-            if (
-                confirm(
-                    "Are you sure you want to sign out?"
-                )
-            ) {
-
-                sessionStorage.clear();
-
-                window.location.href =
-                    "admin-login.html";
-
-            }
-
-        }
-    );
-
-
-    document
-        .querySelectorAll(
-            ".delete-series-btn"
-        )
-        .forEach(
-            button => {
-
-                button.addEventListener(
-                    "click",
-                    () => {
-
-                        const series =
-                            button.dataset.series;
-
-                        deleteSeries(
-                            series
-                        );
-
-                    }
-                );
-
-            }
-        );
-
-
-    document
-        .getElementById(
-            "deleteAllAL"
-        )
-        ?.addEventListener(
-            "click",
-            () => {
-
-                deleteAllAL();
-
-            }
-        );
-
-}
-
-
-// =====================================================
-// UNLOCK
-// =====================================================
-
-function unlock() {
-
-    const password =
-        deletePassword?.value ||
-        "";
-
-
-    if (
-        password !==
-        DELETE_PASSWORD
-    ) {
-
-        if (
-            passwordError
-        ) {
-
-            passwordError.textContent =
-                "Incorrect deletion password.";
-
-        }
-
-
-        deletePassword.value =
-            "";
-
-        deletePassword.focus();
-
-        return;
-
-    }
-
-
-    if (
-        passwordError
-    ) {
-
-        passwordError.textContent =
-            "";
-
-    }
-
-
-    unlocked =
-        true;
-
-
-    passwordCard.style.display =
-        "none";
-
-
-    reportPanel.style.display =
-        "block";
-
-
-    loadStudents();
-
-}
-
-
-// =====================================================
-// LOAD STUDENTS
-// =====================================================
-
-async function loadStudents() {
-
-    if (
-        !unlocked
-    ) {
-
-        return;
-
-    }
-
-
-    studentTable.innerHTML = `
-
-        <tr>
-
-            <td
-                colspan="6"
-                class="loading"
+            <a
+                href="admin.html"
+                class="nav-item"
             >
-                Loading students...
-            </td>
+                <span class="nav-icon">
+                    🏠
+                </span>
 
-        </tr>
+                Dashboard
+            </a>
 
-    `;
 
+            <a
+                href="students.html"
+                class="nav-item"
+            >
+                <span class="nav-icon">
+                    👥
+                </span>
 
-    try {
+                Students
+            </a>
 
-        const snapshot =
-            await getDocs(
-                collection(
-                    db,
-                    "students"
-                )
-            );
 
+            <a
+                href="paper-management.html"
+                class="nav-item superadmin-only"
+            >
+                <span class="nav-icon">
+                    📚
+                </span>
 
-        allStudents = [];
+                Paper Management
+            </a>
 
 
-        snapshot.forEach(
-            studentDoc => {
+            <a
+                href="import-students.html"
+                class="nav-item superadmin-only"
+            >
+                <span class="nav-icon">
+                    📥
+                </span>
 
-                allStudents.push({
+                Import Students
+            </a>
 
-                    id:
-                        studentDoc.id,
 
-                    data:
-                        studentDoc.data()
+            <a
+                href="reports.html"
+                class="nav-item superadmin-only"
+            >
+                <span class="nav-icon">
+                    📈
+                </span>
 
-                });
+                Reports
+            </a>
 
-            }
-        );
 
+            <!-- =============================================
+                 STUDENT DELETION
+            ============================================== -->
 
-        allStudents.sort(
-            (
-                a,
-                b
-            ) => {
+            <a
+                href="student-deletion.html"
+                class="nav-item active superadmin-only"
+            >
 
-                return String(
-                    a.id
-                ).localeCompare(
-                    String(
-                        b.id
-                    ),
-                    undefined,
-                    {
-                        numeric:
-                            true,
-                        sensitivity:
-                            "base"
-                    }
-                );
+                <span class="nav-icon">
+                    🗑️
+                </span>
 
-            }
-        );
+                Student Deletion
 
+            </a>
 
-        updateTotals();
 
-        render();
+        </nav>
 
-    }
 
-    catch (
-        error
-    ) {
+        <div class="sidebar-bottom">
 
-        console.error(
-            "Student loading error:",
-            error
-        );
+            <div class="admin-user-card">
 
+                <div class="admin-user-icon">
+                    👨‍💼
+                </div>
 
-        studentTable.innerHTML = `
+                <div class="admin-user-info">
 
-            <tr>
+                    <strong id="adminUsername">
+                        Super Admin
+                    </strong>
 
-                <td
-                    colspan="6"
-                    class="loading"
-                    style="color:#dc2626"
-                >
-                    ❌ Unable to load students.
-                    <br><br>
-                    Check Firebase Firestore permissions.
-                </td>
+                    <span id="adminRole">
+                        Super Administrator
+                    </span>
 
-            </tr>
+                </div>
 
-        `;
+            </div>
 
-    }
 
-}
+            <button
+                type="button"
+                id="logoutBtn"
+                class="logout-btn"
+            >
 
+                🚪
 
-// =====================================================
-// GET STUDENT TYPE
-// =====================================================
+                <span>
+                    Sign Out
+                </span>
 
-function getType(
-    student
-) {
+            </button>
 
-    const id =
-        String(
-            student.id
-        )
-            .trim()
-            .toUpperCase();
+        </div>
 
+    </aside>
 
-    const data =
-        student.data ||
-        {};
 
+    <!-- =====================================================
+         MAIN
+    ===================================================== -->
 
-    const firebaseType =
-        String(
-            data?.studentType ||
-            ""
-        )
-            .trim()
-            .toLowerCase();
+    <main class="main-content">
 
 
-    if (
-        firebaseType === "grade10" ||
-        firebaseType === "grade 10"
-    ) {
+        <!-- =================================================
+             PASSWORD SCREEN
+        ================================================= -->
 
-        return "grade10";
+        <section
+            id="passwordCard"
+            class="password-box"
+        >
 
-    }
+            <div class="password-icon">
+                🔐
+            </div>
 
+            <h2>
+                Student Deletion
+            </h2>
 
-    if (
-        firebaseType === "grade11" ||
-        firebaseType === "grade 11"
-    ) {
+            <p>
+                Super Administrator access required.
+            </p>
 
-        return "grade11";
 
-    }
+            <input
+                type="password"
+                id="deletePassword"
+                placeholder="Enter deletion password"
+                autocomplete="off"
+            >
 
 
-    if (
-        firebaseType === "al" ||
-        firebaseType === "a/l" ||
-        firebaseType === "a level" ||
-        firebaseType === "advanced level"
-    ) {
+            <div
+                id="passwordError"
+                class="password-error"
+            ></div>
 
-        return "al";
 
-    }
+            <button
+                type="button"
+                id="unlockBtn"
+                class="unlock-btn"
+            >
+                🔓 Continue
+            </button>
 
+        </section>
 
-    if (
-        id.startsWith(
-            "A27000"
-        ) ||
-        id.startsWith(
-            "A28000"
-        ) ||
-        id.startsWith(
-            "A29000"
-        )
-    ) {
 
-        return "al";
+        <!-- =================================================
+             REPORT
+        ================================================= -->
 
-    }
+        <section
+            id="reportPanel"
+            class="deletion-page"
+            style="display:none;"
+        >
 
 
-    if (
-        /^\d{5}$/.test(
-            id
-        )
-    ) {
+            <div class="deletion-header">
 
-        const number =
-            Number(
-                id
-            );
+                <h1>
+                    Student Deletion
+                </h1>
 
+                <p>
+                    Delete students individually or
+                    by admission series.
+                </p>
 
-        if (
-            number >= 26000 &&
-            number <= 26999
-        ) {
+            </div>
 
-            return "grade11";
 
-        }
+            <!-- =============================================
+                 SERIES TOTALS
+            ============================================== -->
 
+            <div class="series-grid">
 
-        if (
-            number >= 27000 &&
-            number <= 27999
-        ) {
 
-            return "grade10";
+                <!-- A27000 -->
 
-        }
+                <div class="series-card">
 
-    }
+                    <div class="series-label">
+                        A/L SERIES
+                    </div>
 
+                    <h3>
+                        A27000
+                    </h3>
 
-    return "al";
+                    <div
+                        class="series-count"
+                        id="totalA27000"
+                    >
+                        0
+                    </div>
 
-}
+                    <button
+                        type="button"
+                        class="delete-series-btn"
+                        data-series="A27000"
+                    >
+                        🗑 Delete All A27000
+                    </button>
 
+                </div>
 
-// =====================================================
-// GET SERIES
-// =====================================================
 
-function getSeries(
-    studentId
-) {
+                <!-- A28000 -->
 
-    const id =
-        String(
-            studentId
-        )
-            .trim()
-            .toUpperCase();
+                <div class="series-card">
 
+                    <div class="series-label">
+                        A/L SERIES
+                    </div>
 
-    if (
-        id.startsWith(
-            "A27000"
-        )
-    ) {
+                    <h3>
+                        A28000
+                    </h3>
 
-        return "A27000";
+                    <div
+                        class="series-count"
+                        id="totalA28000"
+                    >
+                        0
+                    </div>
 
-    }
+                    <button
+                        type="button"
+                        class="delete-series-btn"
+                        data-series="A28000"
+                    >
+                        🗑 Delete All A28000
+                    </button>
 
+                </div>
 
-    if (
-        id.startsWith(
-            "A28000"
-        )
-    ) {
 
-        return "A28000";
+                <!-- A29000 -->
 
-    }
+                <div class="series-card">
 
+                    <div class="series-label">
+                        A/L SERIES
+                    </div>
 
-    if (
-        id.startsWith(
-            "A29000"
-        )
-    ) {
+                    <h3>
+                        A29000
+                    </h3>
 
-        return "A29000";
+                    <div
+                        class="series-count"
+                        id="totalA29000"
+                    >
+                        0
+                    </div>
 
-    }
+                    <button
+                        type="button"
+                        class="delete-series-btn"
+                        data-series="A29000"
+                    >
+                        🗑 Delete All A29000
+                    </button>
 
+                </div>
 
-    if (
-        /^\d{5}$/.test(
-            id
-        )
-    ) {
 
-        const number =
-            Number(
-                id
-            );
+                <!-- 26000 -->
 
+                <div class="series-card">
 
-        if (
-            number >= 26000 &&
-            number <= 26999
-        ) {
+                    <div class="series-label">
+                        GRADE 11 SERIES
+                    </div>
 
-            return "26000";
+                    <h3>
+                        26000
+                    </h3>
 
-        }
+                    <div
+                        class="series-count"
+                        id="total26000"
+                    >
+                        0
+                    </div>
 
+                    <button
+                        type="button"
+                        class="delete-series-btn"
+                        data-series="26000"
+                    >
+                        🗑 Delete All 26000
+                    </button>
 
-        if (
-            number >= 27000 &&
-            number <= 27999
-        ) {
+                </div>
 
-            return "27000";
 
-        }
+                <!-- 27000 -->
 
-    }
+                <div class="series-card">
 
+                    <div class="series-label">
+                        GRADE 10 SERIES
+                    </div>
 
-    return "-";
+                    <h3>
+                        27000
+                    </h3>
 
-}
+                    <div
+                        class="series-count"
+                        id="total27000"
+                    >
+                        0
+                    </div>
 
+                    <button
+                        type="button"
+                        class="delete-series-btn"
+                        data-series="27000"
+                    >
+                        🗑 Delete All 27000
+                    </button>
 
-// =====================================================
-// UPDATE TOTALS
-// =====================================================
+                </div>
 
-function updateTotals() {
 
-    const totalA27000 =
-        allStudents.filter(
-            student =>
-                getSeries(
-                    student.id
-                ) ===
-                "A27000"
-        ).length;
+                <!-- NIC TOTAL -->
 
+                <div class="series-card nic-card">
 
-    const totalA28000 =
-        allStudents.filter(
-            student =>
-                getSeries(
-                    student.id
-                ) ===
-                "A28000"
-        ).length;
+                    <div class="series-label">
+                        REGISTRATION
+                    </div>
 
+                    <h3>
+                        NIC Students
+                    </h3>
 
-    const totalA29000 =
-        allStudents.filter(
-            student =>
-                getSeries(
-                    student.id
-                ) ===
-                "A29000"
-        ).length;
+                    <div
+                        class="series-count"
+                        id="nicStudentTotal"
+                    >
+                        0
+                    </div>
 
+                    <div class="series-label">
+                        Students with NIC Number
+                    </div>
 
-    const total26000 =
-        allStudents.filter(
-            student =>
-                getSeries(
-                    student.id
-                ) ===
-                "26000"
-        ).length;
+                </div>
 
 
-    const total27000 =
-        allStudents.filter(
-            student =>
-                getSeries(
-                    student.id
-                ) ===
-                "27000"
-        ).length;
+            </div>
 
 
-    const currentAL =
-        totalA27000 +
-        totalA28000 +
-        totalA29000;
+            <!-- =============================================
+                 INDIVIDUAL
+            ============================================== -->
 
+            <section
+                class="individual-section"
+            >
 
-    setText(
-        "totalA27000",
-        totalA27000
-    );
+                <h2>
+                    Individual Student Deletion
+                </h2>
 
+                <p>
+                    Search by Student ID, name or NIC
+                    and delete one student account.
+                </p>
 
-    setText(
-        "totalA28000",
-        totalA28000
-    );
 
+                <div class="search-row">
 
-    setText(
-        "totalA29000",
-        totalA29000
-    );
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Search Student ID, Name or NIC..."
+                        autocomplete="off"
+                    >
 
 
-    setText(
-        "total26000",
-        total26000
-    );
+                    <button
+                        type="button"
+                        id="refreshBtn"
+                        class="refresh-btn"
+                    >
+                        🔄 Refresh
+                    </button>
 
+                </div>
 
-    setText(
-        "total27000",
-        total27000
-    );
 
+                <div class="table-wrapper">
 
-    setText(
-        "currentALTotal",
-        currentAL
-    );
+                    <table
+                        class="student-table"
+                    >
 
-}
+                        <thead>
 
+                            <tr>
 
-// =====================================================
-// SET TEXT
-// =====================================================
+                                <th>
+                                    #
+                                </th>
 
-function setText(
-    id,
-    value
-) {
+                                <th>
+                                    Student ID
+                                </th>
 
-    const element =
-        document.getElementById(
-            id
-        );
+                                <th>
+                                    Student
+                                </th>
 
+                                <th>
+                                    Category
+                                </th>
 
-    if (
-        element
-    ) {
+                                <th>
+                                    Series
+                                </th>
 
-        element.textContent =
-            value;
+                                <th>
+                                    Action
+                                </th>
 
-    }
+                            </tr>
 
-}
+                        </thead>
 
 
-// =====================================================
-// GET NAME
-// =====================================================
+                        <tbody
+                            id="studentTable"
+                        >
 
-function getName(
-    data
-) {
+                            <tr>
 
-    return (
-
-        data?.name ||
-
-        data?.studentName ||
-
-        data?.fullName ||
-
-        data?.displayName ||
-
-        "-"
-
-    );
-
-}
-
-
-// =====================================================
-// GET NIC
-// =====================================================
-
-function getNIC(
-    data
-) {
-
-    return (
-
-        data?.nicNumber ||
-
-        data?.nic ||
-
-        data?.NIC ||
-
-        data?.nicNo ||
-
-        ""
-
-    );
-
-}
-
-
-// =====================================================
-// CATEGORY
-// =====================================================
-
-function getCategory(
-    student
-) {
-
-    const type =
-        getType(
-            student
-        );
-
-
-    if (
-        type ===
-        "grade10"
-    ) {
-
-        return "Grade 10";
-
-    }
-
-
-    if (
-        type ===
-        "grade11"
-    ) {
-
-        return "Grade 11";
-
-    }
-
-
-    return "A/L";
-
-}
-
-
-// =====================================================
-// FILTER
-// =====================================================
-
-function getFiltered() {
-
-    const search =
-        String(
-            searchInput?.value ||
-            ""
-        )
-            .trim()
-            .toLowerCase();
-
-
-    const filter =
-        categoryFilter?.value ||
-        "all";
-
-
-    return allStudents.filter(
-        student => {
-
-            const id =
-                String(
-                    student.id
-                )
-                    .trim()
-                    .toUpperCase();
-
-
-            const data =
-                student.data ||
-                {};
-
-
-            const name =
-                getName(
-                    data
-                );
-
-
-            const nic =
-                getNIC(
-                    data
-                );
-
-
-            if (
-                search
-            ) {
-
-                const text =
-                    (
-                        id +
-                        " " +
-                        name +
-                        " " +
-                        nic
-                    )
-                        .toLowerCase();
-
-
-                if (
-                    !text.includes(
-                        search
-                    )
-                ) {
-
-                    return false;
-
-                }
-
-            }
-
-
-            if (
-                filter ===
-                "all"
-            ) {
-
-                return true;
-
-            }
-
-
-            if (
-                filter ===
-                "al"
-            ) {
-
-                return (
-
-                    id.startsWith(
-                        "A27000"
-                    ) ||
-
-                    id.startsWith(
-                        "A28000"
-                    ) ||
-
-                    id.startsWith(
-                        "A29000"
-                    )
-
-                );
-
-            }
-
-
-            if (
-                filter ===
-                "a27000"
-            ) {
-
-                return id.startsWith(
-                    "A27000"
-                );
-
-            }
-
-
-            if (
-                filter ===
-                "a28000"
-            ) {
-
-                return id.startsWith(
-                    "A28000"
-                );
-
-            }
-
-
-            if (
-                filter ===
-                "a29000"
-            ) {
-
-                return id.startsWith(
-                    "A29000"
-                );
-
-            }
-
-
-            if (
-                filter ===
-                "grade11"
-            ) {
-
-                const number =
-                    Number(
-                        id
-                    );
-
-
-                return (
-                    /^\d{5}$/.test(id) &&
-                    number >= 26000 &&
-                    number <= 26999
-                );
-
-            }
-
-
-            if (
-                filter ===
-                "grade10"
-            ) {
-
-                const number =
-                    Number(
-                        id
-                    );
-
-
-                return (
-                    /^\d{5}$/.test(id) &&
-                    number >= 27000 &&
-                    number <= 27999
-                );
-
-            }
-
-
-            return true;
-
-        }
-    );
-
-}
-
-
-// =====================================================
-// RENDER
-// =====================================================
-
-function render() {
-
-    const students =
-        getFiltered();
-
-
-    if (
-        resultCount
-    ) {
-
-        resultCount.textContent =
-
-            students.length +
-            (
-                students.length === 1
-                    ? " student"
-                    : " students"
-            );
-
-    }
-
-
-    if (
-        students.length ===
-        0
-    ) {
-
-        studentTable.innerHTML = `
-
-            <tr>
-
-                <td
-                    colspan="6"
-                    class="loading"
-                >
-                    No students found.
-                </td>
-
-            </tr>
-
-        `;
-
-        return;
-
-    }
-
-
-    studentTable.innerHTML =
-        students
-            .map(
-                (
-                    student,
-                    index
-                ) => {
-
-                    const name =
-                        getName(
-                            student.data
-                        );
-
-
-                    const category =
-                        getCategory(
-                            student
-                        );
-
-
-                    const series =
-                        getSeries(
-                            student.id
-                        );
-
-
-                    const type =
-                        getType(
-                            student
-                        );
-
-
-                    const nic =
-                        getNIC(
-                            student.data
-                        );
-
-
-                    return `
-
-                        <tr>
-
-                            <td>
-                                ${index + 1}
-                            </td>
-
-
-                            <td>
-
-                                <span
-                                    class="student-id"
+                                <td
+                                    colspan="6"
+                                    class="empty-row"
                                 >
-                                    ${escapeHTML(
-                                        student.id
-                                    )}
-                                </span>
+                                    Loading...
+                                </td>
 
-                            </td>
+                            </tr>
 
+                        </tbody>
 
-                            <td>
+                    </table>
 
-                                ${escapeHTML(
-                                    name
-                                )}
+                </div>
 
-                                ${
-                                    nic
-                                        ? `
-                                            <div
-                                                style="
-                                                    margin-top:4px;
-                                                    font-size:10px;
-                                                    color:#94a3b8;
-                                                "
-                                            >
-                                                NIC:
-                                                ${escapeHTML(
-                                                    nic
-                                                )}
-                                            </div>
-                                        `
-                                        : ""
-                                }
+            </section>
 
-                            </td>
 
+        </section>
 
-                            <td>
 
-                                <span
-                                    class="
-                                        badge
-                                        ${type}
-                                    "
-                                >
-                                    ${category}
-                                </span>
+    </main>
 
-                            </td>
+</div>
 
 
-                            <td>
-                                ${series}
-                            </td>
+<script
+    type="module"
+    src="student-deletion.js?v=1"
+></script>
 
 
-                            <td>
+</body>
 
-                                <button
-                                    type="button"
-                                    class="delete-btn"
-                                    data-id="${escapeAttribute(
-                                        student.id
-                                    )}"
-                                >
-                                    🗑 Delete
-                                </button>
-
-                            </td>
-
-                        </tr>
-
-                    `;
-
-                }
-            )
-            .join("");
-
-
-    document
-        .querySelectorAll(
-            ".delete-btn"
-        )
-        .forEach(
-            button => {
-
-                button.addEventListener(
-                    "click",
-                    () => {
-
-                        deleteIndividual(
-                            button.dataset.id
-                        );
-
-                    }
-                );
-
-            }
-        );
-
-}
-
-
-// =====================================================
-// INDIVIDUAL DELETE
-// =====================================================
-
-async function deleteIndividual(
-    studentId
-) {
-
-    if (
-        deleteRunning
-    ) {
-
-        return;
-
-    }
-
-
-    const student =
-        allStudents.find(
-            item =>
-                item.id ===
-                studentId
-        );
-
-
-    if (
-        !student
-    ) {
-
-        alert(
-            "Student not found."
-        );
-
-        return;
-
-    }
-
-
-    const name =
-        getName(
-            student.data
-        );
-
-
-    const series =
-        getSeries(
-            studentId
-        );
-
-
-    const first =
-        confirm(
-
-            "⚠️ DELETE STUDENT\n\n" +
-
-            "Student ID: " +
-            studentId +
-            "\n" +
-
-            "Name: " +
-            name +
-            "\n" +
-
-            "Series: " +
-            series +
-            "\n\n" +
-
-            "This action cannot be undone.\n\n" +
-
-            "Continue?"
-
-        );
-
-
-    if (
-        !first
-    ) {
-
-        return;
-
-    }
-
-
-    const password =
-        prompt(
-            "Enter deletion password:"
-        );
-
-
-    if (
-        password !==
-        DELETE_PASSWORD
-    ) {
-
-        alert(
-            "Incorrect deletion password."
-        );
-
-        return;
-
-    }
-
-
-    await performDelete(
-        [
-            student
-        ],
-        "Student deleted successfully."
-    );
-
-}
-
-
-// =====================================================
-// DELETE SERIES
-// =====================================================
-
-async function deleteSeries(
-    series
-) {
-
-    const students =
-        allStudents.filter(
-            student =>
-                getSeries(
-                    student.id
-                ) ===
-                series
-        );
-
-
-    if (
-        students.length ===
-        0
-    ) {
-
-        alert(
-            "There are no students in " +
-            series +
-            "."
-        );
-
-        return;
-
-    }
-
-
-    const first =
-        confirm(
-
-            "⚠️ DELETE ENTIRE SERIES\n\n" +
-
-            "Series: " +
-            series +
-            "\n" +
-
-            "Students: " +
-            students.length +
-            "\n\n" +
-
-            "ALL students in this series " +
-            "will be permanently deleted.\n\n" +
-
-            "Continue?"
-
-        );
-
-
-    if (
-        !first
-    ) {
-
-        return;
-
-    }
-
-
-    const password =
-        prompt(
-            "Enter deletion password:"
-        );
-
-
-    if (
-        password !==
-        DELETE_PASSWORD
-    ) {
-
-        alert(
-            "Incorrect deletion password."
-        );
-
-        return;
-
-    }
-
-
-    await performDelete(
-        students,
-        series +
-        " series deleted successfully."
-    );
-
-}
-
-
-// =====================================================
-// DELETE ALL A/L
-// =====================================================
-
-async function deleteAllAL() {
-
-    const students =
-        allStudents.filter(
-            student => {
-
-                const series =
-                    getSeries(
-                        student.id
-                    );
-
-
-                return (
-
-                    series ===
-                    "A27000"
-
-                    ||
-
-                    series ===
-                    "A28000"
-
-                    ||
-
-                    series ===
-                    "A29000"
-
-                );
-
-            }
-        );
-
-
-    if (
-        students.length ===
-        0
-    ) {
-
-        alert(
-            "There are no current A/L students."
-        );
-
-        return;
-
-    }
-
-
-    const first =
-        confirm(
-
-            "⚠️ DELETE ALL CURRENT A/L STUDENTS\n\n" +
-
-            "A27000: " +
-            countSeries(
-                "A27000"
-            ) +
-
-            "\nA28000: " +
-            countSeries(
-                "A28000"
-            ) +
-
-            "\nA29000: " +
-            countSeries(
-                "A29000"
-            ) +
-
-            "\n\nTOTAL A/L: " +
-            students.length +
-
-            "\n\n" +
-
-            "ALL current A/L student accounts " +
-            "will be permanently deleted.\n\n" +
-
-            "Continue?"
-
-        );
-
-
-    if (
-        !first
-    ) {
-
-        return;
-
-    }
-
-
-    const password =
-        prompt(
-            "Enter deletion password:"
-        );
-
-
-    if (
-        password !==
-        DELETE_PASSWORD
-    ) {
-
-        alert(
-            "Incorrect deletion password."
-        );
-
-        return;
-
-    }
-
-
-    await performDelete(
-        students,
-        "All current A/L students deleted successfully."
-    );
-
-}
-
-
-// =====================================================
-// COUNT SERIES
-// =====================================================
-
-function countSeries(
-    series
-) {
-
-    return allStudents.filter(
-        student =>
-            getSeries(
-                student.id
-            ) ===
-            series
-    ).length;
-
-}
-
-
-// =====================================================
-// PERFORM DELETE
-// =====================================================
-
-async function performDelete(
-    students,
-    successMessage
-) {
-
-    if (
-        deleteRunning
-    ) {
-
-        return;
-
-    }
-
-
-    deleteRunning =
-        true;
-
-
-    try {
-
-        let deleted =
-            0;
-
-
-        for (
-            const student of students
-        ) {
-
-            const reference =
-                doc(
-                    db,
-                    "students",
-                    student.id
-                );
-
-
-            await deleteDoc(
-                reference
-            );
-
-
-            deleted++;
-
-        }
-
-
-        // ---------------------------------------------
-        // REMOVE LOCALLY
-        // ---------------------------------------------
-
-        const deletedIds =
-            new Set(
-                students.map(
-                    student =>
-                        student.id
-                )
-            );
-
-
-        allStudents =
-            allStudents.filter(
-                student =>
-                    !deletedIds.has(
-                        student.id
-                    )
-            );
-
-
-        updateTotals();
-
-        render();
-
-
-        alert(
-
-            successMessage +
-
-            "\n\nDeleted: " +
-            deleted +
-            " student(s)."
-
-        );
-
-    }
-
-    catch (
-        error
-    ) {
-
-        console.error(
-            "Delete error:",
-            error
-        );
-
-
-        if (
-            error?.code ===
-            "permission-denied"
-        ) {
-
-            alert(
-                "Firebase denied the delete operation.\n\n" +
-                "Please check Firestore Security Rules."
-            );
-
-        }
-        else {
-
-            alert(
-                "Unable to complete the deletion.\n\n" +
-                error.message
-            );
-
-        }
-
-    }
-
-    finally {
-
-        deleteRunning =
-            false;
-
-    }
-
-}
-
-
-// =====================================================
-// HTML ESCAPE
-// =====================================================
-
-function escapeHTML(
-    value
-) {
-
-    return String(
-        value ?? ""
-    )
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-        .replace(
-            /</g,
-            "&lt;"
-        )
-        .replace(
-            />/g,
-            "&gt;"
-        )
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-        .replace(
-            /'/g,
-            "&#039;"
-        );
-
-}
-
-
-function escapeAttribute(
-    value
-) {
-
-    return String(
-        value ?? ""
-    )
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-        .replace(
-            /'/g,
-            "&#039;"
-        )
-        .replace(
-            /</g,
-            "&lt;"
-        )
-        .replace(
-            />/g,
-            "&gt;"
-        );
-
-}
-
-
-// =====================================================
-// START
-// =====================================================
-
-console.log(
-    "===================================="
-);
-
-console.log(
-    "🗑️ STUDENT DELETION SYSTEM"
-);
-
-console.log(
-    "Super Admin:",
-    isSuperAdmin()
-);
-
-console.log(
-    "Admin Logged In:",
-    isAdminLoggedIn()
-);
-
-console.log(
-    "===================================="
-);
-
-
-if (
-    !isAdminLoggedIn() ||
-    !isSuperAdmin()
-) {
-
-    accessDenied();
-
-}
-else {
-
-    initialise();
-
-}
+</html>
