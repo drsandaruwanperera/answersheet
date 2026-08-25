@@ -34,6 +34,7 @@ const studentId =
         "studentId"
     );
 
+
 const storedGrade =
     sessionStorage.getItem(
         "studentGrade"
@@ -49,50 +50,60 @@ const studentIdElement =
         "studentId"
     );
 
+
 const studentGradeElement =
     document.getElementById(
         "studentGrade"
     );
+
 
 const studentNameElement =
     document.getElementById(
         "studentName"
     );
 
+
 const greetingElement =
     document.getElementById(
         "greeting"
     );
+
 
 const gradeLabelElement =
     document.getElementById(
         "gradeLabel"
     );
 
+
 const statusElement =
     document.getElementById(
         "onlineStatus"
     );
+
 
 const totalPapersElement =
     document.getElementById(
         "totalPapers"
     );
 
+
 const viewedPapersElement =
     document.getElementById(
         "viewedPapers"
     );
+
 
 const progressElement =
     document.getElementById(
         "progressValue"
     );
 
+
 const modelPapersCard =
     document.getElementById(
         "modelPapersCard"
     );
+
 
 const pastPapersCard =
     document.getElementById(
@@ -109,15 +120,18 @@ const modelPapersTitle =
         "modelPapersTitle"
     );
 
+
 const modelPapersDescription =
     document.getElementById(
         "modelPapersDescription"
     );
 
+
 const pastPapersTitle =
     document.getElementById(
         "pastPapersTitle"
     );
+
 
 const pastPapersDescription =
     document.getElementById(
@@ -132,9 +146,7 @@ const pastPapersDescription =
 let studentRef = null;
 
 
-if (
-    studentId
-) {
+if (studentId) {
 
     studentRef =
         doc(
@@ -150,9 +162,7 @@ if (
 // GRADE HELPER
 // =====================================================
 
-function getGradeType(
-    value
-) {
+function getGradeType(value) {
 
     const grade =
         String(
@@ -206,9 +216,7 @@ function getGradeType(
 // GRADE DISPLAY
 // =====================================================
 
-function getGradeDisplay(
-    type
-) {
+function getGradeDisplay(type) {
 
     if (
         type === "grade10"
@@ -237,10 +245,7 @@ function getGradeDisplay(
 // GRADE DASHBOARD DATA
 // =====================================================
 
-function getDashboardData(
-    type
-) {
-
+function getDashboardData(type) {
 
     // =================================================
     // GRADE 10
@@ -268,14 +273,6 @@ function getDashboardData(
 
     // =================================================
     // A/L
-    // =================================================
-    //
-    // Model Papers:
-    // model-papers.html
-    //
-    // Province Papers:
-    // province-paper1.html
-    //
     // =================================================
 
     if (
@@ -322,9 +319,7 @@ function getDashboardData(
 // GREETING
 // =====================================================
 
-function updateGreeting(
-    studentName
-) {
+function updateGreeting(studentName) {
 
     const hour =
         new Date().getHours();
@@ -343,6 +338,7 @@ function updateGreeting(
             "Good morning";
 
     }
+
 
     else if (
         hour >= 12 &&
@@ -371,10 +367,7 @@ function updateGreeting(
 // UPDATE MATERIAL TEXT
 // =====================================================
 
-function updateMaterialText(
-    type
-) {
-
+function updateMaterialText(type) {
 
     // =================================================
     // GRADE 10
@@ -578,10 +571,6 @@ function updateMaterialText(
         }
 
 
-        // ---------------------------------------------
-        // Make sure the link text is correct
-        // ---------------------------------------------
-
         const pastLink =
             document.querySelector(
                 "#pastPapersCard .material-link"
@@ -608,9 +597,7 @@ function updateMaterialText(
 // SETUP MODEL CARD
 // =====================================================
 
-function setupModelCard(
-    type
-) {
+function setupModelCard(type) {
 
     if (
         !modelPapersCard
@@ -676,20 +663,13 @@ function setupModelCard(
     );
 
 
-    // =================================================
-    // REMOVE OLD EVENTS
-    // =================================================
-
     modelPapersCard.onclick =
         null;
+
 
     modelPapersCard.onkeydown =
         null;
 
-
-    // =================================================
-    // CARD CLICK
-    // =================================================
 
     modelPapersCard.onclick =
         function(event) {
@@ -699,20 +679,9 @@ function setupModelCard(
             event.stopPropagation();
 
 
-            console.log(
-                "Model card clicked:",
-                modelUrl
-            );
-
-
             if (
                 !modelUrl
             ) {
-
-                console.error(
-                    "Model URL not found for:",
-                    type
-                );
 
                 return;
 
@@ -724,10 +693,6 @@ function setupModelCard(
 
         };
 
-
-    // =================================================
-    // KEYBOARD
-    // =================================================
 
     modelPapersCard.onkeydown =
         function(event) {
@@ -753,10 +718,6 @@ function setupModelCard(
 
         };
 
-
-    // =================================================
-    // INNER LINK
-    // =================================================
 
     const modelLink =
         modelPapersCard.querySelector(
@@ -791,262 +752,12 @@ function setupModelCard(
 
 }
 
+
 // =====================================================
-// LOAD PAPER VISIBILITY SETTINGS
-// =====================================================
-
-async function loadPaperVisibility(type) {
-
-    try {
-
-        // -------------------------------------------------
-        // GRADE 10
-        // -------------------------------------------------
-
-        if (type === "grade10") {
-
-            const settingsRef =
-                doc(
-                    db,
-                    "paperSettings",
-                    "grade10"
-                );
-
-
-            const snapshot =
-                await getDoc(
-                    settingsRef
-                );
-
-
-            if (!snapshot.exists()) {
-
-                console.warn(
-                    "Grade 10 paper settings not found."
-                );
-
-                return;
-
-            }
-
-
-            const settings =
-                snapshot.data();
-
-
-            console.log(
-                "📚 Grade 10 Dashboard Settings:",
-                settings
-            );
-
-
-            // =============================================
-            // MODEL PAPERS
-            // =============================================
-
-            const modelEnabled =
-                settings.modelPapersEnabled === true;
-
-
-            if (modelPapersCard) {
-
-                modelPapersCard.style.display =
-                    modelEnabled
-                        ? ""
-                        : "none";
-
-            }
-
-
-            // =============================================
-            // PAST PAPERS
-            // =============================================
-
-            const pastEnabled =
-                settings.pastPapersEnabled === true;
-
-
-            if (pastPapersCard) {
-
-                pastPapersCard.style.display =
-                    pastEnabled
-                        ? ""
-                        : "none";
-
-            }
-
-
-            console.log(
-                "Grade 10 Model Papers:",
-                modelEnabled
-                    ? "VISIBLE"
-                    : "HIDDEN"
-            );
-
-
-            console.log(
-                "Grade 10 Past Papers:",
-                pastEnabled
-                    ? "VISIBLE"
-                    : "HIDDEN"
-            );
-
-        }
-
-
-        // -------------------------------------------------
-        // GRADE 11
-        // -------------------------------------------------
-
-        else if (type === "grade11") {
-
-            const settingsRef =
-                doc(
-                    db,
-                    "paperSettings",
-                    "grade11"
-                );
-
-
-            const snapshot =
-                await getDoc(
-                    settingsRef
-                );
-
-
-            if (!snapshot.exists()) {
-
-                console.warn(
-                    "Grade 11 paper settings not found."
-                );
-
-                return;
-
-            }
-
-
-            const settings =
-                snapshot.data();
-
-
-            console.log(
-                "📚 Grade 11 Dashboard Settings:",
-                settings
-            );
-
-
-            const topRankingEnabled =
-                settings.topRankingEnabled === true;
-
-
-            const pastEnabled =
-                settings.pastPapersEnabled === true;
-
-
-            if (modelPapersCard) {
-
-                modelPapersCard.style.display =
-                    topRankingEnabled
-                        ? ""
-                        : "none";
-
-            }
-
-
-            if (pastPapersCard) {
-
-                pastPapersCard.style.display =
-                    pastEnabled
-                        ? ""
-                        : "none";
-
-            }
-
-        }
-
-
-        // -------------------------------------------------
-        // A/L
-        // -------------------------------------------------
-
-        else if (type === "al") {
-
-            const settingsRef =
-                doc(
-                    db,
-                    "paperSettings",
-                    "al"
-                );
-
-
-            const snapshot =
-                await getDoc(
-                    settingsRef
-                );
-
-
-            if (!snapshot.exists()) {
-
-                console.warn(
-                    "A/L paper settings not found."
-                );
-
-                return;
-
-            }
-
-
-            const settings =
-                snapshot.data();
-
-
-            const modelEnabled =
-                settings.modelPapersEnabled === true;
-
-
-            const pastEnabled =
-                settings.pastPapersEnabled === true;
-
-
-            if (modelPapersCard) {
-
-                modelPapersCard.style.display =
-                    modelEnabled
-                        ? ""
-                        : "none";
-
-            }
-
-
-            if (pastPapersCard) {
-
-                pastPapersCard.style.display =
-                    pastEnabled
-                        ? ""
-                        : "none";
-
-            }
-
-        }
-
-    }
-    catch (error) {
-
-        console.error(
-            "❌ Failed to load paper visibility:",
-            error
-        );
-
-    }
-
-}
-// =====================================================
-// SETUP PAST / PROVINCE CARD
+// SETUP PAST CARD
 // =====================================================
 
-function setupPastCard(
-    type
-) {
+function setupPastCard(type) {
 
     if (
         !pastPapersCard
@@ -1095,16 +806,6 @@ function setupPastCard(
     // =================================================
     // A/L
     // =================================================
-    //
-    // IMPORTANT FIX:
-    //
-    // OLD:
-    // al-past-papers.html
-    //
-    // NEW:
-    // province-paper1.html
-    //
-    // =================================================
 
     else if (
         type === "al"
@@ -1117,25 +818,18 @@ function setupPastCard(
 
 
     console.log(
-        "Past / Province card URL:",
+        "Past card URL:",
         pastUrl
     );
 
 
-    // =================================================
-    // REMOVE OLD EVENTS
-    // =================================================
-
     pastPapersCard.onclick =
         null;
+
 
     pastPapersCard.onkeydown =
         null;
 
-
-    // =================================================
-    // CARD CLICK
-    // =================================================
 
     pastPapersCard.onclick =
         function(event) {
@@ -1145,20 +839,9 @@ function setupPastCard(
             event.stopPropagation();
 
 
-            console.log(
-                "Past / Province card clicked:",
-                pastUrl
-            );
-
-
             if (
                 !pastUrl
             ) {
-
-                console.error(
-                    "Past URL not found for:",
-                    type
-                );
 
                 return;
 
@@ -1170,10 +853,6 @@ function setupPastCard(
 
         };
 
-
-    // =================================================
-    // KEYBOARD
-    // =================================================
 
     pastPapersCard.onkeydown =
         function(event) {
@@ -1199,10 +878,6 @@ function setupPastCard(
 
         };
 
-
-    // =================================================
-    // INNER LINK
-    // =================================================
 
     const pastLink =
         pastPapersCard.querySelector(
@@ -1232,6 +907,384 @@ function setupPastCard(
                 }
 
             };
+
+    }
+
+}
+
+
+// =====================================================
+// CHECK IF ANY FIELD IS ENABLED
+// =====================================================
+
+function isAnyEnabled(
+    settings,
+    fields
+) {
+
+    return fields.some(
+        function(field) {
+
+            return settings[field] === true;
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// LOAD PAPER VISIBILITY SETTINGS
+// =====================================================
+
+async function loadPaperVisibility(type) {
+
+    try {
+
+        // =================================================
+        // FIREBASE DOCUMENT
+        // =================================================
+
+        const settingsRef =
+            doc(
+                db,
+                "paperSettings",
+                type
+            );
+
+
+        const snapshot =
+            await getDoc(
+                settingsRef
+            );
+
+
+        // =================================================
+        // NO SETTINGS DOCUMENT
+        // =================================================
+
+        if (
+            !snapshot.exists()
+        ) {
+
+            console.warn(
+                "Paper settings not found:",
+                type
+            );
+
+
+            // SAFETY:
+            // Hide cards if admin settings do not exist.
+
+            if (
+                modelPapersCard
+            ) {
+
+                modelPapersCard.style.display =
+                    "none";
+
+            }
+
+
+            if (
+                pastPapersCard
+            ) {
+
+                pastPapersCard.style.display =
+                    "none";
+
+            }
+
+
+            return;
+
+        }
+
+
+        const settings =
+            snapshot.data();
+
+
+        console.log(
+            "📚 Paper Settings:",
+            type,
+            settings
+        );
+
+
+        // =================================================
+        // GRADE 10
+        // =================================================
+
+        if (
+            type === "grade10"
+        ) {
+
+            const modelFields = [
+
+                "grade10_term1_01",
+                "grade10_term1_02",
+                "grade10_term1_03",
+                "grade10_term1_04",
+                "grade10_term1_05",
+
+                "grade10_term2_01",
+                "grade10_term2_02",
+                "grade10_term2_03",
+                "grade10_term2_04",
+                "grade10_term2_05",
+
+                "grade10_term3_01",
+                "grade10_term3_02",
+                "grade10_term3_03",
+                "grade10_term3_04",
+                "grade10_term3_05"
+
+            ];
+
+
+            const modelEnabled =
+                isAnyEnabled(
+                    settings,
+                    modelFields
+                );
+
+
+            const pastEnabled =
+                settings.pastPapersEnabled === true;
+
+
+            if (
+                modelPapersCard
+            ) {
+
+                modelPapersCard.style.display =
+                    modelEnabled
+                        ? ""
+                        : "none";
+
+            }
+
+
+            if (
+                pastPapersCard
+            ) {
+
+                pastPapersCard.style.display =
+                    pastEnabled
+                        ? ""
+                        : "none";
+
+            }
+
+
+            console.log(
+                "Grade 10 Model Papers:",
+                modelEnabled
+                    ? "VISIBLE"
+                    : "HIDDEN"
+            );
+
+
+            console.log(
+                "Grade 10 Past Papers:",
+                pastEnabled
+                    ? "VISIBLE"
+                    : "HIDDEN"
+            );
+
+        }
+
+
+        // =================================================
+        // GRADE 11
+        // =================================================
+
+        else if (
+            type === "grade11"
+        ) {
+
+            // -------------------------------------------------
+            // TOP RANKING
+            // -------------------------------------------------
+
+            const topRankingFields = [
+
+                // 1st Term
+                "grade11_term1_01",
+                "grade11_term1_02",
+                "grade11_term1_03",
+                "grade11_term1_04",
+                "grade11_term1_05",
+
+                // 2nd Term
+                "grade11_term2_01",
+                "grade11_term2_02",
+                "grade11_term2_03",
+                "grade11_term2_04",
+                "grade11_term2_05",
+
+                // 3rd Term
+                "grade11_term3_01",
+                "grade11_term3_02",
+                "grade11_term3_03",
+                "grade11_term3_04",
+                "grade11_term3_05"
+
+            ];
+
+
+            const topRankingEnabled =
+                isAnyEnabled(
+                    settings,
+                    topRankingFields
+                );
+
+
+            // -------------------------------------------------
+            // PAST PAPERS 2016 - 2025
+            // -------------------------------------------------
+
+            const pastFields = [
+
+                "grade11_past_01",
+                "grade11_past_02",
+                "grade11_past_03",
+                "grade11_past_04",
+                "grade11_past_05",
+                "grade11_past_06",
+                "grade11_past_07",
+                "grade11_past_08",
+                "grade11_past_09",
+                "grade11_past_10"
+
+            ];
+
+
+            const pastEnabled =
+                isAnyEnabled(
+                    settings,
+                    pastFields
+                );
+
+
+            // -------------------------------------------------
+            // APPLY VISIBILITY
+            // -------------------------------------------------
+
+            if (
+                modelPapersCard
+            ) {
+
+                modelPapersCard.style.display =
+                    topRankingEnabled
+                        ? ""
+                        : "none";
+
+            }
+
+
+            if (
+                pastPapersCard
+            ) {
+
+                pastPapersCard.style.display =
+                    pastEnabled
+                        ? ""
+                        : "none";
+
+            }
+
+
+            console.log(
+                "Grade 11 Top Ranking:",
+                topRankingEnabled
+                    ? "VISIBLE"
+                    : "HIDDEN"
+            );
+
+
+            console.log(
+                "Grade 11 Past Papers:",
+                pastEnabled
+                    ? "VISIBLE"
+                    : "HIDDEN"
+            );
+
+        }
+
+
+        // =================================================
+        // A/L
+        // =================================================
+
+        else if (
+            type === "al"
+        ) {
+
+            const modelEnabled =
+                settings.modelPapersEnabled === true;
+
+
+            const pastEnabled =
+                settings.pastPapersEnabled === true;
+
+
+            if (
+                modelPapersCard
+            ) {
+
+                modelPapersCard.style.display =
+                    modelEnabled
+                        ? ""
+                        : "none";
+
+            }
+
+
+            if (
+                pastPapersCard
+            ) {
+
+                pastPapersCard.style.display =
+                    pastEnabled
+                        ? ""
+                        : "none";
+
+            }
+
+        }
+
+    }
+    catch (error) {
+
+        console.error(
+            "❌ Failed to load paper visibility:",
+            error
+        );
+
+
+        // SAFETY:
+        // If Firebase read fails, hide cards.
+
+        if (
+            modelPapersCard
+        ) {
+
+            modelPapersCard.style.display =
+                "none";
+
+        }
+
+
+        if (
+            pastPapersCard
+        ) {
+
+            pastPapersCard.style.display =
+                "none";
+
+        }
 
     }
 
@@ -1381,27 +1434,27 @@ async function loadStudent() {
         );
 
 
-       // =================================================
-// MATERIAL CARDS
-// =================================================
+        // =================================================
+        // SETUP CARDS
+        // =================================================
 
-setupModelCard(
-    type
-);
-
-
-setupPastCard(
-    type
-);
+        setupModelCard(
+            type
+        );
 
 
-// =================================================
-// LOAD ADMIN PAPER VISIBILITY
-// =================================================
+        setupPastCard(
+            type
+        );
 
-await loadPaperVisibility(
-    type
-);
+
+        // =================================================
+        // LOAD ADMIN VISIBILITY
+        // =================================================
+
+        await loadPaperVisibility(
+            type
+        );
 
 
         // =================================================
@@ -1410,6 +1463,7 @@ await loadPaperVisibility(
 
         let totalPapers =
             0;
+
 
         let viewedPapers =
             0;
@@ -1423,9 +1477,7 @@ await loadPaperVisibility(
 
             const field =
                 "paper" +
-                String(
-                    i
-                ).padStart(
+                String(i).padStart(
                     2,
                     "0"
                 ) +
@@ -1533,7 +1585,7 @@ await loadPaperVisibility(
         );
 
         console.log(
-            "Past / Province URL:",
+            "Past URL:",
             gradeInfo.past
         );
 
@@ -1542,10 +1594,7 @@ await loadPaperVisibility(
         );
 
     }
-
-    catch (
-        error
-    ) {
+    catch (error) {
 
         console.error(
             "Failed to load student:",
@@ -1593,10 +1642,7 @@ async function updateLastActive() {
         }
 
     }
-
-    catch (
-        error
-    ) {
+    catch (error) {
 
         console.error(
             "Failed to update active status:",
@@ -1652,7 +1698,7 @@ function markActivity() {
     "touchstart"
 ]
 .forEach(
-    eventName => {
+    function(eventName) {
 
         document.addEventListener(
             eventName,
@@ -1676,7 +1722,7 @@ const IDLE_LIMIT =
 
 const idleChecker =
     setInterval(
-        async () => {
+        async function() {
 
             const idleTime =
                 Date.now() -
@@ -1692,10 +1738,15 @@ const idleChecker =
                     heartbeat
                 );
 
+
                 clearInterval(
                     idleChecker
                 );
 
+
+                // -----------------------------------------
+                // MARK OFFLINE
+                // -----------------------------------------
 
                 if (
                     studentRef
@@ -1712,10 +1763,7 @@ const idleChecker =
                         );
 
                     }
-
-                    catch (
-                        error
-                    ) {
+                    catch (error) {
 
                         console.error(
                             "Failed to mark offline:",
@@ -1727,13 +1775,19 @@ const idleChecker =
                 }
 
 
+                // -----------------------------------------
+                // CLEAR SESSION
+                // -----------------------------------------
+
                 sessionStorage.removeItem(
                     "loggedIn"
                 );
 
+
                 sessionStorage.removeItem(
                     "studentId"
                 );
+
 
                 sessionStorage.removeItem(
                     "studentGrade"
@@ -1762,7 +1816,7 @@ const idleChecker =
 
 document.addEventListener(
     "visibilitychange",
-    () => {
+    function() {
 
         if (
             document.visibilityState ===
@@ -1771,6 +1825,7 @@ document.addEventListener(
 
             lastActivity =
                 Date.now();
+
 
             updateLastActive();
 
@@ -1796,7 +1851,7 @@ if (
 
     logoutBtn.addEventListener(
         "click",
-        async () => {
+        async function() {
 
             const confirmed =
                 confirm(
@@ -1817,10 +1872,15 @@ if (
                 heartbeat
             );
 
+
             clearInterval(
                 idleChecker
             );
 
+
+            // -----------------------------------------
+            // MARK OFFLINE
+            // -----------------------------------------
 
             if (
                 studentRef
@@ -1837,10 +1897,7 @@ if (
                     );
 
                 }
-
-                catch (
-                    error
-                ) {
+                catch (error) {
 
                     console.error(
                         "Failed to update logout status:",
@@ -1852,13 +1909,19 @@ if (
             }
 
 
+            // -----------------------------------------
+            // CLEAR SESSION
+            // -----------------------------------------
+
             sessionStorage.removeItem(
                 "loggedIn"
             );
 
+
             sessionStorage.removeItem(
                 "studentId"
             );
+
 
             sessionStorage.removeItem(
                 "studentGrade"
