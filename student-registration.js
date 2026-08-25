@@ -1,5 +1,5 @@
 // =====================================================
-// STUDENT REGISTRATION SYSTEM
+// STUDENT REGISTRATION / FIRST LOGIN ONBOARDING
 // =====================================================
 
 import {
@@ -14,75 +14,64 @@ import {
 // ELEMENTS
 // =====================================================
 
-const studentIdInput =
+const registrationStudentId =
     document.getElementById(
         "registrationStudentId"
     );
-
 
 const fullNameInput =
     document.getElementById(
         "fullName"
     );
 
-
 const nicNumberInput =
     document.getElementById(
         "nicNumber"
     );
-
 
 const newPasswordInput =
     document.getElementById(
         "newPassword"
     );
 
-
 const confirmPasswordInput =
     document.getElementById(
         "confirmPassword"
     );
 
-
-const confirmCheckbox =
+const registrationConfirm =
     document.getElementById(
         "registrationConfirm"
     );
-
 
 const completeRegistrationBtn =
     document.getElementById(
         "completeRegistrationBtn"
     );
 
-
 const registrationMessage =
     document.getElementById(
         "registrationMessage"
     );
-
-
-const toggleNewPassword =
-    document.getElementById(
-        "toggleNewPassword"
-    );
-
-
-const toggleConfirmPassword =
-    document.getElementById(
-        "toggleConfirmPassword"
-    );
-
 
 const requirementLength =
     document.getElementById(
         "requirementLength"
     );
 
-
 const requirementMatch =
     document.getElementById(
         "requirementMatch"
+    );
+
+const toggleNewPassword =
+    document.getElementById(
+        "toggleNewPassword"
+    );
+
+const toggleConfirmPassword =
+    document.getElementById(
+        "toggleConfirmPassword"
     );
 
 
@@ -97,17 +86,18 @@ const loggedIn =
 
 
 const studentId =
-    String(
+    (
         sessionStorage.getItem(
             "studentId"
-        ) || ""
+        ) ||
+        ""
     )
-    .trim()
-    .toUpperCase();
+        .trim()
+        .toUpperCase();
 
 
 // =====================================================
-// PAGE PROTECTION
+// CHECK LOGIN
 // =====================================================
 
 if (
@@ -123,7 +113,7 @@ if (
 
 
 // =====================================================
-// SHOW MESSAGE
+// MESSAGE
 // =====================================================
 
 function showMessage(
@@ -131,9 +121,7 @@ function showMessage(
     type = "error"
 ) {
 
-    if (
-        !registrationMessage
-    ) {
+    if (!registrationMessage) {
 
         return;
 
@@ -145,249 +133,39 @@ function showMessage(
 
 
     registrationMessage.className =
-        "registration-message " +
-        type;
+        "registration-message";
+
+
+    if (
+        type === "success"
+    ) {
+
+        registrationMessage.classList.add(
+            "success"
+        );
+
+    }
+    else {
+
+        registrationMessage.classList.add(
+            "error"
+        );
+
+    }
 
 }
 
 
 // =====================================================
-// STUDENT TYPE
+// SHOW STUDENT ID
 // =====================================================
 
-function getStudentType(
-    data
+if (
+    registrationStudentId
 ) {
 
-    const type =
-        String(
-            data?.studentType || ""
-        )
-        .trim()
-        .toLowerCase();
-
-
-    if (
-        type === "grade10" ||
-        type === "grade 10"
-    ) {
-
-        return "grade10";
-
-    }
-
-
-    if (
-        type === "grade11" ||
-        type === "grade 11"
-    ) {
-
-        return "grade11";
-
-    }
-
-
-    return "al";
-
-}
-
-
-// =====================================================
-// LOAD STUDENT
-// =====================================================
-
-async function loadStudent() {
-
-    try {
-
-        const studentRef =
-            doc(
-                db,
-                "students",
-                studentId
-            );
-
-
-        const studentSnap =
-            await getDoc(
-                studentRef
-            );
-
-
-        if (
-            !studentSnap.exists()
-        ) {
-
-            showMessage(
-                "Student account could not be found."
-            );
-
-
-            if (
-                completeRegistrationBtn
-            ) {
-
-                completeRegistrationBtn.disabled =
-                    true;
-
-            }
-
-
-            return;
-
-        }
-
-
-        const data =
-            studentSnap.data();
-
-
-        // =============================================
-        // STUDENT TYPE
-        // =============================================
-
-        const studentType =
-            getStudentType(
-                data
-            );
-
-
-        // =============================================
-        // ONLY FIRST-LOGIN ACCOUNTS
-        // =============================================
-
-        if (
-            data?.mustChangePassword !==
-            true
-        ) {
-
-            // Registration already completed.
-            if (
-                data?.registrationCompleted ===
-                true ||
-                data?.profileCompleted ===
-                true
-            ) {
-
-                window.location.replace(
-                    "dashboard.html"
-                );
-
-
-                return;
-
-            }
-
-        }
-
-
-        // =============================================
-        // DISPLAY ADMISSION NUMBER
-        // =============================================
-
-        if (
-            studentIdInput
-        ) {
-
-            studentIdInput.value =
-                studentId;
-
-        }
-
-
-        // =============================================
-        // PRE-FILL EXISTING NAME
-        // =============================================
-
-        const existingName =
-            data?.fullName ||
-            data?.name ||
-            data?.studentName ||
-            "";
-
-
-        if (
-            fullNameInput &&
-            existingName
-        ) {
-
-            fullNameInput.value =
-                existingName;
-
-        }
-
-
-        // =============================================
-        // PRE-FILL NIC
-        // =============================================
-
-        if (
-            nicNumberInput &&
-            data?.nicNumber
-        ) {
-
-            nicNumberInput.value =
-                String(
-                    data.nicNumber
-                );
-
-        }
-
-
-        // =============================================
-        // SESSION
-        // =============================================
-
-        sessionStorage.setItem(
-            "studentType",
-            studentType
-        );
-
-
-        console.log(
-            "======================================"
-        );
-
-        console.log(
-            "STUDENT REGISTRATION LOADED"
-        );
-
-        console.log(
-            "Admission Number:",
-            studentId
-        );
-
-        console.log(
-            "Student Type:",
-            studentType
-        );
-
-        console.log(
-            "Must Change Password:",
-            data?.mustChangePassword
-        );
-
-        console.log(
-            "======================================"
-        );
-
-    }
-
-    catch (
-        error
-    ) {
-
-        console.error(
-            "Load student error:",
-            error
-        );
-
-
-        showMessage(
-            "Unable to load your student account."
-        );
-
-    }
+    registrationStudentId.value =
+        studentId;
 
 }
 
@@ -415,29 +193,41 @@ function setupPasswordToggle(
         "click",
         () => {
 
-            const show =
+            const isPassword =
                 input.type ===
                 "password";
 
 
-            input.type =
-                show
-                    ? "text"
-                    : "password";
+            if (
+                isPassword
+            ) {
 
+                input.type =
+                    "text";
 
-            button.textContent =
-                show
-                    ? "🙈"
-                    : "🙊";
+                button.textContent =
+                    "🙈";
 
+                button.setAttribute(
+                    "aria-label",
+                    "Hide password"
+                );
 
-            button.setAttribute(
-                "aria-label",
-                show
-                    ? "Hide password"
-                    : "Show password"
-            );
+            }
+            else {
+
+                input.type =
+                    "password";
+
+                button.textContent =
+                    "🙊";
+
+                button.setAttribute(
+                    "aria-label",
+                    "Show password"
+                );
+
+            }
 
         }
     );
@@ -467,17 +257,16 @@ function updatePasswordRequirements() {
         newPasswordInput?.value ||
         "";
 
-
     const confirmPassword =
         confirmPasswordInput?.value ||
         "";
 
 
-    const lengthValid =
+    const validLength =
         password.length >= 6;
 
 
-    const matchValid =
+    const passwordsMatch =
         password.length > 0 &&
         password ===
         confirmPassword;
@@ -489,12 +278,7 @@ function updatePasswordRequirements() {
 
         requirementLength.classList.toggle(
             "valid",
-            lengthValid
-        );
-
-        requirementLength.classList.toggle(
-            "invalid",
-            !lengthValid
+            validLength
         );
 
 
@@ -504,12 +288,10 @@ function updatePasswordRequirements() {
             );
 
 
-        if (
-            icon
-        ) {
+        if (icon) {
 
             icon.textContent =
-                lengthValid
+                validLength
                     ? "✓"
                     : "○";
 
@@ -524,12 +306,7 @@ function updatePasswordRequirements() {
 
         requirementMatch.classList.toggle(
             "valid",
-            matchValid
-        );
-
-        requirementMatch.classList.toggle(
-            "invalid",
-            !matchValid
+            passwordsMatch
         );
 
 
@@ -539,12 +316,10 @@ function updatePasswordRequirements() {
             );
 
 
-        if (
-            icon
-        ) {
+        if (icon) {
 
             icon.textContent =
-                matchValid
+                passwordsMatch
                     ? "✓"
                     : "○";
 
@@ -561,7 +336,13 @@ if (
 
     newPasswordInput.addEventListener(
         "input",
-        updatePasswordRequirements
+        () => {
+
+            updatePasswordRequirements();
+
+            clearMessage();
+
+        }
     );
 
 }
@@ -573,49 +354,234 @@ if (
 
     confirmPasswordInput.addEventListener(
         "input",
-        updatePasswordRequirements
+        () => {
+
+            updatePasswordRequirements();
+
+            clearMessage();
+
+        }
     );
 
 }
 
 
 // =====================================================
-// CLEAN TEXT
+// CLEAR MESSAGE
 // =====================================================
 
-function cleanText(
-    value
+function clearMessage() {
+
+    if (
+        registrationMessage
+    ) {
+
+        registrationMessage.textContent =
+            "";
+
+        registrationMessage.className =
+            "registration-message";
+
+    }
+
+}
+
+
+if (
+    fullNameInput
 ) {
 
-    return String(
-        value || ""
-    )
-    .trim()
-    .replace(
-        /\s+/g,
-        " "
+    fullNameInput.addEventListener(
+        "input",
+        clearMessage
+    );
+
+}
+
+
+if (
+    nicNumberInput
+) {
+
+    nicNumberInput.addEventListener(
+        "input",
+        clearMessage
+    );
+
+}
+
+
+if (
+    registrationConfirm
+) {
+
+    registrationConfirm.addEventListener(
+        "change",
+        clearMessage
     );
 
 }
 
 
 // =====================================================
-// VALIDATE FULL NAME
+// LOAD STUDENT
 // =====================================================
 
-function validateFullName(
-    value
-) {
+async function loadStudent() {
 
-    const name =
-        cleanText(
-            value
+    try {
+
+        if (!studentId) {
+
+            return;
+
+        }
+
+
+        const studentRef =
+            doc(
+                db,
+                "students",
+                studentId
+            );
+
+
+        const studentSnap =
+            await getDoc(
+                studentRef
+            );
+
+
+        if (
+            !studentSnap.exists()
+        ) {
+
+            showMessage(
+                "Student account could not be found."
+            );
+
+
+            return;
+
+        }
+
+
+        const data =
+            studentSnap.data();
+
+
+        // =============================================
+        // If already registered
+        // =============================================
+
+        const alreadyRegistered =
+            data?.profileCompleted === true &&
+            data?.registrationCompleted === true &&
+            data?.mustChangePassword !== true;
+
+
+        if (
+            alreadyRegistered
+        ) {
+
+            window.location.replace(
+                "dashboard.html"
+            );
+
+
+            return;
+
+        }
+
+
+        // =============================================
+        // Existing name
+        // =============================================
+
+        if (
+            fullNameInput
+        ) {
+
+            const existingName =
+                data?.fullName ||
+                data?.name ||
+                data?.studentName ||
+                "";
+
+
+            if (
+                existingName
+            ) {
+
+                fullNameInput.value =
+                    existingName;
+
+            }
+
+        }
+
+
+        // =============================================
+        // Existing NIC
+        // =============================================
+
+        if (
+            nicNumberInput
+        ) {
+
+            if (
+                data?.nicNumber
+            ) {
+
+                nicNumberInput.value =
+                    String(
+                        data.nicNumber
+                    );
+
+            }
+
+        }
+
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Load registration error:",
+            error
         );
 
 
-    if (
-        !name
-    ) {
+        showMessage(
+            "Unable to load your registration details. Please try again."
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// VALIDATE NAME
+// =====================================================
+
+function validateName(
+    name
+) {
+
+    const clean =
+        String(
+            name || ""
+        )
+            .trim()
+            .replace(
+                /\s+/g,
+                " "
+            );
+
+
+    if (!clean) {
 
         return {
             valid: false,
@@ -627,28 +593,13 @@ function validateFullName(
 
 
     if (
-        name.length <
-        3
+        clean.length < 3
     ) {
 
         return {
             valid: false,
             message:
-                "Please enter your complete full name."
-        };
-
-    }
-
-
-    if (
-        name.length >
-        100
-    ) {
-
-        return {
-            valid: false,
-            message:
-                "Full name is too long."
+                "Please enter your full name."
         };
 
     }
@@ -656,7 +607,7 @@ function validateFullName(
 
     return {
         valid: true,
-        value: name
+        value: clean
     };
 
 }
@@ -667,23 +618,22 @@ function validateFullName(
 // =====================================================
 
 function validateNIC(
-    value
+    nic
 ) {
 
-    const nic =
-        cleanText(
-            value
+    const clean =
+        String(
+            nic || ""
         )
-        .toUpperCase()
-        .replace(
-            /\s+/g,
-            ""
-        );
+            .trim()
+            .toUpperCase()
+            .replace(
+                /\s+/g,
+                ""
+            );
 
 
-    if (
-        !nic
-    ) {
+    if (!clean) {
 
         return {
             valid: false,
@@ -695,27 +645,31 @@ function validateNIC(
 
 
     /*
-       Sri Lankan NIC formats supported:
+        Supports common Sri Lankan NIC formats:
 
-       Old:
-       123456789V
-       123456789X
+        Old:
+        123456789V
+        123456789X
 
-       New:
-       200012345678
+        New:
+        123456789012
     */
 
     const oldNIC =
-        /^[0-9]{9}[VX]$/i;
+        /^\d{9}[VX]$/i.test(
+            clean
+        );
 
 
     const newNIC =
-        /^[0-9]{12}$/;
+        /^\d{12}$/.test(
+            clean
+        );
 
 
     if (
-        !oldNIC.test(nic) &&
-        !newNIC.test(nic)
+        !oldNIC &&
+        !newNIC
     ) {
 
         return {
@@ -729,7 +683,7 @@ function validateNIC(
 
     return {
         valid: true,
-        value: nic
+        value: clean
     };
 
 }
@@ -739,27 +693,19 @@ function validateNIC(
 // VALIDATE PASSWORD
 // =====================================================
 
-function validatePassword(
-    password,
-    confirmPassword
-) {
+function validatePassword() {
 
-    if (
-        !password
-    ) {
+    const password =
+        newPasswordInput?.value ||
+        "";
 
-        return {
-            valid: false,
-            message:
-                "Please create a new password."
-        };
-
-    }
+    const confirmPassword =
+        confirmPasswordInput?.value ||
+        "";
 
 
     if (
-        password.length <
-        6
+        password.length < 6
     ) {
 
         return {
@@ -786,7 +732,8 @@ function validatePassword(
 
 
     return {
-        valid: true
+        valid: true,
+        value: password
     };
 
 }
@@ -799,52 +746,40 @@ function validatePassword(
 async function completeRegistration() {
 
     // ================================================
-    // GET VALUES
+    // Check session
     // ================================================
 
-    const fullName =
-        cleanText(
+    if (
+        !loggedIn ||
+        !studentId
+    ) {
+
+        window.location.replace(
+            "index.html"
+        );
+
+
+        return;
+
+    }
+
+
+    // ================================================
+    // Get values
+    // ================================================
+
+    const nameResult =
+        validateName(
             fullNameInput?.value
         );
 
 
-    const nicNumber =
-        cleanText(
-            nicNumberInput?.value
-        )
-        .toUpperCase()
-        .replace(
-            /\s+/g,
-            ""
-        );
-
-
-    const newPassword =
-        newPasswordInput?.value ||
-        "";
-
-
-    const confirmPassword =
-        confirmPasswordInput?.value ||
-        "";
-
-
-    // ================================================
-    // VALIDATE NAME
-    // ================================================
-
-    const nameValidation =
-        validateFullName(
-            fullName
-        );
-
-
     if (
-        !nameValidation.valid
+        !nameResult.valid
     ) {
 
         showMessage(
-            nameValidation.message
+            nameResult.message
         );
 
 
@@ -856,22 +791,18 @@ async function completeRegistration() {
     }
 
 
-    // ================================================
-    // VALIDATE NIC
-    // ================================================
-
-    const nicValidation =
+    const nicResult =
         validateNIC(
-            nicNumber
+            nicNumberInput?.value
         );
 
 
     if (
-        !nicValidation.valid
+        !nicResult.valid
     ) {
 
         showMessage(
-            nicValidation.message
+            nicResult.message
         );
 
 
@@ -883,39 +814,20 @@ async function completeRegistration() {
     }
 
 
-    // ================================================
-    // VALIDATE PASSWORD
-    // ================================================
-
-    const passwordValidation =
-        validatePassword(
-            newPassword,
-            confirmPassword
-        );
+    const passwordResult =
+        validatePassword();
 
 
     if (
-        !passwordValidation.valid
+        !passwordResult.valid
     ) {
 
         showMessage(
-            passwordValidation.message
+            passwordResult.message
         );
 
 
-        if (
-            newPassword.length <
-            6
-        ) {
-
-            newPasswordInput?.focus();
-
-        }
-        else {
-
-            confirmPasswordInput?.focus();
-
-        }
+        newPasswordInput?.focus();
 
 
         return;
@@ -924,11 +836,11 @@ async function completeRegistration() {
 
 
     // ================================================
-    // CONFIRM CHECKBOX
+    // Confirmation
     // ================================================
 
     if (
-        !confirmCheckbox?.checked
+        !registrationConfirm?.checked
     ) {
 
         showMessage(
@@ -942,25 +854,7 @@ async function completeRegistration() {
 
 
     // ================================================
-    // STUDENT ID
-    // ================================================
-
-    if (
-        !studentId
-    ) {
-
-        showMessage(
-            "Student session could not be identified. Please login again."
-        );
-
-
-        return;
-
-    }
-
-
-    // ================================================
-    // BUTTON
+    // Disable button
     // ================================================
 
     if (
@@ -974,7 +868,7 @@ async function completeRegistration() {
         completeRegistrationBtn.innerHTML =
             `
                 <span>
-                    Saving Registration...
+                    Completing Registration...
                 </span>
             `;
 
@@ -989,9 +883,9 @@ async function completeRegistration() {
 
     try {
 
-        // =============================================
-        // STUDENT DOCUMENT
-        // =============================================
+        // ============================================
+        // Student reference
+        // ============================================
 
         const studentRef =
             doc(
@@ -1000,6 +894,10 @@ async function completeRegistration() {
                 studentId
             );
 
+
+        // ============================================
+        // Check student
+        // ============================================
 
         const studentSnap =
             await getDoc(
@@ -1012,7 +910,7 @@ async function completeRegistration() {
         ) {
 
             throw new Error(
-                "Student account was not found."
+                "Student account not found."
             );
 
         }
@@ -1022,89 +920,61 @@ async function completeRegistration() {
             studentSnap.data();
 
 
-        // =============================================
-        // UPDATE FIRESTORE
-        // =============================================
+        // ============================================
+        // Update registration
+        // ============================================
 
         await updateDoc(
             studentRef,
             {
 
-                // -------------------------------
-                // Personal information
-                // -------------------------------
-
                 fullName:
-                    nameValidation.value,
-
+                    nameResult.value,
 
                 name:
-                    nameValidation.value,
-
+                    nameResult.value,
 
                 studentName:
-                    nameValidation.value,
-
+                    nameResult.value,
 
                 nicNumber:
-                    nicValidation.value,
-
-
-                // -------------------------------
-                // New password
-                // -------------------------------
+                    nicResult.value,
 
                 password:
-                    newPassword,
-
-
-                // -------------------------------
-                // Registration status
-                // -------------------------------
+                    passwordResult.value,
 
                 mustChangePassword:
                     false,
 
-
                 profileCompleted:
                     true,
-
 
                 registrationCompleted:
                     true,
 
-
-                // -------------------------------
-                // Registration timestamp
-                // -------------------------------
-
-                registrationCompletedAt:
+                lastActiveAt:
                     Date.now(),
 
-                // -------------------------------
-                // Activity
-                // -------------------------------
-
-                lastActiveAt:
+                registrationCompletedAt:
                     Date.now()
 
             }
         );
 
 
-        // =============================================
-        // UPDATE SESSION
-        // =============================================
+        // ============================================
+        // Update session
+        // ============================================
 
         sessionStorage.setItem(
             "studentName",
-            nameValidation.value
+            nameResult.value
         );
 
 
         sessionStorage.setItem(
             "studentNIC",
-            nicValidation.value
+            nicResult.value
         );
 
 
@@ -1114,9 +984,15 @@ async function completeRegistration() {
         );
 
 
-        // =============================================
-        // SUCCESS
-        // =============================================
+        sessionStorage.setItem(
+            "studentId",
+            studentId
+        );
+
+
+        // ============================================
+        // Success
+        // ============================================
 
         showMessage(
             "Registration completed successfully. Redirecting...",
@@ -1124,9 +1000,9 @@ async function completeRegistration() {
         );
 
 
-        // =============================================
-        // REDIRECT
-        // =============================================
+        // ============================================
+        // Redirect
+        // ============================================
 
         setTimeout(
             () => {
@@ -1141,9 +1017,7 @@ async function completeRegistration() {
 
     }
 
-    catch (
-        error
-    ) {
+    catch (error) {
 
         console.error(
             "Registration error:",
@@ -1152,6 +1026,7 @@ async function completeRegistration() {
 
 
         showMessage(
+            error?.message ||
             "Unable to complete registration. Please try again."
         );
 
@@ -1186,7 +1061,7 @@ async function completeRegistration() {
 
 
 // =====================================================
-// SUBMIT BUTTON
+// BUTTON
 // =====================================================
 
 if (
@@ -1214,9 +1089,7 @@ if (
 .forEach(
     input => {
 
-        if (
-            !input
-        ) {
+        if (!input) {
 
             return;
 
@@ -1234,7 +1107,6 @@ if (
 
                     event.preventDefault();
 
-
                     completeRegistration();
 
                 }
@@ -1247,97 +1119,37 @@ if (
 
 
 // =====================================================
-// CLEAR MESSAGE
-// =====================================================
-
-[
-    fullNameInput,
-    nicNumberInput,
-    newPasswordInput,
-    confirmPasswordInput
-]
-.forEach(
-    input => {
-
-        if (
-            !input
-        ) {
-
-            return;
-
-        }
-
-
-        input.addEventListener(
-            "input",
-            () => {
-
-                if (
-                    registrationMessage
-                ) {
-
-                    registrationMessage.textContent =
-                        "";
-
-                    registrationMessage.className =
-                        "registration-message";
-
-                }
-
-            }
-        );
-
-    }
-);
-
-
-// =====================================================
-// LOAD
-// =====================================================
-
-loadStudent();
-
-
-// =====================================================
-// INITIAL PASSWORD STATUS
-// =====================================================
-
-updatePasswordRequirements();
-
-
-// =====================================================
-// CONSOLE
+// START
 // =====================================================
 
 console.log(
-    "======================================"
+    "========================================"
 );
 
 console.log(
-    "✅ STUDENT REGISTRATION SYSTEM LOADED"
+    "STUDENT REGISTRATION SYSTEM"
 );
 
 console.log(
-    "Admission Number:",
+    "Student ID:",
     studentId
 );
 
 console.log(
-    "Full Name: ENABLED"
+    "First Login Onboarding: ACTIVE"
 );
 
 console.log(
-    "NIC Number: ENABLED"
+    "Password Change: REQUIRED"
 );
 
 console.log(
-    "Password Change: ENABLED"
+    "Profile Completion: REQUIRED"
 );
 
 console.log(
-    "Firebase Save: ENABLED"
+    "========================================"
 );
 
-console.log(
-    "======================================"
-);
+
+loadStudent();
