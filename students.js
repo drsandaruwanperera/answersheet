@@ -78,7 +78,7 @@ const statusFilter =
 
 
 // =====================================================
-// ADD STUDENT
+// ADD STUDENT ELEMENTS
 // =====================================================
 
 const addStudentBtn =
@@ -143,7 +143,7 @@ const studentIdHelp =
 
 
 // =====================================================
-// EDIT STUDENT
+// EDIT ELEMENTS
 // =====================================================
 
 const editModal =
@@ -193,7 +193,7 @@ const resetPasswordBtn =
 
 
 // =====================================================
-// PAPER CONTROLS
+// PAPER ELEMENTS
 // =====================================================
 
 const selectAllPapers =
@@ -237,7 +237,7 @@ let allStudents = [];
 
 let selectedStudentId = "";
 
-let selectedALSeries = null;
+let selectedALSeries = "";
 
 
 // =====================================================
@@ -248,7 +248,10 @@ function getPaperField(number) {
 
     return (
         "paper" +
-        String(number).padStart(2, "0")
+        String(number).padStart(
+            2,
+            "0"
+        )
     );
 
 }
@@ -377,7 +380,6 @@ function getStudentType(
 
     // ---------------------------------------------
     // Grade 11
-    // 26000 - 26999
     // ---------------------------------------------
 
     if (
@@ -400,7 +402,6 @@ function getStudentType(
 
         // -----------------------------------------
         // Grade 10
-        // 27000 - 27999
         // -----------------------------------------
 
         if (
@@ -433,10 +434,6 @@ function getStudentType(
 
     }
 
-
-    // ---------------------------------------------
-    // Legacy fallback
-    // ---------------------------------------------
 
     return "al";
 
@@ -505,16 +502,7 @@ function getStudentTypeClass(type) {
     }
 
 
-    if (
-        type === "al"
-    ) {
-
-        return "al";
-
-    }
-
-
-    return "";
+    return "al";
 
 }
 
@@ -665,7 +653,7 @@ function escapeHTML(value) {
 
 
 // =====================================================
-// PASSWORD VIEW / HIDE
+// PASSWORD DISPLAY
 // =====================================================
 
 function getPasswordHTML(
@@ -683,17 +671,10 @@ function getPasswordHTML(
 
         <div
             class="password-cell"
-            style="
-                display:flex;
-                align-items:center;
-                gap:8px;
-            "
         >
 
             <span
                 class="student-password"
-                data-password-id="${escapeHTML(studentId)}"
-                data-visible="false"
                 style="
                     min-width:85px;
                     letter-spacing:2px;
@@ -791,6 +772,7 @@ async function loadStudents() {
                         style="
                             text-align:center;
                             padding:30px;
+                            color:#dc2626;
                         "
                     >
 
@@ -975,6 +957,7 @@ function renderStudents() {
                     style="
                         text-align:center;
                         padding:30px;
+                        color:#94a3b8;
                     "
                 >
 
@@ -1063,19 +1046,30 @@ function renderStudentRow(student) {
 
     return `
 
-        <tr
-            data-student-id="${escapeHTML(
-                student.id
-            )}"
-        >
+        <tr>
 
             <td>
 
-                <strong>
+                <strong class="student-id">
                     ${escapeHTML(
                         student.id
                     )}
                 </strong>
+
+            </td>
+
+
+            <td>
+
+                <span class="student-name">
+
+                    ${escapeHTML(
+                        getStudentName(
+                            data
+                        )
+                    )}
+
+                </span>
 
             </td>
 
@@ -1118,7 +1112,9 @@ function renderStudentRow(student) {
 
                 </span>
 
+
                 <br>
+
 
                 <small
                     class="${
@@ -1203,10 +1199,6 @@ if (studentTable) {
         "click",
         event => {
 
-            // -----------------------------------------
-            // Password View
-            // -----------------------------------------
-
             const passwordButton =
                 event.target.closest(
                     ".password-view-btn"
@@ -1214,15 +1206,6 @@ if (studentTable) {
 
 
             if (passwordButton) {
-
-                const isVisible =
-                    passwordButton.dataset.visible ===
-                    "true";
-
-
-                const password =
-                    passwordButton.dataset.password;
-
 
                 const row =
                     passwordButton.closest(
@@ -1236,18 +1219,24 @@ if (studentTable) {
                     );
 
 
+                const password =
+                    passwordButton.dataset.password;
+
+
+                const visible =
+                    passwordButton.dataset.visible ===
+                    "true";
+
+
                 if (passwordSpan) {
 
-                    if (isVisible) {
+                    if (visible) {
 
                         passwordSpan.textContent =
                             "••••••••";
 
                         passwordButton.textContent =
                             "👁️";
-
-                        passwordButton.title =
-                            "View password";
 
                         passwordButton.dataset.visible =
                             "false";
@@ -1262,9 +1251,6 @@ if (studentTable) {
                         passwordButton.textContent =
                             "🙈";
 
-                        passwordButton.title =
-                            "Hide password";
-
                         passwordButton.dataset.visible =
                             "true";
 
@@ -1278,17 +1264,13 @@ if (studentTable) {
             }
 
 
-            // -----------------------------------------
-            // Other actions
-            // -----------------------------------------
-
-            const button =
+            const actionButton =
                 event.target.closest(
                     "button[data-action]"
                 );
 
 
-            if (!button) {
+            if (!actionButton) {
 
                 return;
 
@@ -1296,11 +1278,11 @@ if (studentTable) {
 
 
             const id =
-                button.dataset.id;
+                actionButton.dataset.id;
 
 
             const action =
-                button.dataset.action;
+                actionButton.dataset.action;
 
 
             if (
@@ -1331,7 +1313,7 @@ if (studentTable) {
 
 
 // =====================================================
-// SEARCH
+// SEARCH / FILTER
 // =====================================================
 
 if (searchInput) {
@@ -1365,7 +1347,7 @@ if (statusFilter) {
 
 
 // =====================================================
-// OPEN ADD MODAL
+// ADD MODAL
 // =====================================================
 
 function openAddModal() {
@@ -1464,7 +1446,7 @@ if (addModal) {
 function clearAddForm() {
 
     selectedALSeries =
-        null;
+        "";
 
 
     if (newStudentGrade) {
@@ -1558,246 +1540,6 @@ function clearAddForm() {
 
 
 // =====================================================
-// GENERATE NEXT A/L ID
-// =====================================================
-//
-// A27000 - A27999
-// A28000 - A28999
-// A29000 - A29999
-//
-// =====================================================
-
-async function generateNextALAdmissionNumber(
-    series
-) {
-
-    const base =
-        Number(series);
-
-
-    if (
-        ![
-            27000,
-            28000,
-            29000
-        ].includes(base)
-    ) {
-
-        throw new Error(
-            "Invalid A/L admission series."
-        );
-
-    }
-
-
-    const snapshot =
-        await getDocs(
-            collection(
-                db,
-                "students"
-            )
-        );
-
-
-    const usedNumbers =
-        new Set();
-
-
-    snapshot.forEach(
-        studentDoc => {
-
-            const id =
-                String(
-                    studentDoc.id ||
-                    ""
-                )
-                    .trim()
-                    .toUpperCase();
-
-
-            const match =
-                id.match(
-                    /^A(\d{5})$/
-                );
-
-
-            if (!match) {
-
-                return;
-
-            }
-
-
-            const number =
-                Number(
-                    match[1]
-                );
-
-
-            if (
-                number >= base &&
-                number <= base + 999
-            ) {
-
-                usedNumbers.add(
-                    number
-                );
-
-            }
-
-        }
-    );
-
-
-    for (
-        let number = base;
-        number <= base + 999;
-        number++
-    ) {
-
-        if (
-            !usedNumbers.has(
-                number
-            )
-        ) {
-
-            return (
-                "A" +
-                String(
-                    number
-                ).padStart(
-                    5,
-                    "0"
-                )
-            );
-
-        }
-
-    }
-
-
-    throw new Error(
-        "The selected A/L series is full."
-    );
-
-}
-
-
-// =====================================================
-// A/L SERIES BUTTONS
-// =====================================================
-
-alSeriesButtons.forEach(
-    button => {
-
-        button.addEventListener(
-            "click",
-            async () => {
-
-                const series =
-                    Number(
-                        button.dataset.series
-                    );
-
-
-                selectedALSeries =
-                    series;
-
-
-                alSeriesButtons.forEach(
-                    item => {
-
-                        item.classList.remove(
-                            "selected",
-                            "active"
-                        );
-
-                    }
-                );
-
-
-                button.classList.add(
-                    "selected"
-                );
-
-
-                if (newStudentId) {
-
-                    newStudentId.readOnly =
-                        true;
-
-                    newStudentId.value =
-                        "";
-
-                    newStudentId.placeholder =
-                        "Generating...";
-
-                    newStudentId.style.background =
-                        "#f1f5f9";
-
-                    newStudentId.style.fontWeight =
-                        "700";
-
-                }
-
-
-                try {
-
-                    const nextId =
-                        await generateNextALAdmissionNumber(
-                            series
-                        );
-
-
-                    if (selectedALSeries !== series) {
-
-                        return;
-
-                    }
-
-
-                    if (newStudentId) {
-
-                        newStudentId.value =
-                            nextId;
-
-                    }
-
-                }
-
-                catch (error) {
-
-                    console.error(
-                        "A/L series error:",
-                        error
-                    );
-
-
-                    if (newStudentId) {
-
-                        newStudentId.value =
-                            "";
-
-                        newStudentId.placeholder =
-                            "Series unavailable";
-
-                    }
-
-
-                    alert(
-                        error.message
-                    );
-
-                }
-
-            }
-        );
-
-    }
-);
-
-
-// =====================================================
 // CATEGORY BUTTONS
 // =====================================================
 
@@ -1815,10 +1557,6 @@ document
                     const type =
                         button.dataset.type;
 
-
-                    // ---------------------------------
-                    // Highlight
-                    // ---------------------------------
 
                     document
                         .querySelectorAll(
@@ -1841,16 +1579,16 @@ document
                     );
 
 
-                    // ---------------------------------
+                    // =================================
                     // A/L
-                    // ---------------------------------
+                    // =================================
 
                     if (
                         type === "al"
                     ) {
 
                         selectedALSeries =
-                            null;
+                            "";
 
 
                         if (alSeriesSection) {
@@ -1867,16 +1605,16 @@ document
                                 "";
 
                             newStudentId.readOnly =
-                                true;
+                                false;
 
                             newStudentId.placeholder =
-                                "Select A/L series";
+                                "Enter A/L Student ID";
 
                             newStudentId.style.background =
-                                "#f1f5f9";
+                                "";
 
                             newStudentId.style.fontWeight =
-                                "700";
+                                "";
 
                         }
 
@@ -1884,7 +1622,7 @@ document
                         if (studentIdHelp) {
 
                             studentIdHelp.textContent =
-                                "Select A27000, A28000 or A29000 series.";
+                                "Select the A/L series and manually enter the Student ID.";
 
                         }
 
@@ -1892,43 +1630,23 @@ document
                         if (newStudentGrade) {
 
                             newStudentGrade.textContent =
-                                "Selected: A/L";
+                                "Selected: A/L Student";
 
                         }
-
-
-                        if (newMustChange) {
-
-                            newMustChange.checked =
-                                true;
-
-                        }
-
-
-                        alSeriesButtons.forEach(
-                            item => {
-
-                                item.classList.remove(
-                                    "selected",
-                                    "active"
-                                );
-
-                            }
-                        );
 
                     }
 
 
-                    // ---------------------------------
-                    // Grade 10
-                    // ---------------------------------
+                    // =================================
+                    // GRADE 10
+                    // =================================
 
-                    else if (
+                    if (
                         type === "grade10"
                     ) {
 
                         selectedALSeries =
-                            null;
+                            "";
 
 
                         if (alSeriesSection) {
@@ -1962,7 +1680,7 @@ document
                         if (studentIdHelp) {
 
                             studentIdHelp.textContent =
-                                "Enter the Grade 10 Student ID manually. Valid range: 27000–27999.";
+                                "Enter Grade 10 Student ID manually. Range: 27000–27999.";
 
                         }
 
@@ -1977,16 +1695,16 @@ document
                     }
 
 
-                    // ---------------------------------
-                    // Grade 11
-                    // ---------------------------------
+                    // =================================
+                    // GRADE 11
+                    // =================================
 
-                    else if (
+                    if (
                         type === "grade11"
                     ) {
 
                         selectedALSeries =
-                            null;
+                            "";
 
 
                         if (alSeriesSection) {
@@ -2020,7 +1738,7 @@ document
                         if (studentIdHelp) {
 
                             studentIdHelp.textContent =
-                                "Enter the Grade 11 Student ID manually. Valid range: 26000–26999.";
+                                "Enter Grade 11 Student ID manually. Range: 26000–26999.";
 
                         }
 
@@ -2042,6 +1760,154 @@ document
 
 
 // =====================================================
+// A/L SERIES
+// =====================================================
+
+alSeriesButtons.forEach(
+    button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                const series =
+                    String(
+                        button.dataset.series ||
+                        ""
+                    )
+                        .trim();
+
+
+                selectedALSeries =
+                    series;
+
+
+                alSeriesButtons.forEach(
+                    item => {
+
+                        item.classList.remove(
+                            "selected",
+                            "active"
+                        );
+
+                    }
+                );
+
+
+                button.classList.add(
+                    "selected"
+                );
+
+
+                if (newStudentId) {
+
+                    newStudentId.readOnly =
+                        false;
+
+                    newStudentId.placeholder =
+                        "Enter A/L Student ID";
+
+                    newStudentId.focus();
+
+                }
+
+
+                if (studentIdHelp) {
+
+                    studentIdHelp.textContent =
+                        "Selected " +
+                        (
+                            series === "27000"
+                                ? "A27000"
+                                : series === "28000"
+                                    ? "A28000"
+                                    : "A29000"
+                        ) +
+                        " series. Enter the Student ID manually.";
+
+                }
+
+            }
+        );
+
+    }
+);
+
+
+// =====================================================
+// VALIDATE A/L SERIES
+// =====================================================
+
+function validateALSeries(
+    studentId,
+    selectedSeries
+) {
+
+    const id =
+        String(
+            studentId || ""
+        )
+            .trim()
+            .toUpperCase();
+
+
+    if (
+        !/^A\d{5}$/.test(id)
+    ) {
+
+        return false;
+
+    }
+
+
+    const number =
+        Number(
+            id.substring(1)
+        );
+
+
+    if (
+        selectedSeries === "27000"
+    ) {
+
+        return (
+            number >= 27000 &&
+            number <= 27999
+        );
+
+    }
+
+
+    if (
+        selectedSeries === "28000"
+    ) {
+
+        return (
+            number >= 28000 &&
+            number <= 28999
+        );
+
+    }
+
+
+    if (
+        selectedSeries === "29000"
+    ) {
+
+        return (
+            number >= 29000 &&
+            number <= 29999
+        );
+
+    }
+
+
+    return false;
+
+}
+
+
+// =====================================================
 // SAVE NEW STUDENT
 // =====================================================
 
@@ -2052,7 +1918,7 @@ if (saveNewStudent) {
         async () => {
 
             // -----------------------------------------
-            // READ CATEGORY FROM BUTTON
+            // CATEGORY
             // -----------------------------------------
 
             const selectedCategory =
@@ -2066,12 +1932,20 @@ if (saveNewStudent) {
                 "";
 
 
-            let id =
+            // -----------------------------------------
+            // ID
+            // -----------------------------------------
+
+            const id =
                 newStudentId?.value
                     ?.trim()
                     .toUpperCase() ||
                 "";
 
+
+            // -----------------------------------------
+            // PASSWORD
+            // -----------------------------------------
 
             const password =
                 newStudentPassword?.value
@@ -2079,13 +1953,13 @@ if (saveNewStudent) {
                 "";
 
 
-            let mustChange =
+            const mustChange =
                 newMustChange?.checked ||
                 false;
 
 
             // -----------------------------------------
-            // CATEGORY
+            // CATEGORY REQUIRED
             // -----------------------------------------
 
             if (!type) {
@@ -2100,70 +1974,24 @@ if (saveNewStudent) {
 
 
             // -----------------------------------------
-            // A/L
+            // ID REQUIRED
             // -----------------------------------------
 
-            if (
-                type === "al"
-            ) {
+            if (!id) {
 
-                if (
-                    !selectedALSeries
-                ) {
+                alert(
+                    "Please enter Student ID."
+                );
 
-                    alert(
-                        "Please select an A/L admission series."
-                    );
+                newStudentId?.focus();
 
-                    return;
-
-                }
-
-
-                // Re-check immediately
-                id =
-                    await generateNextALAdmissionNumber(
-                        selectedALSeries
-                    );
-
-
-                mustChange =
-                    true;
-
-
-                if (newStudentId) {
-
-                    newStudentId.value =
-                        id;
-
-                }
+                return;
 
             }
 
 
             // -----------------------------------------
-            // GRADE 10 / 11
-            // -----------------------------------------
-
-            else {
-
-                if (!id) {
-
-                    alert(
-                        "Please enter Student ID."
-                    );
-
-                    newStudentId?.focus();
-
-                    return;
-
-                }
-
-            }
-
-
-            // -----------------------------------------
-            // PASSWORD
+            // PASSWORD REQUIRED
             // -----------------------------------------
 
             if (!password) {
@@ -2187,31 +2015,56 @@ if (saveNewStudent) {
                     "Password must contain at least 4 characters."
                 );
 
-                newStudentPassword?.focus();
-
                 return;
 
             }
 
 
-            // -----------------------------------------
+            // =========================================
             // A/L VALIDATION
-            // -----------------------------------------
+            // =========================================
 
             if (
                 type === "al"
             ) {
 
-                const validAL =
-                    /^A(27|28|29)\d{3}$/
-                        .test(id);
-
-
-                if (!validAL) {
+                if (
+                    !selectedALSeries
+                ) {
 
                     alert(
-                        "Invalid A/L admission number."
+                        "Please select A27000, A28000 or A29000 series."
                     );
+
+                    return;
+
+                }
+
+
+                if (
+                    !validateALSeries(
+                        id,
+                        selectedALSeries
+                    )
+                ) {
+
+                    const seriesName =
+                        selectedALSeries === "27000"
+                            ? "A27000"
+                            : selectedALSeries === "28000"
+                                ? "A28000"
+                                : "A29000";
+
+
+                    alert(
+                        "Invalid Student ID.\n\n" +
+                        "The selected series is " +
+                        seriesName +
+                        ".\n\n" +
+                        "Please enter a valid ID in that series."
+                    );
+
+                    newStudentId?.focus();
 
                     return;
 
@@ -2220,9 +2073,9 @@ if (saveNewStudent) {
             }
 
 
-            // -----------------------------------------
+            // =========================================
             // GRADE 10 VALIDATION
-            // -----------------------------------------
+            // =========================================
 
             if (
                 type === "grade10"
@@ -2261,9 +2114,9 @@ if (saveNewStudent) {
             }
 
 
-            // -----------------------------------------
+            // =========================================
             // GRADE 11 VALIDATION
-            // -----------------------------------------
+            // =========================================
 
             if (
                 type === "grade11"
@@ -2303,7 +2156,7 @@ if (saveNewStudent) {
 
 
             // -----------------------------------------
-            // DISABLE
+            // SAVE BUTTON
             // -----------------------------------------
 
             saveNewStudent.disabled =
@@ -2343,7 +2196,7 @@ if (saveNewStudent) {
 
 
                 // -------------------------------------
-                // STUDENT DATA
+                // BASE DATA
                 // -------------------------------------
 
                 const studentData = {
@@ -2360,12 +2213,11 @@ if (saveNewStudent) {
                     studentType:
                         type,
 
-                    grade:
-                        type === "grade10"
-                            ? 10
-                            : type === "grade11"
-                                ? 11
-                                : null,
+                    profileCompleted:
+                        false,
+
+                    registrationCompleted:
+                        false,
 
                     fullName:
                         "",
@@ -2379,12 +2231,6 @@ if (saveNewStudent) {
                     nicNumber:
                         "",
 
-                    profileCompleted:
-                        false,
-
-                    registrationCompleted:
-                        false,
-
                     createdAt:
                         Date.now(),
 
@@ -2392,6 +2238,38 @@ if (saveNewStudent) {
                         0
 
                 };
+
+
+                // -------------------------------------
+                // GRADE
+                // -------------------------------------
+
+                if (
+                    type === "grade10"
+                ) {
+
+                    studentData.grade =
+                        10;
+
+                }
+
+
+                else if (
+                    type === "grade11"
+                ) {
+
+                    studentData.grade =
+                        11;
+
+                }
+
+
+                else {
+
+                    studentData.grade =
+                        null;
+
+                }
 
 
                 // -------------------------------------
@@ -2429,7 +2307,7 @@ if (saveNewStudent) {
 
 
                 // -------------------------------------
-                // SAVE
+                // SAVE FIRESTORE
                 // -------------------------------------
 
                 await setDoc(
@@ -2442,37 +2320,14 @@ if (saveNewStudent) {
                 // SUCCESS
                 // -------------------------------------
 
-                if (
-                    type === "al"
-                ) {
+                alert(
 
-                    alert(
+                    "Student created successfully.\n\n" +
 
-                        "A/L Student created successfully.\n\n" +
+                    "Student ID: " +
+                    id
 
-                        "Admission Number: " +
-                        id +
-
-                        "\n\n" +
-
-                        "Temporary Password: " +
-                        password +
-
-                        "\n\n" +
-
-                        "The student must complete registration on first login."
-
-                    );
-
-                }
-
-                else {
-
-                    alert(
-                        "Student created successfully."
-                    );
-
-                }
+                );
 
 
                 closeAddModal();
@@ -2513,10 +2368,12 @@ if (saveNewStudent) {
 
 
 // =====================================================
-// OPEN EDIT MODAL
+// EDIT STUDENT
 // =====================================================
 
-function openEditModal(studentId) {
+function openEditModal(
+    studentId
+) {
 
     const student =
         allStudents.find(
@@ -2543,7 +2400,7 @@ function openEditModal(studentId) {
 
     if (editStudentId) {
 
-        editStudentId.value =
+        editStudentId.textContent =
             studentId;
 
     }
@@ -2553,9 +2410,6 @@ function openEditModal(studentId) {
 
         editPassword.value =
             "";
-
-        editPassword.placeholder =
-            "Leave blank to keep current password";
 
     }
 
@@ -2570,7 +2424,7 @@ function openEditModal(studentId) {
 
 
     // ---------------------------------------------
-    // Paper permissions
+    // Paper access
     // ---------------------------------------------
 
     for (
@@ -3019,7 +2873,7 @@ async function deleteStudent(
 
 
 // =====================================================
-// DELETE BUTTON IN EDIT MODAL
+// DELETE FROM EDIT
 // =====================================================
 
 if (deleteStudentBtn) {
@@ -3045,7 +2899,7 @@ if (deleteStudentBtn) {
 
 
 // =====================================================
-// GENERATE PASSWORD
+// GENERATE RANDOM PASSWORD
 // =====================================================
 
 function generatePassword() {
@@ -3054,7 +2908,8 @@ function generatePassword() {
         "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
 
 
-    let password = "";
+    let password =
+        "";
 
 
     for (
@@ -3225,7 +3080,7 @@ if (resetViewed) {
 
 
             alert(
-                "Viewed status will be reset when you save the student."
+                "Viewed status will be reset when you save."
             );
 
         }
@@ -3239,10 +3094,6 @@ if (resetViewed) {
 // =====================================================
 
 function updateCounts() {
-
-    const total =
-        allStudents.length;
-
 
     let grade10 = 0;
 
@@ -3333,7 +3184,7 @@ function updateCounts() {
     if (totalElement) {
 
         totalElement.textContent =
-            total;
+            allStudents.length;
 
     }
 
@@ -3506,15 +3357,19 @@ console.log(
 );
 
 console.log(
-    "A/L Series: A27000 - A27999"
+    "A/L: Manual Student ID"
 );
 
 console.log(
-    "A/L Series: A28000 - A28999"
+    "A/L Series: A27000"
 );
 
 console.log(
-    "A/L Series: A29000 - A29999"
+    "A/L Series: A28000"
+);
+
+console.log(
+    "A/L Series: A29000"
 );
 
 console.log(
@@ -3530,21 +3385,11 @@ console.log(
 );
 
 console.log(
-    "Add / Edit / Delete: ACTIVE"
+    "Edit / Delete: ACTIVE"
 );
 
 console.log(
     "Realtime Firestore: ACTIVE"
-);
-
-console.log(
-    "Admin:",
-    adminUsername
-);
-
-console.log(
-    "Role:",
-    adminRole
 );
 
 console.log(
