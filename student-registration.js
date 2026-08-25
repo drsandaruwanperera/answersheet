@@ -1,5 +1,5 @@
 // =====================================================
-// STUDENT FIRST LOGIN REGISTRATION
+// STUDENT REGISTRATION SYSTEM
 // =====================================================
 
 import {
@@ -16,7 +16,7 @@ import {
 
 const studentIdInput =
     document.getElementById(
-        "studentId"
+        "registrationStudentId"
     );
 
 
@@ -26,7 +26,7 @@ const fullNameInput =
     );
 
 
-const nicInput =
+const nicNumberInput =
     document.getElementById(
         "nicNumber"
     );
@@ -44,15 +44,45 @@ const confirmPasswordInput =
     );
 
 
-const completeBtn =
+const confirmCheckbox =
     document.getElementById(
-        "completeBtn"
+        "registrationConfirm"
     );
 
 
-const message =
+const completeRegistrationBtn =
     document.getElementById(
-        "message"
+        "completeRegistrationBtn"
+    );
+
+
+const registrationMessage =
+    document.getElementById(
+        "registrationMessage"
+    );
+
+
+const toggleNewPassword =
+    document.getElementById(
+        "toggleNewPassword"
+    );
+
+
+const toggleConfirmPassword =
+    document.getElementById(
+        "toggleConfirmPassword"
+    );
+
+
+const requirementLength =
+    document.getElementById(
+        "requirementLength"
+    );
+
+
+const requirementMatch =
+    document.getElementById(
+        "requirementMatch"
     );
 
 
@@ -67,7 +97,7 @@ const loggedIn =
 
 
 const studentId =
-    (
+    String(
         sessionStorage.getItem(
             "studentId"
         ) || ""
@@ -77,32 +107,7 @@ const studentId =
 
 
 // =====================================================
-// MESSAGE
-// =====================================================
-
-function showMessage(
-    text,
-    type = "error"
-) {
-
-    if (!message) {
-        return;
-    }
-
-
-    message.textContent =
-        text;
-
-
-    message.className =
-        "message show " +
-        type;
-
-}
-
-
-// =====================================================
-// CHECK SESSION
+// PAGE PROTECTION
 // =====================================================
 
 if (
@@ -118,62 +123,71 @@ if (
 
 
 // =====================================================
-// SHOW ADMISSION NUMBER
+// SHOW MESSAGE
 // =====================================================
 
-if (studentIdInput) {
+function showMessage(
+    message,
+    type = "error"
+) {
 
-    studentIdInput.value =
-        studentId;
+    if (
+        !registrationMessage
+    ) {
+
+        return;
+
+    }
+
+
+    registrationMessage.textContent =
+        message;
+
+
+    registrationMessage.className =
+        "registration-message " +
+        type;
 
 }
 
 
 // =====================================================
-// VALIDATE NIC
+// STUDENT TYPE
 // =====================================================
 
-function validateNIC(
-    nic
+function getStudentType(
+    data
 ) {
 
-    const cleanNIC =
+    const type =
         String(
-            nic || ""
+            data?.studentType || ""
         )
         .trim()
-        .toUpperCase();
+        .toLowerCase();
 
 
-    // -----------------------------------------------
-    // OLD SRI LANKAN NIC
-    // Example:
-    // 123456789V
-    // 123456789X
-    // -----------------------------------------------
+    if (
+        type === "grade10" ||
+        type === "grade 10"
+    ) {
 
-    const oldNIC =
-        /^[0-9]{9}[VX]$/;
+        return "grade10";
 
-
-    // -----------------------------------------------
-    // NEW SRI LANKAN NIC
-    // Example:
-    // 200012345678
-    // -----------------------------------------------
-
-    const newNIC =
-        /^[0-9]{12}$/;
+    }
 
 
-    return (
-        oldNIC.test(
-            cleanNIC
-        ) ||
-        newNIC.test(
-            cleanNIC
-        )
-    );
+    if (
+        type === "grade11" ||
+        type === "grade 11"
+    ) {
+
+        return "grade11";
+
+    }
+
+
+    return "al";
 
 }
 
@@ -183,11 +197,6 @@ function validateNIC(
 // =====================================================
 
 async function loadStudent() {
-
-    if (!studentId) {
-        return;
-    }
-
 
     try {
 
@@ -199,18 +208,14 @@ async function loadStudent() {
             );
 
 
-        const snapshot =
+        const studentSnap =
             await getDoc(
                 studentRef
             );
 
 
-        // =============================================
-        // NOT FOUND
-        // =============================================
-
         if (
-            !snapshot.exists()
+            !studentSnap.exists()
         ) {
 
             showMessage(
@@ -218,9 +223,11 @@ async function loadStudent() {
             );
 
 
-            if (completeBtn) {
+            if (
+                completeRegistrationBtn
+            ) {
 
-                completeBtn.disabled =
+                completeRegistrationBtn.disabled =
                     true;
 
             }
@@ -232,35 +239,64 @@ async function loadStudent() {
 
 
         const data =
-            snapshot.data();
+            studentSnap.data();
 
 
         // =============================================
-        // IMPORTANT
-        // =============================================
-        //
-        // Only students with
-        // mustChangePassword = true
-        // should complete this page.
-        //
+        // STUDENT TYPE
         // =============================================
 
-        if (
-            data?.mustChangePassword !== true
-        ) {
-
-            window.location.replace(
-                "dashboard.html"
+        const studentType =
+            getStudentType(
+                data
             );
 
 
-            return;
+        // =============================================
+        // ONLY FIRST-LOGIN ACCOUNTS
+        // =============================================
+
+        if (
+            data?.mustChangePassword !==
+            true
+        ) {
+
+            // Registration already completed.
+            if (
+                data?.registrationCompleted ===
+                true ||
+                data?.profileCompleted ===
+                true
+            ) {
+
+                window.location.replace(
+                    "dashboard.html"
+                );
+
+
+                return;
+
+            }
 
         }
 
 
         // =============================================
-        // EXISTING FULL NAME
+        // DISPLAY ADMISSION NUMBER
+        // =============================================
+
+        if (
+            studentIdInput
+        ) {
+
+            studentIdInput.value =
+                studentId;
+
+        }
+
+
+        // =============================================
+        // PRE-FILL EXISTING NAME
         // =============================================
 
         const existingName =
@@ -271,8 +307,8 @@ async function loadStudent() {
 
 
         if (
-            existingName &&
-            fullNameInput
+            fullNameInput &&
+            existingName
         ) {
 
             fullNameInput.value =
@@ -280,20 +316,478 @@ async function loadStudent() {
 
         }
 
+
+        // =============================================
+        // PRE-FILL NIC
+        // =============================================
+
+        if (
+            nicNumberInput &&
+            data?.nicNumber
+        ) {
+
+            nicNumberInput.value =
+                String(
+                    data.nicNumber
+                );
+
+        }
+
+
+        // =============================================
+        // SESSION
+        // =============================================
+
+        sessionStorage.setItem(
+            "studentType",
+            studentType
+        );
+
+
+        console.log(
+            "======================================"
+        );
+
+        console.log(
+            "STUDENT REGISTRATION LOADED"
+        );
+
+        console.log(
+            "Admission Number:",
+            studentId
+        );
+
+        console.log(
+            "Student Type:",
+            studentType
+        );
+
+        console.log(
+            "Must Change Password:",
+            data?.mustChangePassword
+        );
+
+        console.log(
+            "======================================"
+        );
+
     }
-    catch (error) {
+
+    catch (
+        error
+    ) {
 
         console.error(
-            "Student registration load error:",
+            "Load student error:",
             error
         );
 
 
         showMessage(
-            "Unable to load your registration details. Please try again."
+            "Unable to load your student account."
         );
 
     }
+
+}
+
+
+// =====================================================
+// PASSWORD TOGGLE
+// =====================================================
+
+function setupPasswordToggle(
+    button,
+    input
+) {
+
+    if (
+        !button ||
+        !input
+    ) {
+
+        return;
+
+    }
+
+
+    button.addEventListener(
+        "click",
+        () => {
+
+            const show =
+                input.type ===
+                "password";
+
+
+            input.type =
+                show
+                    ? "text"
+                    : "password";
+
+
+            button.textContent =
+                show
+                    ? "🙈"
+                    : "🙊";
+
+
+            button.setAttribute(
+                "aria-label",
+                show
+                    ? "Hide password"
+                    : "Show password"
+            );
+
+        }
+    );
+
+}
+
+
+setupPasswordToggle(
+    toggleNewPassword,
+    newPasswordInput
+);
+
+
+setupPasswordToggle(
+    toggleConfirmPassword,
+    confirmPasswordInput
+);
+
+
+// =====================================================
+// PASSWORD REQUIREMENTS
+// =====================================================
+
+function updatePasswordRequirements() {
+
+    const password =
+        newPasswordInput?.value ||
+        "";
+
+
+    const confirmPassword =
+        confirmPasswordInput?.value ||
+        "";
+
+
+    const lengthValid =
+        password.length >= 6;
+
+
+    const matchValid =
+        password.length > 0 &&
+        password ===
+        confirmPassword;
+
+
+    if (
+        requirementLength
+    ) {
+
+        requirementLength.classList.toggle(
+            "valid",
+            lengthValid
+        );
+
+        requirementLength.classList.toggle(
+            "invalid",
+            !lengthValid
+        );
+
+
+        const icon =
+            requirementLength.querySelector(
+                "span"
+            );
+
+
+        if (
+            icon
+        ) {
+
+            icon.textContent =
+                lengthValid
+                    ? "✓"
+                    : "○";
+
+        }
+
+    }
+
+
+    if (
+        requirementMatch
+    ) {
+
+        requirementMatch.classList.toggle(
+            "valid",
+            matchValid
+        );
+
+        requirementMatch.classList.toggle(
+            "invalid",
+            !matchValid
+        );
+
+
+        const icon =
+            requirementMatch.querySelector(
+                "span"
+            );
+
+
+        if (
+            icon
+        ) {
+
+            icon.textContent =
+                matchValid
+                    ? "✓"
+                    : "○";
+
+        }
+
+    }
+
+}
+
+
+if (
+    newPasswordInput
+) {
+
+    newPasswordInput.addEventListener(
+        "input",
+        updatePasswordRequirements
+    );
+
+}
+
+
+if (
+    confirmPasswordInput
+) {
+
+    confirmPasswordInput.addEventListener(
+        "input",
+        updatePasswordRequirements
+    );
+
+}
+
+
+// =====================================================
+// CLEAN TEXT
+// =====================================================
+
+function cleanText(
+    value
+) {
+
+    return String(
+        value || ""
+    )
+    .trim()
+    .replace(
+        /\s+/g,
+        " "
+    );
+
+}
+
+
+// =====================================================
+// VALIDATE FULL NAME
+// =====================================================
+
+function validateFullName(
+    value
+) {
+
+    const name =
+        cleanText(
+            value
+        );
+
+
+    if (
+        !name
+    ) {
+
+        return {
+            valid: false,
+            message:
+                "Please enter your full name."
+        };
+
+    }
+
+
+    if (
+        name.length <
+        3
+    ) {
+
+        return {
+            valid: false,
+            message:
+                "Please enter your complete full name."
+        };
+
+    }
+
+
+    if (
+        name.length >
+        100
+    ) {
+
+        return {
+            valid: false,
+            message:
+                "Full name is too long."
+        };
+
+    }
+
+
+    return {
+        valid: true,
+        value: name
+    };
+
+}
+
+
+// =====================================================
+// VALIDATE NIC
+// =====================================================
+
+function validateNIC(
+    value
+) {
+
+    const nic =
+        cleanText(
+            value
+        )
+        .toUpperCase()
+        .replace(
+            /\s+/g,
+            ""
+        );
+
+
+    if (
+        !nic
+    ) {
+
+        return {
+            valid: false,
+            message:
+                "Please enter your NIC number."
+        };
+
+    }
+
+
+    /*
+       Sri Lankan NIC formats supported:
+
+       Old:
+       123456789V
+       123456789X
+
+       New:
+       200012345678
+    */
+
+    const oldNIC =
+        /^[0-9]{9}[VX]$/i;
+
+
+    const newNIC =
+        /^[0-9]{12}$/;
+
+
+    if (
+        !oldNIC.test(nic) &&
+        !newNIC.test(nic)
+    ) {
+
+        return {
+            valid: false,
+            message:
+                "Please enter a valid NIC number."
+        };
+
+    }
+
+
+    return {
+        valid: true,
+        value: nic
+    };
+
+}
+
+
+// =====================================================
+// VALIDATE PASSWORD
+// =====================================================
+
+function validatePassword(
+    password,
+    confirmPassword
+) {
+
+    if (
+        !password
+    ) {
+
+        return {
+            valid: false,
+            message:
+                "Please create a new password."
+        };
+
+    }
+
+
+    if (
+        password.length <
+        6
+    ) {
+
+        return {
+            valid: false,
+            message:
+                "Password must contain at least 6 characters."
+        };
+
+    }
+
+
+    if (
+        password !==
+        confirmPassword
+    ) {
+
+        return {
+            valid: false,
+            message:
+                "Passwords do not match."
+        };
+
+    }
+
+
+    return {
+        valid: true
+    };
 
 }
 
@@ -304,52 +798,53 @@ async function loadStudent() {
 
 async function completeRegistration() {
 
+    // ================================================
+    // GET VALUES
+    // ================================================
+
     const fullName =
-        fullNameInput?.value
-            ?.trim() || "";
+        cleanText(
+            fullNameInput?.value
+        );
 
 
     const nicNumber =
-        nicInput?.value
-            ?.trim()
-            .toUpperCase() || "";
+        cleanText(
+            nicNumberInput?.value
+        )
+        .toUpperCase()
+        .replace(
+            /\s+/g,
+            ""
+        );
 
 
     const newPassword =
-        newPasswordInput?.value
-            ?.trim() || "";
+        newPasswordInput?.value ||
+        "";
 
 
     const confirmPassword =
-        confirmPasswordInput?.value
-            ?.trim() || "";
+        confirmPasswordInput?.value ||
+        "";
 
 
-    // =================================================
-    // FULL NAME
-    // =================================================
+    // ================================================
+    // VALIDATE NAME
+    // ================================================
 
-    if (!fullName) {
-
-        showMessage(
-            "Please enter your full name."
+    const nameValidation =
+        validateFullName(
+            fullName
         );
 
 
-        fullNameInput?.focus();
-
-
-        return;
-
-    }
-
-
     if (
-        fullName.length < 3
+        !nameValidation.valid
     ) {
 
         showMessage(
-            "Please enter a valid full name."
+            nameValidation.message
         );
 
 
@@ -361,73 +856,26 @@ async function completeRegistration() {
     }
 
 
-    // =================================================
-    // NIC
-    // =================================================
+    // ================================================
+    // VALIDATE NIC
+    // ================================================
 
-    if (!nicNumber) {
-
-        showMessage(
-            "Please enter your NIC number."
-        );
-
-
-        nicInput?.focus();
-
-
-        return;
-
-    }
-
-
-    if (
-        !validateNIC(
+    const nicValidation =
+        validateNIC(
             nicNumber
-        )
-    ) {
-
-        showMessage(
-            "Please enter a valid NIC number."
         );
-
-
-        nicInput?.focus();
-
-
-        return;
-
-    }
-
-
-    // =================================================
-    // PASSWORD
-    // =================================================
-
-    if (!newPassword) {
-
-        showMessage(
-            "Please create a new password."
-        );
-
-
-        newPasswordInput?.focus();
-
-
-        return;
-
-    }
 
 
     if (
-        newPassword.length < 6
+        !nicValidation.valid
     ) {
 
         showMessage(
-            "New password must contain at least 6 characters."
+            nicValidation.message
         );
 
 
-        newPasswordInput?.focus();
+        nicNumberInput?.focus();
 
 
         return;
@@ -435,21 +883,39 @@ async function completeRegistration() {
     }
 
 
-    // =================================================
-    // PASSWORD MUST NOT EQUAL ADMISSION NUMBER
-    // =================================================
+    // ================================================
+    // VALIDATE PASSWORD
+    // ================================================
+
+    const passwordValidation =
+        validatePassword(
+            newPassword,
+            confirmPassword
+        );
+
 
     if (
-        newPassword.toUpperCase() ===
-        studentId.toUpperCase()
+        !passwordValidation.valid
     ) {
 
         showMessage(
-            "Your new password cannot be the same as your Admission Number."
+            passwordValidation.message
         );
 
 
-        newPasswordInput?.focus();
+        if (
+            newPassword.length <
+            6
+        ) {
+
+            newPasswordInput?.focus();
+
+        }
+        else {
+
+            confirmPasswordInput?.focus();
+
+        }
 
 
         return;
@@ -457,21 +923,17 @@ async function completeRegistration() {
     }
 
 
-    // =================================================
-    // CONFIRM PASSWORD
-    // =================================================
+    // ================================================
+    // CONFIRM CHECKBOX
+    // ================================================
 
     if (
-        newPassword !==
-        confirmPassword
+        !confirmCheckbox?.checked
     ) {
 
         showMessage(
-            "Passwords do not match."
+            "Please confirm that the information provided is accurate."
         );
-
-
-        confirmPasswordInput?.focus();
 
 
         return;
@@ -479,24 +941,48 @@ async function completeRegistration() {
     }
 
 
-    // =================================================
-    // DISABLE BUTTON
-    // =================================================
+    // ================================================
+    // STUDENT ID
+    // ================================================
 
-    if (completeBtn) {
+    if (
+        !studentId
+    ) {
 
-        completeBtn.disabled =
+        showMessage(
+            "Student session could not be identified. Please login again."
+        );
+
+
+        return;
+
+    }
+
+
+    // ================================================
+    // BUTTON
+    // ================================================
+
+    if (
+        completeRegistrationBtn
+    ) {
+
+        completeRegistrationBtn.disabled =
             true;
 
 
-        completeBtn.textContent =
-            "Saving...";
+        completeRegistrationBtn.innerHTML =
+            `
+                <span>
+                    Saving Registration...
+                </span>
+            `;
 
     }
 
 
     showMessage(
-        "",
+        "Saving your registration...",
         "success"
     );
 
@@ -515,18 +1001,14 @@ async function completeRegistration() {
             );
 
 
-        const snapshot =
+        const studentSnap =
             await getDoc(
                 studentRef
             );
 
 
-        // =============================================
-        // STUDENT NOT FOUND
-        // =============================================
-
         if (
-            !snapshot.exists()
+            !studentSnap.exists()
         ) {
 
             throw new Error(
@@ -536,26 +1018,8 @@ async function completeRegistration() {
         }
 
 
-        const existingData =
-            snapshot.data();
-
-
-        // =============================================
-        // SECURITY CHECK
-        // =============================================
-
-        if (
-            existingData?.mustChangePassword !== true
-        ) {
-
-            window.location.replace(
-                "dashboard.html"
-            );
-
-
-            return;
-
-        }
+        const currentData =
+            studentSnap.data();
 
 
         // =============================================
@@ -567,25 +1031,23 @@ async function completeRegistration() {
             {
 
                 // -------------------------------
-                // Student name
+                // Personal information
                 // -------------------------------
 
                 fullName:
-                    fullName,
+                    nameValidation.value,
+
 
                 name:
-                    fullName,
+                    nameValidation.value,
+
 
                 studentName:
-                    fullName,
+                    nameValidation.value,
 
-
-                // -------------------------------
-                // NIC
-                // -------------------------------
 
                 nicNumber:
-                    nicNumber,
+                    nicValidation.value,
 
 
                 // -------------------------------
@@ -603,8 +1065,10 @@ async function completeRegistration() {
                 mustChangePassword:
                     false,
 
+
                 profileCompleted:
                     true,
+
 
                 registrationCompleted:
                     true,
@@ -615,37 +1079,44 @@ async function completeRegistration() {
                 // -------------------------------
 
                 registrationCompletedAt:
+                    Date.now(),
+
+                // -------------------------------
+                // Activity
+                // -------------------------------
+
+                lastActiveAt:
                     Date.now()
 
             }
         );
 
 
-        // =================================================
+        // =============================================
         // UPDATE SESSION
-        // =================================================
+        // =============================================
 
         sessionStorage.setItem(
             "studentName",
-            fullName
+            nameValidation.value
         );
 
 
         sessionStorage.setItem(
             "studentNIC",
-            nicNumber
+            nicValidation.value
         );
 
 
         sessionStorage.setItem(
-            "registrationCompleted",
+            "loggedIn",
             "true"
         );
 
 
-        // =================================================
+        // =============================================
         // SUCCESS
-        // =================================================
+        // =============================================
 
         showMessage(
             "Registration completed successfully. Redirecting...",
@@ -653,9 +1124,9 @@ async function completeRegistration() {
         );
 
 
-        // =================================================
+        // =============================================
         // REDIRECT
-        // =================================================
+        // =============================================
 
         setTimeout(
             () => {
@@ -669,7 +1140,10 @@ async function completeRegistration() {
         );
 
     }
-    catch (error) {
+
+    catch (
+        error
+    ) {
 
         console.error(
             "Registration error:",
@@ -682,16 +1156,27 @@ async function completeRegistration() {
         );
 
     }
+
     finally {
 
-        if (completeBtn) {
+        if (
+            completeRegistrationBtn
+        ) {
 
-            completeBtn.disabled =
+            completeRegistrationBtn.disabled =
                 false;
 
 
-            completeBtn.textContent =
-                "Complete Registration";
+            completeRegistrationBtn.innerHTML =
+                `
+                    <span>
+                        Complete Registration
+                    </span>
+
+                    <span>
+                        →
+                    </span>
+                `;
 
         }
 
@@ -701,12 +1186,14 @@ async function completeRegistration() {
 
 
 // =====================================================
-// BUTTON
+// SUBMIT BUTTON
 // =====================================================
 
-if (completeBtn) {
+if (
+    completeRegistrationBtn
+) {
 
-    completeBtn.addEventListener(
+    completeRegistrationBtn.addEventListener(
         "click",
         completeRegistration
     );
@@ -720,15 +1207,19 @@ if (completeBtn) {
 
 [
     fullNameInput,
-    nicInput,
+    nicNumberInput,
     newPasswordInput,
     confirmPasswordInput
 ]
 .forEach(
     input => {
 
-        if (!input) {
+        if (
+            !input
+        ) {
+
             return;
+
         }
 
 
@@ -756,10 +1247,62 @@ if (completeBtn) {
 
 
 // =====================================================
-// START
+// CLEAR MESSAGE
+// =====================================================
+
+[
+    fullNameInput,
+    nicNumberInput,
+    newPasswordInput,
+    confirmPasswordInput
+]
+.forEach(
+    input => {
+
+        if (
+            !input
+        ) {
+
+            return;
+
+        }
+
+
+        input.addEventListener(
+            "input",
+            () => {
+
+                if (
+                    registrationMessage
+                ) {
+
+                    registrationMessage.textContent =
+                        "";
+
+                    registrationMessage.className =
+                        "registration-message";
+
+                }
+
+            }
+        );
+
+    }
+);
+
+
+// =====================================================
+// LOAD
 // =====================================================
 
 loadStudent();
+
+
+// =====================================================
+// INITIAL PASSWORD STATUS
+// =====================================================
+
+updatePasswordRequirements();
 
 
 // =====================================================
@@ -771,16 +1314,28 @@ console.log(
 );
 
 console.log(
-    "🎓 FIRST LOGIN REGISTRATION"
+    "✅ STUDENT REGISTRATION SYSTEM LOADED"
 );
 
 console.log(
-    "Student ID:",
+    "Admission Number:",
     studentId
 );
 
 console.log(
-    "Registration System: ACTIVE"
+    "Full Name: ENABLED"
+);
+
+console.log(
+    "NIC Number: ENABLED"
+);
+
+console.log(
+    "Password Change: ENABLED"
+);
+
+console.log(
+    "Firebase Save: ENABLED"
 );
 
 console.log(
