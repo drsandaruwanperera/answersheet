@@ -1,14 +1,15 @@
 // =====================================================
 // ADMIN DASHBOARD
-// Student Management + Super Admin Removal
+// Student Assessment Portal
 // =====================================================
-
-import * as firebase from "./firebase.js";
 
 
 // =====================================================
 // FIREBASE
 // =====================================================
+
+import * as firebase from "./firebase.js";
+
 
 const db =
     firebase.db;
@@ -22,20 +23,24 @@ const getDocs =
 const onSnapshot =
     firebase.onSnapshot;
 
+const deleteDoc =
+    firebase.deleteDoc;
+
 const doc =
     firebase.doc;
 
-const writeBatch =
-    firebase.writeBatch;
 
-const auth =
-    firebase.auth;
+// =====================================================
+// SUPER ADMIN DELETE PASSWORD
+// =====================================================
+//
+// Student removal password:
+// Nimeth
+//
+// =====================================================
 
-const reauthenticateWithCredential =
-    firebase.reauthenticateWithCredential;
-
-const EmailAuthProvider =
-    firebase.EmailAuthProvider;
+const SUPER_ADMIN_DELETE_PASSWORD =
+    "Nimeth";
 
 
 // =====================================================
@@ -71,6 +76,11 @@ const storedRole =
 // =====================================================
 // ROLE
 // =====================================================
+//
+// full / superadmin = SUPER ADMIN
+// limited / admin   = NORMAL ADMIN
+//
+// =====================================================
 
 const isSuperAdmin =
     storedRole === "superadmin" ||
@@ -94,6 +104,11 @@ if (!adminLoggedIn) {
 // ELEMENTS
 // =====================================================
 
+
+// -----------------------------------------------------
+// ADMIN INFORMATION
+// -----------------------------------------------------
+
 const adminUsernameElement =
     document.getElementById(
         "adminUsername"
@@ -106,15 +121,19 @@ const adminRoleElement =
     );
 
 
+// -----------------------------------------------------
+// LOGOUT
+// -----------------------------------------------------
+
 const logoutBtn =
     document.getElementById(
         "logoutBtn"
     );
 
 
-// =====================================================
+// -----------------------------------------------------
 // SUMMARY
-// =====================================================
+// -----------------------------------------------------
 
 const totalStudentsElement =
     document.getElementById(
@@ -134,25 +153,157 @@ const activeStudentsElement =
     );
 
 
-// =====================================================
+// -----------------------------------------------------
 // MANAGEMENT LINKS
+// -----------------------------------------------------
+
+const studentManagementLink =
+    document.getElementById(
+        "studentManagementLink"
+    );
+
+
+const paperManagementLink =
+    document.getElementById(
+        "paperManagementLink"
+    );
+
+
+const importStudentsLink =
+    document.getElementById(
+        "importStudentsLink"
+    );
+
+
+const statisticsLink =
+    document.getElementById(
+        "statisticsLink"
+    );
+
+
+// =====================================================
+// STUDENT REMOVAL ELEMENTS
 // =====================================================
 
-const superAdminNavItems =
-    document.querySelectorAll(
-        ".superadmin-only"
+const studentRemovalSection =
+    document.getElementById(
+        "studentRemovalSection"
     );
 
 
-const superAdminLinks =
-    document.querySelectorAll(
-        ".superadmin-link"
+const controlTotalCount =
+    document.getElementById(
+        "controlTotalCount"
     );
 
 
-const superAdminCards =
-    document.querySelectorAll(
-        ".superadmin-card"
+const controlGrade10Count =
+    document.getElementById(
+        "controlGrade10Count"
+    );
+
+
+const controlGrade11Count =
+    document.getElementById(
+        "controlGrade11Count"
+    );
+
+
+const controlALCount =
+    document.getElementById(
+        "controlALCount"
+    );
+
+
+const removeGrade10Btn =
+    document.getElementById(
+        "removeGrade10Btn"
+    );
+
+
+const removeGrade11Btn =
+    document.getElementById(
+        "removeGrade11Btn"
+    );
+
+
+const removeALBtn =
+    document.getElementById(
+        "removeALBtn"
+    );
+
+
+// =====================================================
+// DELETE PASSWORD MODAL
+// =====================================================
+
+const studentDeleteModal =
+    document.getElementById(
+        "studentDeleteModal"
+    );
+
+
+const deletePasswordInput =
+    document.getElementById(
+        "deletePasswordInput"
+    );
+
+
+const deletePasswordError =
+    document.getElementById(
+        "deletePasswordError"
+    );
+
+
+const deleteModalTitle =
+    document.getElementById(
+        "deleteModalTitle"
+    );
+
+
+const deleteModalDescription =
+    document.getElementById(
+        "deleteModalDescription"
+    );
+
+
+const deleteCancelBtn =
+    document.getElementById(
+        "deleteCancelBtn"
+    );
+
+
+const deleteConfirmBtn =
+    document.getElementById(
+        "deleteConfirmBtn"
+    );
+
+
+// =====================================================
+// DELETE PROGRESS
+// =====================================================
+
+const deleteProgressModal =
+    document.getElementById(
+        "deleteProgressModal"
+    );
+
+
+const deleteProgressFill =
+    document.getElementById(
+        "deleteProgressFill"
+    );
+
+
+const deleteProgressText =
+    document.getElementById(
+        "deleteProgressText"
+    );
+
+
+const deleteProgressDescription =
+    document.getElementById(
+        "deleteProgressDescription"
     );
 
 
@@ -169,6 +320,8 @@ const ACTIVE_LIMIT =
 // =====================================================
 
 let allStudents = [];
+
+let pendingDeleteType = null;
 
 
 // =====================================================
@@ -241,6 +394,7 @@ function showAccessDenied() {
             <button
                 type="button"
                 class="access-denied-close"
+                aria-label="Close"
             >
                 ×
             </button>
@@ -315,6 +469,27 @@ function hideAccessDenied() {
 
 function setupRoleAccess() {
 
+    const superAdminNavItems =
+        document.querySelectorAll(
+            ".superadmin-only"
+        );
+
+
+    const superAdminLinks =
+        document.querySelectorAll(
+            ".superadmin-link"
+        );
+
+
+    const superAdminCards =
+        document.querySelectorAll(
+            ".superadmin-card"
+        );
+
+
+    // =================================================
+    // SUPER ADMIN
+    // =================================================
 
     if (isSuperAdmin) {
 
@@ -325,9 +500,11 @@ function setupRoleAccess() {
                     "locked-menu"
                 );
 
+
                 item.removeAttribute(
                     "aria-disabled"
                 );
+
 
                 item.removeAttribute(
                     "title"
@@ -344,9 +521,11 @@ function setupRoleAccess() {
                     "access-locked"
                 );
 
+
                 link.removeAttribute(
                     "aria-disabled"
                 );
+
 
                 link.removeAttribute(
                     "title"
@@ -373,7 +552,7 @@ function setupRoleAccess() {
 
 
     // =================================================
-    // LIMITED ADMIN
+    // NORMAL ADMIN
     // =================================================
 
     superAdminNavItems.forEach(
@@ -383,10 +562,12 @@ function setupRoleAccess() {
                 "locked-menu"
             );
 
+
             item.setAttribute(
                 "aria-disabled",
                 "true"
             );
+
 
             item.setAttribute(
                 "title",
@@ -418,10 +599,12 @@ function setupRoleAccess() {
                 "access-locked"
             );
 
+
             link.setAttribute(
                 "aria-disabled",
                 "true"
             );
+
 
             link.setAttribute(
                 "title",
@@ -463,6 +646,37 @@ setupRoleAccess();
 
 
 // =====================================================
+// STUDENT REMOVAL ACCESS
+// =====================================================
+
+function setupStudentRemovalAccess() {
+
+    if (!studentRemovalSection) {
+        return;
+    }
+
+
+    if (isSuperAdmin) {
+
+        studentRemovalSection.style.display =
+            "";
+
+    }
+
+    else {
+
+        studentRemovalSection.style.display =
+            "none";
+
+    }
+
+}
+
+
+setupStudentRemovalAccess();
+
+
+// =====================================================
 // LOGOUT
 // =====================================================
 
@@ -487,9 +701,11 @@ if (logoutBtn) {
                 "adminLoggedIn"
             );
 
+
             sessionStorage.removeItem(
                 "adminRole"
             );
+
 
             sessionStorage.removeItem(
                 "adminUsername"
@@ -667,43 +883,74 @@ function setText(
 
 
 // =====================================================
-// UPDATE STUDENT CONTROL COUNTS
+// UPDATE STUDENT REMOVAL COUNTS
 // =====================================================
 
-function updateStudentControlCounts(
-    categories,
-    total
-) {
+function updateRemovalCounts() {
 
-    setText(
-        document.getElementById(
-            "controlGrade10Count"
-        ),
-        categories.grade10.total
+    let grade10Count = 0;
+
+    let grade11Count = 0;
+
+    let alCount = 0;
+
+
+    allStudents.forEach(
+        student => {
+
+            const type =
+                getStudentType(
+                    student.data
+                );
+
+
+            if (
+                type === "grade10"
+            ) {
+
+                grade10Count++;
+
+            }
+
+            else if (
+                type === "grade11"
+            ) {
+
+                grade11Count++;
+
+            }
+
+            else {
+
+                alCount++;
+
+            }
+
+        }
     );
 
 
     setText(
-        document.getElementById(
-            "controlGrade11Count"
-        ),
-        categories.grade11.total
+        controlTotalCount,
+        allStudents.length
     );
 
 
     setText(
-        document.getElementById(
-            "controlALCount"
-        ),
-        categories.al.total
+        controlGrade10Count,
+        grade10Count
     );
 
 
     setText(
-        document.getElementById(
-            "controlTotalCount"
-        ),
-        total
+        controlGrade11Count,
+        grade11Count
+    );
+
+
+    setText(
+        controlALCount,
+        alCount
     );
 
 }
@@ -828,17 +1075,7 @@ function updateDashboard() {
 
 
     // =================================================
-    // STUDENT CONTROL COUNTS
-    // =================================================
-
-    updateStudentControlCounts(
-        categories,
-        total
-    );
-
-
-    // =================================================
-    // ALL
+    // ALL STUDENTS
     // =================================================
 
     setText(
@@ -984,6 +1221,13 @@ function updateDashboard() {
         categories.al.views
     );
 
+
+    // =================================================
+    // REMOVAL COUNTS
+    // =================================================
+
+    updateRemovalCounts();
+
 }
 
 
@@ -1030,11 +1274,17 @@ async function loadStudents() {
 
         updateDashboard();
 
+
+        console.log(
+            "✅ Students loaded:",
+            allStudents.length
+        );
+
     }
     catch (error) {
 
         console.error(
-            "Dashboard student load error:",
+            "❌ Dashboard student load error:",
             error
         );
 
@@ -1062,7 +1312,7 @@ async function loadStudents() {
 
 
 // =====================================================
-// REAL-TIME FIREBASE
+// REAL-TIME FIREBASE LISTENER
 // =====================================================
 
 function startRealtimeUpdates() {
@@ -1071,6 +1321,11 @@ function startRealtimeUpdates() {
         typeof onSnapshot !==
         "function"
     ) {
+
+        console.warn(
+            "onSnapshot is not available."
+        );
+
 
         return;
 
@@ -1087,6 +1342,7 @@ function startRealtimeUpdates() {
 
 
         onSnapshot(
+
             studentsRef,
 
             snapshot => {
@@ -1119,7 +1375,7 @@ function startRealtimeUpdates() {
 
 
                 console.log(
-                    "🔄 Student dashboard updated:",
+                    "🔄 Dashboard updated:",
                     students.length
                 );
 
@@ -1128,7 +1384,7 @@ function startRealtimeUpdates() {
             error => {
 
                 console.error(
-                    "Realtime dashboard error:",
+                    "❌ Realtime dashboard error:",
                     error
                 );
 
@@ -1136,13 +1392,14 @@ function startRealtimeUpdates() {
                 loadStudents();
 
             }
+
         );
 
     }
     catch (error) {
 
         console.error(
-            "Realtime listener setup error:",
+            "❌ Realtime listener setup error:",
             error
         );
 
@@ -1155,277 +1412,20 @@ function startRealtimeUpdates() {
 
 
 // =====================================================
-// PASSWORD MODAL
+// GET STUDENTS BY TYPE
 // =====================================================
 
-function showPasswordModal(
-    category,
-    count
+function getStudentsByType(
+    type
 ) {
 
-    return new Promise(
-        function(resolve) {
-
-            const existing =
-                document.getElementById(
-                    "studentDeleteModal"
-                );
-
-
-            if (existing) {
-                existing.remove();
-            }
-
-
-            const categoryName =
-                category === "grade10"
-                    ? "Grade 10"
-                    : category === "grade11"
-                        ? "Grade 11"
-                        : "A/L";
-
-
-            const modal =
-                document.createElement(
-                    "div"
-                );
-
-
-            modal.id =
-                "studentDeleteModal";
-
-
-            modal.innerHTML = `
-
-                <div class="delete-modal-overlay">
-
-                    <div class="delete-modal">
-
-                        <div class="delete-modal-icon">
-                            🔐
-                        </div>
-
-
-                        <div class="delete-modal-header">
-
-                            <p>
-                                SUPER ADMINISTRATOR
-                            </p>
-
-                            <h2>
-                                Confirm Student Removal
-                            </h2>
-
-                            <span>
-                                You are about to permanently
-                                remove ${count} ${categoryName}
-                                student account(s).
-                            </span>
-
-                        </div>
-
-
-                        <div class="delete-modal-warning">
-
-                            ⚠️
-                            This action cannot be undone.
-
-                        </div>
-
-
-                        <label
-                            class="delete-password-label"
-                            for="deleteAdminPassword"
-                        >
-                            Super Admin Password
-                        </label>
-
-
-                        <input
-                            id="deleteAdminPassword"
-                            class="delete-password-input"
-                            type="password"
-                            autocomplete="current-password"
-                            placeholder="Enter your password"
-                        >
-
-
-                        <div
-                            id="deletePasswordError"
-                            class="delete-password-error"
-                        ></div>
-
-
-                        <div class="delete-modal-actions">
-
-                            <button
-                                type="button"
-                                id="cancelDeleteBtn"
-                                class="delete-cancel-btn"
-                            >
-                                Cancel
-                            </button>
-
-
-                            <button
-                                type="button"
-                                id="confirmDeleteBtn"
-                                class="delete-confirm-btn"
-                            >
-                                🔐 Verify & Continue
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            `;
-
-
-            document.body.appendChild(
-                modal
-            );
-
-
-            const passwordInput =
-                document.getElementById(
-                    "deleteAdminPassword"
-                );
-
-
-            const errorElement =
-                document.getElementById(
-                    "deletePasswordError"
-                );
-
-
-            const cancelButton =
-                document.getElementById(
-                    "cancelDeleteBtn"
-                );
-
-
-            const confirmButton =
-                document.getElementById(
-                    "confirmDeleteBtn"
-                );
-
-
-            function closeModal(
-                result
-            ) {
-
-                modal.remove();
-
-                resolve(
-                    result
-                );
-
-            }
-
-
-            cancelButton.addEventListener(
-                "click",
-                function() {
-
-                    closeModal(
-                        false
-                    );
-
-                }
-            );
-
-
-            modal
-                .querySelector(
-                    ".delete-modal-overlay"
-                )
-                .addEventListener(
-                    "click",
-                    function(event) {
-
-                        if (
-                            event.target ===
-                            this
-                        ) {
-
-                            closeModal(
-                                false
-                            );
-
-                        }
-
-                    }
-                );
-
-
-            confirmButton.addEventListener(
-                "click",
-                function() {
-
-                    const password =
-                        passwordInput.value
-                            .trim();
-
-
-                    if (!password) {
-
-                        errorElement.textContent =
-                            "Please enter the Super Admin password.";
-
-                        passwordInput.focus();
-
-                        return;
-
-                    }
-
-
-                    closeModal(
-                        password
-                    );
-
-                }
-            );
-
-
-            passwordInput.addEventListener(
-                "keydown",
-                function(event) {
-
-                    if (
-                        event.key ===
-                        "Enter"
-                    ) {
-
-                        confirmButton.click();
-
-                    }
-
-
-                    if (
-                        event.key ===
-                        "Escape"
-                    ) {
-
-                        closeModal(
-                            false
-                        );
-
-                    }
-
-                }
-            );
-
-
-            setTimeout(
-                function() {
-
-                    passwordInput.focus();
-
-                },
-                100
+    return allStudents.filter(
+        student => {
+
+            return (
+                getStudentType(
+                    student.data
+                ) === type
             );
 
         }
@@ -1435,233 +1435,11 @@ function showPasswordModal(
 
 
 // =====================================================
-// REAUTHENTICATE SUPER ADMIN
+// OPEN DELETE MODAL
 // =====================================================
 
-async function verifySuperAdminPassword(
-    password
-) {
-
-    if (!isSuperAdmin) {
-
-        throw new Error(
-            "Super Administrator access is required."
-        );
-
-    }
-
-
-    // Firebase Authentication user
-
-    const currentUser =
-        auth?.currentUser;
-
-
-    if (!currentUser) {
-
-        throw new Error(
-            "No Firebase Authentication session is active. Please sign in to the Super Admin Firebase account first."
-        );
-
-    }
-
-
-    if (
-        !currentUser.email
-    ) {
-
-        throw new Error(
-            "The current Firebase account does not have an email address."
-        );
-
-    }
-
-
-    const credential =
-        EmailAuthProvider.credential(
-            currentUser.email,
-            password
-        );
-
-
-    await reauthenticateWithCredential(
-        currentUser,
-        credential
-    );
-
-
-    return true;
-
-}
-
-
-// =====================================================
-// DELETE PROGRESS
-// =====================================================
-
-function showDeleteProgress(
-    categoryName,
-    count
-) {
-
-    const existing =
-        document.getElementById(
-            "deleteProgressModal"
-        );
-
-
-    if (existing) {
-        existing.remove();
-    }
-
-
-    const modal =
-        document.createElement(
-            "div"
-        );
-
-
-    modal.id =
-        "deleteProgressModal";
-
-
-    modal.innerHTML = `
-
-        <div class="delete-modal-overlay">
-
-            <div class="delete-modal delete-progress-modal">
-
-                <div class="delete-modal-icon">
-                    ⏳
-                </div>
-
-                <div class="delete-modal-header">
-
-                    <p>
-                        SUPER ADMINISTRATOR
-                    </p>
-
-                    <h2>
-                        Removing Students
-                    </h2>
-
-                    <span>
-                        Removing ${count}
-                        ${categoryName}
-                        student account(s)...
-                    </span>
-
-                </div>
-
-
-                <div class="delete-progress-bar">
-
-                    <div
-                        id="deleteProgressFill"
-                        class="delete-progress-fill"
-                    ></div>
-
-                </div>
-
-
-                <p
-                    id="deleteProgressText"
-                    class="delete-progress-text"
-                >
-                    Preparing...
-                </p>
-
-            </div>
-
-        </div>
-
-    `;
-
-
-    document.body.appendChild(
-        modal
-    );
-
-}
-
-
-// =====================================================
-// UPDATE DELETE PROGRESS
-// =====================================================
-
-function updateDeleteProgress(
-    current,
-    total
-) {
-
-    const fill =
-        document.getElementById(
-            "deleteProgressFill"
-        );
-
-
-    const text =
-        document.getElementById(
-            "deleteProgressText"
-        );
-
-
-    const percentage =
-        total > 0
-            ? Math.round(
-                (
-                    current /
-                    total
-                ) * 100
-            )
-            : 100;
-
-
-    if (fill) {
-
-        fill.style.width =
-            percentage + "%";
-
-    }
-
-
-    if (text) {
-
-        text.textContent =
-            `Deleted ${current} of ${total} students (${percentage}%)`;
-
-    }
-
-}
-
-
-// =====================================================
-// HIDE DELETE PROGRESS
-// =====================================================
-
-function hideDeleteProgress() {
-
-    const modal =
-        document.getElementById(
-            "deleteProgressModal"
-        );
-
-
-    if (modal) {
-
-        modal.remove();
-
-    }
-
-}
-
-
-// =====================================================
-// DELETE STUDENTS
-// =====================================================
-
-async function deleteStudentsByCategory(
-    category
+function openDeleteModal(
+    type
 ) {
 
     if (!isSuperAdmin) {
@@ -1673,46 +1451,18 @@ async function deleteStudentsByCategory(
     }
 
 
-    // =================================================
-    // GET TARGET STUDENTS
-    // =================================================
-
-    const targetStudents =
-        allStudents.filter(
-            student => {
-
-                return (
-                    getStudentType(
-                        student.data
-                    ) === category
-                );
-
-            }
+    const students =
+        getStudentsByType(
+            type
         );
 
 
-    const count =
-        targetStudents.length;
-
-
-    const categoryName =
-        category === "grade10"
-            ? "Grade 10"
-            : category === "grade11"
-                ? "Grade 11"
-                : "A/L";
-
-
-    // =================================================
-    // NOTHING TO DELETE
-    // =================================================
-
     if (
-        count === 0
+        students.length === 0
     ) {
 
         alert(
-            `There are no ${categoryName} students to remove.`
+            "There are no students in this category."
         );
 
         return;
@@ -1720,71 +1470,318 @@ async function deleteStudentsByCategory(
     }
 
 
-    // =================================================
-    // PASSWORD MODAL
-    // =================================================
+    pendingDeleteType =
+        type;
 
-    const password =
-        await showPasswordModal(
-            category,
-            count
+
+    let title =
+        "Confirm Student Removal";
+
+
+    let description =
+        "Enter the Super Administrator password to continue.";
+
+
+    if (
+        type === "grade10"
+    ) {
+
+        title =
+            "Remove All Grade 10 Students";
+
+
+        description =
+            "You are about to permanently remove " +
+            students.length +
+            " Grade 10 student records.";
+
+    }
+
+
+    if (
+        type === "grade11"
+    ) {
+
+        title =
+            "Remove All Grade 11 Students";
+
+
+        description =
+            "You are about to permanently remove " +
+            students.length +
+            " Grade 11 student records.";
+
+    }
+
+
+    if (
+        type === "al"
+    ) {
+
+        title =
+            "Remove All A/L Students";
+
+
+        description =
+            "You are about to permanently remove " +
+            students.length +
+            " A/L student records.";
+
+    }
+
+
+    if (deleteModalTitle) {
+
+        deleteModalTitle.textContent =
+            title;
+
+    }
+
+
+    if (deleteModalDescription) {
+
+        deleteModalDescription.textContent =
+            description;
+
+    }
+
+
+    if (deletePasswordInput) {
+
+        deletePasswordInput.value =
+            "";
+
+    }
+
+
+    if (deletePasswordError) {
+
+        deletePasswordError.textContent =
+            "";
+
+    }
+
+
+    if (studentDeleteModal) {
+
+        studentDeleteModal.style.display =
+            "flex";
+
+    }
+
+
+    setTimeout(
+        () => {
+
+            if (deletePasswordInput) {
+
+                deletePasswordInput.focus();
+
+            }
+
+        },
+        100
+    );
+
+}
+
+
+// =====================================================
+// CLOSE DELETE MODAL
+// =====================================================
+
+function closeDeleteModal() {
+
+    pendingDeleteType =
+        null;
+
+
+    if (studentDeleteModal) {
+
+        studentDeleteModal.style.display =
+            "none";
+
+    }
+
+
+    if (deletePasswordInput) {
+
+        deletePasswordInput.value =
+            "";
+
+    }
+
+
+    if (deletePasswordError) {
+
+        deletePasswordError.textContent =
+            "";
+
+    }
+
+}
+
+
+// =====================================================
+// VERIFY PASSWORD
+// =====================================================
+
+function verifyDeletePassword() {
+
+    if (!isSuperAdmin) {
+
+        showAccessDenied();
+
+        return false;
+
+    }
+
+
+    const enteredPassword =
+        String(
+            deletePasswordInput?.value || ""
         );
 
 
-    if (!password) {
+    if (
+        enteredPassword === ""
+    ) {
+
+        if (deletePasswordError) {
+
+            deletePasswordError.textContent =
+                "Please enter the Super Administrator password.";
+
+        }
+
+        return false;
+
+    }
+
+
+    if (
+        enteredPassword !==
+        SUPER_ADMIN_DELETE_PASSWORD
+    ) {
+
+        if (deletePasswordError) {
+
+            deletePasswordError.textContent =
+                "Incorrect Super Administrator password.";
+
+        }
+
+
+        if (deletePasswordInput) {
+
+            deletePasswordInput.select();
+
+        }
+
+
+        return false;
+
+    }
+
+
+    return true;
+
+}
+
+
+// =====================================================
+// DELETE STUDENTS
+// =====================================================
+
+async function deleteStudentsByType(
+    type
+) {
+
+    if (!isSuperAdmin) {
+
+        showAccessDenied();
 
         return;
 
     }
 
 
-    // =================================================
-    // FIREBASE RE-AUTHENTICATION
-    // =================================================
-
-    try {
-
-        await verifySuperAdminPassword(
-            password
+    const students =
+        getStudentsByType(
+            type
         );
 
-    }
-    catch (error) {
 
-        console.error(
-            "Super Admin verification failed:",
-            error
-        );
-
+    if (
+        students.length === 0
+    ) {
 
         alert(
-            "❌ Password verification failed.\n\n" +
-            (
-                error?.message ||
-                "Invalid password."
-            )
+            "There are no students in this category."
         );
-
 
         return;
 
     }
 
 
+    let categoryName =
+        "students";
+
+
+    if (
+        type === "grade10"
+    ) {
+
+        categoryName =
+            "Grade 10 students";
+
+    }
+
+
+    if (
+        type === "grade11"
+    ) {
+
+        categoryName =
+            "Grade 11 students";
+
+    }
+
+
+    if (
+        type === "al"
+    ) {
+
+        categoryName =
+            "A/L students";
+
+    }
+
+
     // =================================================
-    // SECOND CONFIRMATION
+    // FINAL CONFIRMATION
     // =================================================
 
     const confirmed =
         confirm(
-            `FINAL CONFIRMATION\n\n` +
 
-            `You are about to permanently delete ` +
-            `${count} ${categoryName} student account(s).\n\n` +
+            "⚠️ FINAL WARNING\n\n" +
 
-            `This action cannot be undone.\n\n` +
+            "You are about to permanently delete " +
 
-            `Continue?`
+            students.length +
+
+            " " +
+
+            categoryName +
+
+            ".\n\n" +
+
+            "This action CANNOT be undone.\n\n" +
+
+            "Click OK to permanently remove them."
+
         );
 
 
@@ -1795,153 +1792,102 @@ async function deleteStudentsByCategory(
     }
 
 
-    // =================================================
-    // SHOW PROGRESS
-    // =================================================
+    closeDeleteModal();
+
 
     showDeleteProgress(
         categoryName,
-        count
+        students.length
     );
 
 
     try {
 
-        let deleted =
+        let completed =
             0;
 
 
         // =================================================
-        // FIRESTORE BATCH LIMIT
+        // DELETE EACH STUDENT
         // =================================================
-        //
-        // Firestore allows up to 500 writes per batch.
-        // Use 450 for a safe margin.
-        //
-
-        const CHUNK_SIZE =
-            450;
-
 
         for (
-            let start = 0;
-            start < count;
-            start += CHUNK_SIZE
+            const student of students
         ) {
 
-            const chunk =
-                targetStudents.slice(
-                    start,
-                    start +
-                    CHUNK_SIZE
-                );
+            await deleteDoc(
 
+                doc(
+                    db,
+                    "students",
+                    student.id
+                )
 
-            const batch =
-                writeBatch(
-                    db
-                );
-
-
-            chunk.forEach(
-                student => {
-
-                    const studentRef =
-                        doc(
-                            db,
-                            "students",
-                            student.id
-                        );
-
-
-                    batch.delete(
-                        studentRef
-                    );
-
-                }
             );
 
 
-            await batch.commit();
-
-
-            deleted +=
-                chunk.length;
+            completed++;
 
 
             updateDeleteProgress(
-                deleted,
-                count
+                completed,
+                students.length
             );
 
         }
 
 
         // =================================================
-        // REMOVE FROM LOCAL DATA
+        // UPDATE LOCAL DATA
         // =================================================
-
-        const deletedIds =
-            new Set(
-                targetStudents.map(
-                    student =>
-                        student.id
-                )
-            );
-
 
         allStudents =
             allStudents.filter(
-                student =>
-                    !deletedIds.has(
-                        student.id
-                    )
+                student => {
+
+                    return (
+                        getStudentType(
+                            student.data
+                        ) !==
+                        type
+                    );
+
+                }
             );
 
 
         updateDashboard();
 
 
-        // =================================================
-        // SUCCESS
-        // =================================================
-
-        hideDeleteProgress();
+        finishDeleteProgress();
 
 
-        alert(
-            `✅ ${categoryName} student accounts removed successfully.\n\n` +
-            `Removed: ${deleted}`
-        );
+        setTimeout(
+            () => {
 
+                alert(
 
-        console.log(
-            "===================================="
-        );
+                    "✅ Successfully removed " +
 
-        console.log(
-            "STUDENT REMOVAL SUCCESS"
-        );
+                    students.length +
 
-        console.log(
-            "Category:",
-            categoryName
-        );
+                    " " +
 
-        console.log(
-            "Deleted:",
-            deleted
-        );
+                    categoryName +
 
-        console.log(
-            "===================================="
+                    "."
+
+                );
+
+            },
+            800
         );
 
     }
     catch (error) {
 
         console.error(
-            "Student deletion error:",
+            "❌ Student deletion error:",
             error
         );
 
@@ -1950,11 +1896,11 @@ async function deleteStudentsByCategory(
 
 
         alert(
+
             "❌ Student removal failed.\n\n" +
-            (
-                error?.message ||
-                "Unknown error."
-            )
+
+            error.message
+
         );
 
     }
@@ -1963,114 +1909,186 @@ async function deleteStudentsByCategory(
 
 
 // =====================================================
-// REMOVE BUTTONS
+// SHOW DELETE PROGRESS
 // =====================================================
 
-function setupStudentRemovalButtons() {
+function showDeleteProgress(
+    categoryName,
+    total
+) {
 
-    const grade10Button =
-        document.getElementById(
-            "removeGrade10Btn"
-        );
-
-
-    const grade11Button =
-        document.getElementById(
-            "removeGrade11Btn"
-        );
-
-
-    const alButton =
-        document.getElementById(
-            "removeALBtn"
-        );
-
-
-    if (
-        !grade10Button ||
-        !grade11Button ||
-        !alButton
-    ) {
-
-        console.warn(
-            "Student removal buttons not found."
-        );
-
+    if (!deleteProgressModal) {
         return;
+    }
+
+
+    if (deleteProgressDescription) {
+
+        deleteProgressDescription.textContent =
+            "Removing " +
+            categoryName +
+            " from the system.";
 
     }
 
 
-    // =================================================
-    // LIMITED ADMIN
-    // =================================================
+    if (deleteProgressFill) {
 
-    if (!isSuperAdmin) {
-
-        [
-            grade10Button,
-            grade11Button,
-            alButton
-        ].forEach(
-            button => {
-
-                button.addEventListener(
-                    "click",
-                    function() {
-
-                        showAccessDenied();
-
-                    }
-                );
-
-
-                button.setAttribute(
-                    "title",
-                    "Super Administrator only"
-                );
-
-            }
-        );
-
-
-        return;
+        deleteProgressFill.style.width =
+            "0%";
 
     }
 
 
-    // =================================================
-    // SUPER ADMIN
-    // =================================================
+    if (deleteProgressText) {
 
-    grade10Button.addEventListener(
+        deleteProgressText.textContent =
+            "Preparing to remove " +
+            total +
+            " records...";
+
+    }
+
+
+    deleteProgressModal.style.display =
+        "flex";
+
+}
+
+
+// =====================================================
+// UPDATE DELETE PROGRESS
+// =====================================================
+
+function updateDeleteProgress(
+    completed,
+    total
+) {
+
+    const percentage =
+        total > 0
+            ? Math.round(
+                (
+                    completed /
+                    total
+                ) * 100
+            )
+            : 100;
+
+
+    if (deleteProgressFill) {
+
+        deleteProgressFill.style.width =
+            percentage + "%";
+
+    }
+
+
+    if (deleteProgressText) {
+
+        deleteProgressText.textContent =
+            "Removed " +
+            completed +
+            " of " +
+            total +
+            " records (" +
+            percentage +
+            "%)";
+
+    }
+
+}
+
+
+// =====================================================
+// FINISH DELETE PROGRESS
+// =====================================================
+
+function finishDeleteProgress() {
+
+    if (deleteProgressFill) {
+
+        deleteProgressFill.style.width =
+            "100%";
+
+    }
+
+
+    if (deleteProgressText) {
+
+        deleteProgressText.textContent =
+            "Removal completed successfully.";
+
+    }
+
+
+    setTimeout(
+        hideDeleteProgress,
+        700
+    );
+
+}
+
+
+// =====================================================
+// HIDE DELETE PROGRESS
+// =====================================================
+
+function hideDeleteProgress() {
+
+    if (deleteProgressModal) {
+
+        deleteProgressModal.style.display =
+            "none";
+
+    }
+
+}
+
+
+// =====================================================
+// DELETE BUTTONS
+// =====================================================
+
+if (removeGrade10Btn) {
+
+    removeGrade10Btn.addEventListener(
         "click",
-        function() {
+        () => {
 
-            deleteStudentsByCategory(
+            openDeleteModal(
                 "grade10"
             );
 
         }
     );
 
+}
 
-    grade11Button.addEventListener(
+
+if (removeGrade11Btn) {
+
+    removeGrade11Btn.addEventListener(
         "click",
-        function() {
+        () => {
 
-            deleteStudentsByCategory(
+            openDeleteModal(
                 "grade11"
             );
 
         }
     );
 
+}
 
-    alButton.addEventListener(
+
+if (removeALBtn) {
+
+    removeALBtn.addEventListener(
         "click",
-        function() {
+        () => {
 
-            deleteStudentsByCategory(
+            openDeleteModal(
                 "al"
             );
 
@@ -2080,7 +2098,149 @@ function setupStudentRemovalButtons() {
 }
 
 
-setupStudentRemovalButtons();
+// =====================================================
+// CANCEL DELETE
+// =====================================================
+
+if (deleteCancelBtn) {
+
+    deleteCancelBtn.addEventListener(
+        "click",
+        closeDeleteModal
+    );
+
+}
+
+
+// =====================================================
+// CONFIRM DELETE
+// =====================================================
+
+if (deleteConfirmBtn) {
+
+    deleteConfirmBtn.addEventListener(
+        "click",
+        async () => {
+
+            if (
+                !verifyDeletePassword()
+            ) {
+
+                return;
+
+            }
+
+
+            if (
+                !pendingDeleteType
+            ) {
+
+                return;
+
+            }
+
+
+            const type =
+                pendingDeleteType;
+
+
+            deleteConfirmBtn.disabled =
+                true;
+
+
+            deleteConfirmBtn.textContent =
+                "Deleting...";
+
+
+            try {
+
+                await deleteStudentsByType(
+                    type
+                );
+
+            }
+            finally {
+
+                deleteConfirmBtn.disabled =
+                    false;
+
+
+                deleteConfirmBtn.textContent =
+                    "🗑️ Confirm Removal";
+
+            }
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// PASSWORD ENTER KEY
+// =====================================================
+
+if (deletePasswordInput) {
+
+    deletePasswordInput.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key ===
+                "Enter"
+            ) {
+
+                event.preventDefault();
+
+
+                if (deleteConfirmBtn) {
+
+                    deleteConfirmBtn.click();
+
+                }
+
+            }
+
+
+            if (
+                event.key ===
+                "Escape"
+            ) {
+
+                closeDeleteModal();
+
+            }
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// CLICK OUTSIDE MODAL
+// =====================================================
+
+if (studentDeleteModal) {
+
+    studentDeleteModal.addEventListener(
+        "click",
+        event => {
+
+            if (
+                event.target ===
+                studentDeleteModal
+            ) {
+
+                closeDeleteModal();
+
+            }
+
+        }
+    );
+
+}
 
 
 // =====================================================
@@ -2092,8 +2252,6 @@ function refreshActiveStatus() {
     if (
         !allStudents.length
     ) {
-
-        updateDashboard();
 
         return;
 
@@ -2224,8 +2382,15 @@ console.log(
 );
 
 console.log(
-    "Firebase Auth User:",
-    auth?.currentUser?.email || "NONE"
+    "Student Removal:",
+    isSuperAdmin
+        ? "ENABLED"
+        : "HIDDEN"
+);
+
+console.log(
+    "Delete Password:",
+    "CONFIGURED"
 );
 
 console.log(
