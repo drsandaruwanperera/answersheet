@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Student Assessment Portal - Complete Registration"
+    >
+
+    <title>
+        Complete Registration
+    </title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        html,
+        body {
+
+            margin: 0;
+
+            padding: 0;
+
+            min-height: 100%;
+
+            font-family:
+                Inter,
+                "Segoe UI",
+                Arial,
+                sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #eef2ff,
+                    #f8fafc
+                );
+
+            color:
+                #0f172a;
+
+        }
+
+
+        .page {
+
+            min-height:
+                100vh;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            padding:
+                30px 18px;
+
+        }
+
+
+        .card {
+
+            width:
+                min(
+                    520px,
+                    100%
+                );
+
+            background:
+                #ffffff;
+
+            border-radius:
+                22px;
+
+            padding:
+                35px;
+
+            box-shadow:
+                0 20px 60px
+                rgba(
+                    15,
+                    23,
+                    42,
+                    0.12
+                );
+
+            border:
+                1px solid
+                #e2e8f0;
+
+        }
+
+
+        .logo {
+
+            width:
+                58px;
+
+            height:
+                58px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            border-radius:
+                16px;
+
+            background:
+                #f0ebff;
+
+            font-size:
+                28px;
+
+            margin-bottom:
+                18px;
+
+        }
+
+
+        .label {
+
+            display:
+                inline-block;
+
+            font-size:
+                11px;
+
+            font-weight:
+                800;
+
+            letter-spacing:
+                1px;
+
+            color:
+                #6d35f2;
+
+            margin-bottom:
+                7px;
+
+        }
+
+
+        h1 {
+
+            margin:
+                0 0 8px;
+
+            font-size:
+                27px;
+
+        }
+
+
+        .description {
+
+            margin:
+                0 0 28px;
+
+            color:
+                #64748b;
+
+            line-height:
+                1.6;
+
+            font-size:
+                14px;
+
+        }
+
+
+        .form-group {
+
+            margin-bottom:
+                18px;
+
+        }
+
+
+        label {
+
+            display:
+                block;
+
+            margin-bottom:
+                7px;
+
+            font-size:
+                13px;
+
+            font-weight:
+                750;
+
+            color:
+                #334155;
+
+        }
+
+
+        input {
+
+            width:
+                100%;
+
+            height:
+                48px;
+
+            padding:
+                0 14px;
+
+            border:
+                1px solid
+                #cbd5e1;
+
+            border-radius:
+                11px;
+
+            outline:
+                none;
+
+            font-family:
+                inherit;
+
+            font-size:
+                14px;
+
+            transition:
+                border-color .2s,
+                box-shadow .2s;
+
+        }
+
+
+        input:focus {
+
+            border-color:
+                #7c3aed;
+
+            box-shadow:
+                0 0 0 4px
+                rgba(
+                    124,
+                    58,
+                    237,
+                    0.10
+                );
+
+        }
+
+
+        input[readonly] {
+
+            background:
+                #f8fafc;
+
+            color:
+                #64748b;
+
+            cursor:
+                not-allowed;
+
+        }
+
+
+        .button {
+
+            width:
+                100%;
+
+            height:
+                50px;
+
+            border:
+                0;
+
+            border-radius:
+                12px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6d35f2,
+                    #7c3aed
+                );
+
+            color:
+                #ffffff;
+
+            font-family:
+                inherit;
+
+            font-size:
+                14px;
+
+            font-weight:
+                800;
+
+            cursor:
+                pointer;
+
+            margin-top:
+                5px;
+
+            box-shadow:
+                0 8px 20px
+                rgba(
+                    109,
+                    53,
+                    242,
+                    0.22
+                );
+
+        }
+
+
+        .button:hover {
+
+            transform:
+                translateY(-1px);
+
+        }
+
+
+        .button:disabled {
+
+            opacity:
+                .65;
+
+            cursor:
+                not-allowed;
+
+            transform:
+                none;
+
+        }
+
+
+        .message {
+
+            margin-top:
+                16px;
+
+            padding:
+                12px 14px;
+
+            border-radius:
+                10px;
+
+            display:
+                none;
+
+            font-size:
+                13px;
+
+            line-height:
+                1.5;
+
+        }
+
+
+        .message.show {
+
+            display:
+                block;
+
+        }
+
+
+        .message.error {
+
+            background:
+                #fef2f2;
+
+            color:
+                #b91c1c;
+
+            border:
+                1px solid
+                #fecaca;
+
+        }
+
+
+        .message.success {
+
+            background:
+                #f0fdf4;
+
+            color:
+                #15803d;
+
+            border:
+                1px solid
+                #bbf7d0;
+
+        }
+
+
+        .security-note {
+
+            margin-top:
+                22px;
+
+            padding:
+                14px;
+
+            border-radius:
+                12px;
+
+            background:
+                #f8fafc;
+
+            border:
+                1px solid
+                #e2e8f0;
+
+            font-size:
+                12px;
+
+            color:
+                #64748b;
+
+            line-height:
+                1.6;
+
+        }
+
+
+        .security-note strong {
+
+            color:
+                #334155;
+
+        }
+
+
+        .required {
+
+            color:
+                #dc2626;
+
+        }
+
+
+        @media (
+            max-width: 600px
+        ) {
+
+            .card {
+
+                padding:
+                    25px 20px;
+
+            }
+
+
+            h1 {
+
+                font-size:
+                    23px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="page">
+
+
+    <div class="card">
+
+
+        <!-- LOGO -->
+
+        <div class="logo">
+            🎓
+        </div>
+
+
+        <!-- HEADER -->
+
+        <span class="label">
+            FIRST LOGIN
+        </span>
+
+
+        <h1>
+            Complete Your Registration
+        </h1>
+
+
+        <p class="description">
+
+            Please complete your student profile
+            before accessing the Student Assessment Portal.
+
+        </p>
+
+
+        <!-- =========================================
+             ADMISSION NUMBER
+        ========================================== -->
+
+        <div class="form-group">
+
+            <label
+                for="studentId"
+            >
+                Admission Number
+            </label>
+
+
+            <input
+                type="text"
+                id="studentId"
+                readonly
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <!-- =========================================
+             FULL NAME
+        ========================================== -->
+
+        <div class="form-group">
+
+            <label
+                for="fullName"
+            >
+
+                Full Name
+
+                <span class="required">
+                    *
+                </span>
+
+            </label>
+
+
+            <input
+                type="text"
+                id="fullName"
+                placeholder="Enter your full name"
+                autocomplete="name"
+                maxlength="150"
+            >
+
+        </div>
+
+
+        <!-- =========================================
+             NIC
+        ========================================== -->
+
+        <div class="form-group">
+
+            <label
+                for="nicNumber"
+            >
+
+                NIC Number
+
+                <span class="required">
+                    *
+                </span>
+
+            </label>
+
+
+            <input
+                type="text"
+                id="nicNumber"
+                placeholder="Enter your NIC number"
+                autocomplete="off"
+                maxlength="12"
+            >
+
+        </div>
+
+
+        <!-- =========================================
+             NEW PASSWORD
+        ========================================== -->
+
+        <div class="form-group">
+
+            <label
+                for="newPassword"
+            >
+
+                New Password
+
+                <span class="required">
+                    *
+                </span>
+
+            </label>
+
+
+            <input
+                type="password"
+                id="newPassword"
+                placeholder="Create a new password"
+                autocomplete="new-password"
+            >
+
+        </div>
+
+
+        <!-- =========================================
+             CONFIRM PASSWORD
+        ========================================== -->
+
+        <div class="form-group">
+
+            <label
+                for="confirmPassword"
+            >
+
+                Confirm New Password
+
+                <span class="required">
+                    *
+                </span>
+
+            </label>
+
+
+            <input
+                type="password"
+                id="confirmPassword"
+                placeholder="Re-enter your new password"
+                autocomplete="new-password"
+            >
+
+        </div>
+
+
+        <!-- =========================================
+             SUBMIT
+        ========================================== -->
+
+        <button
+            type="button"
+            id="completeBtn"
+            class="button"
+        >
+
+            Complete Registration
+
+        </button>
+
+
+        <!-- MESSAGE -->
+
+        <div
+            id="message"
+            class="message"
+            aria-live="polite"
+        ></div>
+
+
+        <!-- SECURITY -->
+
+        <div class="security-note">
+
+            🔐
+
+            <strong>
+                Security Notice
+            </strong>
+
+            <br>
+
+            Your temporary password must be replaced
+            with a new password before you can access
+            the Student Portal.
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- ================================================
+     REGISTRATION JAVASCRIPT
+================================================ -->
+
+<script
+    type="module"
+    src="student-registration.js"
+></script>
+
+
+</body>
+
+</html>
