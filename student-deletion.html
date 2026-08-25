@@ -10,9 +10,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>
-        Student Deletion
-    </title>
+    <title>Student Deletion</title>
 
     <link
         rel="stylesheet"
@@ -21,471 +19,288 @@
 
     <style>
 
-        * {
-            box-sizing: border-box;
-        }
-
-
-        body {
-            margin: 0;
-            background: #f4f6fb;
-            color: #172033;
-            font-family:
-                Arial,
-                Helvetica,
-                sans-serif;
-        }
-
-
-        /* =====================================================
-           PAGE
-        ===================================================== */
-
         .deletion-page {
-
-            padding:
-                25px 30px 40px;
-
+            padding: 25px 30px 40px;
         }
-
 
         .page-header {
-
-            background:
-                white;
-
-            border:
-                1px solid #e2e8f0;
-
-            border-radius:
-                18px;
-
-            padding:
-                24px 28px;
-
-            display:
-                flex;
-
-            justify-content:
-                space-between;
-
-            align-items:
-                center;
-
-            gap:
-                20px;
-
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 18px;
+            padding: 24px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
         }
-
 
         .page-header h1 {
-
-            margin:
-                0;
-
-            font-size:
-                27px;
-
+            margin: 0;
+            font-size: 27px;
         }
-
 
         .page-header p {
-
-            margin:
-                6px 0 0;
-
-            color:
-                #64748b;
-
-            font-size:
-                14px;
-
+            margin: 7px 0 0;
+            color: #64748b;
+            font-size: 14px;
         }
 
-
         .danger-label {
-
-            display:
-                inline-flex;
-
-            padding:
-                7px 11px;
-
-            border-radius:
-                8px;
-
-            background:
-                #fee2e2;
-
-            color:
-                #b91c1c;
-
-            font-size:
-                11px;
-
-            font-weight:
-                800;
-
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: #fee2e2;
+            color: #b91c1c;
+            font-size: 11px;
+            font-weight: 800;
         }
 
 
         /* =====================================================
-           PASSWORD CARD
+           PASSWORD
         ===================================================== */
 
         .password-card {
-
-            max-width:
-                500px;
-
-            margin:
-                35px auto;
-
-            background:
-                white;
-
-            border:
-                1px solid #e2e8f0;
-
-            border-radius:
-                20px;
-
-            padding:
-                35px;
-
-            text-align:
-                center;
-
+            max-width: 500px;
+            margin: 35px auto;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 35px;
+            text-align: center;
             box-shadow:
                 0 15px 45px
-                rgba(15, 23, 42, .08);
-
+                rgba(15,23,42,.08);
         }
-
 
         .lock-icon {
-
-            width:
-                65px;
-
-            height:
-                65px;
-
-            margin:
-                0 auto 18px;
-
-            border-radius:
-                18px;
-
-            background:
-                #fef2f2;
-
-            display:
-                flex;
-
-            align-items:
-                center;
-
-            justify-content:
-                center;
-
-            font-size:
-                30px;
-
+            width: 65px;
+            height: 65px;
+            margin: 0 auto 18px;
+            border-radius: 18px;
+            background: #fef2f2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
         }
-
 
         .password-card h2 {
-
-            margin:
-                0;
-
-            font-size:
-                21px;
-
+            margin: 0;
         }
-
 
         .password-card p {
-
-            color:
-                #64748b;
-
-            font-size:
-                13px;
-
-            line-height:
-                1.6;
-
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.6;
         }
-
 
         .password-input {
-
-            width:
-                100%;
-
-            height:
-                45px;
-
-            border:
-                1px solid #cbd5e1;
-
-            border-radius:
-                10px;
-
-            padding:
-                0 13px;
-
-            margin-top:
-                10px;
-
-            outline:
-                none;
-
-            font-size:
-                14px;
-
+            width: 100%;
+            height: 45px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 0 13px;
+            margin-top: 10px;
+            outline: none;
+            font-size: 14px;
         }
-
-
-        .password-input:focus {
-
-            border-color:
-                #7c3aed;
-
-            box-shadow:
-                0 0 0 3px
-                rgba(124, 58, 237, .10);
-
-        }
-
 
         .unlock-btn {
-
-            width:
-                100%;
-
-            height:
-                45px;
-
-            margin-top:
-                12px;
-
-            border:
-                0;
-
-            border-radius:
-                10px;
-
-            background:
-                #7c3aed;
-
-            color:
-                white;
-
-            font-weight:
-                800;
-
-            cursor:
-                pointer;
-
+            width: 100%;
+            height: 45px;
+            margin-top: 12px;
+            border: 0;
+            border-radius: 10px;
+            background: #7c3aed;
+            color: #fff;
+            font-weight: 800;
+            cursor: pointer;
         }
 
-
         .password-error {
-
-            min-height:
-                20px;
-
-            margin-top:
-                10px;
-
-            color:
-                #dc2626;
-
-            font-size:
-                12px;
-
+            min-height: 20px;
+            margin-top: 10px;
+            color: #dc2626;
+            font-size: 12px;
         }
 
 
         /* =====================================================
-           REPORT
+           REPORT PANEL
         ===================================================== */
 
         .report-panel {
-
-            display:
-                none;
-
-        }
-
-
-        .toolbar {
-
-            margin-top:
-                20px;
-
-            background:
-                white;
-
-            border:
-                1px solid #e2e8f0;
-
-            border-radius:
-                15px;
-
-            padding:
-                15px;
-
-            display:
-                flex;
-
-            gap:
-                10px;
-
-        }
-
-
-        .search {
-
-            flex:
-                1;
-
-            height:
-                43px;
-
-            border:
-                1px solid #dbe3ef;
-
-            border-radius:
-                10px;
-
-            padding:
-                0 13px;
-
-            outline:
-                none;
-
-        }
-
-
-        .filter {
-
-            min-width:
-                180px;
-
-            height:
-                43px;
-
-            border:
-                1px solid #dbe3ef;
-
-            border-radius:
-                10px;
-
-            padding:
-                0 12px;
-
-            background:
-                white;
-
-        }
-
-
-        .refresh-btn {
-
-            height:
-                43px;
-
-            border:
-                0;
-
-            border-radius:
-                10px;
-
-            padding:
-                0 16px;
-
-            background:
-                #f1f5f9;
-
-            font-weight:
-                700;
-
-            cursor:
-                pointer;
-
+            display: none;
         }
 
 
         /* =====================================================
-           SUMMARY
+           SUMMARY TITLE
         ===================================================== */
 
-        .summary {
+        .summary-heading {
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
 
-            display:
-                grid;
+        .summary-heading h2 {
+            margin: 0;
+            font-size: 20px;
+        }
 
+        .summary-heading p {
+            margin: 5px 0 0;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+
+        /* =====================================================
+           TOTAL CARDS
+        ===================================================== */
+
+        .deletion-summary {
+            display: grid;
             grid-template-columns:
-                repeat(3, 1fr);
+                repeat(5, minmax(0, 1fr));
+            gap: 14px;
+        }
 
-            gap:
-                15px;
+        .deletion-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 18px;
+            position: relative;
+            overflow: hidden;
+        }
 
-            margin-top:
-                18px;
+        .deletion-card h3 {
+            margin: 0;
+            font-size: 13px;
+            color: #64748b;
+        }
 
+        .deletion-card strong {
+            display: block;
+            margin-top: 8px;
+            font-size: 29px;
+            color: #172033;
+        }
+
+        .deletion-card small {
+            display: block;
+            margin-top: 4px;
+            color: #94a3b8;
+            font-size: 11px;
+        }
+
+        .delete-series-btn {
+            width: 100%;
+            margin-top: 14px;
+            height: 35px;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            background: #fff1f2;
+            color: #dc2626;
+            font-size: 11px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .delete-series-btn:hover {
+            background: #fee2e2;
         }
 
 
-        .summary-card {
+        /* =====================================================
+           CURRENT AL
+        ===================================================== */
 
+        .current-al-card {
+            margin-top: 15px;
             background:
-                white;
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #5b21b6
+                );
+            color: #fff;
+            border-radius: 17px;
+            padding: 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
 
-            border:
-                1px solid #e2e8f0;
+        .current-al-card h3 {
+            margin: 0;
+            font-size: 18px;
+        }
 
-            border-radius:
-                14px;
+        .current-al-card p {
+            margin: 5px 0 0;
+            opacity: .8;
+            font-size: 12px;
+        }
 
-            padding:
-                18px;
+        .current-al-total {
+            font-size: 32px;
+            font-weight: 900;
+        }
 
+        .delete-al-btn {
+            border: 0;
+            background: #fff;
+            color: #7c3aed;
+            padding: 10px 15px;
+            border-radius: 9px;
+            font-weight: 800;
+            cursor: pointer;
         }
 
 
-        .summary-card span {
+        /* =====================================================
+           TOOLBAR
+        ===================================================== */
 
-            display:
-                block;
-
-            color:
-                #64748b;
-
-            font-size:
-                11px;
-
-            font-weight:
-                800;
-
+        .toolbar {
+            margin-top: 25px;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 15px;
+            display: flex;
+            gap: 10px;
         }
 
+        .search {
+            flex: 1;
+            height: 43px;
+            border: 1px solid #dbe3ef;
+            border-radius: 10px;
+            padding: 0 13px;
+            outline: none;
+        }
 
-        .summary-card strong {
+        .filter {
+            min-width: 180px;
+            height: 43px;
+            border: 1px solid #dbe3ef;
+            border-radius: 10px;
+            padding: 0 12px;
+            background: #fff;
+        }
 
-            display:
-                block;
-
-            margin-top:
-                6px;
-
-            font-size:
-                25px;
-
+        .refresh-btn {
+            height: 43px;
+            border: 0;
+            border-radius: 10px;
+            padding: 0 16px;
+            background: #f1f5f9;
+            font-weight: 700;
+            cursor: pointer;
         }
 
 
@@ -494,278 +309,145 @@
         ===================================================== */
 
         .table-card {
-
-            margin-top:
-                18px;
-
-            background:
-                white;
-
-            border:
-                1px solid #e2e8f0;
-
-            border-radius:
-                17px;
-
-            overflow:
-                hidden;
-
+            margin-top: 18px;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 17px;
+            overflow: hidden;
         }
-
 
         .table-title {
-
-            padding:
-                18px 20px;
-
-            border-bottom:
-                1px solid #e2e8f0;
-
-            display:
-                flex;
-
-            justify-content:
-                space-between;
-
-            align-items:
-                center;
-
+            padding: 18px 20px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-
 
         .table-title h2 {
-
-            margin:
-                0;
-
-            font-size:
-                17px;
-
+            margin: 0;
+            font-size: 17px;
         }
-
 
         .table-title span {
-
-            color:
-                #64748b;
-
-            font-size:
-                12px;
-
+            color: #64748b;
+            font-size: 12px;
         }
-
 
         .table-wrapper {
-
-            overflow-x:
-                auto;
-
+            overflow-x: auto;
         }
-
 
         table {
-
-            width:
-                100%;
-
-            border-collapse:
-                collapse;
-
-            min-width:
-                900px;
-
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
         }
-
 
         th {
-
-            padding:
-                13px 15px;
-
-            background:
-                #f8fafc;
-
-            border-bottom:
-                1px solid #e2e8f0;
-
-            text-align:
-                left;
-
-            color:
-                #64748b;
-
-            font-size:
-                11px;
-
-            text-transform:
-                uppercase;
-
+            padding: 13px 15px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: left;
+            color: #64748b;
+            font-size: 11px;
+            text-transform: uppercase;
         }
-
 
         td {
-
-            padding:
-                13px 15px;
-
-            border-bottom:
-                1px solid #f1f5f9;
-
-            font-size:
-                13px;
-
+            padding: 13px 15px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 13px;
         }
-
 
         .student-id {
-
-            font-weight:
-                800;
-
+            font-weight: 800;
         }
-
 
         .badge {
-
-            display:
-                inline-flex;
-
-            padding:
-                5px 9px;
-
-            border-radius:
-                7px;
-
-            font-size:
-                11px;
-
-            font-weight:
-                800;
-
+            display: inline-flex;
+            padding: 5px 9px;
+            border-radius: 7px;
+            font-size: 11px;
+            font-weight: 800;
         }
-
 
         .al {
-
-            background:
-                #f3e8ff;
-
-            color:
-                #7e22ce;
-
+            background: #f3e8ff;
+            color: #7e22ce;
         }
-
 
         .grade10 {
-
-            background:
-                #dbeafe;
-
-            color:
-                #1d4ed8;
-
+            background: #dbeafe;
+            color: #1d4ed8;
         }
-
 
         .grade11 {
-
-            background:
-                #dcfce7;
-
-            color:
-                #15803d;
-
+            background: #dcfce7;
+            color: #15803d;
         }
-
 
         .delete-btn {
-
-            border:
-                1px solid #fecaca;
-
-            background:
-                #fff1f2;
-
-            color:
-                #dc2626;
-
-            padding:
-                7px 11px;
-
-            border-radius:
-                8px;
-
-            font-size:
-                11px;
-
-            font-weight:
-                800;
-
-            cursor:
-                pointer;
-
+            border: 1px solid #fecaca;
+            background: #fff1f2;
+            color: #dc2626;
+            padding: 7px 11px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 800;
+            cursor: pointer;
         }
-
 
         .delete-btn:hover {
-
-            background:
-                #fee2e2;
-
+            background: #fee2e2;
         }
 
-
         .loading {
-
-            text-align:
-                center;
-
-            padding:
-                40px;
-
-            color:
-                #94a3b8;
-
+            text-align: center;
+            padding: 40px;
+            color: #94a3b8;
         }
 
 
         /* =====================================================
-           RESPONSIVE
+           MOBILE
         ===================================================== */
 
-        @media (
-            max-width: 800px
-        ) {
+        @media (max-width: 1100px) {
+
+            .deletion-summary {
+                grid-template-columns:
+                    repeat(3, 1fr);
+            }
+
+        }
+
+        @media (max-width: 700px) {
 
             .deletion-page {
-
-                padding:
-                    18px;
-
+                padding: 18px;
             }
 
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .deletion-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .current-al-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
 
             .toolbar {
-
-                flex-direction:
-                    column;
-
+                flex-direction: column;
             }
-
 
             .filter {
-
-                width:
-                    100%;
-
-            }
-
-
-            .summary {
-
-                grid-template-columns:
-                    1fr;
-
+                width: 100%;
             }
 
         }
@@ -899,10 +581,6 @@
             </a>
 
 
-            <!-- =================================================
-                 STUDENT DELETION
-            ================================================== -->
-
             <a
                 href="student-deletion.html"
                 class="nav-item superadmin-only active"
@@ -1002,8 +680,8 @@
                     </h1>
 
                     <p>
-                        Permanently remove student accounts
-                        from the Student Assessment Portal.
+                        View student totals and permanently
+                        remove student accounts.
                     </p>
 
                 </div>
@@ -1070,7 +748,7 @@
 
 
             <!-- =================================================
-                 REPORT PANEL
+                 REPORT
             ================================================== -->
 
             <section
@@ -1079,7 +757,222 @@
             >
 
 
-                <!-- FILTER -->
+                <!-- =================================================
+                     TOTALS
+                ================================================== -->
+
+                <div class="summary-heading">
+
+                    <h2>
+                        Student Totals
+                    </h2>
+
+                    <p>
+                        Delete an entire student series or
+                        individual student accounts.
+                    </p>
+
+                </div>
+
+
+                <div class="deletion-summary">
+
+
+                    <!-- A27000 -->
+
+                    <div class="deletion-card">
+
+                        <h3>
+                            A27000
+                        </h3>
+
+                        <strong id="totalA27000">
+                            0
+                        </strong>
+
+                        <small>
+                            A/L Students
+                        </small>
+
+                        <button
+                            type="button"
+                            class="delete-series-btn"
+                            data-series="A27000"
+                        >
+                            🗑 Delete All
+                        </button>
+
+                    </div>
+
+
+                    <!-- A28000 -->
+
+                    <div class="deletion-card">
+
+                        <h3>
+                            A28000
+                        </h3>
+
+                        <strong id="totalA28000">
+                            0
+                        </strong>
+
+                        <small>
+                            A/L Students
+                        </small>
+
+                        <button
+                            type="button"
+                            class="delete-series-btn"
+                            data-series="A28000"
+                        >
+                            🗑 Delete All
+                        </button>
+
+                    </div>
+
+
+                    <!-- A29000 -->
+
+                    <div class="deletion-card">
+
+                        <h3>
+                            A29000
+                        </h3>
+
+                        <strong id="totalA29000">
+                            0
+                        </strong>
+
+                        <small>
+                            A/L Students
+                        </small>
+
+                        <button
+                            type="button"
+                            class="delete-series-btn"
+                            data-series="A29000"
+                        >
+                            🗑 Delete All
+                        </button>
+
+                    </div>
+
+
+                    <!-- 26000 -->
+
+                    <div class="deletion-card">
+
+                        <h3>
+                            26000
+                        </h3>
+
+                        <strong id="total26000">
+                            0
+                        </strong>
+
+                        <small>
+                            Grade 11
+                        </small>
+
+                        <button
+                            type="button"
+                            class="delete-series-btn"
+                            data-series="26000"
+                        >
+                            🗑 Delete All
+                        </button>
+
+                    </div>
+
+
+                    <!-- 27000 -->
+
+                    <div class="deletion-card">
+
+                        <h3>
+                            27000
+                        </h3>
+
+                        <strong id="total27000">
+                            0
+                        </strong>
+
+                        <small>
+                            Grade 10
+                        </small>
+
+                        <button
+                            type="button"
+                            class="delete-series-btn"
+                            data-series="27000"
+                        >
+                            🗑 Delete All
+                        </button>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- =================================================
+                     CURRENT A/L
+                ================================================== -->
+
+                <div class="current-al-card">
+
+                    <div>
+
+                        <h3>
+                            Current A/L Students
+                        </h3>
+
+                        <p>
+                            A27000 + A28000 + A29000
+                        </p>
+
+                    </div>
+
+
+                    <div class="current-al-total">
+
+                        <span id="currentALTotal">
+                            0
+                        </span>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        id="deleteAllAL"
+                        class="delete-al-btn"
+                    >
+                        🗑 Delete All A/L
+                    </button>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     INDIVIDUAL SEARCH
+                ================================================== -->
+
+                <div class="summary-heading">
+
+                    <h2>
+                        Individual Student Deletion
+                    </h2>
+
+                    <p>
+                        Search by Student ID, name or NIC.
+                    </p>
+
+                </div>
+
 
                 <div class="toolbar">
 
@@ -1103,27 +996,27 @@
                         </option>
 
                         <option value="al">
-                            A/L Students
+                            Current A/L
                         </option>
 
                         <option value="a27000">
-                            A27000 Series
+                            A27000
                         </option>
 
                         <option value="a28000">
-                            A28000 Series
+                            A28000
                         </option>
 
                         <option value="a29000">
-                            A29000 Series
+                            A29000
                         </option>
 
                         <option value="grade11">
-                            Grade 11 — 26000 Series
+                            26000 — Grade 11
                         </option>
 
                         <option value="grade10">
-                            Grade 10 — 27000 Series
+                            27000 — Grade 10
                         </option>
 
                     </select>
@@ -1142,55 +1035,9 @@
 
 
 
-                <!-- SUMMARY -->
-
-                <div class="summary">
-
-
-                    <div class="summary-card">
-
-                        <span>
-                            STUDENTS SHOWN
-                        </span>
-
-                        <strong id="shownCount">
-                            0
-                        </strong>
-
-                    </div>
-
-
-                    <div class="summary-card">
-
-                        <span>
-                            A/L STUDENTS
-                        </span>
-
-                        <strong id="alCount">
-                            0
-                        </strong>
-
-                    </div>
-
-
-                    <div class="summary-card">
-
-                        <span>
-                            GRADE STUDENTS
-                        </span>
-
-                        <strong id="gradeCount">
-                            0
-                        </strong>
-
-                    </div>
-
-
-                </div>
-
-
-
-                <!-- TABLE -->
+                <!-- =================================================
+                     TABLE
+                ================================================== -->
 
                 <div class="table-card">
 
@@ -1225,7 +1072,7 @@
                                     </th>
 
                                     <th>
-                                        Full Name
+                                        Student Name
                                     </th>
 
                                     <th>
@@ -1233,7 +1080,7 @@
                                     </th>
 
                                     <th>
-                                        Password Status
+                                        Series
                                     </th>
 
                                     <th>
