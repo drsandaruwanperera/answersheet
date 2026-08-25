@@ -17,6 +17,46 @@ const getDocs =
 const onSnapshot =
     firebase.onSnapshot;
 
+const doc =
+    firebase.doc;
+
+const deleteDoc =
+    firebase.deleteDoc;
+
+const writeBatch =
+    firebase.writeBatch;
+
+
+// =====================================================
+// FIREBASE AUTHENTICATION
+// =====================================================
+//
+// IMPORTANT:
+// firebase.js must export:
+//
+// auth
+// reauthenticateWithCredential
+// EmailAuthProvider
+//
+// Example:
+//
+// export {
+//     auth,
+//     reauthenticateWithCredential,
+//     EmailAuthProvider
+// };
+//
+// =====================================================
+
+const auth =
+    firebase.auth;
+
+const reauthenticateWithCredential =
+    firebase.reauthenticateWithCredential;
+
+const EmailAuthProvider =
+    firebase.EmailAuthProvider;
+
 
 // =====================================================
 // SESSION
@@ -50,10 +90,6 @@ const storedRole =
 
 // =====================================================
 // ROLE
-// =====================================================
-//
-// full / superadmin = SUPER ADMIN
-// limited / admin   = NORMAL ADMIN
 // =====================================================
 
 const isSuperAdmin =
@@ -152,6 +188,72 @@ const importStudentsLink =
 const statisticsLink =
     document.getElementById(
         "statisticsLink"
+    );
+
+
+// -----------------------------------------------------
+// STUDENT COUNT ELEMENTS
+// -----------------------------------------------------
+
+const grade10StudentCount =
+    document.getElementById(
+        "grade10StudentCount"
+    );
+
+
+const grade11StudentCount =
+    document.getElementById(
+        "grade11StudentCount"
+    );
+
+
+const alStudentCount =
+    document.getElementById(
+        "alStudentCount"
+    );
+
+
+const allStudentCount =
+    document.getElementById(
+        "allStudentCount"
+    );
+
+
+// -----------------------------------------------------
+// DELETE BUTTONS
+// -----------------------------------------------------
+
+const removeGrade10Btn =
+    document.getElementById(
+        "removeGrade10Btn"
+    );
+
+
+const removeGrade11Btn =
+    document.getElementById(
+        "removeGrade11Btn"
+    );
+
+
+const removeALBtn =
+    document.getElementById(
+        "removeALBtn"
+    );
+
+
+const studentDeleteStatus =
+    document.getElementById(
+        "studentDeleteStatus"
+    );
+
+
+// -----------------------------------------------------
+// DANGER ZONE
+// -----------------------------------------------------
+
+const dangerZone =
+    document.getElementById(
+        "dangerZone"
     );
 
 
@@ -312,19 +414,12 @@ function hideAccessDenied() {
 // =====================================================
 // SUPER ADMIN ACCESS CONTROL
 // =====================================================
-//
-// IMPORTANT:
-// This function DOES NOT create lock icons.
-// CSS handles the single 🔒 icon.
-//
-// Therefore duplicate lock icons will not occur.
-// =====================================================
 
 function setupRoleAccess() {
 
 
     // =================================================
-    // SIDEBAR SUPER ADMIN ITEMS
+    // SIDEBAR
     // =================================================
 
     const superAdminNavItems =
@@ -334,7 +429,7 @@ function setupRoleAccess() {
 
 
     // =================================================
-    // MANAGEMENT LINKS
+    // LINKS
     // =================================================
 
     const superAdminLinks =
@@ -344,7 +439,7 @@ function setupRoleAccess() {
 
 
     // =================================================
-    // MANAGEMENT CARDS
+    // CARDS
     // =================================================
 
     const superAdminCards =
@@ -359,11 +454,6 @@ function setupRoleAccess() {
 
     if (isSuperAdmin) {
 
-
-        // ---------------------------------------------
-        // NAV
-        // ---------------------------------------------
-
         superAdminNavItems.forEach(
             item => {
 
@@ -371,11 +461,9 @@ function setupRoleAccess() {
                     "locked-menu"
                 );
 
-
                 item.removeAttribute(
                     "aria-disabled"
                 );
-
 
                 item.removeAttribute(
                     "title"
@@ -384,10 +472,6 @@ function setupRoleAccess() {
             }
         );
 
-
-        // ---------------------------------------------
-        // LINKS
-        // ---------------------------------------------
 
         superAdminLinks.forEach(
             link => {
@@ -396,11 +480,9 @@ function setupRoleAccess() {
                     "access-locked"
                 );
 
-
                 link.removeAttribute(
                     "aria-disabled"
                 );
-
 
                 link.removeAttribute(
                     "title"
@@ -409,10 +491,6 @@ function setupRoleAccess() {
             }
         );
 
-
-        // ---------------------------------------------
-        // CARDS
-        // ---------------------------------------------
 
         superAdminCards.forEach(
             card => {
@@ -441,22 +519,16 @@ function setupRoleAccess() {
                 "locked-menu"
             );
 
-
             item.setAttribute(
                 "aria-disabled",
                 "true"
             );
-
 
             item.setAttribute(
                 "title",
                 "Super Administrator only"
             );
 
-
-            // -----------------------------------------
-            // CLICK PROTECTION
-            // -----------------------------------------
 
             item.addEventListener(
                 "click",
@@ -475,10 +547,6 @@ function setupRoleAccess() {
     );
 
 
-    // =================================================
-    // MANAGEMENT LINKS
-    // =================================================
-
     superAdminLinks.forEach(
         link => {
 
@@ -486,12 +554,10 @@ function setupRoleAccess() {
                 "access-locked"
             );
 
-
             link.setAttribute(
                 "aria-disabled",
                 "true"
             );
-
 
             link.setAttribute(
                 "title",
@@ -516,10 +582,6 @@ function setupRoleAccess() {
     );
 
 
-    // =================================================
-    // MANAGEMENT CARDS
-    // =================================================
-
     superAdminCards.forEach(
         card => {
 
@@ -534,6 +596,75 @@ function setupRoleAccess() {
 
 
 setupRoleAccess();
+
+
+// =====================================================
+// DELETE ACCESS CONTROL
+// =====================================================
+
+function setupDeleteAccess() {
+
+    const deleteButtons = [
+
+        removeGrade10Btn,
+        removeGrade11Btn,
+        removeALBtn
+
+    ];
+
+
+    deleteButtons.forEach(
+        button => {
+
+            if (!button) {
+                return;
+            }
+
+
+            if (!isSuperAdmin) {
+
+                button.classList.add(
+                    "access-locked"
+                );
+
+
+                button.setAttribute(
+                    "title",
+                    "Super Administrator only"
+                );
+
+
+                button.addEventListener(
+                    "click",
+                    event => {
+
+                        event.preventDefault();
+
+                        showAccessDenied();
+
+                    }
+                );
+
+            }
+
+        }
+    );
+
+
+    if (
+        dangerZone &&
+        !isSuperAdmin
+    ) {
+
+        dangerZone.style.display =
+            "none";
+
+    }
+
+}
+
+
+setupDeleteAccess();
 
 
 // =====================================================
@@ -690,8 +821,6 @@ function getViewedCount(data) {
     let count = 0;
 
 
-    // Supports papers 01 - 13
-
     for (
         let i = 1;
         i <= 13;
@@ -745,6 +874,84 @@ function setText(
 
 
 // =====================================================
+// UPDATE STUDENT COUNTS
+// =====================================================
+
+function updateStudentCounts() {
+
+    let grade10Count = 0;
+
+    let grade11Count = 0;
+
+    let alCount = 0;
+
+
+    allStudents.forEach(
+        student => {
+
+            const type =
+                getStudentType(
+                    student.data
+                );
+
+
+            if (
+                type === "grade10"
+            ) {
+
+                grade10Count++;
+
+            }
+            else if (
+                type === "grade11"
+            ) {
+
+                grade11Count++;
+
+            }
+            else {
+
+                alCount++;
+
+            }
+
+        }
+    );
+
+
+    const total =
+        grade10Count +
+        grade11Count +
+        alCount;
+
+
+    setText(
+        grade10StudentCount,
+        grade10Count
+    );
+
+
+    setText(
+        grade11StudentCount,
+        grade11Count
+    );
+
+
+    setText(
+        alStudentCount,
+        alCount
+    );
+
+
+    setText(
+        allStudentCount,
+        total
+    );
+
+}
+
+
+// =====================================================
 // UPDATE DASHBOARD
 // =====================================================
 
@@ -781,10 +988,6 @@ function updateDashboard() {
 
     };
 
-
-    // =================================================
-    // PROCESS STUDENTS
-    // =================================================
 
     allStudents.forEach(
         student => {
@@ -828,7 +1031,6 @@ function updateDashboard() {
 
                 categories[type].total++;
 
-
                 categories[type].views +=
                     viewed;
 
@@ -868,7 +1070,14 @@ function updateDashboard() {
 
 
     // =================================================
-    // ALL STUDENTS
+    // STUDENT COUNTS
+    // =================================================
+
+    updateStudentCounts();
+
+
+    // =================================================
+    // ALL
     // =================================================
 
     setText(
@@ -1086,13 +1295,37 @@ async function loadStudents() {
             "—"
         );
 
+
+        setText(
+            grade10StudentCount,
+            "—"
+        );
+
+
+        setText(
+            grade11StudentCount,
+            "—"
+        );
+
+
+        setText(
+            alStudentCount,
+            "—"
+        );
+
+
+        setText(
+            allStudentCount,
+            "—"
+        );
+
     }
 
 }
 
 
 // =====================================================
-// REAL-TIME FIREBASE LISTENER
+// REALTIME FIREBASE LISTENER
 // =====================================================
 
 function startRealtimeUpdates() {
@@ -1210,6 +1443,643 @@ function refreshActiveStatus() {
 
 
 // =====================================================
+// FIREBASE AUTH PASSWORD VERIFICATION
+// =====================================================
+
+async function verifySuperAdminPassword() {
+
+    if (!isSuperAdmin) {
+
+        showAccessDenied();
+
+        return false;
+
+    }
+
+
+    // =================================================
+    // CHECK AUTH MODULES
+    // =================================================
+
+    if (
+        !auth ||
+        !reauthenticateWithCredential ||
+        !EmailAuthProvider
+    ) {
+
+        alert(
+            "Firebase Authentication is not configured for Super Admin password verification.\n\n" +
+            "Please check firebase.js exports."
+        );
+
+
+        console.error(
+            "Missing Firebase Auth exports:",
+            {
+                auth,
+                reauthenticateWithCredential,
+                EmailAuthProvider
+            }
+        );
+
+
+        return false;
+
+    }
+
+
+    // =================================================
+    // CURRENT FIREBASE USER
+    // =================================================
+
+    const currentUser =
+        auth.currentUser;
+
+
+    if (!currentUser) {
+
+        alert(
+            "Super Admin authentication session was not found.\n\n" +
+            "Please sign in again."
+        );
+
+
+        return false;
+
+    }
+
+
+    // =================================================
+    // PASSWORD
+    // =================================================
+
+    const password =
+        window.prompt(
+            "🔐 Super Administrator Verification\n\n" +
+            "Enter your Super Admin password:"
+        );
+
+
+    if (
+        password === null
+    ) {
+
+        return false;
+
+    }
+
+
+    if (
+        password.trim() === ""
+    ) {
+
+        alert(
+            "Password cannot be empty."
+        );
+
+
+        return false;
+
+    }
+
+
+    // =================================================
+    // RE-AUTHENTICATE
+    // =================================================
+
+    try {
+
+        const credential =
+            EmailAuthProvider.credential(
+                currentUser.email,
+                password
+            );
+
+
+        await reauthenticateWithCredential(
+            currentUser,
+            credential
+        );
+
+
+        console.log(
+            "✅ Super Admin password verified."
+        );
+
+
+        return true;
+
+    }
+    catch (error) {
+
+        console.error(
+            "Super Admin password verification failed:",
+            error
+        );
+
+
+        alert(
+            "❌ Incorrect Super Admin password.\n\n" +
+            "No students were deleted."
+        );
+
+
+        return false;
+
+    }
+
+}
+
+
+// =====================================================
+// GET STUDENTS BY TYPE
+// =====================================================
+
+function getStudentsByType(
+    type
+) {
+
+    return allStudents.filter(
+        student => {
+
+            return (
+                getStudentType(
+                    student.data
+                ) === type
+            );
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// DELETE STUDENT DOCUMENTS
+// =====================================================
+//
+// Firestore batches support a maximum of 500 operations.
+// Therefore this function deletes in batches of 400.
+//
+
+async function deleteStudentDocuments(
+    students
+) {
+
+    if (
+        !students ||
+        students.length === 0
+    ) {
+
+        return;
+
+    }
+
+
+    const BATCH_SIZE =
+        400;
+
+
+    for (
+        let start = 0;
+        start < students.length;
+        start += BATCH_SIZE
+    ) {
+
+        const batch =
+            writeBatch(
+                db
+            );
+
+
+        const currentBatch =
+            students.slice(
+                start,
+                start + BATCH_SIZE
+            );
+
+
+        currentBatch.forEach(
+            student => {
+
+                const studentRef =
+                    doc(
+                        db,
+                        "students",
+                        student.id
+                    );
+
+
+                batch.delete(
+                    studentRef
+                );
+
+            }
+        );
+
+
+        await batch.commit();
+
+
+        console.log(
+            "Deleted batch:",
+            currentBatch.length
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// DELETE GRADE
+// =====================================================
+
+async function removeAllStudentsOfType(
+    type,
+    displayName
+) {
+
+    // =================================================
+    // SUPER ADMIN ONLY
+    // =================================================
+
+    if (!isSuperAdmin) {
+
+        showAccessDenied();
+
+        return;
+
+    }
+
+
+    // =================================================
+    // GET TARGET STUDENTS
+    // =================================================
+
+    const targetStudents =
+        getStudentsByType(
+            type
+        );
+
+
+    const count =
+        targetStudents.length;
+
+
+    // =================================================
+    // NO STUDENTS
+    // =================================================
+
+    if (
+        count === 0
+    ) {
+
+        alert(
+            `There are currently no ${displayName} students to remove.`
+        );
+
+
+        return;
+
+    }
+
+
+    // =================================================
+    // FIRST CONFIRMATION
+    // =================================================
+
+    const firstConfirmation =
+        confirm(
+            `⚠️ REMOVE ALL ${displayName.toUpperCase()} STUDENTS?\n\n` +
+
+            `Students to be removed: ${count}\n\n` +
+
+            `This action will permanently delete these student records.\n\n` +
+
+            `Other grades will NOT be affected.\n\n` +
+
+            `Do you want to continue?`
+        );
+
+
+    if (
+        !firstConfirmation
+    ) {
+
+        return;
+
+    }
+
+
+    // =================================================
+    // SECOND CONFIRMATION
+    // =================================================
+
+    const secondConfirmation =
+        confirm(
+            `⚠️ FINAL CONFIRMATION\n\n` +
+
+            `You are about to permanently delete ${count} ${displayName} student(s).\n\n` +
+
+            `This action cannot be undone.\n\n` +
+
+            `Press OK only if you are absolutely sure.`
+        );
+
+
+    if (
+        !secondConfirmation
+    ) {
+
+        return;
+
+    }
+
+
+    // =================================================
+    // PASSWORD
+    // =================================================
+
+    const verified =
+        await verifySuperAdminPassword();
+
+
+    if (!verified) {
+
+        return;
+
+    }
+
+
+    // =================================================
+    // DISABLE BUTTONS
+    // =================================================
+
+    setDeleteButtonsDisabled(
+        true
+    );
+
+
+    setDeleteStatus(
+        `Deleting ${count} ${displayName} students...`,
+        "loading"
+    );
+
+
+    try {
+
+        // =================================================
+        // DELETE
+        // =================================================
+
+        await deleteStudentDocuments(
+            targetStudents
+        );
+
+
+        // =================================================
+        // REMOVE FROM LOCAL ARRAY
+        // =================================================
+
+        const deletedIds =
+            new Set(
+                targetStudents.map(
+                    student =>
+                        student.id
+                )
+            );
+
+
+        allStudents =
+            allStudents.filter(
+                student =>
+                    !deletedIds.has(
+                        student.id
+                    )
+            );
+
+
+        // =================================================
+        // UPDATE UI
+        // =================================================
+
+        updateDashboard();
+
+
+        setDeleteStatus(
+            `✅ Successfully removed ${count} ${displayName} student(s).`,
+            "success"
+        );
+
+
+        alert(
+            `✅ Successfully removed ${count} ${displayName} student(s).`
+        );
+
+
+        console.log(
+            `🗑️ Deleted ${count} ${displayName} students.`
+        );
+
+    }
+    catch (error) {
+
+        console.error(
+            `Failed to delete ${displayName} students:`,
+            error
+        );
+
+
+        setDeleteStatus(
+            `❌ Failed to remove ${displayName} students.`,
+            "error"
+        );
+
+
+        alert(
+            `❌ Failed to remove ${displayName} students.\n\n` +
+            error.message
+        );
+
+    }
+    finally {
+
+        setDeleteButtonsDisabled(
+            false
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// DELETE BUTTON STATE
+// =====================================================
+
+function setDeleteButtonsDisabled(
+    disabled
+) {
+
+    const buttons = [
+
+        removeGrade10Btn,
+        removeGrade11Btn,
+        removeALBtn
+
+    ];
+
+
+    buttons.forEach(
+        button => {
+
+            if (!button) {
+                return;
+            }
+
+
+            button.disabled =
+                disabled;
+
+
+            if (disabled) {
+
+                button.style.opacity =
+                    "0.55";
+
+                button.style.pointerEvents =
+                    "none";
+
+            }
+            else {
+
+                button.style.opacity =
+                    "";
+
+                button.style.pointerEvents =
+                    "";
+
+            }
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// DELETE STATUS
+// =====================================================
+
+function setDeleteStatus(
+    message,
+    type
+) {
+
+    if (
+        !studentDeleteStatus
+    ) {
+
+        return;
+
+    }
+
+
+    studentDeleteStatus.textContent =
+        message;
+
+
+    studentDeleteStatus.className =
+        "student-delete-status";
+
+
+    if (type) {
+
+        studentDeleteStatus.classList.add(
+            type
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// DELETE BUTTON EVENTS
+// =====================================================
+
+
+// -----------------------------------------------------
+// GRADE 10
+// -----------------------------------------------------
+
+if (
+    removeGrade10Btn
+) {
+
+    removeGrade10Btn.addEventListener(
+        "click",
+        () => {
+
+            removeAllStudentsOfType(
+                "grade10",
+                "Grade 10"
+            );
+
+        }
+    );
+
+}
+
+
+// -----------------------------------------------------
+// GRADE 11
+// -----------------------------------------------------
+
+if (
+    removeGrade11Btn
+) {
+
+    removeGrade11Btn.addEventListener(
+        "click",
+        () => {
+
+            removeAllStudentsOfType(
+                "grade11",
+                "Grade 11"
+            );
+
+        }
+    );
+
+}
+
+
+// -----------------------------------------------------
+// A/L
+// -----------------------------------------------------
+
+if (
+    removeALBtn
+) {
+
+    removeALBtn.addEventListener(
+        "click",
+        () => {
+
+            removeAllStudentsOfType(
+                "al",
+                "A/L"
+            );
+
+        }
+    );
+
+}
+
+
+// =====================================================
 // DIRECT PAGE PROTECTION
 // =====================================================
 
@@ -1267,7 +2137,7 @@ loadStudents();
 
 
 // =====================================================
-// REAL-TIME
+// REALTIME
 // =====================================================
 
 startRealtimeUpdates();
@@ -1329,6 +2199,14 @@ console.log(
 console.log(
     "Super Admin:",
     isSuperAdmin
+);
+
+console.log(
+    "Grade 10 / Grade 11 / A/L DELETE:"
+);
+
+console.log(
+    "Super Admin password required"
 );
 
 console.log(
