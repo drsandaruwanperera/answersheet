@@ -1,7 +1,7 @@
 // =====================================================
 // GRADE 11 TERM PAPER PAGE
 // Firebase Controlled Paper Visibility
-// Professional Paper Cards
+// TOP RANKING ANSWER PDF SYSTEM
 // =====================================================
 
 import {
@@ -19,6 +19,7 @@ const paperContainer =
     document.getElementById(
         "paperContainer"
     );
+
 
 const termTitle =
     document.getElementById(
@@ -100,7 +101,7 @@ const TERM_TITLES = {
 
 
 // =====================================================
-// SET TITLE
+// SET PAGE TITLE
 // =====================================================
 
 if (termTitle) {
@@ -183,31 +184,76 @@ const PAPER_CONFIG = [
 
 
 // =====================================================
-// PAPER PAGE URL
+// GET ANSWER PDF URL
 // =====================================================
 //
-// Example:
+// Actual GitHub structure:
 //
-// grade11-term3-paper01.html
-// grade11-term3-paper02.html
+// answers/grade11/term3/
+//     top-ranking-01-part-a.pdf
+//     top-ranking-01-part-b.pdf
 //
-// If your actual filenames are different,
-// change only this function.
+//     top-ranking-02-part-a.pdf
+//     top-ranking-02-part-b.pdf
+//
+// Same structure for term1 / term2.
 // =====================================================
 
-function getPaperURL(number) {
+function getAnswerURL(
+    number,
+    part
+) {
+
+    const paperNumber =
+        String(number).padStart(
+            2,
+            "0"
+        );
+
+
+    const partLetter =
+        String(part)
+            .toLowerCase();
+
 
     return (
-        `grade11-${currentTerm}-paper` +
-        String(number).padStart(2, "0") +
-        ".html"
+        `answers/grade11/${currentTerm}/` +
+        `top-ranking-${paperNumber}-part-${partLetter}.pdf`
     );
 
 }
 
 
 // =====================================================
-// CREATE PROFESSIONAL PAPER CARD
+// OPEN ANSWER PDF
+// =====================================================
+
+function openAnswer(
+    number,
+    part
+) {
+
+    const url =
+        getAnswerURL(
+            number,
+            part
+        );
+
+
+    console.log(
+        "Opening answer:",
+        url
+    );
+
+
+    window.location.href =
+        url;
+
+}
+
+
+// =====================================================
+// CREATE PAPER CARD
 // =====================================================
 
 function createPaperCard(
@@ -230,26 +276,36 @@ function createPaperCard(
 
     card.innerHTML = `
 
-        <!-- PAPER ICON -->
+        <!-- ==========================================
+             ICON
+        =========================================== -->
 
         <div class="paper-card-icon">
             🏆
         </div>
 
 
-        <!-- PAPER TITLE -->
+        <!-- ==========================================
+             TITLE
+        =========================================== -->
 
         <h2>
             ${paper.title}
         </h2>
 
 
+        <!-- ==========================================
+             SUBTITLE
+        =========================================== -->
+
         <p class="paper-card-subtitle">
             Answers
         </p>
 
 
-        <!-- ANSWER SECTION -->
+        <!-- ==========================================
+             ANSWER SECTION
+        =========================================== -->
 
         <div class="answer-section">
 
@@ -307,7 +363,7 @@ function createPaperCard(
 
 
     // =================================================
-    // PART A BUTTON
+    // PART A
     // =================================================
 
     const partA =
@@ -327,7 +383,7 @@ function createPaperCard(
                 event.stopPropagation();
 
 
-                openPaper(
+                openAnswer(
                     paper.number,
                     "A"
                 );
@@ -339,7 +395,7 @@ function createPaperCard(
 
 
     // =================================================
-    // PART B BUTTON
+    // PART B
     // =================================================
 
     const partB =
@@ -359,7 +415,7 @@ function createPaperCard(
                 event.stopPropagation();
 
 
-                openPaper(
+                openAnswer(
                     paper.number,
                     "B"
                 );
@@ -376,32 +432,7 @@ function createPaperCard(
 
 
 // =====================================================
-// OPEN PAPER
-// =====================================================
-
-function openPaper(
-    number,
-    part
-) {
-
-    const paperURL =
-        getPaperURL(
-            number
-        );
-
-
-    window.location.href =
-        paperURL +
-        "?part=" +
-        encodeURIComponent(
-            part
-        );
-
-}
-
-
-// =====================================================
-// SHOW NO PAPERS
+// NO PAPERS MESSAGE
 // =====================================================
 
 function showNoPapers() {
@@ -418,14 +449,14 @@ function showNoPapers() {
             style="
                 grid-column:1/-1;
                 text-align:center;
-                padding:70px 20px;
+                padding:65px 20px;
             "
         >
 
             <div
                 style="
-                    width:70px;
-                    height:70px;
+                    width:72px;
+                    height:72px;
                     margin:0 auto 18px;
                     display:flex;
                     align-items:center;
@@ -550,7 +581,7 @@ async function loadPaperSettings() {
 
 
         // =================================================
-        // GET SETTINGS
+        // SETTINGS
         // =================================================
 
         const settings =
@@ -581,7 +612,7 @@ async function loadPaperSettings() {
 
 
         // =================================================
-        // CLEAR OLD CARDS
+        // CLEAR CONTAINER
         // =================================================
 
         paperContainer.innerHTML =
@@ -606,18 +637,15 @@ async function loadPaperSettings() {
 
 
                 console.log(
-                    paper.field +
-                    ": " +
-                    (
-                        enabled
-                            ? "ENABLED"
-                            : "DISABLED"
-                    )
+                    paper.field,
+                    enabled
+                        ? "ENABLED"
+                        : "DISABLED"
                 );
 
 
                 // =========================================
-                // DISABLED = DO NOT SHOW
+                // DISABLED
                 // =========================================
 
                 if (
@@ -751,7 +779,13 @@ console.log(
 );
 
 console.log(
-    "Firebase visibility: ACTIVE"
+    "Answer PDFs:",
+    "ACTIVE"
+);
+
+console.log(
+    "Firebase visibility:",
+    "ACTIVE"
 );
 
 console.log(
