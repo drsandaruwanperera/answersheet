@@ -1,3 +1,7 @@
+// =====================================================
+// FIREBASE
+// =====================================================
+
 import {
     db,
     collection,
@@ -33,10 +37,6 @@ if (!adminLoggedIn) {
 
 }
 
-
-// =====================================================
-// SUPER ADMIN ONLY
-// =====================================================
 
 const isSuperAdmin =
     adminRole === "superadmin" ||
@@ -92,6 +92,10 @@ const logoutBtn =
 
 const PAPER_CONFIG = {
 
+    // =================================================
+    // GRADE 10
+    // =================================================
+
     grade10: {
 
         groups: [
@@ -124,6 +128,10 @@ const PAPER_CONFIG = {
 
     },
 
+
+    // =================================================
+    // GRADE 11
+    // =================================================
 
     grade11: {
 
@@ -160,6 +168,7 @@ const PAPER_CONFIG = {
                 type: "past",
 
                 years: [
+
                     2016,
                     2017,
                     2018,
@@ -170,8 +179,36 @@ const PAPER_CONFIG = {
                     2023,
                     2024,
                     2025
+
                 ]
 
+            }
+
+        ]
+
+    },
+
+
+    // =================================================
+    // A/L
+    // =================================================
+
+    al: {
+
+        groups: [
+
+            {
+                id: "model",
+                title: "Model Paper",
+                subtitle: "A/L Model Papers",
+                type: "al-single"
+            },
+
+            {
+                id: "province",
+                title: "Province Paper",
+                subtitle: "A/L Province Papers",
+                type: "al-single"
             }
 
         ]
@@ -188,11 +225,20 @@ const PAPER_CONFIG = {
 let paperSettings = {
 
     grade10: {
+
         modelPapersEnabled: true,
         pastPapersEnabled: true
+
     },
 
-    grade11: {}
+    grade11: {},
+
+    al: {
+
+        modelPaperEnabled: true,
+        provincePaperEnabled: true
+
+    }
 
 };
 
@@ -414,11 +460,52 @@ function createPaperItem(
         );
 
 
-    const enabled =
-        getPaperValue(
-            category,
-            field
-        );
+    let enabled;
+
+
+    // =================================================
+    // A/L
+    // =================================================
+
+    if (
+        category === "al"
+    ) {
+
+        if (
+            group.id === "model"
+        ) {
+
+            enabled =
+                paperSettings
+                    .al
+                    .modelPaperEnabled === true;
+
+        }
+        else {
+
+            enabled =
+                paperSettings
+                    .al
+                    .provincePaperEnabled === true;
+
+        }
+
+    }
+
+
+    // =================================================
+    // GRADE 10 / 11
+    // =================================================
+
+    else {
+
+        enabled =
+            getPaperValue(
+                category,
+                field
+            );
+
+    }
 
 
     const item =
@@ -433,6 +520,7 @@ function createPaperItem(
 
     item.dataset.category =
         category;
+
 
     item.dataset.field =
         field;
@@ -452,11 +540,13 @@ function createPaperItem(
                     ${label}
                 </strong>
 
-                <span class="paper-status ${
-                    enabled
-                        ? "active"
-                        : "disabled"
-                }">
+                <span
+                    class="paper-status ${
+                        enabled
+                            ? "active"
+                            : "disabled"
+                    }"
+                >
 
                     ${
                         enabled
@@ -500,11 +590,49 @@ function createPaperItem(
         "change",
         function () {
 
-            setPaperValue(
-                category,
-                field,
-                checkbox.checked
-            );
+            // =========================================
+            // A/L
+            // =========================================
+
+            if (
+                category === "al"
+            ) {
+
+                if (
+                    group.id === "model"
+                ) {
+
+                    paperSettings
+                        .al
+                        .modelPaperEnabled =
+                            checkbox.checked;
+
+                }
+                else {
+
+                    paperSettings
+                        .al
+                        .provincePaperEnabled =
+                            checkbox.checked;
+
+                }
+
+            }
+
+
+            // =========================================
+            // OTHER
+            // =========================================
+
+            else {
+
+                setPaperValue(
+                    category,
+                    field,
+                    checkbox.checked
+                );
+
+            }
 
 
             const status =
@@ -610,7 +738,7 @@ function createGroup(
 
 
     // =================================================
-    // PAPER LIST
+    // LIST
     // =================================================
 
     const list =
@@ -628,10 +756,35 @@ function createGroup(
 
 
     // =================================================
+    // A/L SINGLE PAPER
+    // =================================================
+
+    if (
+        group.type ===
+        "al-single"
+    ) {
+
+        list.appendChild(
+
+            createPaperItem(
+                category,
+                group,
+                1,
+                group.title
+            )
+
+        );
+
+    }
+
+
+    // =================================================
     // MODEL / TOP RANKING
     // =================================================
 
-    if (group.count) {
+    if (
+        group.count
+    ) {
 
         for (
             let i = 1;
@@ -660,12 +813,14 @@ function createGroup(
 
 
             list.appendChild(
+
                 createPaperItem(
                     category,
                     group,
                     i,
                     label
                 )
+
             );
 
         }
@@ -677,7 +832,9 @@ function createGroup(
     // PAST PAPERS
     // =================================================
 
-    if (group.years) {
+    if (
+        group.years
+    ) {
 
         group.years.forEach(
             function (
@@ -686,12 +843,14 @@ function createGroup(
             ) {
 
                 list.appendChild(
+
                     createPaperItem(
                         category,
                         group,
                         index + 1,
                         `Past Paper ${year}`
                     )
+
                 );
 
             }
@@ -706,7 +865,7 @@ function createGroup(
 
 
     // =================================================
-    // GROUP EXPAND / COLLAPSE
+    // GROUP TOGGLE
     // =================================================
 
     const toggle =
@@ -767,20 +926,51 @@ function renderCategory(
 
 
     if (!config) {
+
         return;
+
+    }
+
+
+    let containerId;
+
+
+    if (
+        category ===
+        "grade10"
+    ) {
+
+        containerId =
+            "grade10PaperList";
+
+    }
+    else if (
+        category ===
+        "grade11"
+    ) {
+
+        containerId =
+            "grade11PaperList";
+
+    }
+    else {
+
+        containerId =
+            "alPaperList";
+
     }
 
 
     const container =
         document.getElementById(
-            category === "grade10"
-                ? "grade10PaperList"
-                : "grade11PaperList"
+            containerId
         );
 
 
     if (!container) {
+
         return;
+
     }
 
 
@@ -789,13 +979,17 @@ function renderCategory(
 
 
     config.groups.forEach(
-        function (group) {
+        function (
+            group
+        ) {
 
             container.appendChild(
+
                 createGroup(
                     category,
                     group
                 )
+
             );
 
         }
@@ -817,13 +1011,11 @@ function createGrade10DashboardControls() {
 
 
     if (!container) {
+
         return;
+
     }
 
-
-    // ---------------------------------------------
-    // Do not create twice
-    // ---------------------------------------------
 
     const existing =
         document.getElementById(
@@ -889,8 +1081,6 @@ function createGrade10DashboardControls() {
             </div>
 
 
-            <!-- MODEL PAPERS -->
-
             <div
                 style="
                     display:flex;
@@ -904,26 +1094,7 @@ function createGrade10DashboardControls() {
 
                 <div>
 
-                    <span
-                        style="
-                            display:block;
-                            color:#6d35f2;
-                            font-size:9px;
-                            font-weight:850;
-                            letter-spacing:.12em;
-                        "
-                    >
-                        STUDENT DASHBOARD
-                    </span>
-
-                    <strong
-                        style="
-                            display:block;
-                            margin-top:3px;
-                            color:#0f172a;
-                            font-size:13px;
-                        "
-                    >
+                    <strong>
                         Model Papers
                     </strong>
 
@@ -935,18 +1106,13 @@ function createGrade10DashboardControls() {
                             font-size:10px;
                         "
                     >
-                        Show or hide the Model Papers button on the Grade 10 student dashboard.
+                        Show or hide Model Papers.
                     </span>
 
                 </div>
 
 
-                <label
-                    class="switch"
-                    style="
-                        flex-shrink:0;
-                    "
-                >
+                <label class="switch">
 
                     <input
                         type="checkbox"
@@ -960,8 +1126,6 @@ function createGrade10DashboardControls() {
             </div>
 
 
-            <!-- PAST PAPERS -->
-
             <div
                 style="
                     display:flex;
@@ -974,26 +1138,7 @@ function createGrade10DashboardControls() {
 
                 <div>
 
-                    <span
-                        style="
-                            display:block;
-                            color:#6d35f2;
-                            font-size:9px;
-                            font-weight:850;
-                            letter-spacing:.12em;
-                        "
-                    >
-                        STUDENT DASHBOARD
-                    </span>
-
-                    <strong
-                        style="
-                            display:block;
-                            margin-top:3px;
-                            color:#0f172a;
-                            font-size:13px;
-                        "
-                    >
+                    <strong>
                         Past Papers
                     </strong>
 
@@ -1005,18 +1150,13 @@ function createGrade10DashboardControls() {
                             font-size:10px;
                         "
                     >
-                        Show or hide the Past Papers button on the Grade 10 student dashboard.
+                        Show or hide Past Papers.
                     </span>
 
                 </div>
 
 
-                <label
-                    class="switch"
-                    style="
-                        flex-shrink:0;
-                    "
-                >
+                <label class="switch">
 
                     <input
                         type="checkbox"
@@ -1039,10 +1179,6 @@ function createGrade10DashboardControls() {
     );
 
 
-    // =================================================
-    // GET TOGGLES
-    // =================================================
-
     const modelToggle =
         document.getElementById(
             "grade10ModelDashboardToggle"
@@ -1055,64 +1191,366 @@ function createGrade10DashboardControls() {
         );
 
 
-    // =================================================
-    // SET CURRENT VALUES
-    // =================================================
-
     modelToggle.checked =
-        paperSettings.grade10.modelPapersEnabled === true;
+        paperSettings
+            .grade10
+            .modelPapersEnabled === true;
 
 
     pastToggle.checked =
-        paperSettings.grade10.pastPapersEnabled === true;
+        paperSettings
+            .grade10
+            .pastPapersEnabled === true;
 
-
-    // =================================================
-    // MODEL TOGGLE
-    // =================================================
 
     modelToggle.addEventListener(
         "change",
         function () {
 
-            paperSettings.grade10.modelPapersEnabled =
-                modelToggle.checked;
-
+            paperSettings
+                .grade10
+                .modelPapersEnabled =
+                    modelToggle.checked;
 
             markChanged();
-
-
-            console.log(
-                "Grade 10 Model Papers:",
-                modelToggle.checked
-            );
 
         }
     );
 
-
-    // =================================================
-    // PAST TOGGLE
-    // =================================================
 
     pastToggle.addEventListener(
         "change",
         function () {
 
-            paperSettings.grade10.pastPapersEnabled =
-                pastToggle.checked;
+            paperSettings
+                .grade10
+                .pastPapersEnabled =
+                    pastToggle.checked;
+
+            markChanged();
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// A/L DASHBOARD CONTROLS
+// =====================================================
+
+function createALDashboardControls() {
+
+    const container =
+        document.getElementById(
+            "alPaperList"
+        );
+
+
+    if (!container) {
+
+        return;
+
+    }
+
+
+    let controls =
+        document.getElementById(
+            "alDashboardControls"
+        );
+
+
+    if (controls) {
+
+        controls.remove();
+
+    }
+
+
+    controls =
+        document.createElement(
+            "div"
+        );
+
+
+    controls.id =
+        "alDashboardControls";
+
+
+    controls.innerHTML = `
+
+        <div
+            style="
+                padding:24px 20px 10px;
+                background:#ffffff;
+                border-top:1px solid #e2e8f0;
+            "
+        >
+
+            <div
+                style="
+                    margin-bottom:18px;
+                "
+            >
+
+                <strong
+                    style="
+                        display:block;
+                        color:#0f172a;
+                        font-size:14px;
+                        font-weight:800;
+                    "
+                >
+                    A/L Dashboard Controls
+                </strong>
+
+                <span
+                    style="
+                        display:block;
+                        margin-top:5px;
+                        color:#64748b;
+                        font-size:11px;
+                    "
+                >
+                    Control which A/L paper buttons students see.
+                </span>
+
+            </div>
+
+
+            <!-- MODEL PAPER -->
+
+            <div
+                style="
+                    display:flex;
+                    align-items:center;
+                    justify-content:space-between;
+                    gap:20px;
+                    padding:14px 0;
+                    border-bottom:1px solid #eef2f7;
+                "
+            >
+
+                <div>
+
+                    <strong>
+                        Model Paper
+                    </strong>
+
+                    <span
+                        style="
+                            display:block;
+                            margin-top:4px;
+                            color:#64748b;
+                            font-size:10px;
+                        "
+                    >
+                        Show or hide Model Paper for A/L students.
+                    </span>
+
+                </div>
+
+
+                <label class="switch">
+
+                    <input
+                        type="checkbox"
+                        id="alModelPaperDashboardToggle"
+                    >
+
+                    <span class="slider"></span>
+
+                </label>
+
+            </div>
+
+
+            <!-- PROVINCE PAPER -->
+
+            <div
+                style="
+                    display:flex;
+                    align-items:center;
+                    justify-content:space-between;
+                    gap:20px;
+                    padding:14px 0;
+                "
+            >
+
+                <div>
+
+                    <strong>
+                        Province Paper
+                    </strong>
+
+                    <span
+                        style="
+                            display:block;
+                            margin-top:4px;
+                            color:#64748b;
+                            font-size:10px;
+                        "
+                    >
+                        Show or hide Province Paper for A/L students.
+                    </span>
+
+                </div>
+
+
+                <label class="switch">
+
+                    <input
+                        type="checkbox"
+                        id="alProvincePaperDashboardToggle"
+                    >
+
+                    <span class="slider"></span>
+
+                </label>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    container.appendChild(
+        controls
+    );
+
+
+    const modelToggle =
+        document.getElementById(
+            "alModelPaperDashboardToggle"
+        );
+
+
+    const provinceToggle =
+        document.getElementById(
+            "alProvincePaperDashboardToggle"
+        );
+
+
+    modelToggle.checked =
+        paperSettings
+            .al
+            .modelPaperEnabled === true;
+
+
+    provinceToggle.checked =
+        paperSettings
+            .al
+            .provincePaperEnabled === true;
+
+
+    modelToggle.addEventListener(
+        "change",
+        function () {
+
+            paperSettings
+                .al
+                .modelPaperEnabled =
+                    modelToggle.checked;
+
+
+            syncALPaperStatus(
+                "model",
+                modelToggle.checked
+            );
 
 
             markChanged();
 
+        }
+    );
 
-            console.log(
-                "Grade 10 Past Papers:",
-                pastToggle.checked
+
+    provinceToggle.addEventListener(
+        "change",
+        function () {
+
+            paperSettings
+                .al
+                .provincePaperEnabled =
+                    provinceToggle.checked;
+
+
+            syncALPaperStatus(
+                "province",
+                provinceToggle.checked
             );
+
+
+            markChanged();
 
         }
     );
+
+}
+
+
+// =====================================================
+// SYNC A/L STATUS
+// =====================================================
+
+function syncALPaperStatus(
+    type,
+    enabled
+) {
+
+    const toggleId =
+        type === "model"
+            ? "alModelPaperToggle"
+            : "alProvincePaperToggle";
+
+
+    const statusId =
+        type === "model"
+            ? "alModelPaperStatus"
+            : "alProvincePaperStatus";
+
+
+    const toggle =
+        document.getElementById(
+            toggleId
+        );
+
+
+    const status =
+        document.getElementById(
+            statusId
+        );
+
+
+    if (toggle) {
+
+        toggle.checked =
+            enabled;
+
+    }
+
+
+    if (status) {
+
+        status.textContent =
+            enabled
+                ? "Available to students"
+                : "Currently disabled";
+
+
+        status.classList.toggle(
+            "active",
+            enabled
+        );
+
+
+        status.classList.toggle(
+            "disabled",
+            !enabled
+        );
+
+    }
 
 }
 
@@ -1144,23 +1582,35 @@ async function loadSettings() {
             grade10: {
 
                 modelPapersEnabled: true,
-
                 pastPapersEnabled: true
 
             },
 
-            grade11: {}
+            grade11: {},
+
+            al: {
+
+                modelPaperEnabled: true,
+                provincePaperEnabled: true
+
+            }
 
         };
 
 
         snapshot.forEach(
-            function (paperDoc) {
+            function (
+                paperDoc
+            ) {
 
                 const id =
                     paperDoc.id
                         .toLowerCase();
 
+
+                // =====================================
+                // GRADE 10
+                // =====================================
 
                 if (
                     id === "grade10"
@@ -1186,12 +1636,43 @@ async function loadSettings() {
                 }
 
 
+                // =====================================
+                // GRADE 11
+                // =====================================
+
                 if (
                     id === "grade11"
                 ) {
 
                     paperSettings.grade11 =
                         paperDoc.data();
+
+                }
+
+
+                // =====================================
+                // A/L
+                // =====================================
+
+                if (
+                    id === "al"
+                ) {
+
+                    const data =
+                        paperDoc.data();
+
+
+                    paperSettings.al = {
+
+                        ...data,
+
+                        modelPaperEnabled:
+                            data.modelPaperEnabled !== false,
+
+                        provincePaperEnabled:
+                            data.provincePaperEnabled !== false
+
+                    };
 
                 }
 
@@ -1205,9 +1686,9 @@ async function loadSettings() {
         );
 
 
-        // =================================================
-        // RENDER PAPERS
-        // =================================================
+        // =============================================
+        // RENDER
+        // =============================================
 
         renderCategory(
             "grade10"
@@ -1219,11 +1700,19 @@ async function loadSettings() {
         );
 
 
-        // =================================================
-        // ADD GRADE 10 DASHBOARD CONTROLS
-        // =================================================
+        renderCategory(
+            "al"
+        );
+
+
+        // =============================================
+        // CONTROLS
+        // =============================================
 
         createGrade10DashboardControls();
+
+
+        createALDashboardControls();
 
 
         clearChanged();
@@ -1234,7 +1723,9 @@ async function loadSettings() {
         );
 
     }
-    catch (error) {
+    catch (
+        error
+    ) {
 
         console.error(
             "❌ Paper settings load error:",
@@ -1264,14 +1755,37 @@ function getAllPaperFields() {
     Object.keys(
         PAPER_CONFIG
     ).forEach(
-        function (category) {
+        function (
+            category
+        ) {
 
             PAPER_CONFIG[
                 category
             ].groups.forEach(
-                function (group) {
+                function (
+                    group
+                ) {
 
-                    if (group.count) {
+                    // =================================
+                    // A/L
+                    // =================================
+
+                    if (
+                        category === "al"
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    // =================================
+                    // COUNT
+                    // =================================
+
+                    if (
+                        group.count
+                    ) {
 
                         for (
                             let i = 1;
@@ -1298,7 +1812,13 @@ function getAllPaperFields() {
                     }
 
 
-                    if (group.years) {
+                    // =================================
+                    // YEARS
+                    // =================================
+
+                    if (
+                        group.years
+                    ) {
 
                         group.years.forEach(
                             function (
@@ -1347,8 +1867,14 @@ if (enableAllBtn) {
         "click",
         function () {
 
+            // =========================================
+            // Grade 10 / Grade 11
+            // =========================================
+
             getAllPaperFields().forEach(
-                function (item) {
+                function (
+                    item
+                ) {
 
                     setPaperValue(
                         item.category,
@@ -1360,14 +1886,41 @@ if (enableAllBtn) {
             );
 
 
-            // Grade 10 dashboard buttons ON
+            // =========================================
+            // Grade 10 dashboard
+            // =========================================
 
-            paperSettings.grade10.modelPapersEnabled =
-                true;
+            paperSettings
+                .grade10
+                .modelPapersEnabled =
+                    true;
 
-            paperSettings.grade10.pastPapersEnabled =
-                true;
 
+            paperSettings
+                .grade10
+                .pastPapersEnabled =
+                    true;
+
+
+            // =========================================
+            // A/L
+            // =========================================
+
+            paperSettings
+                .al
+                .modelPaperEnabled =
+                    true;
+
+
+            paperSettings
+                .al
+                .provincePaperEnabled =
+                    true;
+
+
+            // =========================================
+            // RENDER
+            // =========================================
 
             renderCategory(
                 "grade10"
@@ -1379,7 +1932,15 @@ if (enableAllBtn) {
             );
 
 
+            renderCategory(
+                "al"
+            );
+
+
             createGrade10DashboardControls();
+
+
+            createALDashboardControls();
 
 
             markChanged();
@@ -1402,7 +1963,7 @@ if (disableAllBtn) {
 
             if (
                 !confirm(
-                    "Disable all Grade 10 and Grade 11 papers and dashboard buttons?"
+                    "Disable all Grade 10, Grade 11 and A/L papers?"
                 )
             ) {
 
@@ -1411,8 +1972,14 @@ if (disableAllBtn) {
             }
 
 
+            // =========================================
+            // Grade 10 / Grade 11
+            // =========================================
+
             getAllPaperFields().forEach(
-                function (item) {
+                function (
+                    item
+                ) {
 
                     setPaperValue(
                         item.category,
@@ -1424,14 +1991,41 @@ if (disableAllBtn) {
             );
 
 
-            // Grade 10 dashboard buttons OFF
+            // =========================================
+            // Grade 10 dashboard
+            // =========================================
 
-            paperSettings.grade10.modelPapersEnabled =
-                false;
+            paperSettings
+                .grade10
+                .modelPapersEnabled =
+                    false;
 
-            paperSettings.grade10.pastPapersEnabled =
-                false;
 
+            paperSettings
+                .grade10
+                .pastPapersEnabled =
+                    false;
+
+
+            // =========================================
+            // A/L
+            // =========================================
+
+            paperSettings
+                .al
+                .modelPaperEnabled =
+                    false;
+
+
+            paperSettings
+                .al
+                .provincePaperEnabled =
+                    false;
+
+
+            // =========================================
+            // RENDER
+            // =========================================
 
             renderCategory(
                 "grade10"
@@ -1443,7 +2037,15 @@ if (disableAllBtn) {
             );
 
 
+            renderCategory(
+                "al"
+            );
+
+
             createGrade10DashboardControls();
+
+
+            createALDashboardControls();
 
 
             markChanged();
@@ -1464,7 +2066,9 @@ if (saveSettingsBtn) {
         "click",
         async function () {
 
-            if (!hasUnsavedChanges) {
+            if (
+                !hasUnsavedChanges
+            ) {
 
                 alert(
                     "There are no changes to save."
@@ -1485,9 +2089,9 @@ if (saveSettingsBtn) {
 
             try {
 
-                // -----------------------------------------
-                // SAVE GRADE 10
-                // -----------------------------------------
+                // =====================================
+                // GRADE 10
+                // =====================================
 
                 await setDoc(
                     doc(
@@ -1499,9 +2103,9 @@ if (saveSettingsBtn) {
                 );
 
 
-                // -----------------------------------------
-                // SAVE GRADE 11
-                // -----------------------------------------
+                // =====================================
+                // GRADE 11
+                // =====================================
 
                 await setDoc(
                     doc(
@@ -1510,6 +2114,20 @@ if (saveSettingsBtn) {
                         "grade11"
                     ),
                     paperSettings.grade11
+                );
+
+
+                // =====================================
+                // A/L
+                // =====================================
+
+                await setDoc(
+                    doc(
+                        db,
+                        "paperSettings",
+                        "al"
+                    ),
+                    paperSettings.al
                 );
 
 
@@ -1522,12 +2140,26 @@ if (saveSettingsBtn) {
                 );
 
 
+                console.log(
+                    "✅ Grade 11 settings saved:",
+                    paperSettings.grade11
+                );
+
+
+                console.log(
+                    "✅ A/L settings saved:",
+                    paperSettings.al
+                );
+
+
                 alert(
                     "✅ Paper settings saved successfully."
                 );
 
             }
-            catch (error) {
+            catch (
+                error
+            ) {
 
                 console.error(
                     "❌ Save error:",
@@ -1564,7 +2196,9 @@ if (saveSettingsBtn) {
 
 window.addEventListener(
     "beforeunload",
-    function (event) {
+    function (
+        event
+    ) {
 
         if (
             !hasUnsavedChanges
@@ -1622,7 +2256,7 @@ console.log(
 );
 
 console.log(
-    "A/L: HOLD"
+    "A/L: MODEL + PROVINCE ACTIVE"
 );
 
 console.log(
