@@ -14,7 +14,7 @@
 
     <link
         rel="stylesheet"
-        href="paper-settings.css?v=10"
+        href="paper-settings.css?v=20"
     >
 
     <link
@@ -28,18 +28,16 @@
 <body>
 
 
-<div class="admin-layout">
+<div class="settings-layout">
 
 
     <!-- =====================================================
          SIDEBAR
     ====================================================== -->
 
-    <aside class="sidebar">
+    <aside class="settings-sidebar">
 
-        <!-- BRAND -->
-
-        <div class="sidebar-brand">
+        <div class="settings-brand">
 
             <div class="brand-logo">
                 🎓
@@ -60,274 +58,139 @@
         </div>
 
 
-        <!-- LABEL -->
-
         <div class="sidebar-label">
-            ADMINISTRATION
+            PAPER MANAGEMENT
         </div>
 
 
-        <!-- NAVIGATION -->
-
-        <nav class="sidebar-nav">
-
-
-            <!-- DASHBOARD -->
+        <nav class="settings-nav">
 
             <a
                 href="admin.html"
                 class="nav-item"
             >
-
-                <span class="nav-icon">
-                    🏠
-                </span>
-
-                <span>
-                    Dashboard
-                </span>
-
+                <span class="nav-icon">🏠</span>
+                <span>Dashboard</span>
             </a>
 
-
-            <!-- STUDENTS -->
 
             <a
                 href="students.html"
                 class="nav-item"
             >
-
-                <span class="nav-icon">
-                    👥
-                </span>
-
-                <span>
-                    Students
-                </span>
-
+                <span class="nav-icon">👥</span>
+                <span>Students</span>
             </a>
 
 
-            <!-- PAPER MANAGEMENT -->
-
             <a
-                href="paper-settings.html"
+                href="paper-management.html"
                 class="nav-item active"
             >
-
-                <span class="nav-icon">
-                    📚
-                </span>
-
-                <span>
-                    Paper Management
-                </span>
-
+                <span class="nav-icon">📚</span>
+                <span>Paper Management</span>
             </a>
-
-
-            <!-- IMPORT -->
-
-            <a
-                href="import-students.html"
-                class="nav-item"
-            >
-
-                <span class="nav-icon">
-                    📥
-                </span>
-
-                <span>
-                    Import Students
-                </span>
-
-            </a>
-
-
-            <!-- REPORTS -->
-
-            <a
-                href="reports.html"
-                class="nav-item"
-            >
-
-                <span class="nav-icon">
-                    📊
-                </span>
-
-                <span>
-                    Reports
-                </span>
-
-            </a>
-
 
         </nav>
 
 
-        <!-- =================================================
-             SIDEBAR BOTTOM
-        ================================================== -->
-
         <div class="sidebar-bottom">
-
-
-            <div class="admin-user-card">
-
-                <div class="admin-user-icon">
-                    👨‍💼
-                </div>
-
-
-                <div class="admin-user-info">
-
-                    <strong id="adminUsername">
-                        Admin
-                    </strong>
-
-                    <span id="adminRole">
-                        Administrator
-                    </span>
-
-                </div>
-
-            </div>
-
 
             <button
                 type="button"
-                id="logoutBtn"
-                class="logout-btn"
+                id="backToAdmin"
+                class="back-btn"
             >
-
-                🚪
-
-                <span>
-                    Sign Out
-                </span>
-
+                ← Back to Admin
             </button>
 
-
         </div>
-
 
     </aside>
 
 
-
     <!-- =====================================================
-         MAIN CONTENT
+         MAIN
     ====================================================== -->
 
-    <main class="main-content">
+    <main class="settings-main">
 
-
-        <!-- PAGE HEADER -->
 
         <header class="page-header">
 
             <div>
 
                 <p class="page-label">
-                    PAPER AVAILABILITY
+                    PAPER MANAGEMENT
                 </p>
 
                 <h1>
-                    Manage Student Resources
+                    Paper Settings
                 </h1>
 
                 <p class="page-description">
-                    Control which papers are available
-                    to students.
+                    Control paper availability for students.
                 </p>
 
             </div>
 
 
-            <div class="admin-status">
+            <div class="system-status">
 
                 <span class="status-dot"></span>
 
-                Superadmin Only
+                System Online
 
             </div>
 
         </header>
 
 
-
         <!-- =================================================
-             INFO
+             SETTINGS ACTIONS
         ================================================== -->
 
-        <section class="info-banner">
-
-            <div class="info-banner-icon">
-                🔐
-            </div>
-
+        <section class="settings-actions">
 
             <div>
 
-                <strong>
-                    Super Administrator Access
-                </strong>
+                <p class="card-label">
+                    QUICK ACTIONS
+                </p>
+
+                <h2>
+                    Paper Availability
+                </h2>
 
                 <p>
-                    Enable or disable individual papers.
-                    Only enabled papers will be displayed
-                    to students.
+                    Enable or disable papers for students.
                 </p>
 
             </div>
 
-        </section>
 
-
-
-        <!-- =================================================
-             TOOLBAR
-        ================================================== -->
-
-        <section class="management-toolbar">
-
-            <div>
-
-                <span class="toolbar-label">
-                    PAPER AVAILABILITY
-                </span>
-
-                <h2>
-                    Manage Student Resources
-                </h2>
-
-            </div>
-
-
-            <div class="toolbar-actions">
+            <div class="action-buttons">
 
                 <button
                     type="button"
-                    id="enableAllBtn"
-                    class="toolbar-btn enable-all"
+                    id="enableAll"
+                    class="primary-btn"
                 >
-                    🟢 Enable All
+                    ✓ Enable All
                 </button>
 
 
                 <button
                     type="button"
-                    id="disableAllBtn"
-                    class="toolbar-btn disable-all"
+                    id="disableAll"
+                    class="secondary-btn"
                 >
-                    🔴 Disable All
+                    ✕ Disable All
                 </button>
 
             </div>
 
         </section>
-
 
 
         <!-- =================================================
@@ -343,10 +206,9 @@
 
                 <div class="section-title">
 
-                    <div class="section-icon grade10-icon">
+                    <div class="section-icon">
                         🎓
                     </div>
-
 
                     <div>
 
@@ -359,7 +221,7 @@
                         </h2>
 
                         <p>
-                            1st, 2nd and 3rd Term Model Papers
+                            Manage Grade 10 model and past papers.
                         </p>
 
                     </div>
@@ -378,15 +240,13 @@
             </div>
 
 
-            <!-- JS WILL LOAD CONTENT -->
-
             <div
-                class="paper-list"
+                class="paper-section-body"
                 id="grade10PaperList"
-            ></div>
+            >
+            </div>
 
         </section>
-
 
 
         <!-- =================================================
@@ -402,10 +262,9 @@
 
                 <div class="section-title">
 
-                    <div class="section-icon grade11-icon">
+                    <div class="section-icon">
                         🎓
                     </div>
-
 
                     <div>
 
@@ -418,8 +277,7 @@
                         </h2>
 
                         <p>
-                            1st, 2nd and 3rd Term Top Ranking
-                            and Past Papers
+                            Manage Grade 11 model and past papers.
                         </p>
 
                     </div>
@@ -438,19 +296,18 @@
             </div>
 
 
-            <!-- JS WILL LOAD CONTENT -->
-
             <div
-                class="paper-list"
+                class="paper-section-body"
                 id="grade11PaperList"
-            ></div>
+            >
+            </div>
 
         </section>
 
 
-
         <!-- =================================================
-             A/L - HOLD
+             A/L PAPERS
+             NEW - ONLY THIS SECTION IS ADDED/CHANGED
         ================================================== -->
 
         <section
@@ -462,10 +319,9 @@
 
                 <div class="section-title">
 
-                    <div class="section-icon al-icon">
+                    <div class="section-icon">
                         🎓
                     </div>
-
 
                     <div>
 
@@ -478,8 +334,7 @@
                         </h2>
 
                         <p>
-                            A/L paper management will be
-                            available later.
+                            Model Papers and Province Papers.
                         </p>
 
                     </div>
@@ -490,280 +345,331 @@
                 <button
                     type="button"
                     class="section-toggle"
-                    disabled
+                    data-section-toggle="al"
                 >
-                    Coming Soon
+                    Expand
                 </button>
+
+            </div>
+
+
+            <div
+                class="paper-section-body"
+                id="alPaperList"
+            >
+
+
+                <!-- =========================================
+                     MODEL PAPER
+                ========================================== -->
+
+                <div class="paper-group">
+
+                    <div class="paper-group-header">
+
+                        <div>
+
+                            <span class="paper-group-label">
+                                MODEL PAPER
+                            </span>
+
+                            <h3>
+                                A/L Model Paper
+                            </h3>
+
+                            <p>
+                                A/L model papers available to students.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="paper-group-list">
+
+                        <div class="paper-item">
+
+                            <div class="paper-info">
+
+                                <div class="paper-icon">
+                                    📘
+                                </div>
+
+                                <div class="paper-details">
+
+                                    <strong>
+                                        Model Paper
+                                    </strong>
+
+                                    <span
+                                        class="paper-status active"
+                                        id="alModelPaperStatus"
+                                    >
+                                        Available to students
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="paper-actions">
+
+                                <label class="switch">
+
+                                    <input
+                                        type="checkbox"
+                                        id="alModelPaperToggle"
+                                        data-al-paper-toggle="model"
+                                        checked
+                                    >
+
+                                    <span class="slider"></span>
+
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================================
+                     PROVINCE PAPER
+                ========================================== -->
+
+                <div class="paper-group">
+
+                    <div class="paper-group-header">
+
+                        <div>
+
+                            <span class="paper-group-label">
+                                PROVINCE PAPER
+                            </span>
+
+                            <h3>
+                                A/L Province Paper
+                            </h3>
+
+                            <p>
+                                A/L province papers available to students.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="paper-group-list">
+
+                        <div class="paper-item">
+
+                            <div class="paper-info">
+
+                                <div class="paper-icon">
+                                    🗺️
+                                </div>
+
+                                <div class="paper-details">
+
+                                    <strong>
+                                        Province Paper
+                                    </strong>
+
+                                    <span
+                                        class="paper-status active"
+                                        id="alProvincePaperStatus"
+                                    >
+                                        Available to students
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="paper-actions">
+
+                                <label class="switch">
+
+                                    <input
+                                        type="checkbox"
+                                        id="alProvincePaperToggle"
+                                        data-al-paper-toggle="province"
+                                        checked
+                                    >
+
+                                    <span class="slider"></span>
+
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================================
+                     A/L DASHBOARD CONTROLS
+                ========================================== -->
+
+                <div
+                    id="alDashboardControls"
+                    class="al-dashboard-controls"
+                >
+
+                    <div class="al-controls-heading">
+
+                        <span>
+                            A/L STUDENT DASHBOARD
+                        </span>
+
+                        <strong>
+                            Dashboard Controls
+                        </strong>
+
+                        <p>
+                            Control which A/L paper options are shown
+                            on the student dashboard.
+                        </p>
+
+                    </div>
+
+
+                    <div class="al-control-row">
+
+                        <div>
+
+                            <strong>
+                                Model Paper
+                            </strong>
+
+                            <span>
+                                Show or hide Model Paper for A/L students.
+                            </span>
+
+                        </div>
+
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                id="alModelPaperDashboardToggle"
+                                checked
+                            >
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="al-control-row">
+
+                        <div>
+
+                            <strong>
+                                Province Paper
+                            </strong>
+
+                            <span>
+                                Show or hide Province Paper for A/L students.
+                            </span>
+
+                        </div>
+
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                id="alProvincePaperDashboardToggle"
+                                checked
+                            >
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+                </div>
 
             </div>
 
         </section>
 
 
-
         <!-- =================================================
-             SAVE BAR
+             SAVE
         ================================================== -->
 
-        <div class="save-bar">
-
+        <section class="save-section">
 
             <div>
 
                 <strong>
-                    Paper Settings
+                    Save Changes
                 </strong>
 
-
-                <span id="changesStatus">
-                    No unsaved changes
-                </span>
+                <p>
+                    Changes will be applied to the student portal.
+                </p>
 
             </div>
 
 
             <button
                 type="button"
-                id="saveSettingsBtn"
-                class="save-settings-btn"
+                id="saveSettings"
+                class="save-btn"
             >
-
                 💾 Save Changes
-
             </button>
 
-
-        </div>
-
+        </section>
 
 
-        <!-- =================================================
-             FOOTER
-        ================================================== -->
+        <footer class="settings-footer">
 
-        <footer class="admin-footer">
+            <strong>
+                Student Assessment Portal
+            </strong>
 
-            <div>
-
-                <strong>
-                    Student Assessment Portal
-                </strong>
-
-                <span>
-                    © 2026 Administration Dashboard
-                </span>
-
-            </div>
+            <span>
+                © 2026 Administration Dashboard
+            </span>
 
         </footer>
 
 
     </main>
 
-
 </div>
 
 
+<div
+    id="toast"
+    class="toast"
+    aria-live="polite"
+></div>
 
-<!-- =====================================================
-     PAPER MANAGEMENT JS
-====================================================== -->
 
 <script
     type="module"
-    src="paper-settings.js?v=10"
+    src="paper-settings.js?v=21"
 ></script>
 
 
-<!-- =====================================================
-     MAIN EXPAND SYSTEM
-====================================================== -->
-
-<script>
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
-
-        console.log(
-            "✅ Paper Management UI started"
-        );
-
-
-        /*
-         * MAIN CATEGORY EXPAND
-         */
-
-        document
-            .querySelectorAll(
-                ".section-toggle"
-            )
-            .forEach(
-                function (button) {
-
-                    button.addEventListener(
-                        "click",
-                        function (event) {
-
-                            event.preventDefault();
-                            event.stopPropagation();
-
-
-                            if (
-                                button.disabled
-                            ) {
-                                return;
-                            }
-
-
-                            const section =
-                                button.closest(
-                                    ".paper-section"
-                                );
-
-
-                            if (!section) {
-                                return;
-                            }
-
-
-                            const list =
-                                section.querySelector(
-                                    ".paper-list"
-                                );
-
-
-                            if (!list) {
-                                return;
-                            }
-
-
-                            const isOpen =
-                                list.classList.contains(
-                                    "open"
-                                );
-
-
-                            if (isOpen) {
-
-                                list.classList.remove(
-                                    "open"
-                                );
-
-                                button.textContent =
-                                    "Expand";
-
-                            }
-                            else {
-
-                                list.classList.add(
-                                    "open"
-                                );
-
-                                button.textContent =
-                                    "Collapse";
-
-                            }
-
-                        }
-                    );
-
-                }
-            );
-
-
-        /*
-         * GROUP EXPAND
-         *
-         * paper-settings.js dynamically creates
-         * .group-toggle buttons.
-         *
-         * Event delegation is used here so it
-         * also works for dynamically created buttons.
-         */
-
-        document.addEventListener(
-            "click",
-            function (event) {
-
-                const button =
-                    event.target.closest(
-                        ".group-toggle"
-                    );
-
-
-                if (!button) {
-                    return;
-                }
-
-
-                event.preventDefault();
-                event.stopPropagation();
-
-
-                const group =
-                    button.closest(
-                        ".paper-group"
-                    );
-
-
-                if (!group) {
-                    return;
-                }
-
-
-                const list =
-                    group.querySelector(
-                        ".paper-group-list"
-                    );
-
-
-                if (!list) {
-                    return;
-                }
-
-
-                const isOpen =
-                    list.classList.contains(
-                        "open"
-                    );
-
-
-                if (isOpen) {
-
-                    list.classList.remove(
-                        "open"
-                    );
-
-                    button.textContent =
-                        "Expand";
-
-                }
-                else {
-
-                    list.classList.add(
-                        "open"
-                    );
-
-                    button.textContent =
-                        "Collapse";
-
-                }
-
-            }
-        );
-
-
-        console.log(
-            "✅ Expand system ready"
-        );
-
-    }
-);
-
-</script>
-
-
 </body>
-
 </html>
