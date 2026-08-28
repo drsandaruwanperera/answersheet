@@ -12,7 +12,7 @@ import {
 
 
 // =====================================================
-// DELETE PASSWORD
+// SUPER ADMIN DELETION PASSWORD
 // =====================================================
 
 const DELETE_PASSWORD = "Nimeth";
@@ -31,241 +31,243 @@ let deleteInProgress = false;
 // DOM ELEMENTS
 // =====================================================
 
-let passwordCard;
-let reportPanel;
+let passwordCard = null;
+let reportPanel = null;
 
-let deletePassword;
-let passwordError;
-let unlockBtn;
+let deletePassword = null;
+let passwordError = null;
+let unlockBtn = null;
 
-let searchInput;
-let categoryFilter;
-let refreshBtn;
+let searchInput = null;
+let categoryFilter = null;
+let refreshBtn = null;
 
-let studentTable;
-let resultCount;
+let studentTable = null;
+let resultCount = null;
 
-let logoutBtn;
+let logoutBtn = null;
 
 
 // =====================================================
-// PAGE INITIALIZATION
+// PAGE LOAD
 // =====================================================
 
 document.addEventListener(
     "DOMContentLoaded",
     () => {
 
-        console.log(
-            "===================================="
-        );
+        initializeElements();
 
-        console.log(
-            "STUDENT DELETION SYSTEM"
-        );
+        attachEvents();
 
         console.log(
             "===================================="
         );
 
+        console.log(
+            "STUDENT DELETION SYSTEM LOADED"
+        );
 
-        // =================================================
-        // ELEMENTS
-        // =================================================
-
-        passwordCard =
-            document.getElementById(
-                "passwordCard"
-            );
-
-
-        reportPanel =
-            document.getElementById(
-                "reportPanel"
-            );
-
-
-        deletePassword =
-            document.getElementById(
-                "deletePassword"
-            );
-
-
-        passwordError =
-            document.getElementById(
-                "passwordError"
-            );
-
-
-        unlockBtn =
-            document.getElementById(
-                "unlockBtn"
-            );
-
-
-        searchInput =
-            document.getElementById(
-                "searchInput"
-            );
-
-
-        categoryFilter =
-            document.getElementById(
-                "categoryFilter"
-            );
-
-
-        refreshBtn =
-            document.getElementById(
-                "refreshBtn"
-            );
-
-
-        studentTable =
-            document.getElementById(
-                "studentTable"
-            );
-
-
-        resultCount =
-            document.getElementById(
-                "resultCount"
-            );
-
-
-        logoutBtn =
-            document.getElementById(
-                "logoutBtn"
-            );
-
-
-        // =================================================
-        // UNLOCK
-        // =================================================
-
-        if (
-            unlockBtn
-        ) {
-
-            unlockBtn.addEventListener(
-                "click",
-                unlockStudentDeletion
-            );
-
-        }
-
-
-        // =================================================
-        // ENTER KEY
-        // =================================================
-
-        if (
-            deletePassword
-        ) {
-
-            deletePassword.addEventListener(
-                "keydown",
-                event => {
-
-                    if (
-                        event.key ===
-                        "Enter"
-                    ) {
-
-                        event.preventDefault();
-
-                        unlockStudentDeletion();
-
-                    }
-
-                }
-            );
-
-        }
-
-
-        // =================================================
-        // SEARCH
-        // =================================================
-
-        if (
-            searchInput
-        ) {
-
-            searchInput.addEventListener(
-                "input",
-                renderStudents
-            );
-
-        }
-
-
-        // =================================================
-        // FILTER
-        // =================================================
-
-        if (
-            categoryFilter
-        ) {
-
-            categoryFilter.addEventListener(
-                "change",
-                renderStudents
-            );
-
-        }
-
-
-        // =================================================
-        // REFRESH
-        // =================================================
-
-        if (
-            refreshBtn
-        ) {
-
-            refreshBtn.addEventListener(
-                "click",
-                loadStudents
-            );
-
-        }
-
-
-        // =================================================
-        // LOGOUT
-        // =================================================
-
-        if (
-            logoutBtn
-        ) {
-
-            logoutBtn.addEventListener(
-                "click",
-                logout
-            );
-
-        }
-
-
-        // =================================================
-        // PASSWORD FOCUS
-        // =================================================
-
-        if (
-            deletePassword
-        ) {
-
-            deletePassword.focus();
-
-        }
+        console.log(
+            "===================================="
+        );
 
     }
 );
 
 
 // =====================================================
-// UNLOCK STUDENT DELETION
+// INITIALIZE ELEMENTS
+// =====================================================
+
+function initializeElements() {
+
+    passwordCard =
+        document.getElementById(
+            "passwordCard"
+        );
+
+
+    reportPanel =
+        document.getElementById(
+            "reportPanel"
+        );
+
+
+    deletePassword =
+        document.getElementById(
+            "deletePassword"
+        );
+
+
+    passwordError =
+        document.getElementById(
+            "passwordError"
+        );
+
+
+    unlockBtn =
+        document.getElementById(
+            "unlockBtn"
+        );
+
+
+    searchInput =
+        document.getElementById(
+            "searchInput"
+        );
+
+
+    categoryFilter =
+        document.getElementById(
+            "categoryFilter"
+        );
+
+
+    refreshBtn =
+        document.getElementById(
+            "refreshBtn"
+        );
+
+
+    studentTable =
+        document.getElementById(
+            "studentTable"
+        );
+
+
+    resultCount =
+        document.getElementById(
+            "resultCount"
+        );
+
+
+    logoutBtn =
+        document.getElementById(
+            "logoutBtn"
+        );
+
+}
+
+
+// =====================================================
+// ATTACH EVENTS
+// =====================================================
+
+function attachEvents() {
+
+    // =================================================
+    // UNLOCK
+    // =================================================
+
+    if (
+        unlockBtn
+    ) {
+
+        unlockBtn.addEventListener(
+            "click",
+            unlockStudentDeletion
+        );
+
+    }
+
+
+    // =================================================
+    // ENTER PASSWORD
+    // =================================================
+
+    if (
+        deletePassword
+    ) {
+
+        deletePassword.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key === "Enter"
+                ) {
+
+                    event.preventDefault();
+
+                    unlockStudentDeletion();
+
+                }
+
+            }
+        );
+
+    }
+
+
+    // =================================================
+    // SEARCH
+    // =================================================
+
+    if (
+        searchInput
+    ) {
+
+        searchInput.addEventListener(
+            "input",
+            renderStudents
+        );
+
+    }
+
+
+    // =================================================
+    // FILTER
+    // =================================================
+
+    if (
+        categoryFilter
+    ) {
+
+        categoryFilter.addEventListener(
+            "change",
+            renderStudents
+        );
+
+    }
+
+
+    // =================================================
+    // REFRESH
+    // =================================================
+
+    if (
+        refreshBtn
+    ) {
+
+        refreshBtn.addEventListener(
+            "click",
+            loadStudents
+        );
+
+    }
+
+
+    // =================================================
+    // LOGOUT
+    // =================================================
+
+    if (
+        logoutBtn
+    ) {
+
+        logoutBtn.addEventListener(
+            "click",
+            logout
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// UNLOCK
 // =====================================================
 
 async function unlockStudentDeletion() {
@@ -277,7 +279,7 @@ async function unlockStudentDeletion() {
 
 
     // =================================================
-    // CHECK PASSWORD
+    // PASSWORD CHECK
     // =================================================
 
     if (
@@ -299,8 +301,7 @@ async function unlockStudentDeletion() {
             deletePassword
         ) {
 
-            deletePassword.value =
-                "";
+            deletePassword.value = "";
 
             deletePassword.focus();
 
@@ -320,22 +321,20 @@ async function unlockStudentDeletion() {
         passwordError
     ) {
 
-        passwordError.textContent =
-            "";
+        passwordError.textContent = "";
 
     }
 
 
     // =================================================
-    // LOADING
+    // BUTTON LOADING
     // =================================================
 
     if (
         unlockBtn
     ) {
 
-        unlockBtn.disabled =
-            true;
+        unlockBtn.disabled = true;
 
         unlockBtn.textContent =
             "Loading students...";
@@ -349,7 +348,7 @@ async function unlockStudentDeletion() {
 
 
         // =================================================
-        // HIDE PASSWORD CARD
+        // HIDE PASSWORD SCREEN
         // =================================================
 
         if (
@@ -428,6 +427,10 @@ async function loadStudents() {
     );
 
 
+    // =================================================
+    // LOADING MESSAGE
+    // =================================================
+
     if (
         studentTable
     ) {
@@ -440,7 +443,9 @@ async function loadStudents() {
                     colspan="6"
                     class="loading"
                 >
+
                     Loading students...
+
                 </td>
 
             </tr>
@@ -449,6 +454,10 @@ async function loadStudents() {
 
     }
 
+
+    // =================================================
+    // FIRESTORE
+    // =================================================
 
     const snapshot =
         await getDocs(
@@ -459,8 +468,16 @@ async function loadStudents() {
         );
 
 
+    // =================================================
+    // CLEAR
+    // =================================================
+
     allStudents = [];
 
+
+    // =================================================
+    // READ STUDENTS
+    // =================================================
 
     snapshot.forEach(
         studentDoc => {
@@ -521,7 +538,7 @@ async function loadStudents() {
 
 
     console.log(
-        "Students loaded:",
+        "Total students:",
         allStudents.length
     );
 
@@ -529,15 +546,15 @@ async function loadStudents() {
 
 
 // =====================================================
-// GET STUDENT SERIES
+// GET ACADEMIC SERIES
 // =====================================================
 //
-// A27000 - A27999 = A27000
-// A28000 - A28999 = A28000
-// A29000 - A29999 = A29000
+// A27000 - A27999
+// A28000 - A28999
+// A29000 - A29999
 //
-// 26000 - 26999 = Grade 11
-// 27000 - 27999 = Grade 10
+// 26000 - 26999
+// 27000 - 27999
 //
 // =====================================================
 
@@ -554,7 +571,7 @@ function getSeries(
 
 
     // =================================================
-    // A/L STUDENT IDs
+    // A/L
     // =================================================
 
     if (
@@ -617,7 +634,7 @@ function getSeries(
 
 
     // =================================================
-    // NUMERIC STUDENT IDs
+    // NUMERIC IDs
     // =================================================
 
     if (
@@ -670,20 +687,7 @@ function getSeries(
 
 
 // =====================================================
-// GET NIC
-// =====================================================
-//
-// Supports common Firestore field names:
-//
-// nicNumber
-// nic
-// NIC
-// nicNo
-// NICNumber
-// nic_number
-// nationalId
-// nationalID
-//
+// GET NIC FIELD
 // =====================================================
 
 function getNIC(
@@ -708,6 +712,8 @@ function getNIC(
 
         data?.nationalID ||
 
+        data?.national_id ||
+
         ""
 
     );
@@ -719,24 +725,33 @@ function getNIC(
 // CHECK NIC STUDENT
 // =====================================================
 //
-// Supported NIC formats:
+// IMPORTANT:
+//
+// NIC can be:
 //
 // 9 digits
 // 10 digits
 // 11 digits
-//
-// Old format:
-//
-// 123456789V
-// 123456789X
 //
 // Examples:
 //
 // 123456789
 // 1234567890
 // 20076902182
+//
+// Also:
+//
 // 123456789V
 // 123456789X
+//
+// AND:
+//
+// Student ID itself can be a NIC number.
+//
+// Example:
+//
+// Student ID:
+// 20076902182
 //
 // =====================================================
 
@@ -746,7 +761,38 @@ function hasNIC(
 ) {
 
     // =================================================
-    // GET NIC
+    // STUDENT ID
+    // =================================================
+
+    const cleanStudentId =
+        String(
+            studentId || ""
+        )
+            .trim()
+            .replace(
+                /\s+/g,
+                ""
+            )
+            .toUpperCase();
+
+
+    // =================================================
+    // STUDENT ID ITSELF IS NIC
+    // =================================================
+
+    if (
+        /^\d{9,11}$/.test(
+            cleanStudentId
+        )
+    ) {
+
+        return true;
+
+    }
+
+
+    // =================================================
+    // GET FIRESTORE NIC
     // =================================================
 
     const nic =
@@ -787,7 +833,10 @@ function hasNIC(
 
 
     // =================================================
-    // OLD NIC - V / X
+    // OLD NIC FORMAT
+    //
+    // 123456789V
+    // 123456789X
     // =================================================
 
     if (
@@ -891,7 +940,7 @@ function getCategory(
 
 
     // =================================================
-    // NIC STUDENT
+    // NIC
     // =================================================
 
     if (
@@ -905,6 +954,10 @@ function getCategory(
 
     }
 
+
+    // =================================================
+    // OTHER
+    // =================================================
 
     return "Other";
 
@@ -933,13 +986,13 @@ function countSeries(
 
 
 // =====================================================
-// UPDATE TOTAL COUNTS
+// UPDATE COUNTS
 // =====================================================
 
 function updateCounts() {
 
     // =================================================
-    // A/L
+    // A/L SERIES
     // =================================================
 
     const totalA27000 =
@@ -1033,6 +1086,22 @@ function updateCounts() {
 
 
     // =================================================
+    // OPTIONAL ALTERNATIVE IDs
+    // =================================================
+
+    setText(
+        "totalNICStudents",
+        totalNIC
+    );
+
+
+    setText(
+        "totalNICStudent",
+        totalNIC
+    );
+
+
+    // =================================================
     // DEBUG
     // =================================================
 
@@ -1066,7 +1135,7 @@ function updateCounts() {
     );
 
     console.log(
-        "NIC Students:",
+        "NIC:",
         totalNIC
     );
 
@@ -1119,6 +1188,10 @@ function renderStudents() {
     }
 
 
+    // =================================================
+    // SEARCH
+    // =================================================
+
     const search =
         String(
             searchInput?.value || ""
@@ -1126,6 +1199,10 @@ function renderStudents() {
             .trim()
             .toLowerCase();
 
+
+    // =================================================
+    // FILTER
+    // =================================================
 
     const filter =
         String(
@@ -1137,7 +1214,7 @@ function renderStudents() {
 
 
     // =================================================
-    // FILTER
+    // FILTER DATA
     // =================================================
 
     const filtered =
@@ -1170,15 +1247,19 @@ function renderStudents() {
 
 
                 const series =
-                    getSeries(
-                        student.id
+                    String(
+                        getSeries(
+                            student.id
+                        )
                     )
                         .toLowerCase();
 
 
                 const category =
-                    getCategory(
-                        student
+                    String(
+                        getCategory(
+                            student
+                        )
                     )
                         .toLowerCase();
 
@@ -1354,6 +1435,23 @@ function renderStudents() {
                 }
 
 
+                // =================================================
+                // OTHER
+                // =================================================
+
+                if (
+                    filter ===
+                    "other"
+                ) {
+
+                    return (
+                        category ===
+                        "other"
+                    );
+
+                }
+
+
                 return true;
 
             }
@@ -1373,13 +1471,9 @@ function renderStudents() {
             filtered.length +
 
             (
-                filtered.length ===
-                1
-
+                filtered.length === 1
                     ? " student"
-
                     : " students"
-
             );
 
     }
@@ -1390,8 +1484,7 @@ function renderStudents() {
     // =================================================
 
     if (
-        filtered.length ===
-        0
+        filtered.length === 0
     ) {
 
         studentTable.innerHTML = `
@@ -1411,8 +1504,6 @@ function renderStudents() {
 
         `;
 
-
-        attachDeleteButtons();
 
         return;
 
@@ -1475,7 +1566,7 @@ function renderStudents() {
                     }
 
 
-                    if (
+                    else if (
                         category ===
                         "Grade 10"
                     ) {
@@ -1486,7 +1577,7 @@ function renderStudents() {
                     }
 
 
-                    if (
+                    else if (
                         category ===
                         "Grade 11"
                     ) {
@@ -1497,18 +1588,35 @@ function renderStudents() {
                     }
 
 
+                    else if (
+                        category ===
+                        "NIC Student"
+                    ) {
+
+                        badgeClass =
+                            "nic";
+
+                    }
+
+
                     return `
 
                         <tr>
 
+                            <!-- NUMBER -->
+
                             <td>
+
                                 ${index + 1}
+
                             </td>
 
 
+                            <!-- STUDENT ID -->
+
                             <td>
 
-                                <span
+                                <strong
                                     class="student-id"
                                 >
 
@@ -1516,10 +1624,12 @@ function renderStudents() {
                                         student.id
                                     )}
 
-                                </span>
+                                </strong>
 
                             </td>
 
+
+                            <!-- NAME -->
 
                             <td>
 
@@ -1561,6 +1671,8 @@ function renderStudents() {
                             </td>
 
 
+                            <!-- CATEGORY -->
+
                             <td>
 
                                 <span
@@ -1579,14 +1691,24 @@ function renderStudents() {
                             </td>
 
 
+                            <!-- SERIES -->
+
                             <td>
 
-                                ${escapeHTML(
-                                    series || "-"
-                                )}
+                                ${
+                                    series
+
+                                        ? escapeHTML(
+                                            series
+                                        )
+
+                                        : "-"
+                                }
 
                             </td>
 
+
+                            <!-- DELETE -->
 
                             <td>
 
@@ -1614,23 +1736,7 @@ function renderStudents() {
 
 
     // =================================================
-    // ATTACH BUTTONS
-    // =================================================
-
-    attachDeleteButtons();
-
-}
-
-
-// =====================================================
-// ATTACH DELETE BUTTONS
-// =====================================================
-
-function attachDeleteButtons() {
-
-
-    // =================================================
-    // INDIVIDUAL DELETE
+    // DELETE BUTTONS
     // =================================================
 
     document
@@ -1654,84 +1760,6 @@ function attachDeleteButtons() {
             }
         );
 
-
-    // =================================================
-    // SERIES DELETE
-    // =================================================
-
-    document
-        .querySelectorAll(
-            ".delete-series-btn"
-        )
-        .forEach(
-            button => {
-
-                if (
-                    button.dataset.bound ===
-                    "true"
-                ) {
-
-                    return;
-
-                }
-
-
-                button.dataset.bound =
-                    "true";
-
-
-                const series =
-                    button.dataset.series;
-
-
-                if (
-                    series
-                ) {
-
-                    button.addEventListener(
-                        "click",
-                        () => {
-
-                            deleteSeries(
-                                series
-                            );
-
-                        }
-                    );
-
-                }
-
-            }
-        );
-
-
-    // =================================================
-    // NIC DELETE
-    // =================================================
-
-    const deleteAllNIC =
-        document.getElementById(
-            "deleteAllNIC"
-        );
-
-
-    if (
-        deleteAllNIC &&
-        deleteAllNIC.dataset.bound !==
-        "true"
-    ) {
-
-        deleteAllNIC.dataset.bound =
-            "true";
-
-
-        deleteAllNIC.addEventListener(
-            "click",
-            deleteAllNICStudents
-        );
-
-    }
-
 }
 
 
@@ -1751,7 +1779,7 @@ async function deleteAllNICStudents() {
 
 
     // =================================================
-    // FIND NIC STUDENTS
+    // GET NIC STUDENTS
     // =================================================
 
     const nicStudents =
@@ -1767,12 +1795,11 @@ async function deleteAllNICStudents() {
 
 
     // =================================================
-    // NO STUDENTS
+    // NONE
     // =================================================
 
     if (
-        nicStudents.length ===
-        0
+        nicStudents.length === 0
     ) {
 
         alert(
@@ -1798,8 +1825,12 @@ async function deleteAllNICStudents() {
 
             "\n\n" +
 
-            "Students with 9, 10 or 11 digit " +
-            "NIC numbers will be deleted.\n\n" +
+            "This includes students whose " +
+            "Student ID or NIC field contains " +
+            "a 9, 10 or 11 digit NIC number.\n\n" +
+
+            "All selected accounts will be " +
+            "permanently deleted.\n\n" +
 
             "This action cannot be undone.\n\n" +
 
@@ -1853,7 +1884,7 @@ async function deleteAllNICStudents() {
 
 
 // =====================================================
-// DELETE INDIVIDUAL
+// DELETE INDIVIDUAL STUDENT
 // =====================================================
 
 async function deleteIndividual(
@@ -1930,7 +1961,8 @@ async function deleteIndividual(
 
             "\n\n" +
 
-            "This action cannot be undone.\n\n" +
+            "This account will be permanently " +
+            "deleted.\n\n" +
 
             "Continue?"
 
@@ -1945,6 +1977,10 @@ async function deleteIndividual(
 
     }
 
+
+    // =================================================
+    // PASSWORD
+    // =================================================
 
     const password =
         prompt(
@@ -1965,6 +2001,10 @@ async function deleteIndividual(
 
     }
 
+
+    // =================================================
+    // DELETE
+    // =================================================
 
     await deleteStudents(
         [student]
@@ -2007,8 +2047,7 @@ async function deleteSeries(
     // =================================================
 
     if (
-        students.length ===
-        0
+        students.length === 0
     ) {
 
         alert(
@@ -2040,8 +2079,9 @@ async function deleteSeries(
 
             "\n\n" +
 
-            "All accounts in this series " +
-            "will be permanently deleted.\n\n" +
+            "All students in " +
+            series +
+            " will be permanently deleted.\n\n" +
 
             "This action cannot be undone.\n\n" +
 
@@ -2111,6 +2151,16 @@ async function deleteStudents(
     }
 
 
+    if (
+        !students ||
+        students.length === 0
+    ) {
+
+        return;
+
+    }
+
+
     deleteInProgress =
         true;
 
@@ -2122,7 +2172,7 @@ async function deleteStudents(
 
 
         // =================================================
-        // DELETE FIRESTORE DOCUMENTS
+        // FIRESTORE DELETE
         // =================================================
 
         for (
@@ -2151,7 +2201,7 @@ async function deleteStudents(
 
 
         // =================================================
-        // REMOVE LOCAL DATA
+        // REMOVE FROM LOCAL ARRAY
         // =================================================
 
         const deletedIds =
@@ -2173,15 +2223,10 @@ async function deleteStudents(
 
 
         // =================================================
-        // UPDATE COUNTS
+        // UPDATE
         // =================================================
 
         updateCounts();
-
-
-        // =================================================
-        // UPDATE TABLE
-        // =================================================
 
         renderStudents();
 
@@ -2205,7 +2250,7 @@ async function deleteStudents(
     ) {
 
         console.error(
-            "Delete error:",
+            "Student deletion error:",
             error
         );
 
@@ -2225,36 +2270,6 @@ async function deleteStudents(
             false;
 
     }
-
-}
-
-
-// =====================================================
-// LOGOUT
-// =====================================================
-
-function logout() {
-
-    const confirmed =
-        confirm(
-            "Are you sure you want to sign out?"
-        );
-
-
-    if (
-        !confirmed
-    ) {
-
-        return;
-
-    }
-
-
-    sessionStorage.clear();
-
-
-    window.location.href =
-        "admin-login.html";
 
 }
 
@@ -2330,6 +2345,115 @@ function escapeAttribute(
 
 
 // =====================================================
+// LOGOUT
+// =====================================================
+
+function logout() {
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to sign out?"
+        );
+
+
+    if (
+        !confirmed
+    ) {
+
+        return;
+
+    }
+
+
+    sessionStorage.clear();
+
+
+    window.location.href =
+        "admin-login.html";
+
+}
+
+
+// =====================================================
+// GLOBAL BUTTON SUPPORT
+// =====================================================
+//
+// Allows existing HTML buttons such as:
+//
+// deleteAllNIC
+// delete-series-btn
+//
+// to work even if they are already present
+// in the HTML.
+//
+// =====================================================
+
+document.addEventListener(
+    "click",
+    event => {
+
+        const target =
+            event.target.closest(
+                "button"
+            );
+
+
+        if (
+            !target
+        ) {
+
+            return;
+
+        }
+
+
+        // =================================================
+        // DELETE ALL NIC
+        // =================================================
+
+        if (
+            target.id ===
+            "deleteAllNIC"
+        ) {
+
+            deleteAllNICStudents();
+
+            return;
+
+        }
+
+
+        // =================================================
+        // DELETE SERIES
+        // =================================================
+
+        if (
+            target.classList.contains(
+                "delete-series-btn"
+            )
+        ) {
+
+            const series =
+                target.dataset.series;
+
+
+            if (
+                series
+            ) {
+
+                deleteSeries(
+                    series
+                );
+
+            }
+
+        }
+
+    }
+);
+
+
+// =====================================================
 // SYSTEM READY
 // =====================================================
 
@@ -2346,15 +2470,15 @@ console.log(
 );
 
 console.log(
-    "A27000-A27999 = A27000"
+    "A27000-A27999 = A/L"
 );
 
 console.log(
-    "A28000-A28999 = A28000"
+    "A28000-A28999 = A/L"
 );
 
 console.log(
-    "A29000-A29999 = A29000"
+    "A29000-A29999 = A/L"
 );
 
 console.log(
@@ -2366,27 +2490,27 @@ console.log(
 );
 
 console.log(
-    "9-11 digit NIC = NIC Student"
+    "9-11 digit Student ID = NIC"
 );
 
 console.log(
-    "9 digit + V/X = NIC Student"
+    "9-11 digit NIC field = NIC"
 );
 
 console.log(
-    "A/L + NIC can be counted in both"
+    "9 digit + V/X = NIC"
 );
 
 console.log(
-    "Individual delete = ENABLED"
+    "Individual deletion = ENABLED"
 );
 
 console.log(
-    "Series delete = ENABLED"
+    "Series deletion = ENABLED"
 );
 
 console.log(
-    "NIC delete = ENABLED"
+    "NIC deletion = ENABLED"
 );
 
 console.log(
