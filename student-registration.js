@@ -1,5 +1,11 @@
 // =====================================================
 // STUDENT REGISTRATION / FIRST LOGIN ONBOARDING
+// A/L STUDENTS ONLY
+// =====================================================
+
+
+// =====================================================
+// FIREBASE
 // =====================================================
 
 import {
@@ -19,55 +25,66 @@ const registrationStudentId =
         "registrationStudentId"
     );
 
+
 const fullNameInput =
     document.getElementById(
         "fullName"
     );
+
 
 const nicNumberInput =
     document.getElementById(
         "nicNumber"
     );
 
+
 const newPasswordInput =
     document.getElementById(
         "newPassword"
     );
+
 
 const confirmPasswordInput =
     document.getElementById(
         "confirmPassword"
     );
 
+
 const registrationConfirm =
     document.getElementById(
         "registrationConfirm"
     );
+
 
 const completeRegistrationBtn =
     document.getElementById(
         "completeRegistrationBtn"
     );
 
+
 const registrationMessage =
     document.getElementById(
         "registrationMessage"
     );
+
 
 const requirementLength =
     document.getElementById(
         "requirementLength"
     );
 
+
 const requirementMatch =
     document.getElementById(
         "requirementMatch"
     );
 
+
 const toggleNewPassword =
     document.getElementById(
         "toggleNewPassword"
     );
+
 
 const toggleConfirmPassword =
     document.getElementById(
@@ -97,6 +114,43 @@ const studentId =
 
 
 // =====================================================
+// A/L STUDENT ID VALIDATION
+// =====================================================
+
+function isALStudentId(
+    id
+) {
+
+    const cleanId =
+        String(
+            id || ""
+        )
+            .trim()
+            .toUpperCase();
+
+
+    /*
+        A/L admission series:
+
+        A27000 - A27999
+        A28000 - A28999
+        A29000 - A29999
+
+        Pattern:
+
+        A2
+        followed by 7 / 8 / 9
+        followed by exactly 3 digits
+    */
+
+    return /^A2[789]\d{3}$/.test(
+        cleanId
+    );
+
+}
+
+
+// =====================================================
 // CHECK LOGIN
 // =====================================================
 
@@ -104,6 +158,57 @@ if (
     !loggedIn ||
     !studentId
 ) {
+
+    window.location.replace(
+        "index.html"
+    );
+
+}
+
+
+// =====================================================
+// CHECK A/L ONLY
+// =====================================================
+
+if (
+    loggedIn &&
+    studentId &&
+    !isALStudentId(
+        studentId
+    )
+) {
+
+    console.warn(
+        "Non A/L student attempted onboarding:",
+        studentId
+    );
+
+
+    alert(
+        "A/L Student Registration Only.\n\n" +
+        "This registration page is only available for A/L students."
+    );
+
+
+    sessionStorage.removeItem(
+        "loggedIn"
+    );
+
+
+    sessionStorage.removeItem(
+        "studentId"
+    );
+
+
+    sessionStorage.removeItem(
+        "studentName"
+    );
+
+
+    sessionStorage.removeItem(
+        "studentNIC"
+    );
+
 
     window.location.replace(
         "index.html"
@@ -121,7 +226,9 @@ function showMessage(
     type = "error"
 ) {
 
-    if (!registrationMessage) {
+    if (
+        !registrationMessage
+    ) {
 
         return;
 
@@ -205,8 +312,10 @@ function setupPasswordToggle(
                 input.type =
                     "text";
 
+
                 button.textContent =
                     "🙈";
+
 
                 button.setAttribute(
                     "aria-label",
@@ -219,8 +328,10 @@ function setupPasswordToggle(
                 input.type =
                     "password";
 
+
                 button.textContent =
                     "🙊";
+
 
                 button.setAttribute(
                     "aria-label",
@@ -256,6 +367,7 @@ function updatePasswordRequirements() {
     const password =
         newPasswordInput?.value ||
         "";
+
 
     const confirmPassword =
         confirmPasswordInput?.value ||
@@ -379,6 +491,7 @@ function clearMessage() {
         registrationMessage.textContent =
             "";
 
+
         registrationMessage.className =
             "registration-message";
 
@@ -431,7 +544,29 @@ async function loadStudent() {
 
     try {
 
-        if (!studentId) {
+        if (
+            !studentId
+        ) {
+
+            return;
+
+        }
+
+
+        // ---------------------------------------------
+        // A/L ONLY CHECK
+        // ---------------------------------------------
+
+        if (
+            !isALStudentId(
+                studentId
+            )
+        ) {
+
+            showMessage(
+                "This registration page is only for A/L students."
+            );
+
 
             return;
 
@@ -457,7 +592,7 @@ async function loadStudent() {
         ) {
 
             showMessage(
-                "Student account could not be found."
+                "A/L student account could not be found."
             );
 
 
@@ -542,10 +677,10 @@ async function loadStudent() {
 
         }
 
-
     }
-
-    catch (error) {
+    catch (
+        error
+    ) {
 
         console.error(
             "Load registration error:",
@@ -581,12 +716,17 @@ function validateName(
             );
 
 
-    if (!clean) {
+    if (
+        !clean
+    ) {
 
         return {
+
             valid: false,
+
             message:
                 "Please enter your full name."
+
         };
 
     }
@@ -597,17 +737,24 @@ function validateName(
     ) {
 
         return {
+
             valid: false,
+
             message:
                 "Please enter your full name."
+
         };
 
     }
 
 
     return {
+
         valid: true,
-        value: clean
+
+        value:
+            clean
+
     };
 
 }
@@ -633,12 +780,17 @@ function validateNIC(
             );
 
 
-    if (!clean) {
+    if (
+        !clean
+    ) {
 
         return {
+
             valid: false,
+
             message:
                 "Please enter your NIC number."
+
         };
 
     }
@@ -654,6 +806,7 @@ function validateNIC(
         New:
         123456789012
     */
+
 
     const oldNIC =
         /^\d{9}[VX]$/i.test(
@@ -673,17 +826,24 @@ function validateNIC(
     ) {
 
         return {
+
             valid: false,
+
             message:
                 "Please enter a valid NIC number."
+
         };
 
     }
 
 
     return {
+
         valid: true,
-        value: clean
+
+        value:
+            clean
+
     };
 
 }
@@ -699,6 +859,7 @@ function validatePassword() {
         newPasswordInput?.value ||
         "";
 
+
     const confirmPassword =
         confirmPasswordInput?.value ||
         "";
@@ -709,9 +870,12 @@ function validatePassword() {
     ) {
 
         return {
+
             valid: false,
+
             message:
                 "Password must contain at least 6 characters."
+
         };
 
     }
@@ -723,17 +887,24 @@ function validatePassword() {
     ) {
 
         return {
+
             valid: false,
+
             message:
                 "Passwords do not match."
+
         };
 
     }
 
 
     return {
+
         valid: true,
-        value: password
+
+        value:
+            password
+
     };
 
 }
@@ -756,6 +927,31 @@ async function completeRegistration() {
 
         window.location.replace(
             "index.html"
+        );
+
+
+        return;
+
+    }
+
+
+    // ================================================
+    // A/L ONLY - SECOND SECURITY CHECK
+    // ================================================
+
+    if (
+        !isALStudentId(
+            studentId
+        )
+    ) {
+
+        showMessage(
+            "Only A/L students can complete registration."
+        );
+
+
+        alert(
+            "Only A/L students are allowed to register."
         );
 
 
@@ -910,7 +1106,7 @@ async function completeRegistration() {
         ) {
 
             throw new Error(
-                "Student account not found."
+                "A/L student account not found."
             );
 
         }
@@ -918,6 +1114,29 @@ async function completeRegistration() {
 
         const currentData =
             studentSnap.data();
+
+
+        // ============================================
+        // FINAL A/L CHECK
+        // ============================================
+
+        /*
+            Even if somebody manually changes
+            sessionStorage, registration will still
+            only continue for A/L IDs.
+        */
+
+        if (
+            !isALStudentId(
+                studentId
+            )
+        ) {
+
+            throw new Error(
+                "Only A/L students are allowed to complete registration."
+            );
+
+        }
 
 
         // ============================================
@@ -956,7 +1175,13 @@ async function completeRegistration() {
                     Date.now(),
 
                 registrationCompletedAt:
-                    Date.now()
+                    Date.now(),
+
+                category:
+                    "A/L",
+
+                studentCategory:
+                    "A/L"
 
             }
         );
@@ -995,7 +1220,7 @@ async function completeRegistration() {
         // ============================================
 
         showMessage(
-            "Registration completed successfully. Redirecting...",
+            "A/L registration completed successfully. Redirecting...",
             "success"
         );
 
@@ -1016,8 +1241,9 @@ async function completeRegistration() {
         );
 
     }
-
-    catch (error) {
+    catch (
+        error
+    ) {
 
         console.error(
             "Registration error:",
@@ -1031,7 +1257,6 @@ async function completeRegistration() {
         );
 
     }
-
     finally {
 
         if (
@@ -1086,36 +1311,36 @@ if (
     newPasswordInput,
     confirmPasswordInput
 ]
-.forEach(
-    input => {
+    .forEach(
+        input => {
 
-        if (!input) {
+            if (!input) {
 
-            return;
-
-        }
-
-
-        input.addEventListener(
-            "keydown",
-            event => {
-
-                if (
-                    event.key ===
-                    "Enter"
-                ) {
-
-                    event.preventDefault();
-
-                    completeRegistration();
-
-                }
+                return;
 
             }
-        );
 
-    }
-);
+
+            input.addEventListener(
+                "keydown",
+                event => {
+
+                    if (
+                        event.key ===
+                        "Enter"
+                    ) {
+
+                        event.preventDefault();
+
+                        completeRegistration();
+
+                    }
+
+                }
+            );
+
+        }
+    );
 
 
 // =====================================================
@@ -1127,12 +1352,35 @@ console.log(
 );
 
 console.log(
-    "STUDENT REGISTRATION SYSTEM"
+    "A/L STUDENT REGISTRATION SYSTEM"
 );
 
 console.log(
     "Student ID:",
     studentId
+);
+
+console.log(
+    "A/L Student:",
+    isALStudentId(
+        studentId
+    )
+);
+
+console.log(
+    "Allowed Series:"
+);
+
+console.log(
+    "A27000 - A27999"
+);
+
+console.log(
+    "A28000 - A28999"
+);
+
+console.log(
+    "A29000 - A29999"
 );
 
 console.log(
@@ -1152,4 +1400,16 @@ console.log(
 );
 
 
-loadStudent();
+// =====================================================
+// LOAD
+// =====================================================
+
+if (
+    isALStudentId(
+        studentId
+    )
+) {
+
+    loadStudent();
+
+}
