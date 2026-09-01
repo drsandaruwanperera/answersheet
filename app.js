@@ -15,52 +15,34 @@ import {
 // =====================================================
 
 const studentIdInput =
-    document.getElementById(
-        "studentId"
-    );
-
+    document.getElementById("studentId");
 
 const passwordInput =
-    document.getElementById(
-        "password"
-    );
-
+    document.getElementById("password");
 
 const loginBtn =
-    document.getElementById(
-        "loginBtn"
-    );
-
+    document.getElementById("loginBtn");
 
 const msg =
-    document.getElementById(
-        "msg"
-    );
+    document.getElementById("msg");
 
 
 // =====================================================
 // SHOW MESSAGE
 // =====================================================
 
-function showMessage(
-    message,
-    type = "error"
-) {
+function showMessage(message, type = "error") {
 
     if (!msg) {
         return;
     }
 
-
-    msg.textContent =
-        message;
-
+    msg.textContent = message;
 
     msg.style.color =
         type === "success"
             ? "#16a34a"
             : "#dc2626";
-
 }
 
 
@@ -68,61 +50,33 @@ function showMessage(
 // NORMALIZE STUDENT ID
 // =====================================================
 
-function normalizeStudentId(
-    studentId
-) {
+function normalizeStudentId(studentId) {
 
-    return String(
-        studentId || ""
-    )
+    return String(studentId || "")
         .trim()
-        .replace(
-            /\s+/g,
-            ""
-        )
+        .replace(/\s+/g, "")
         .toUpperCase();
-
 }
 
 
 // =====================================================
-// CHECK A/L STUDENT ID
+// A/L STUDENT CHECK
 // =====================================================
 //
 // A27000 - A27999
 // A28000 - A28999
 // A29000 - A29999
 //
-// Valid:
-// A27000
-// A27555
-// A28000
-// A28999
-// A29000
-// A29999
-//
-// Invalid:
-// A26000
-// A30000
-// 26000
-// 27000
-//
 // =====================================================
 
-function isALStudentId(
-    studentId
-) {
+function isALStudentId(studentId) {
 
     const cleanId =
-        normalizeStudentId(
-            studentId
-        );
-
+        normalizeStudentId(studentId);
 
     return /^A2[789]\d{3}$/.test(
         cleanId
     );
-
 }
 
 
@@ -136,13 +90,11 @@ function detectStudentType(
 ) {
 
     const cleanId =
-        normalizeStudentId(
-            studentId
-        );
+        normalizeStudentId(studentId);
 
 
     // =================================================
-    // FIREBASE studentType
+    // FIREBASE STUDENT TYPE
     // =================================================
 
     const firebaseType =
@@ -225,9 +177,7 @@ function detectStudentType(
     // =================================================
 
     if (
-        isALStudentId(
-            cleanId
-        )
+        isALStudentId(cleanId)
     ) {
 
         return "al";
@@ -236,19 +186,15 @@ function detectStudentType(
 
 
     // =================================================
-    // NUMERIC ADMISSION NUMBERS
+    // NUMERIC STUDENT IDs
     // =================================================
 
     if (
-        /^\d{5}$/.test(
-            cleanId
-        )
+        /^\d{5}$/.test(cleanId)
     ) {
 
         const number =
-            Number(
-                cleanId
-            );
+            Number(cleanId);
 
 
         // =============================================
@@ -283,12 +229,7 @@ function detectStudentType(
     }
 
 
-    // =================================================
-    // UNKNOWN
-    // =================================================
-
     return "unknown";
-
 }
 
 
@@ -296,9 +237,7 @@ function detectStudentType(
 // GET GRADE NAME
 // =====================================================
 
-function getGradeName(
-    type
-) {
+function getGradeName(type) {
 
     if (
         type === "grade10"
@@ -328,12 +267,11 @@ function getGradeName(
 
 
     return "Student";
-
 }
 
 
 // =====================================================
-// SAVE STUDENT SESSION
+// SAVE SESSION
 // =====================================================
 
 function saveStudentSession(
@@ -387,9 +325,7 @@ function saveStudentSession(
 
         sessionStorage.setItem(
             "studentNIC",
-            String(
-                data.nicNumber
-            )
+            String(data.nicNumber)
         );
 
     }
@@ -406,7 +342,6 @@ function clearPasswordChangeSession() {
     sessionStorage.removeItem(
         "mustChangePassword"
     );
-
 
     sessionStorage.removeItem(
         "passwordChangeRequired"
@@ -428,79 +363,61 @@ async function loginStudent() {
 
 
     const password =
-        passwordInput?.value
-            ?.trim() || "";
+        String(
+            passwordInput?.value || ""
+        ).trim();
 
 
     // =================================================
     // VALIDATION
     // =================================================
 
-    if (
-        !studentId
-    ) {
+    if (!studentId) {
 
         showMessage(
             "Please enter your Student ID."
         );
 
-
         studentIdInput?.focus();
 
-
         return;
-
     }
 
 
-    if (
-        !password
-    ) {
+    if (!password) {
 
         showMessage(
             "Please enter your password."
         );
 
-
         passwordInput?.focus();
 
-
         return;
-
     }
 
 
     // =================================================
-    // DISABLE BUTTON
+    // BUTTON LOADING
     // =================================================
 
-    if (
-        loginBtn
-    ) {
+    if (loginBtn) {
 
-        loginBtn.disabled =
-            true;
+        loginBtn.disabled = true;
 
-
-        loginBtn.innerHTML =
-            `
-                <span>
-                    Signing In...
-                </span>
-            `;
+        loginBtn.innerHTML = `
+            <span>Signing In...</span>
+        `;
 
     }
 
 
-    showMessage(
-        ""
-    );
+    showMessage("");
 
 
     try {
 
         // =============================================
-        // STUDENT DOCUMENT
+        // FIRESTORE STUDENT DOCUMENT
         // =============================================
 
         const studentRef =
@@ -518,7 +435,7 @@ async function loginStudent() {
 
 
         // =============================================
-        // NOT FOUND
+        // STUDENT NOT FOUND
         // =============================================
 
         if (
@@ -528,7 +445,6 @@ async function loginStudent() {
             showMessage(
                 "Invalid Student ID or password."
             );
-
 
             return;
 
@@ -540,25 +456,22 @@ async function loginStudent() {
 
 
         // =============================================
-        // PASSWORD
+        // PASSWORD CHECK
         // =============================================
 
         const storedPassword =
             String(
-                data?.password ??
-                ""
+                data?.password ?? ""
             );
 
 
         if (
-            storedPassword !==
-            password
+            storedPassword !== password
         ) {
 
             showMessage(
                 "Invalid Student ID or password."
             );
-
 
             return;
 
@@ -566,7 +479,7 @@ async function loginStudent() {
 
 
         // =============================================
-        // STUDENT TYPE
+        // DETECT CATEGORY
         // =============================================
 
         const studentType =
@@ -583,18 +496,16 @@ async function loginStudent() {
 
 
         // =============================================
-        // UNKNOWN STUDENT TYPE
+        // UNKNOWN CATEGORY
         // =============================================
 
         if (
-            studentType ===
-            "unknown"
+            studentType === "unknown"
         ) {
 
             showMessage(
-                "Unable to determine your student category. Please contact the administrator."
+                "Unable to determine your student category. Please contact the System Administrator."
             );
-
 
             return;
 
@@ -622,75 +533,63 @@ async function loginStudent() {
             await updateDoc(
                 studentRef,
                 {
-
                     lastActiveAt:
                         Date.now()
-
                 }
             );
 
         }
-        catch (
-            activeError
-        ) {
+        catch (activeError) {
 
             console.warn(
-                "Unable to update lastActiveAt:",
+                "Last active update failed:",
                 activeError
             );
 
         }
 
 
-        // =============================================
-        // DEBUG
-        // =============================================
+        // =================================================
+        // CONSOLE DEBUG
+        // =================================================
 
         console.log(
             "================================"
         );
 
-
         console.log(
             "LOGIN SUCCESS"
         );
-
 
         console.log(
             "Student ID:",
             studentId
         );
 
-
         console.log(
             "Student Type:",
             studentType
         );
-
 
         console.log(
             "Grade:",
             gradeName
         );
 
-
         console.log(
             "Must Change Password:",
             data?.mustChangePassword
         );
-
 
         console.log(
             "Profile Completed:",
             data?.profileCompleted
         );
 
-
         console.log(
             "Registration Completed:",
             data?.registrationCompleted
         );
-
 
         console.log(
             "================================"
@@ -698,21 +597,17 @@ async function loginStudent() {
 
 
         // =================================================
-        // A/L FIRST LOGIN
-        // =================================================
-        //
-        // A/L students ONLY go to:
-        //
-        // student-registration.html
-        //
-        // Grade 10 / Grade 11 NEVER go here.
-        //
+        // A/L STUDENT
         // =================================================
 
         if (
-            studentType ===
-            "al"
+            studentType === "al"
         ) {
+
+            /*
+                A/L students use the A/L registration page
+                when first registration is incomplete.
+            */
 
             const needsALRegistration =
                 data?.mustChangePassword === true ||
@@ -741,7 +636,7 @@ async function loginStudent() {
                         );
 
                     },
-                    300
+                    500
                 );
 
 
@@ -749,22 +644,40 @@ async function loginStudent() {
 
             }
 
+
+            // =========================================
+            // A/L COMPLETED
+            // =========================================
+
+            clearPasswordChangeSession();
+
+
+            showMessage(
+                "Login successful. Redirecting...",
+                "success"
+            );
+
+
+            setTimeout(
+                () => {
+
+                    window.location.replace(
+                        "dashboard.html"
+                    );
+
+                },
+                500
+            );
+
+
+            return;
+
         }
 
 
         // =================================================
-        // GRADE 10 / GRADE 11 FIRST LOGIN
-        // =================================================
-        //
-        // IMPORTANT:
-        //
-        // These students MUST NOT go to
-        // student-registration.html.
-        //
-        // They go to:
-        //
-        // change-password.html?id=STUDENT_ID
-        //
+        // GRADE 10 / GRADE 11
+        // MUST CHANGE PASSWORD
         // =================================================
 
         if (
@@ -776,4 +689,271 @@ async function loginStudent() {
         ) {
 
             sessionStorage.setItem(
-                "
+                "mustChangePassword",
+                "true"
+            );
+
+
+            sessionStorage.setItem(
+                "passwordChangeRequired",
+                "true"
+            );
+
+
+            showMessage(
+                `${gradeName} first login. Password change required.`,
+                "success"
+            );
+
+
+            setTimeout(
+                () => {
+
+                    window.location.replace(
+                        "change-password.html?id=" +
+                        encodeURIComponent(
+                            studentId
+                        )
+                    );
+
+                },
+                500
+            );
+
+
+            return;
+
+        }
+
+
+        // =================================================
+        // GRADE 10 / GRADE 11 NORMAL LOGIN
+        // =================================================
+
+        if (
+            studentType === "grade10" ||
+            studentType === "grade11"
+        ) {
+
+            clearPasswordChangeSession();
+
+
+            showMessage(
+                "Login successful. Redirecting...",
+                "success"
+            );
+
+
+            setTimeout(
+                () => {
+
+                    window.location.replace(
+                        "dashboard.html"
+                    );
+
+                },
+                500
+            );
+
+
+            return;
+
+        }
+
+
+        // =================================================
+        // FALLBACK
+        // =================================================
+
+        clearPasswordChangeSession();
+
+
+        showMessage(
+            "Login successful. Redirecting...",
+            "success"
+        );
+
+
+        setTimeout(
+            () => {
+
+                window.location.replace(
+                    "dashboard.html"
+                );
+
+            },
+            500
+        );
+
+    }
+    catch (error) {
+
+        console.error(
+            "Student login error:",
+            error
+        );
+
+
+        showMessage(
+            "Unable to sign in. Please try again."
+        );
+
+    }
+    finally {
+
+        if (loginBtn) {
+
+            loginBtn.disabled =
+                false;
+
+
+            loginBtn.innerHTML = `
+                <span>
+                    Sign In
+                </span>
+
+                <span class="login-arrow">
+                    →
+                </span>
+            `;
+
+        }
+
+    }
+
+}
+
+
+// =====================================================
+// SIGN IN BUTTON
+// =====================================================
+
+if (loginBtn) {
+
+    loginBtn.addEventListener(
+        "click",
+        loginStudent
+    );
+
+}
+
+
+// =====================================================
+// ENTER KEY LOGIN
+// =====================================================
+
+if (studentIdInput) {
+
+    studentIdInput.addEventListener(
+        "keydown",
+        (event) => {
+
+            if (
+                event.key === "Enter"
+            ) {
+
+                event.preventDefault();
+
+                loginStudent();
+
+            }
+
+        }
+    );
+
+}
+
+
+if (passwordInput) {
+
+    passwordInput.addEventListener(
+        "keydown",
+        (event) => {
+
+            if (
+                event.key === "Enter"
+            ) {
+
+                event.preventDefault();
+
+                loginStudent();
+
+            }
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// CLEAR MESSAGE
+// =====================================================
+
+if (studentIdInput) {
+
+    studentIdInput.addEventListener(
+        "input",
+        () => {
+
+            if (msg) {
+                msg.textContent = "";
+            }
+
+        }
+    );
+
+}
+
+
+if (passwordInput) {
+
+    passwordInput.addEventListener(
+        "input",
+        () => {
+
+            if (msg) {
+                msg.textContent = "";
+            }
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// STARTUP LOG
+// =====================================================
+
+console.log(
+    "========================================"
+);
+
+console.log(
+    "Student Assessment Portal Login"
+);
+
+console.log(
+    "Grade 11: 26000 - 26999"
+);
+
+console.log(
+    "Grade 10: 27000 - 27999"
+);
+
+console.log(
+    "A/L: A27000 - A29999"
+);
+
+console.log(
+    "A/L Registration: ENABLED"
+);
+
+console.log(
+    "Grade 10/11 Password Change: ENABLED"
+);
+
+console.log(
+    "========================================"
+);
