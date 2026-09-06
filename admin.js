@@ -181,6 +181,12 @@ const statisticsLink =
     );
 
 
+const websiteManagementLink =
+    document.getElementById(
+        "websiteManagementLink"
+    );
+
+
 // =====================================================
 // STUDENT REMOVAL ELEMENTS
 // =====================================================
@@ -2313,7 +2319,19 @@ function protectCurrentPage() {
 
         "reports.html",
 
-        "statistics.html"
+        "statistics.html",
+
+        "website-dashboard.html",
+        "gallery.html",
+        "programs.html",
+        "about.html",
+        "results.html",
+        "testimonials.html",
+        "resources.html",
+        "classes.html",
+        "faq.html",
+        "contact.html",
+        "settings.html"
 
     ];
 
