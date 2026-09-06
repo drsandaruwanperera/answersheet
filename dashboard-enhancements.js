@@ -25,6 +25,78 @@ function injectStyle() {
     document.head.appendChild(link);
 }
 
+function injectSidebarStyle() {
+    if (document.getElementById("studentSidebarFixStyle")) return;
+
+    const style = document.createElement("style");
+    style.id = "studentSidebarFixStyle";
+    style.textContent = `
+        .sidebar {
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .sidebar-nav {
+            flex-shrink: 0;
+        }
+
+        #logoutBtn.sidebar-logout {
+            flex-shrink: 0;
+            margin-top: 10px;
+            margin-bottom: 8px;
+            min-height: 44px;
+            background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+            border: 1px solid rgba(255,255,255,.12) !important;
+            color: #ffffff !important;
+            box-shadow: 0 8px 18px rgba(239,68,68,.22);
+            font-weight: 700;
+        }
+
+        #logoutBtn.sidebar-logout:hover {
+            background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+            transform: translateY(-1px);
+            box-shadow: 0 10px 22px rgba(239,68,68,.30);
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+function cleanSidebarAndPlaceLogout() {
+    const removeIds = [
+        "myPapersNav",
+        "supportNav",
+        "enhanceNotificationNav"
+    ];
+
+    removeIds.forEach((id) => {
+        document.getElementById(id)?.remove();
+    });
+
+    const sidebar = document.querySelector(".sidebar");
+    const logout = document.getElementById("logoutBtn");
+    const spacer = document.querySelector(".sidebar-spacer");
+
+    if (sidebar && logout && spacer) {
+        sidebar.insertBefore(logout, spacer);
+    }
+
+    if (logout && !logout.dataset.studentLogoutBound) {
+        logout.dataset.studentLogoutBound = "1";
+        logout.addEventListener("click", () => {
+            [
+                "loggedIn",
+                "studentId",
+                "studentType",
+                "studentGrade",
+                "studentName",
+                "studentNIC"
+            ].forEach((key) => sessionStorage.removeItem(key));
+
+            window.location.replace("index.html");
+        });
+    }
+}
+
 function paperStats(data) {
     let total = 0;
     let viewed = 0;
@@ -162,8 +234,7 @@ function setupNavigation() {
         announcementsNav: "notificationSection",
         myPapersNav: "materialGrid",
         quickProgress: "performanceSection",
-        quickSupport: "supportNav",
-        enhanceNotificationNav: "notificationSection"
+        quickSupport: "supportNav"
     };
 
     Object.entries(links).forEach(([id, target]) => {
@@ -238,11 +309,16 @@ function setupTarget(stats, data) {
             target = next;
             if (pill) pill.textContent = `${next}%`;
             renderAchievements(stats, target);
-            if (msg) msg.textContent = "Target saved successfully.";
+            if (msg) {
+                msg.textContent = "Target saved successfully.";
+                msg.style.color = "";
+            }
         } catch (error) {
             console.error(error);
-            if (msg) msg.textContent = "Could not save target. Please try again.";
-            if (msg) msg.style.color = "#c73555";
+            if (msg) {
+                msg.textContent = "Could not save target. Please try again.";
+                msg.style.color = "#c73555";
+            }
         } finally {
             save.disabled = false;
         }
@@ -286,7 +362,9 @@ function formatDate(value) {
 async function init() {
     if (sessionStorage.getItem("loggedIn") !== "true" || !studentRef) return;
     injectStyle();
+    injectSidebarStyle();
     addNavItems();
+    cleanSidebarAndPlaceLogout();
     buildSections();
     setupNavigation();
     setupQuickPaperLinks();
