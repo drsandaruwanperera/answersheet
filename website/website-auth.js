@@ -1,0 +1,1 @@
+const ok=sessionStorage.getItem('adminLoggedIn')==='true';const role=(sessionStorage.getItem('adminRole')||'').trim().toLowerCase().replace(/[\s_-]+/g,'');if(!ok)location.replace('../admin-login.html');else if(role!=='superadmin'&&role!=='full')location.replace('../admin.html');
