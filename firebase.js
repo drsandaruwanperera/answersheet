@@ -102,41 +102,37 @@ const auth =
 
 export {
 
-    // Firestore
-
     db,
-
     collection,
-
     doc,
-
     getDoc,
-
     getDocs,
-
     setDoc,
-
     updateDoc,
-
     deleteDoc,
-
     onSnapshot,
-
     query,
-
     where,
-
     limit,
-
     writeBatch,
-
-
-    // Authentication
-
     auth,
-
     reauthenticateWithCredential,
-
     EmailAuthProvider
 
 };
+
+
+// =====================================================
+// STUDENT DASHBOARD ENHANCEMENTS
+// Load only on dashboard.html so the existing pages are
+// not affected by the new dashboard UI.
+// =====================================================
+
+if (
+    window.location.pathname.endsWith("/dashboard.html") ||
+    window.location.pathname.endsWith("dashboard.html")
+) {
+    import("./dashboard-enhancements.js?v=1").catch((error) => {
+        console.error("Dashboard enhancement module failed to load:", error);
+    });
+}
