@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Main Website Management</title>
+<link rel="stylesheet" href="website-management.css">
+</head>
+<body>
+<div class="page">
+<header class="topbar">
+<div><p class="eyebrow">MAIN WEBSITE</p><h1>Website Management</h1></div>
+<a class="back" href="../admin.html">← Admin Dashboard</a>
+</header>
+<main class="content">
+<section class="intro"><h2>Manage your public education website</h2><p>Keep the Student Assessment Portal and the Main Website as separate management areas.</p></section>
+<section class="grid">
+<div class="card"><div class="icon">🖼️</div><h3>Gallery</h3><p>Manage website gallery photos and captions. Images will be stored in the GitHub repository assets folder.</p><a class="link" href="gallery.html">Manage Gallery →</a></div>
+<div class="card"><div class="icon">📚</div><h3>Programs</h3><p>Edit Grade 10 Commerce, Grade 11 Commerce and A/L Accounting program information.</p><a class="link" href="programs.html">Manage Programs →</a></div>
+<div class="card"><div class="icon">👨‍🏫</div><h3>About</h3><p>Manage the teacher profile, introduction, experience and qualifications shown on the website.</p><a class="link" href="about.html">Manage About →</a></div>
+<div class="card"><div class="icon">🏆</div><h3>Results &amp; Achievements</h3><p>Update statistics, achievement cards and success information.</p><a class="link" href="results.html">Manage Results →</a></div>
+<div class="card"><div class="icon">💬</div><h3>Student Voices</h3><p>Add, edit, show or hide student testimonials.</p><a class="link" href="testimonials.html">Manage Testimonials →</a></div>
+<div class="card"><div class="icon">📖</div><h3>Learning Resources</h3><p>Manage resource titles, descriptions and links.</p><a class="link" href="resources.html">Manage Resources →</a></div>
+<div class="card"><div class="icon">📅</div><h3>Upcoming Classes</h3><p>Update upcoming class details and visibility.</p><a class="link" href="classes.html">Manage Classes →</a></div>
+<div class="card"><div class="icon">❓</div><h3>FAQ</h3><p>Create and edit frequently asked questions and answers.</p><a class="link" href="faq.html">Manage FAQ →</a></div>
+<div class="card"><div class="icon">📞</div><h3>Contact &amp; Social</h3><p>Manage WhatsApp, technical inquiry, social media and Google Maps links.</p><a class="link" href="contact.html">Manage Contact →</a></div>
+<div class="card"><div class="icon">⚙️</div><h3>Website Settings</h3><p>Manage general website settings and display options.</p><a class="link" href="settings.html">Open Settings →</a></div>
+</section>
+<div class="note"><strong>Current image plan:</strong> Firebase Storage is not required. Website images can be committed to GitHub under <code>assets/</code>, while editable content and image paths can be stored in Firestore.</div>
+</main>
+</div>
+<script type="module" src="website-dashboard.js"></script>
+</body>
+</html>
