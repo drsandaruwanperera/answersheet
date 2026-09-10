@@ -15,6 +15,13 @@ if (
 const studentId =
     sessionStorage.getItem("studentId");
 
+const params =
+    new URLSearchParams(window.location.search);
+
+const paperNumber =
+    String(params.get("paper") || "01")
+        .padStart(2, "0");
+
 
 async function getStudentData() {
     if (!studentId) {
@@ -69,8 +76,6 @@ function isALStudent(studentData) {
 
 function hasPaperAccess(studentData) {
 
-    // All A/L students are allowed to access
-    // the A/L Top Ranking Model papers.
     if (isALStudent(studentData)) {
         return true;
     }
@@ -94,7 +99,7 @@ function hasPaperAccess(studentData) {
 }
 
 
-async function checkPdf(linkId, statusId) {
+async function checkPdf(linkId, statusId, pdfUrl) {
     const link = document.getElementById(linkId);
     const status = document.getElementById(statusId);
 
@@ -102,7 +107,7 @@ async function checkPdf(linkId, statusId) {
         return;
     }
 
-    const pdfUrl = link.getAttribute("href");
+    link.href = pdfUrl;
 
     try {
         const response = await fetch(pdfUrl, {
@@ -127,14 +132,57 @@ async function initialize() {
     const studentData = await getStudentData();
 
     if (!studentData || !hasPaperAccess(studentData)) {
-        alert("Paper 01 is not available for your account yet.");
+        alert(`Paper ${paperNumber} is not available for your account yet.`);
         window.location.replace("model-papers.html");
         return;
     }
 
+    const pageTitle =
+        document.getElementById("pageTitle");
+
+    const paperKicker =
+        document.getElementById("paperKicker");
+
+    const firstDescription =
+        document.getElementById("firstDescription");
+
+    const secondDescription =
+        document.getElementById("secondDescription");
+
+    if (pageTitle) {
+        pageTitle.textContent =
+            `Paper ${paperNumber}`;
+    }
+
+    if (paperKicker) {
+        paperKicker.textContent =
+            `PAPER ${paperNumber}`;
+    }
+
+    if (firstDescription) {
+        firstDescription.textContent =
+            `Open the September 2026 Top Ranking Model — Paper ${paperNumber} 1st Paper PDF.`;
+    }
+
+    if (secondDescription) {
+        secondDescription.textContent =
+            `Open the September 2026 Top Ranking Model — Paper ${paperNumber} 2nd Paper PDF.`;
+    }
+
+    const basePath =
+        `papers/al-top-ranking/september/paper-${paperNumber}`;
+
     await Promise.all([
-        checkPdf("firstPaper", "firstStatus"),
-        checkPdf("secondPaper", "secondStatus")
+        checkPdf(
+            "firstPaper",
+            "firstStatus",
+            `${basePath}-1st-paper.pdf`
+        ),
+        checkPdf(
+            "secondPaper",
+            "secondStatus",
+            `${basePath}-2nd-paper.pdf`
+        )
     ]);
 }
 
