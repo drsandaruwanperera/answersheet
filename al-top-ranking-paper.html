@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>September 2026 • Top Ranking Paper 01</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 28px 18px 50px;
+            font-family: "Segoe UI", sans-serif;
+            color: #111827;
+            background: linear-gradient(145deg, #f7f7fb, #eef1f8);
+        }
+        .wrap { width: min(900px, 100%); margin: auto; }
+        .top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 26px;
+        }
+        .kicker { color: #7c3aed; font-size: 12px; font-weight: 800; letter-spacing: 1.4px; }
+        h1 { margin: 7px 0 0; font-size: clamp(26px, 4vw, 38px); }
+        .subtitle { margin: 7px 0 0; color: #64748b; }
+        .back {
+            border: 0; border-radius: 11px; padding: 11px 17px;
+            background: #17152b; color: #fff; font-weight: 700; cursor: pointer;
+        }
+        .paper-header {
+            padding: 25px 27px;
+            border-radius: 22px 22px 0 0;
+            background: linear-gradient(120deg, #21183e, #4c1d95);
+            color: #fff;
+        }
+        .paper-header .kicker { color: #c4b5fd; }
+        .paper-header h2 { margin: 7px 0 0; font-size: 27px; }
+        .paper-header p { margin: 7px 0 0; color: #ddd6fe; }
+        .papers {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px;
+            padding: 22px; background: #fff; border-radius: 0 0 22px 22px;
+            box-shadow: 0 20px 50px rgba(30,41,59,.1);
+        }
+        .pdf-card {
+            padding: 22px; border: 1px solid #e5e7eb; border-radius: 17px;
+            background: #fff; transition: .2s ease;
+        }
+        .pdf-card:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(76,29,149,.1); }
+        .pdf-icon {
+            display: grid; place-items: center; width: 48px; height: 48px;
+            border-radius: 14px; background: #ede9fe; color: #7c3aed; font-size: 23px;
+        }
+        .pdf-card h3 { margin: 16px 0 6px; font-size: 20px; }
+        .pdf-card p { margin: 0 0 17px; color: #64748b; font-size: 13px; line-height: 1.5; }
+        .pdf-link {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            width: 100%; padding: 12px 15px; border-radius: 11px;
+            background: linear-gradient(90deg, #7c3aed, #6366f1);
+            color: #fff; text-decoration: none; font-weight: 800; font-size: 14px;
+        }
+        .pdf-link.pending { background: #e2e8f0; color: #64748b; pointer-events: none; }
+        .status { margin-top: 9px; color: #94a3b8; font-size: 11px; text-align: center; }
+        @media (max-width: 650px) {
+            .top { align-items: flex-start; flex-direction: column; }
+            .back { width: 100%; }
+            .papers { grid-template-columns: 1fr; padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <header class="top">
+        <div>
+            <div class="kicker">SEPTEMBER 2026 • A/L TOP RANKING MODEL</div>
+            <h1>Paper 01</h1>
+            <p class="subtitle">Choose the paper you want to study.</p>
+        </div>
+        <button class="back" type="button" onclick="history.back()">← Back</button>
+    </header>
+
+    <section>
+        <div class="paper-header">
+            <div class="kicker">PAPER 01</div>
+            <h2>September Model Paper</h2>
+            <p>1st Paper and 2nd Paper are provided separately.</p>
+        </div>
+
+        <div class="papers">
+            <article class="pdf-card">
+                <div class="pdf-icon">📄</div>
+                <h3>1st Paper</h3>
+                <p>Open the September 2026 Top Ranking Model — 1st Paper PDF.</p>
+                <a id="firstPaper" class="pdf-link pending" href="papers/al-top-ranking/september/paper-01-1st-paper.pdf" target="_blank" rel="noopener">PDF not uploaded yet</a>
+                <div id="firstStatus" class="status">Checking PDF availability…</div>
+            </article>
+
+            <article class="pdf-card">
+                <div class="pdf-icon">📄</div>
+                <h3>2nd Paper</h3>
+                <p>Open the September 2026 Top Ranking Model — 2nd Paper PDF.</p>
+                <a id="secondPaper" class="pdf-link pending" href="papers/al-top-ranking/september/paper-01-2nd-paper.pdf" target="_blank" rel="noopener">PDF not uploaded yet</a>
+                <div id="secondStatus" class="status">Checking PDF availability…</div>
+            </article>
+        </div>
+    </section>
+</div>
+
+<script type="module" src="al-top-ranking-paper.js"></script>
+</body>
+</html>
