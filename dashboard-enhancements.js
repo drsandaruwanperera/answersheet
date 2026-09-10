@@ -421,13 +421,7 @@ function ensureAlStudyMaterials() {
         }
 
         if (past) {
-            past.style.display = "";
-            const title = document.getElementById("pastPapersTitle");
-            const description = document.getElementById("pastPapersDescription");
-            const link = past.querySelector(".material-link");
-            if (title) title.textContent = "Province Papers";
-            if (description) description.textContent = "A/L Provincial Examination Papers";
-            if (link) link.innerHTML = "Explore Province Papers <span>→</span>";
+            past.style.display = "none";
         }
     };
 
@@ -470,8 +464,4 @@ async function init() {
     loadNotifications();
 }
 
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init, { once:true });
-} else {
-    init();
-}
+init();
