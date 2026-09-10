@@ -4,24 +4,13 @@ import {
     getDoc
 } from "./firebase.js";
 
-
-if (
-    sessionStorage.getItem("loggedIn") !== "true"
-) {
+if (sessionStorage.getItem("loggedIn") !== "true") {
     window.location.replace("index.html");
 }
 
-
-const studentId =
-    sessionStorage.getItem("studentId");
-
-const params =
-    new URLSearchParams(window.location.search);
-
-const paperNumber =
-    String(params.get("paper") || "01")
-        .padStart(2, "0");
-
+const studentId = sessionStorage.getItem("studentId");
+const params = new URLSearchParams(window.location.search);
+const paperNumber = String(params.get("paper") || "01").padStart(2, "0");
 
 async function getStudentData() {
     if (!studentId) {
@@ -29,35 +18,17 @@ async function getStudentData() {
     }
 
     try {
-        const snapshot = await getDoc(
-            doc(db, "students", studentId)
-        );
-
-        return snapshot.exists()
-            ? snapshot.data()
-            : null;
+        const snapshot = await getDoc(doc(db, "students", studentId));
+        return snapshot.exists() ? snapshot.data() : null;
     } catch (error) {
         console.error("Firestore error:", error);
         return null;
     }
 }
 
-
 function isALStudent(studentData) {
-
-    const studentType =
-        String(
-            studentData?.studentType || ""
-        )
-            .trim()
-            .toLowerCase();
-
-    const grade =
-        String(
-            studentData?.grade || ""
-        )
-            .trim()
-            .toLowerCase();
+    const studentType = String(studentData?.studentType || "").trim().toLowerCase();
+    const grade = String(studentData?.grade || "").trim().toLowerCase();
 
     return (
         studentType === "al" ||
@@ -73,9 +44,7 @@ function isALStudent(studentData) {
     );
 }
 
-
 function hasPaperAccess(studentData) {
-
     if (isALStudent(studentData)) {
         return true;
     }
@@ -89,17 +58,10 @@ function hasPaperAccess(studentData) {
     }
 
     const value = studentData.paper01;
-
-    return (
-        value === true ||
-        value === "true" ||
-        value === 1 ||
-        value === "1"
-    );
+    return value === true || value === "true" || value === 1 || value === "1";
 }
 
-
-async function checkPdf(linkId, statusId, pdfUrl) {
+async function checkPageImage(linkId, statusId, type) {
     const link = document.getElementById(linkId);
     const status = document.getElementById(statusId);
 
@@ -107,26 +69,27 @@ async function checkPdf(linkId, statusId, pdfUrl) {
         return;
     }
 
-    link.href = pdfUrl;
+    const viewerUrl = `al-paper-viewer.html?paper=${paperNumber}&type=${type}`;
+    const firstPageUrl = `papers/al-top-ranking/september/paper-${paperNumber}-${type === "second" ? "2nd-paper" : "1st-paper"}/page-01.jpg`;
 
     try {
-        const response = await fetch(pdfUrl, {
+        const response = await fetch(firstPageUrl, {
             method: "HEAD",
             cache: "no-store"
         });
 
         if (response.ok) {
+            link.href = viewerUrl;
             link.classList.remove("pending");
-            link.textContent = "Open PDF →";
-            status.textContent = "Available";
+            link.textContent = "View & Print →";
+            status.textContent = "Pages available";
         } else {
-            status.textContent = "PDF will appear here after upload.";
+            status.textContent = "Page images will appear here after upload.";
         }
     } catch (error) {
-        status.textContent = "PDF will appear here after upload.";
+        status.textContent = "Page images will appear here after upload.";
     }
 }
-
 
 async function initialize() {
     const studentData = await getStudentData();
@@ -137,57 +100,31 @@ async function initialize() {
         return;
     }
 
-    const pageTitle =
-        document.getElementById("pageTitle");
-
-    const paperKicker =
-        document.getElementById("paperKicker");
-
-    const firstDescription =
-        document.getElementById("firstDescription");
-
-    const secondDescription =
-        document.getElementById("secondDescription");
+    const pageTitle = document.getElementById("pageTitle");
+    const paperKicker = document.getElementById("paperKicker");
+    const firstDescription = document.getElementById("firstDescription");
+    const secondDescription = document.getElementById("secondDescription");
 
     if (pageTitle) {
-        pageTitle.textContent =
-            `Paper ${paperNumber}`;
+        pageTitle.textContent = `Paper ${paperNumber}`;
     }
 
     if (paperKicker) {
-        paperKicker.textContent =
-            `PAPER ${paperNumber}`;
+        paperKicker.textContent = `PAPER ${paperNumber}`;
     }
 
     if (firstDescription) {
-        firstDescription.textContent =
-            `Open the September 2026 Top Ranking Model — Paper ${paperNumber} 1st Paper PDF.`;
+        firstDescription.textContent = `Open the September 2026 Top Ranking Model — Paper ${paperNumber} 1st Paper.`;
     }
 
     if (secondDescription) {
-        secondDescription.textContent =
-            `Open the September 2026 Top Ranking Model — Paper ${paperNumber} 2nd Paper PDF.`;
+        secondDescription.textContent = `Open the September 2026 Top Ranking Model — Paper ${paperNumber} 2nd Paper.`;
     }
 
-    const basePath =
-        `papers/al-top-ranking/september/paper-${paperNumber}`;
-
     await Promise.all([
-        checkPdf(
-            "firstPaper",
-            "firstStatus",
-            `${basePath}-1st-paper.pdf`
-        ),
-        checkPdf(
-            "secondPaper",
-            "secondStatus",
-            `${basePath}-2nd-paper.pdf`
-        )
+        checkPageImage("firstPaper", "firstStatus", "first"),
+        checkPageImage("secondPaper", "secondStatus", "second")
     ]);
 }
 
-
-document.addEventListener(
-    "DOMContentLoaded",
-    initialize
-);
+document.addEventListener("DOMContentLoaded", initialize);
