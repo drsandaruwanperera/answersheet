@@ -5,12 +5,26 @@
     font-family: "Segoe UI", sans-serif;
 }
 
+:root {
+    --portal-bg: #0b1020;
+    --portal-surface: #11182b;
+    --portal-surface-2: #151f35;
+    --portal-purple: #4037c9;
+    --portal-purple-bright: #5b4bff;
+    --portal-violet: #7c3aed;
+    --portal-lime: #a6ff2e;
+    --portal-text: #f4f7ff;
+    --portal-muted: #aeb8ce;
+    --portal-border: rgba(255, 255, 255, 0.10);
+}
+
 body {
     min-height: 100vh;
     background:
-        radial-gradient(circle at top right, rgba(124, 58, 237, 0.16), transparent 32%),
-        linear-gradient(145deg, #f6f7fb, #eef1f8);
-    color: #111827;
+        radial-gradient(circle at 8% 10%, rgba(64, 55, 201, 0.20), transparent 34%),
+        radial-gradient(circle at 92% 88%, rgba(124, 58, 237, 0.16), transparent 36%),
+        var(--portal-bg);
+    color: var(--portal-text);
     padding: 34px 20px 60px;
 }
 
@@ -30,7 +44,7 @@ body {
 .eyebrow,
 .section-kicker,
 .paper-kicker {
-    color: #7c3aed;
+    color: var(--portal-lime);
     font-size: 12px;
     font-weight: 800;
     letter-spacing: 1.4px;
@@ -41,38 +55,39 @@ body {
     font-size: clamp(28px, 4vw, 42px);
     line-height: 1.1;
     font-weight: 800;
+    color: var(--portal-text);
 }
 
 .header-subtitle {
     margin-top: 9px;
-    color: #64748b;
+    color: var(--portal-muted);
     font-size: 15px;
 }
 
 .header button {
-    border: 0;
+    border: 1px solid rgba(255, 255, 255, 0.10);
     border-radius: 12px;
     padding: 12px 20px;
-    background: #17152b;
+    background: linear-gradient(135deg, var(--portal-purple), var(--portal-violet));
     color: #fff;
     font-size: 14px;
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 10px 24px rgba(23, 21, 43, 0.18);
+    box-shadow: 0 12px 28px rgba(64, 55, 201, 0.30);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .header button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 14px 28px rgba(23, 21, 43, 0.22);
+    box-shadow: 0 16px 34px rgba(64, 55, 201, 0.40);
 }
 
 .month-section {
     overflow: hidden;
-    border: 1px solid rgba(124, 58, 237, 0.13);
+    border: 1px solid var(--portal-border);
     border-radius: 24px;
-    background: rgba(255, 255, 255, 0.88);
-    box-shadow: 0 20px 50px rgba(30, 41, 59, 0.09);
+    background: var(--portal-surface);
+    box-shadow: 0 35px 90px rgba(0, 0, 0, 0.28), 0 10px 30px rgba(0, 0, 0, 0.16);
 }
 
 .section-heading {
@@ -81,12 +96,14 @@ body {
     justify-content: space-between;
     gap: 20px;
     padding: 28px 30px;
-    background: linear-gradient(120deg, #21183e, #4c1d95);
+    background:
+        radial-gradient(circle at 85% 8%, rgba(166, 255, 46, 0.08), transparent 26%),
+        linear-gradient(145deg, #24205f 0%, #4037c9 48%, #6d28d9 100%);
     color: #fff;
 }
 
 .section-heading .section-kicker {
-    color: #c4b5fd;
+    color: var(--portal-lime);
 }
 
 .section-heading h2 {
@@ -96,16 +113,16 @@ body {
 
 .section-heading p {
     margin-top: 6px;
-    color: #ddd6fe;
+    color: #ddd9ff;
     font-size: 14px;
 }
 
 .month-badge {
     flex: 0 0 auto;
     padding: 9px 13px;
-    border: 1px solid rgba(255,255,255,0.2);
+    border: 1px solid rgba(255, 255, 255, 0.20);
     border-radius: 999px;
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.10);
     color: #fff;
     font-size: 11px;
     font-weight: 800;
@@ -113,6 +130,8 @@ body {
 }
 
 .paper-list {
+    display: grid;
+    gap: 14px;
     padding: 22px;
 }
 
@@ -122,16 +141,17 @@ body {
     align-items: center;
     gap: 20px;
     padding: 20px;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--portal-border);
     border-radius: 18px;
-    background: #fff;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    background: var(--portal-surface-2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
 
 .paper-card:hover {
     transform: translateY(-3px);
-    border-color: #c4b5fd;
-    box-shadow: 0 14px 30px rgba(76, 29, 149, 0.1);
+    border-color: rgba(166, 255, 46, 0.28);
+    background: #18233b;
+    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.24);
 }
 
 .paper-number {
@@ -140,39 +160,43 @@ body {
     width: 72px;
     height: 72px;
     border-radius: 18px;
-    background: linear-gradient(145deg, #7c3aed, #4f46e5);
+    background: linear-gradient(145deg, var(--portal-purple-bright), var(--portal-violet));
     color: #fff;
     font-size: 25px;
     font-weight: 900;
+    box-shadow: 0 12px 28px rgba(64, 55, 201, 0.26);
 }
 
 .paper-info h3 {
     margin-top: 5px;
     font-size: 22px;
-    color: #111827;
+    color: var(--portal-text);
 }
 
 .paper-info p {
     margin-top: 5px;
-    color: #64748b;
+    color: var(--portal-muted);
     font-size: 14px;
 }
 
 .paper-open {
-    border: 0;
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 12px;
     padding: 12px 16px;
-    background: linear-gradient(90deg, #7c3aed, #6366f1);
+    background: linear-gradient(135deg, var(--portal-purple), var(--portal-violet));
     color: #fff;
     font-size: 14px;
     font-weight: 800;
     cursor: pointer;
     white-space: nowrap;
-    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.2);
+    box-shadow: 0 10px 24px rgba(64, 55, 201, 0.28);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 
 .paper-open:hover {
-    filter: brightness(1.05);
+    transform: translateY(-1px);
+    filter: brightness(1.06);
+    box-shadow: 0 14px 28px rgba(64, 55, 201, 0.36);
 }
 
 .paper-card.locked {
@@ -180,13 +204,15 @@ body {
 }
 
 .paper-card.locked .paper-open {
-    background: #94a3b8;
+    background: #33405a;
+    color: #aeb8ce;
     cursor: not-allowed;
     box-shadow: none;
 }
 
 .paper-card.viewed .paper-open {
-    background: #64748b;
+    background: #33405a;
+    color: #aeb8ce;
     cursor: not-allowed;
     box-shadow: none;
 }
@@ -197,9 +223,9 @@ body {
     gap: 18px;
     margin-top: 20px;
     padding: 22px 25px;
-    border: 1px dashed #cbd5e1;
+    border: 1px dashed rgba(255, 255, 255, 0.14);
     border-radius: 20px;
-    background: rgba(255,255,255,0.68);
+    background: rgba(17, 24, 43, 0.82);
 }
 
 .coming-icon {
@@ -208,8 +234,9 @@ body {
     width: 48px;
     height: 48px;
     border-radius: 14px;
-    background: #ede9fe;
-    color: #7c3aed;
+    background: rgba(91, 75, 255, 0.14);
+    color: var(--portal-lime);
+    border: 1px solid rgba(166, 255, 46, 0.12);
     font-size: 27px;
     font-weight: 400;
 }
@@ -217,11 +244,12 @@ body {
 .coming-section h2 {
     margin-top: 3px;
     font-size: 19px;
+    color: var(--portal-text);
 }
 
 .coming-section p {
     margin-top: 4px;
-    color: #64748b;
+    color: var(--portal-muted);
     font-size: 14px;
 }
 
