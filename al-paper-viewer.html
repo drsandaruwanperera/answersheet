@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A/L Paper Viewer • View & Print</title>
+    <style>
+        * { box-sizing: border-box; }
+        :root {
+            --portal-bg: #0b1020;
+            --portal-surface: #11182b;
+            --portal-surface-2: #151f35;
+            --portal-purple: #4037c9;
+            --portal-violet: #7c3aed;
+            --portal-lime: #a6ff2e;
+            --portal-text: #f4f7ff;
+            --portal-muted: #aeb8ce;
+            --portal-border: rgba(255,255,255,.10);
+        }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI", sans-serif;
+            color: var(--portal-text);
+            background:
+                radial-gradient(circle at 8% 10%, rgba(64,55,201,.20), transparent 34%),
+                radial-gradient(circle at 92% 88%, rgba(124,58,237,.16), transparent 36%),
+                var(--portal-bg);
+        }
+        .toolbar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 14px 18px;
+            background: rgba(11,16,32,.94);
+            border-bottom: 1px solid var(--portal-border);
+            backdrop-filter: blur(14px);
+        }
+        .toolbar-title { min-width: 0; }
+        .kicker { color: var(--portal-lime); font-size: 11px; font-weight: 800; letter-spacing: 1.3px; }
+        h1 { margin: 4px 0 0; font-size: 19px; }
+        .actions { display: flex; gap: 9px; flex-wrap: wrap; }
+        button, a.action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255,255,255,.10);
+            border-radius: 10px;
+            padding: 10px 15px;
+            background: linear-gradient(135deg, var(--portal-purple), var(--portal-violet));
+            color: #fff;
+            font: inherit;
+            font-size: 13px;
+            font-weight: 800;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .secondary { background: #202b44 !important; }
+        .pages {
+            width: min(900px, calc(100% - 28px));
+            margin: 22px auto 45px;
+            display: grid;
+            gap: 18px;
+        }
+        .page-card {
+            padding: 10px;
+            border: 1px solid var(--portal-border);
+            border-radius: 14px;
+            background: var(--portal-surface);
+            box-shadow: 0 20px 45px rgba(0,0,0,.25);
+        }
+        .page-card img {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            background: #fff;
+        }
+        .page-number {
+            padding: 7px 4px 2px;
+            color: var(--portal-muted);
+            text-align: center;
+            font-size: 11px;
+        }
+        .empty {
+            width: min(700px, calc(100% - 28px));
+            margin: 60px auto;
+            padding: 35px;
+            text-align: center;
+            border: 1px solid var(--portal-border);
+            border-radius: 20px;
+            background: var(--portal-surface);
+        }
+        .empty h2 { margin: 0 0 8px; }
+        .empty p { margin: 0; color: var(--portal-muted); }
+        @media print {
+            @page { margin: 0; size: A4; }
+            body { background: #fff; }
+            .toolbar, .page-number { display: none !important; }
+            .pages { width: 100%; margin: 0; display: block; }
+            .page-card { padding: 0; border: 0; box-shadow: none; border-radius: 0; page-break-after: always; break-after: page; }
+            .page-card img { width: 100%; max-height: 100vh; object-fit: contain; border-radius: 0; }
+        }
+        @media (max-width: 650px) {
+            .toolbar { align-items: flex-start; flex-direction: column; }
+            .actions { width: 100%; }
+            button, a.action { flex: 1; }
+        }
+    </style>
+</head>
+<body>
+    <header class="toolbar">
+        <div class="toolbar-title">
+            <div class="kicker" id="viewerKicker">A/L TOP RANKING MODEL</div>
+            <h1 id="viewerTitle">Paper Viewer</h1>
+        </div>
+        <div class="actions">
+            <button class="secondary" type="button" onclick="history.back()">← Back</button>
+            <button type="button" onclick="window.print()">🖨️ Print Paper</button>
+        </div>
+    </header>
+
+    <main id="pages" class="pages" aria-live="polite"></main>
+
+    <section id="empty" class="empty" hidden>
+        <h2>Paper pages are not available yet</h2>
+        <p>Please check again after the page images have been uploaded.</p>
+    </section>
+
+    <script type="module" src="al-paper-viewer.js"></script>
+</body>
+</html>
