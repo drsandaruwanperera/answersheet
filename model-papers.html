@@ -2,276 +2,68 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>Model Papers</title>
-
-    <link
-        rel="icon"
-        href="data:,"
-    >
-
-    <link
-        rel="stylesheet"
-        href="model-papers.css"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A/L Student Top Ranking Model</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="model-papers.css">
 </head>
-
 
 <body>
 
 <div class="container">
 
-
-    <!-- =====================================================
-         HEADER
-    ====================================================== -->
-
-    <div class="header">
-
-        <h1>
-            📘 Model Papers
-        </h1>
-
-        <button
-            type="button"
-            onclick="history.back()"
-        >
-            ← Back
-        </button>
-
-    </div>
-
-
-    <!-- =====================================================
-         PAPER GRID
-    ====================================================== -->
-
-    <div class="paper-grid">
-
-
-        <!-- PAPER 01 -->
-
-        <button
-            id="paper01"
-            class="available"
-            type="button"
-            onclick="openPaper(1)"
-        >
-
-            <span class="paper-main">
-                📘 Model Paper 01
-            </span>
-
-            <span class="paper-status">
-                🟢 Available
-            </span>
-
-        </button>
-
-
-        <!-- PAPER 02 -->
-
-        <button
-            id="paper02"
-            class="available"
-            type="button"
-            onclick="openPaper(2)"
-        >
-
-            <span class="paper-main">
-                📘 Model Paper 02
-            </span>
-
-            <span class="paper-status">
-                🟢 Available
-            </span>
-
-        </button>
-
-
-        <!-- PAPER 03 -->
-
-        <button
-            id="paper03"
-            class="available"
-            type="button"
-            onclick="openPaper(3)"
-        >
-
-            <span class="paper-main">
-                📘 Model Paper 03
-            </span>
-
-            <span class="paper-status">
-                🟢 Available
-            </span>
-
-        </button>
-
-
-        <!-- PAPER 04 -->
-
-        <button
-            id="paper04"
-            class="available"
-            type="button"
-            onclick="openPaper(4)"
-        >
-
-            <span class="paper-main">
-                📘 Model Paper 04
-            </span>
-
-            <span class="paper-status">
-                🟢 Available
-            </span>
-
-        </button>
-
-
-        <!-- PAPER 05 -->
-
-        <button
-            id="paper05"
-            class="available"
-            type="button"
-            onclick="openPaper(5)"
-        >
-
-            <span class="paper-main">
-                📘 Model Paper 05
-            </span>
-
-            <span class="paper-status">
-                🟢 Available
-            </span>
-
-        </button>
-
-
-        <!-- PAPER 06 -->
-
-        <button
-            id="paper06"
-            class="available"
-            type="button"
-            onclick="openPaper(6)"
-        >
-
-            <span class="paper-main">
-                📘 Model Paper 06
-            </span>
-
-            <span class="paper-status">
-                🟢 Available
-            </span>
-
-        </button>
-
-
-        <!-- PAPER 07 -->
-
-        <button
-            id="paper07"
-            class="available"
-            type="button"
-            onclick="openPaper(7)"
-        >
-
-            <span class="paper-main">
-                📘 Model Paper 07
-            </span>
-
-            <span class="paper-status">
-                🟢 Available
-            </span>
-
-        </button>
-
-
-        <!-- PAPER 08 -->
-
-        <button
-            id="paper08"
-            class="available"
-            type="button"
-            onclick="openPaper(8)"
-        >
-
-            <span class="paper-main">
-                📘 Model Paper 08
-            </span>
-
-            <span class="paper-status">
-                🟢 Available
-            </span>
-
-        </button>
-
-
-        <!-- PAPER 09 -->
-
-        <button
-            id="paper09"
-            class="available"
-            type="button"
-            onclick="openPaper(9)"
-        >
-
-            <span class="paper-main">
-                📘 Model Paper 09
-            </span>
-
-            <span class="paper-status">
-                🟢 Available
-            </span>
-
-        </button>
-
-
-        <!-- PAPER 10 -->
-
-        <button
-            id="paper10"
-            class="available"
-            type="button"
-            onclick="openPaper(10)"
-        >
-
-            <span class="paper-main">
-                📘 Model Paper 10
-            </span>
-
-            <span class="paper-status">
-                🟢 Available
-            </span>
-
-        </button>
-
-
-    </div>
+    <header class="header">
+        <div>
+            <p class="eyebrow">A/L STUDENT PORTAL</p>
+            <h1>🏆 Student Top Ranking Model</h1>
+            <p class="header-subtitle">Monthly model papers and examination practice</p>
+        </div>
+
+        <button type="button" onclick="history.back()">← Back</button>
+    </header>
+
+    <main>
+
+        <section class="month-section">
+            <div class="section-heading">
+                <div>
+                    <span class="section-kicker">MONTHLY COLLECTION</span>
+                    <h2>September 2026</h2>
+                    <p>Top Ranking Model Papers for September</p>
+                </div>
+                <span class="month-badge">SEPTEMBER</span>
+            </div>
+
+            <div class="paper-list">
+                <article class="paper-card" id="paper01Card">
+                    <div class="paper-number">01</div>
+                    <div class="paper-info">
+                        <span class="paper-kicker">TOP RANKING MODEL</span>
+                        <h3>Paper 01</h3>
+                        <p>1st Paper and 2nd Paper PDF resources</p>
+                    </div>
+                    <button type="button" class="paper-open" id="paper01Open">
+                        Open Paper 01 <span>→</span>
+                    </button>
+                </article>
+            </div>
+        </section>
+
+        <section class="coming-section">
+            <div class="coming-icon">＋</div>
+            <div>
+                <span class="section-kicker">COMING NEXT</span>
+                <h2>More monthly papers</h2>
+                <p>Additional Top Ranking Model months can be added here as they are released.</p>
+            </div>
+        </section>
+
+    </main>
 
 </div>
 
-
-<!-- =========================================================
-     JAVASCRIPT
-========================================================== -->
-
-<script
-    type="module"
-    src="model-papers.js"
-></script>
-
+<script type="module" src="model-papers.js"></script>
 
 </body>
-
 </html>
