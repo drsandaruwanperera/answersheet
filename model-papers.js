@@ -1,6 +1,5 @@
 // ============================================================
-// A/L MODEL PAPERS
-// model-papers.js
+// A/L TOP RANKING MODEL PAPERS
 // ============================================================
 
 import {
@@ -21,12 +20,14 @@ if (
 }
 
 
-// ============================================================
-// STUDENT ID
-// ============================================================
-
 const studentId =
     sessionStorage.getItem("studentId");
+
+const paperButton =
+    document.getElementById("paper01Open");
+
+const paperCard =
+    document.getElementById("paper01Card");
 
 
 // ============================================================
@@ -36,114 +37,42 @@ const studentId =
 async function getStudentData() {
 
     if (!studentId) {
-
-        console.error(
-            "❌ Student ID not found in sessionStorage."
-        );
-
         return null;
     }
-
 
     try {
-
         const studentRef =
-            doc(
-                db,
-                "students",
-                studentId
-            );
-
+            doc(db, "students", studentId);
 
         const snapshot =
-            await getDoc(
-                studentRef
-            );
+            await getDoc(studentRef);
 
-
-        if (!snapshot.exists()) {
-
-            console.error(
-                "❌ Student document not found:",
-                studentId
-            );
-
-            return null;
-        }
-
-
-        return snapshot.data();
+        return snapshot.exists()
+            ? snapshot.data()
+            : null;
 
     } catch (error) {
-
-        console.error(
-            "❌ Firestore error:",
-            error
-        );
-
+        console.error("Firestore error:", error);
         return null;
     }
 }
 
 
 // ============================================================
-// CHECK VIEWED
+// ACCESS CHECK
 // ============================================================
 
-function hasViewedPaper(
-    studentData,
-    paperId
-) {
-
-    if (!studentData) {
-        return false;
-    }
-
-
-    const viewed =
-        studentData?.paperViews?.al?.model?.[paperId];
-
-
-    return viewed === true;
-}
-
-
-// ============================================================
-// CHECK ACCESS
-// ============================================================
-
-function hasPaperAccess(
-    studentData,
-    paperId
-) {
+function hasPaperAccess(studentData) {
 
     if (!studentData) {
         return true;
     }
 
-
-    /*
-     * IMPORTANT:
-     *
-     * If paper01 / paper02 / etc.
-     * does not exist in Firestore,
-     * consider it AVAILABLE.
-     */
-
-    if (
-        !Object.prototype.hasOwnProperty.call(
-            studentData,
-            paperId
-        )
-    ) {
-
+    if (!Object.prototype.hasOwnProperty.call(studentData, "paper01")) {
         return true;
     }
 
-
-    const value =
-        studentData[paperId];
-
+    const value = studentData.paper01;
 
     return (
         value === true ||
@@ -154,536 +83,51 @@ function hasPaperAccess(
 }
 
 
-// ============================================================
-// GET PAPER BUTTON
-// ============================================================
+function hasViewedPaper(studentData) {
 
-function getPaperButton(
-    paperNumber
-) {
-
-    const number =
-        String(
-            paperNumber
-        ).padStart(
-            2,
-            "0"
-        );
-
-
-    return document.getElementById(
-        `paper${number}`
+    return (
+        studentData?.paperViews?.al?.model?.paper01 === true
     );
 }
 
 
 // ============================================================
-// UPDATE STATUS
+// OPEN PAPER 01
 // ============================================================
 
-function updatePaperStatus(
-    paperNumber,
-    status
-) {
+async function openPaper01() {
 
-    const button =
-        getPaperButton(
-            paperNumber
-        );
-
-
-    if (!button) {
+    if (!paperButton) {
         return;
     }
-
-
-    // Remove old classes
-
-    button.classList.remove(
-        "available",
-        "viewed",
-        "disabled"
-    );
-
-
-    // ========================================================
-    // AVAILABLE
-    // ========================================================
-
-    if (
-        status === "available"
-    ) {
-
-        button.classList.add(
-            "available"
-        );
-
-
-        const statusElement =
-            button.querySelector(
-                ".paper-status"
-            );
-
-
-        if (statusElement) {
-
-            statusElement.textContent =
-                "🟢 Available";
-
-        }
-
-
-        return;
-    }
-
-
-    // ========================================================
-    // VIEWED
-    // ========================================================
-
-    if (
-        status === "viewed"
-    ) {
-
-        button.classList.add(
-            "viewed"
-        );
-
-
-        const statusElement =
-            button.querySelector(
-                ".paper-status"
-            );
-
-
-        if (statusElement) {
-
-            statusElement.textContent =
-                "🔵 Viewed";
-
-        }
-
-
-        return;
-    }
-
-
-    // ========================================================
-    // LOCKED
-    // ========================================================
-
-    if (
-        status === "locked"
-    ) {
-
-        button.classList.add(
-            "disabled"
-        );
-
-
-        const statusElement =
-            button.querySelector(
-                ".paper-status"
-            );
-
-
-        if (statusElement) {
-
-            statusElement.textContent =
-                "🔒 Locked";
-
-        }
-    }
-}
-
-
-// ============================================================
-// LOAD PAPER STATUSES
-// ============================================================
-
-async function loadPaperStatuses() {
-
-    console.log(
-        "======================================"
-    );
-
-    console.log(
-        "A/L MODEL PAPERS"
-    );
-
-    console.log(
-        "Student ID:",
-        studentId
-    );
-
-    console.log(
-        "======================================"
-    );
-
 
     const studentData =
         await getStudentData();
 
-
-    /*
-     * If Firestore cannot be read,
-     * keep papers available instead of
-     * locking all papers.
-     */
-
     if (!studentData) {
-
-        console.warn(
-            "Student data unavailable. Papers remain available."
-        );
-
-
-        for (
-            let i = 1;
-            i <= 10;
-            i++
-        ) {
-
-            updatePaperStatus(
-                i,
-                "available"
-            );
-        }
-
-
-        return;
-    }
-
-
-    // ========================================================
-    // PAPERS 01 - 10
-    // ========================================================
-
-    for (
-        let i = 1;
-        i <= 10;
-        i++
-    ) {
-
-        const paperId =
-            `paper${String(
-                i
-            ).padStart(
-                2,
-                "0"
-            )}`;
-
-
-        const accessible =
-            hasPaperAccess(
-                studentData,
-                paperId
-            );
-
-
-        // ----------------------------------------------------
-        // NOT AVAILABLE
-        // ----------------------------------------------------
-
-        if (!accessible) {
-
-            updatePaperStatus(
-                i,
-                "locked"
-            );
-
-            continue;
-        }
-
-
-        // ----------------------------------------------------
-        // ALREADY VIEWED
-        // ----------------------------------------------------
-
-        const viewed =
-            hasViewedPaper(
-                studentData,
-                paperId
-            );
-
-
-        if (viewed) {
-
-            updatePaperStatus(
-                i,
-                "viewed"
-            );
-
-        } else {
-
-            updatePaperStatus(
-                i,
-                "available"
-            );
-
-        }
-    }
-
-
-    console.log(
-        "✅ Paper statuses loaded."
-    );
-}
-
-
-// ============================================================
-// OPEN PAPER
-// ============================================================
-
-async function openPaper(
-    paperNumber
-) {
-
-    const number =
-        String(
-            paperNumber
-        ).padStart(
-            2,
-            "0"
-        );
-
-
-    const paperId =
-        `paper${number}`;
-
-
-    console.log(
-        "======================================"
-    );
-
-    console.log(
-        "PAPER CLICKED:",
-        paperId
-    );
-
-
-    // ========================================================
-    // GET CURRENT FIRESTORE DATA
-    // ========================================================
-
-    const studentData =
-        await getStudentData();
-
-
-    /*
-     * If student data cannot be loaded,
-     * don't silently fail.
-     */
-
-    if (!studentData) {
-
-        console.warn(
-            "Student data could not be verified."
-        );
-
-
         alert(
             "Unable to verify your account. Please refresh the page and try again."
         );
-
-
         return;
     }
 
+    if (!hasPaperAccess(studentData)) {
+        paperCard?.classList.add("locked");
+        alert("Paper 01 is not available for your account yet.");
+        return;
+    }
 
-    // ========================================================
-    // CHECK ACCESS
-    // ========================================================
-
-    const accessible =
-        hasPaperAccess(
-            studentData,
-            paperId
-        );
-
-
-    if (!accessible) {
-
+    if (hasViewedPaper(studentData)) {
+        paperCard?.classList.add("viewed");
         alert(
-            `Model Paper ${number} is not available.`
+            "Paper 01 has already been viewed and cannot be opened again."
         );
-
-
         return;
     }
 
-
-    // ========================================================
-    // CHECK VIEWED
-    // ========================================================
-
-    const alreadyViewed =
-        hasViewedPaper(
-            studentData,
-            paperId
-        );
-
-
-    if (alreadyViewed) {
-
-        console.log(
-            "❌ BLOCKED - ALREADY VIEWED:",
-            paperId
-        );
-
-
-        alert(
-            `Model Paper ${number} has already been viewed and cannot be opened again.`
-        );
-
-
-        return;
-    }
-
-
-    // ========================================================
-    // BUILD VIEWER URL
-    // ========================================================
-
-    const viewerUrl =
-        `viewer.html?` +
-        `paper=${encodeURIComponent(
-            paperId
-        )}` +
-        `&id=${encodeURIComponent(
-            studentId
-        )}` +
-        `&type=al-model`;
-
-
-    console.log(
-        "✅ OPENING:",
-        viewerUrl
-    );
-
-
-    console.log(
-        "======================================"
-    );
-
-
-    // ========================================================
-    // NAVIGATE
-    // ========================================================
-
-    window.location.assign(
-        viewerUrl
-    );
+    window.location.href =
+        "al-top-ranking-paper.html?paper=01&month=september";
 }
-
-
-// ============================================================
-// ATTACH CLICK EVENTS
-// ============================================================
-
-function attachPaperEvents() {
-
-    for (
-        let i = 1;
-        i <= 10;
-        i++
-    ) {
-
-        const button =
-            getPaperButton(
-                i
-            );
-
-
-        if (!button) {
-
-            console.warn(
-                `Paper button not found: paper${String(i).padStart(2, "0")}`
-            );
-
-            continue;
-        }
-
-
-        /*
-         * Remove inline onclick behavior.
-         *
-         * The HTML can still contain:
-         *
-         * onclick="openPaper(1)"
-         *
-         * but we don't rely on it.
-         */
-
-        button.removeAttribute(
-            "onclick"
-        );
-
-
-        // ----------------------------------------------------
-        // CLICK
-        // ----------------------------------------------------
-
-        button.addEventListener(
-            "click",
-            async function(event) {
-
-                event.preventDefault();
-
-                event.stopPropagation();
-
-
-                await openPaper(
-                    i
-                );
-
-            }
-        );
-
-
-        // ----------------------------------------------------
-        // KEYBOARD
-        // ----------------------------------------------------
-
-        button.addEventListener(
-            "keydown",
-            async function(event) {
-
-                if (
-                    event.key === "Enter" ||
-                    event.key === " "
-                ) {
-
-                    event.preventDefault();
-
-                    event.stopPropagation();
-
-
-                    await openPaper(
-                        i
-                    );
-
-                }
-
-            }
-        );
-    }
-}
-
-
-// ============================================================
-// GLOBAL FUNCTION
-// ============================================================
-//
-// This is kept because your HTML currently contains:
-// onclick="openPaper(1)"
-//
-// So even if the HTML hasn't been changed,
-// it will still work.
-//
-
-window.openPaper =
-    openPaper;
 
 
 // ============================================================
@@ -694,33 +138,31 @@ document.addEventListener(
     "DOMContentLoaded",
     async function() {
 
-        console.log(
-            "🟢 Model Papers page loaded."
+        if (!paperButton) {
+            return;
+        }
+
+        paperButton.addEventListener(
+            "click",
+            openPaper01
         );
 
+        const studentData =
+            await getStudentData();
 
-        // Attach click handlers FIRST
+        if (!studentData) {
+            return;
+        }
 
-        attachPaperEvents();
+        if (!hasPaperAccess(studentData)) {
+            paperCard?.classList.add("locked");
+            paperButton.textContent = "🔒 Locked";
+            return;
+        }
 
-
-        // Then load statuses
-
-        await loadPaperStatuses();
-
+        if (hasViewedPaper(studentData)) {
+            paperCard?.classList.add("viewed");
+            paperButton.textContent = "🔵 Already Viewed";
+        }
     }
-);
-
-
-// ============================================================
-// CONSOLE
-// ============================================================
-
-console.log(
-    "🟢 A/L Model Papers JS loaded."
-);
-
-console.log(
-    "Student ID:",
-    studentId
 );
