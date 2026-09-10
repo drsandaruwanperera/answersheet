@@ -1,0 +1,157 @@
+/* =========================================
+   PORTAL THEME — MATCH MAIN WEBSITE
+   Dr. Sandaruwan Perera
+========================================= */
+
+:root {
+    --portal-bg: #0b1020;
+    --portal-surface: #11182b;
+    --portal-surface-2: #151f35;
+    --portal-purple: #4037c9;
+    --portal-purple-bright: #5b4bff;
+    --portal-violet: #7c3aed;
+    --portal-lime: #a6ff2e;
+    --portal-text: #f4f7ff;
+    --portal-muted: #aeb8ce;
+    --portal-border: rgba(255, 255, 255, 0.10);
+}
+
+html,
+body {
+    background:
+        radial-gradient(circle at 8% 10%, rgba(64, 55, 201, 0.20), transparent 34%),
+        radial-gradient(circle at 92% 88%, rgba(124, 58, 237, 0.16), transparent 36%),
+        var(--portal-bg) !important;
+    color: var(--portal-text) !important;
+}
+
+.background-shape {
+    opacity: 0.55;
+}
+
+.shape-one {
+    background: radial-gradient(circle, rgba(91, 75, 255, 0.22), transparent 70%);
+}
+
+.shape-two {
+    background: radial-gradient(circle, rgba(166, 255, 46, 0.08), transparent 70%);
+}
+
+.login-wrapper {
+    background: var(--portal-surface) !important;
+    border: 1px solid var(--portal-border) !important;
+    box-shadow:
+        0 35px 90px rgba(0, 0, 0, 0.42),
+        0 10px 30px rgba(0, 0, 0, 0.24) !important;
+}
+
+.brand-panel {
+    background:
+        radial-gradient(circle at 85% 8%, rgba(166, 255, 46, 0.08), transparent 26%),
+        linear-gradient(145deg, #24205f 0%, #4037c9 48%, #6d28d9 100%) !important;
+}
+
+.brand-content h1 span {
+    color: var(--portal-lime) !important;
+}
+
+.brand-label,
+.welcome-label {
+    color: var(--portal-lime) !important;
+}
+
+.feature {
+    border-color: rgba(255, 255, 255, 0.13) !important;
+    background: rgba(255, 255, 255, 0.075) !important;
+}
+
+.feature:hover {
+    background: rgba(255, 255, 255, 0.12) !important;
+}
+
+.secure-dot {
+    background: var(--portal-lime) !important;
+    box-shadow: 0 0 0 4px rgba(166, 255, 46, 0.10) !important;
+}
+
+.login-panel {
+    background: var(--portal-surface) !important;
+}
+
+.login-header h2,
+.form-group label {
+    color: var(--portal-text) !important;
+}
+
+.login-header p {
+    color: var(--portal-muted) !important;
+}
+
+.input-wrapper input {
+    background: #0d1426 !important;
+    border-color: rgba(255, 255, 255, 0.12) !important;
+    color: var(--portal-text) !important;
+}
+
+.input-wrapper input:hover {
+    border-color: rgba(166, 255, 46, 0.40) !important;
+}
+
+.input-wrapper input:focus {
+    border-color: var(--portal-lime) !important;
+    background: #0d1426 !important;
+    box-shadow: 0 0 0 4px rgba(166, 255, 46, 0.08) !important;
+}
+
+.input-wrapper input::placeholder {
+    color: #7f8ba3 !important;
+}
+
+.toggle-password:hover {
+    background: rgba(255, 255, 255, 0.07) !important;
+}
+
+.login-btn {
+    background: linear-gradient(135deg, var(--portal-purple), var(--portal-violet)) !important;
+    box-shadow: 0 12px 28px rgba(64, 55, 201, 0.32) !important;
+}
+
+.login-btn:hover {
+    box-shadow: 0 16px 34px rgba(64, 55, 201, 0.40) !important;
+}
+
+.support-box {
+    background: var(--portal-surface-2) !important;
+    border-color: var(--portal-border) !important;
+}
+
+.support-content strong {
+    color: var(--portal-text) !important;
+}
+
+.support-content span {
+    color: var(--portal-muted) !important;
+}
+
+.support-content a {
+    color: var(--portal-lime) !important;
+}
+
+.login-footer {
+    color: #7f8ba3 !important;
+}
+
+.mobile-logo {
+    background: rgba(91, 75, 255, 0.14) !important;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+@media (max-width: 900px) {
+    .login-wrapper {
+        border-radius: 22px;
+    }
+
+    .login-panel {
+        background: var(--portal-surface) !important;
+    }
+}
