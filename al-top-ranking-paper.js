@@ -36,7 +36,45 @@ async function getStudentData() {
 }
 
 
+function isALStudent(studentData) {
+
+    const studentType =
+        String(
+            studentData?.studentType || ""
+        )
+            .trim()
+            .toLowerCase();
+
+    const grade =
+        String(
+            studentData?.grade || ""
+        )
+            .trim()
+            .toLowerCase();
+
+    return (
+        studentType === "al" ||
+        studentType === "a/l" ||
+        studentType === "a level" ||
+        studentType === "advanced" ||
+        studentType === "advanced level" ||
+        grade === "al" ||
+        grade === "a/l" ||
+        grade === "a level" ||
+        grade === "advanced" ||
+        grade === "advanced level"
+    );
+}
+
+
 function hasPaperAccess(studentData) {
+
+    // All A/L students are allowed to access
+    // the A/L Top Ranking Model papers.
+    if (isALStudent(studentData)) {
+        return true;
+    }
+
     if (!studentData) {
         return false;
     }
