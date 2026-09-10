@@ -154,6 +154,11 @@ body {
     box-shadow: 0 16px 34px rgba(0, 0, 0, 0.24);
 }
 
+/* Paper 02 is prepared in the backend but intentionally hidden until release. */
+#paper02Card {
+    display: none !important;
+}
+
 .paper-number {
     display: grid;
     place-items: center;
