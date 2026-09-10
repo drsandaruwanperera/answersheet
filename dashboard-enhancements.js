@@ -395,6 +395,52 @@ async function loadNotifications() {
     }
 }
 
+function ensureAlStudyMaterials() {
+    const grade = String(
+        sessionStorage.getItem("studentGrade") ||
+        sessionStorage.getItem("studentType") ||
+        ""
+    ).toLowerCase().trim().replace(/\s+/g, "");
+
+    if (!["al", "a/l", "advanced", "advancedlevel"].includes(grade)) {
+        return;
+    }
+
+    const apply = () => {
+        const model = document.getElementById("modelPapersCard");
+        const past = document.getElementById("pastPapersCard");
+
+        if (model) {
+            model.style.display = "";
+            const title = document.getElementById("modelPapersTitle");
+            const description = document.getElementById("modelPapersDescription");
+            const link = model.querySelector(".material-link");
+            if (title) title.textContent = "🏆 Top Ranking Model";
+            if (description) description.textContent = "A/L Student Top Ranking Model Papers";
+            if (link) link.innerHTML = "Explore Top Ranking Model <span>→</span>";
+        }
+
+        if (past) {
+            past.style.display = "";
+            const title = document.getElementById("pastPapersTitle");
+            const description = document.getElementById("pastPapersDescription");
+            const link = past.querySelector(".material-link");
+            if (title) title.textContent = "Province Papers";
+            if (description) description.textContent = "A/L Provincial Examination Papers";
+            if (link) link.innerHTML = "Explore Province Papers <span>→</span>";
+        }
+    };
+
+    apply();
+
+    const grid = document.getElementById("materialGrid");
+    if (grid && !grid.dataset.alVisibilityGuarded) {
+        grid.dataset.alVisibilityGuarded = "1";
+        const observer = new MutationObserver(apply);
+        observer.observe(grid, { subtree: true, attributes: true, attributeFilter: ["style"] });
+    }
+}
+
 async function init() {
     injectStyle();
     injectSidebarStyle();
@@ -402,6 +448,7 @@ async function init() {
     buildSections();
     setupNavigation();
     setupQuickLinks();
+    ensureAlStudyMaterials();
 
     // dashboard.js is loaded before this module, so these values are the real live dashboard values.
     animateRealDashboardData();
