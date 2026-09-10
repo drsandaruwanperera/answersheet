@@ -9,10 +9,6 @@ import {
 } from "./firebase.js";
 
 
-// ============================================================
-// LOGIN CHECK
-// ============================================================
-
 if (
     sessionStorage.getItem("loggedIn") !== "true"
 ) {
@@ -23,11 +19,18 @@ if (
 const studentId =
     sessionStorage.getItem("studentId");
 
-const paperButton =
-    document.getElementById("paper01Open");
-
-const paperCard =
-    document.getElementById("paper01Card");
+const paperCards = [
+    {
+        number: "01",
+        card: document.getElementById("paper01Card"),
+        button: document.getElementById("paper01Open")
+    },
+    {
+        number: "02",
+        card: document.getElementById("paper02Card"),
+        button: document.getElementById("paper02Open")
+    }
+];
 
 
 // ============================================================
@@ -99,8 +102,6 @@ function isALStudent(studentData) {
 
 function hasPaperAccess(studentData) {
 
-    // All A/L students are allowed to access
-    // the A/L Top Ranking Model papers.
     if (isALStudent(studentData)) {
         return true;
     }
@@ -124,19 +125,22 @@ function hasPaperAccess(studentData) {
 }
 
 
-function hasViewedPaper(studentData) {
+function hasViewedPaper(studentData, paperNumber) {
+
+    const key =
+        `paper${paperNumber}`;
 
     return (
-        studentData?.paperViews?.al?.model?.paper01 === true
+        studentData?.paperViews?.al?.model?.[key] === true
     );
 }
 
 
 // ============================================================
-// OPEN PAPER 01
+// OPEN PAPER
 // ============================================================
 
-async function openPaper01() {
+async function openPaper(paperNumber, paperButton, paperCard) {
 
     if (!paperButton) {
         return;
@@ -154,20 +158,20 @@ async function openPaper01() {
 
     if (!hasPaperAccess(studentData)) {
         paperCard?.classList.add("locked");
-        alert("Paper 01 is not available for your account yet.");
+        alert(`Paper ${paperNumber} is not available for your account yet.`);
         return;
     }
 
-    if (hasViewedPaper(studentData)) {
+    if (hasViewedPaper(studentData, paperNumber)) {
         paperCard?.classList.add("viewed");
         alert(
-            "Paper 01 has already been viewed and cannot be opened again."
+            `Paper ${paperNumber} has already been viewed and cannot be opened again.`
         );
         return;
     }
 
     window.location.href =
-        "al-top-ranking-paper.html?paper=01&month=september";
+        `al-top-ranking-paper.html?paper=${paperNumber}&month=september`;
 }
 
 
@@ -179,31 +183,42 @@ document.addEventListener(
     "DOMContentLoaded",
     async function() {
 
-        if (!paperButton) {
-            return;
-        }
-
-        paperButton.addEventListener(
-            "click",
-            openPaper01
-        );
-
         const studentData =
             await getStudentData();
 
-        if (!studentData) {
-            return;
-        }
+        paperCards.forEach(
+            function(item) {
 
-        if (!hasPaperAccess(studentData)) {
-            paperCard?.classList.add("locked");
-            paperButton.textContent = "🔒 Locked";
-            return;
-        }
+                if (!item.button) {
+                    return;
+                }
 
-        if (hasViewedPaper(studentData)) {
-            paperCard?.classList.add("viewed");
-            paperButton.textContent = "🔵 Already Viewed";
-        }
+                item.button.addEventListener(
+                    "click",
+                    function() {
+                        openPaper(
+                            item.number,
+                            item.button,
+                            item.card
+                        );
+                    }
+                );
+
+                if (!studentData) {
+                    return;
+                }
+
+                if (!hasPaperAccess(studentData)) {
+                    item.card?.classList.add("locked");
+                    item.button.textContent = "🔒 Locked";
+                    return;
+                }
+
+                if (hasViewedPaper(studentData, item.number)) {
+                    item.card?.classList.add("viewed");
+                    item.button.textContent = "🔵 Already Viewed";
+                }
+            }
+        );
     }
 );
