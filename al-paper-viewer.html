@@ -119,15 +119,15 @@
             }
             .toolbar, .page-number, .empty { display: none !important; }
             .pages {
-                width: 100%;
+                width: 100% !important;
                 min-width: 0;
-                max-width: none;
+                max-width: none !important;
                 margin: 0 !important;
                 padding: 0 !important;
                 display: block;
             }
             .page-card {
-                width: 100%;
+                width: 100% !important;
                 min-width: 0;
                 height: auto;
                 min-height: 0;
@@ -149,8 +149,8 @@
             }
             .page-card img {
                 display: block;
-                width: 100%;
-                max-width: 100%;
+                width: 100% !important;
+                max-width: 100% !important;
                 height: auto;
                 max-height: none !important;
                 margin: 0 !important;
@@ -161,7 +161,8 @@
             }
         }
 
-        @media (max-width: 650px) {
+        /* Mobile layout is screen-only so it cannot override the A4 print layout on iPhone/iPad. */
+        @media screen and (max-width: 650px) {
             .toolbar {
                 align-items: stretch;
                 flex-direction: column;
