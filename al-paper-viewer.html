@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>A/L Paper Viewer • View & Print</title>
     <style>
         * { box-sizing: border-box; }
+        html, body { max-width: 100%; overflow-x: hidden; }
         :root {
             --portal-bg: #0b1020;
             --portal-surface: #11182b;
@@ -67,6 +68,7 @@
             gap: 18px;
         }
         .page-card {
+            min-width: 0;
             padding: 10px;
             border: 1px solid var(--portal-border);
             border-radius: 14px;
@@ -76,6 +78,7 @@
         .page-card img {
             display: block;
             width: 100%;
+            max-width: 100%;
             height: auto;
             border-radius: 8px;
             background: #fff;
@@ -97,18 +100,89 @@
         }
         .empty h2 { margin: 0 0 8px; }
         .empty p { margin: 0; color: var(--portal-muted); }
+
+        /* Every printed paper page is a true A4 portrait page. */
         @media print {
-            @page { margin: 0; size: A4; }
-            body { background: #fff; }
-            .toolbar, .page-number { display: none !important; }
-            .pages { width: 100%; margin: 0; display: block; }
-            .page-card { padding: 0; border: 0; box-shadow: none; border-radius: 0; page-break-after: always; break-after: page; }
-            .page-card img { width: 100%; max-height: 100vh; object-fit: contain; border-radius: 0; }
+            @page {
+                size: A4 portrait;
+                margin: 0;
+            }
+            html, body {
+                width: 210mm;
+                min-width: 210mm;
+                max-width: 210mm;
+                margin: 0;
+                padding: 0;
+                background: #fff !important;
+                overflow: visible;
+            }
+            .toolbar, .page-number, .empty { display: none !important; }
+            .pages {
+                width: 210mm;
+                min-width: 210mm;
+                max-width: 210mm;
+                margin: 0;
+                padding: 0;
+                display: block;
+            }
+            .page-card {
+                width: 210mm;
+                height: 297mm;
+                min-width: 210mm;
+                padding: 0;
+                margin: 0;
+                border: 0;
+                box-shadow: none;
+                border-radius: 0;
+                page-break-after: always;
+                break-after: page;
+                page-break-inside: avoid;
+                break-inside: avoid;
+                overflow: hidden;
+            }
+            .page-card:last-child {
+                page-break-after: auto;
+                break-after: auto;
+            }
+            .page-card img {
+                display: block;
+                width: 210mm;
+                height: 297mm;
+                max-width: 210mm;
+                max-height: 297mm;
+                margin: 0;
+                border-radius: 0;
+                object-fit: contain;
+            }
         }
+
         @media (max-width: 650px) {
-            .toolbar { align-items: flex-start; flex-direction: column; }
+            .toolbar {
+                align-items: stretch;
+                flex-direction: column;
+                gap: 10px;
+                padding: 12px;
+            }
+            h1 { font-size: 17px; }
             .actions { width: 100%; }
-            button, a.action { flex: 1; }
+            button, a.action { flex: 1; min-height: 42px; }
+            .pages {
+                width: 100%;
+                margin: 12px 0 28px;
+                padding: 0 8px;
+                gap: 12px;
+            }
+            .page-card {
+                width: 100%;
+                padding: 3px;
+                border-radius: 10px;
+            }
+            .page-card img {
+                width: 100%;
+                max-width: 100%;
+                border-radius: 6px;
+            }
+            .page-number { padding: 5px 2px 1px; }
         }
     </style>
 </head>
