@@ -7,6 +7,7 @@ const paperNumber = String(params.get("paper") || "01").padStart(2, "0");
 const paperType = params.get("type") === "second" ? "2nd" : "1st";
 const folderType = paperType === "2nd" ? "2nd-paper" : "1st-paper";
 const basePath = `papers/al-top-ranking/september/paper-${paperNumber}-${folderType}`;
+const imageVersion = "750c5998";
 
 const pages = document.getElementById("pages");
 const empty = document.getElementById("empty");
@@ -35,7 +36,8 @@ async function initializeViewer() {
     let loaded = 0;
 
     while (pageNumber <= 100) {
-        const src = `${basePath}/page-${String(pageNumber).padStart(2, "0")}.jpg`;
+        const fileName = `page-${String(pageNumber).padStart(2, "0")}.jpg`;
+        const src = `${basePath}/${fileName}?v=${imageVersion}`;
         const image = await loadImage(src);
 
         if (!image) {
@@ -48,7 +50,8 @@ async function initializeViewer() {
         const img = document.createElement("img");
         img.src = src;
         img.alt = `Paper ${paperNumber} ${paperType} Paper — page ${pageNumber}`;
-        img.loading = pageNumber === 1 ? "eager" : "lazy";
+        img.loading = "eager";
+        img.decoding = "sync";
 
         const label = document.createElement("div");
         label.className = "page-number";
