@@ -166,23 +166,35 @@
             h1 { font-size: 17px; }
             .actions { width: 100%; }
             button, a.action { flex: 1; min-height: 42px; }
+
+            /* On phones the paper itself uses the full viewport width. */
             .pages {
-                width: 100%;
+                width: 100vw;
+                max-width: 100vw;
                 margin: 12px 0 28px;
-                padding: 0 8px;
+                padding: 0;
                 gap: 12px;
             }
             .page-card {
-                width: 100%;
-                padding: 3px;
-                border-radius: 10px;
+                width: 100vw;
+                max-width: 100vw;
+                padding: 0;
+                border: 0;
+                border-radius: 0;
+                box-shadow: none;
+                background: #fff;
             }
             .page-card img {
-                width: 100%;
-                max-width: 100%;
-                border-radius: 6px;
+                display: block;
+                width: 100vw;
+                max-width: 100vw;
+                height: auto;
+                border-radius: 0;
             }
-            .page-number { padding: 5px 2px 1px; }
+            .page-number {
+                padding: 6px 2px 2px;
+                background: var(--portal-surface);
+            }
         }
     </style>
 </head>
