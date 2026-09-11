@@ -15,11 +15,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Install Pillow
+        run: python -m pip install --upgrade Pillow
+
       - name: Crop white margins from A/L paper JPGs
         run: |
           python - <<'PY'
           from pathlib import Path
-          from PIL import Image, ImageChops
+          from PIL import Image
 
           roots = [
               Path('papers/al-top-ranking/september/paper-01-1st-paper'),
@@ -32,8 +35,6 @@ jobs:
                   with Image.open(path) as source:
                       image = source.convert('RGB')
                       gray = image.convert('L')
-                      # Treat near-white pixels as page background and find the
-                      # bounding box of the actual printed paper/content.
                       mask = gray.point(lambda p: 0 if p >= 245 else 255)
                       bbox = mask.getbbox()
                       if not bbox:
